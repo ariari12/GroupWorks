@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" th:fragment="layout">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+
+    <title>[[${title}]]</title>
+
+    <th:block th:replace="~{layout/header::header}" />
+</head>
+<body class="sb-nav-fixed">
+
+    <!--/* !필수 Top Menu */-->
+    <nav th:replace="~{layout/topNav::top-nav}"></nav>
+
+    <div id="layoutSidenav" th:fragment="side">
+
+        <!--/* !필수 Side Bar Menu */-->
+        <div th:replace="~{layout/sideMenu::side}"></div>
+
+        <div id="layoutSidenav_content">
+            <main>
+                <div class="container-fluid px-4">
+                    <h1 class="mt-4">MAIN</h1>
+                    <ol class="breadcrumb mb-4">
+                        <li class="breadcrumb-item active">MAIN</li>
+                    </ol>
+
+                    <!--/* !필수 Contents */-->
+                    <th:block th:replace="~{::contnet}"></th:block>
+
+                </div>
+            </main>
+        <!--/* !필수 footer */-->
+        <footer th:replace="~{layout/footer::footer}"></footer>
+        </div>
+    </div>
+</body>
+</html>
