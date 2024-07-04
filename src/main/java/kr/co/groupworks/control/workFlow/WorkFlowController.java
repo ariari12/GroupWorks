@@ -1,9 +1,8 @@
-package kr.co.groupworks.control.workFlow;
+package kr.co.groupworks.control.workflow;
 
 import jakarta.servlet.http.HttpSession;
-import kr.co.group_workers.dto.employee.EmployeeDTO;
-import kr.co.group_workers.dto.workFlow.WorkFlowDTO;
-import kr.co.group_workers.service.workFlow.WorkFlow2ServiceImpl;
+import kr.co.groupworks.dto.employee.EmployeeDTO;
+import kr.co.groupworks.dto.workflow.WorkFlowDTO;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +19,6 @@ import java.util.Map;
 @RequestMapping("/work-flow")
 @RequiredArgsConstructor
 public class WorkFlowController {
-    private final WorkFlow2ServiceImpl workFlowService;
 
     private static final String WORKFLOW_URL = "work-flow";
     private static final String APPROVAL_REQUEST = "/request";
