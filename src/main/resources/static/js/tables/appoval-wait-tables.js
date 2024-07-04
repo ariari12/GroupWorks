@@ -1,33 +1,44 @@
 // Call the dataTables jQuery plugin
 $(document).ready(function() {
 
-    // 테이블 생성
-    $('#datatablesSimple').DataTable({
+    // 내 결재 요청 목록 테이블 생성
+    $('#MyRequestList').DataTable({
         info: false,
         ordering: true,
-        order: [[1, 'desc']],
+        order: [[0, 'desc']],
         scrollX: true,
         paging: true,
         scrollCollapse: true,
         scrollY: 450,
     });
 
-    // 테이블 생성
-    $('#approvalWait02').DataTable({
+    // 승인된 결재 목록 테이블 생성
+    $('#approvedTable').DataTable({
         info: false,
         ordering: true,
-        order: [[1, 'desc']],
+        order: [[0, 'desc']],
         scrollX: true,
         paging: true,
         scrollCollapse: true,
         scrollY: 450,
     });
 
-    // 테이블 생성
-    $('#approvalWait03').DataTable({
+    // 내 결재 요청 대기 목록 테이블 생성
+    $('#MyRequestWaitTable').DataTable({
         info: false,
         ordering: true,
-        order: [[1, 'desc']],
+        order: [[0, 'desc']],
+        scrollX: true,
+        paging: true,
+        scrollCollapse: true,
+        scrollY: 450,
+    });
+
+    // 결재 승인 대기 목록 테이블 생성
+    $('#approvalWaitTable').DataTable({
+        info: false,
+        ordering: true,
+        order: [[0, 'desc']],
         scrollX: true,
         paging: true,
         scrollCollapse: true,

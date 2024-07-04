@@ -1,4 +1,4 @@
-package kr.co.groupworks.dto.workFlow;
+package kr.co.groupworks.dto.workflow;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

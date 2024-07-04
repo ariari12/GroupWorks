@@ -2,15 +2,15 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
 <!--/* Section: WorkFlow approval Wait Tables */-->
-<div class="card mb-4" th:fragment="approvalWait03">
+<div class="card mb-4" th:fragment="MyRequestList">
 
     <div class="card-header">
         <i class="bi bi-folder-fill"></i>
-        Wait03
+        발송 결재 목록
     </div>
 
     <div class="card-body">
-        <table id="approvalWait03" class="table table-hover" style="width:100%">
+        <table id="MyRequestList" class="table table-hover" style="width:100%">
             <thead>
             <tr>
                 <th>Name01</th>
@@ -29,7 +29,7 @@
             <tbody>
             <!--/* 상세 보기 이동 시 onclick 이벤트 핸들러로 Javascript 함수 추가 */-->
 <!--                <tr onclick="" th:each="lsit : ${dtoList}">-->
-            <tr th:onclick="load();">
+            <tr th:onclick="load()">
                 <td>Name 01</td>
                 <td>Position 01</td>
                 <td>Office 01</td>

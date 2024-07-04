@@ -1,9 +1,8 @@
-package kr.co.groupworks.control.workFlow;
+package kr.co.groupworks.control.workflow;
 
 import jakarta.servlet.http.HttpSession;
-import kr.co.group_workers.dto.employee.EmployeeDTO;
-import kr.co.group_workers.dto.workFlow.WorkFlowDTO;
-import kr.co.group_workers.service.workFlow.WorkFlow2ServiceImpl;
+import kr.co.groupworks.dto.employee.EmployeeDTO;
+import kr.co.groupworks.dto.workflow.WorkFlowDTO;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,10 +19,10 @@ import java.util.Map;
 @RequestMapping("/work-flow")
 @RequiredArgsConstructor
 public class WorkFlowController {
-    private final WorkFlow2ServiceImpl workFlowService;
 
     private static final String WORKFLOW_URL = "work-flow";
     private static final String APPROVAL_REQUEST = "/request";
+    private static final String MY_APPROVED = "/my-approved";
     private static final String WORK_STATUS = "/stat";
     private static final String WORK_WAIT = "/wait";
     private static final String REQUEST_OK = "/request-ok";
@@ -75,7 +74,14 @@ public class WorkFlowController {
         model.addAttribute(AttributeName.WORK_FLOW_URL.getStatus(), WORK_STATUS);
         model.addAttribute(AttributeName.WORK_FLOW_DTO.getStatus(), workFlowDTO);
 
-        return "work_flow/approvalForm";
+        return "workflow/approvalForm";
+    }
+
+    @GetMapping(MY_APPROVED)
+    public String myApproved(Model model, HttpSession session) {
+        log.info("WorkFlowController - myApproved");
+
+        return "workflow/myRequest";
     }
 
     /* 결재 현황 */
@@ -87,7 +93,7 @@ public class WorkFlowController {
         model.addAttribute(AttributeName.TITLE.getStatus(), title);
         model.addAttribute(AttributeName.SUB_TITLE.getStatus(), title);
         model.addAttribute(AttributeName.WORK_FLOW_URL.getStatus(), WORK_STATUS);
-        return "work_flow/workStatus";
+        return "workflow/workStatus";
     }
 
     /* 결재 대기(승인대기 / 요청대기) 목록 */
@@ -99,7 +105,7 @@ public class WorkFlowController {
         model.addAttribute(AttributeName.TITLE.getStatus(), title);
         model.addAttribute(AttributeName.SUB_TITLE.getStatus(), title);
         model.addAttribute(AttributeName.WORK_FLOW_URL.getStatus(), WORK_STATUS);
-        return "work_flow/workWait";
+        return "workflow/workWait";
     }
 
     /* 결재 요청 받기 */
@@ -125,7 +131,6 @@ public class WorkFlowController {
         for (String s: names) {
             log.info("WorkFlowController - test, name = {}", s);
         }
-
         return names;
     }
 
