@@ -1,10 +1,11 @@
 package kr.co.groupworks.service.workFlow;
 
 import jakarta.transaction.Transactional;
-import kr.co.group_workers.entity.workFlow.WorkFlow;
-import kr.co.group_workers.entity.workFlow.WorkFlow2;
-import kr.co.group_workers.repository.workFlow.WorkFlow1Repository;
-import kr.co.group_workers.repository.workFlow.WorkFlow2Repository;
+
+import kr.co.groupworks.entity.workFlow.WorkFlow;
+import kr.co.groupworks.entity.workFlow.WorkFlow2;
+import kr.co.groupworks.repository.workFlow.WorkFlow1Repository;
+import kr.co.groupworks.repository.workFlow.WorkFlow2Repository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

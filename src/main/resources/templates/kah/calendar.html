@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<!--/* !필수 Header */-->
+<head>
+    <th:block th:replace="layout/header.html::header">
+    </th:block>
+
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.14/index.global.min.js'></script>
+    <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/google-calendar@6.1.14/index.global.min.js'></script>
+    <script>
+
+        document.addEventListener('DOMContentLoaded', function() {
+            var calendarEl = document.getElementById('calendar');
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                googleCalendarApiKey : 'AIzaSyCyTApWr2NijbtvLNwUGFu3wCe_lYSSB5U',
+                eventSources: [
+                    {
+                        googleCalendarId: 'ko.south_korea#holiday@group.v.calendar.google.com',
+                        color: 'white',   // an option!
+                        textColor: 'red'  // an option!
+                    }
+                ],
+                locale: 'ko'
+            });
+            calendar.render();
+        });
+
+    </script>
+</head>
+<body class="sb-nav-fixed">
+
+<!--/* !필수 Top Menu */-->
+<nav th:replace="layout/topNav::top-nav"></nav>
+
+<!--/* !필수 Side Bar Menu */-->
+<div th:replace="layout/sideMenu::side"></div>
+
+<!--/* !필수 Contents Start */-->
+<div id="layoutSidenav_content">
+    <main>
+        <div class="container-fluid px-4">
+            <h1 class="mt-4">Calendar</h1>
+
+
+            <div id='calendar'></div>
+
+
+
+            <!--/* !필수 footer */-->
+            <footer th:replace="layout/footer::footer"></footer>
+</body>
+</html>

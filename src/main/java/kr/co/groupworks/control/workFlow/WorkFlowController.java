@@ -1,9 +1,10 @@
 package kr.co.groupworks.control.workFlow;
 
 import jakarta.servlet.http.HttpSession;
-import kr.co.group_workers.dto.employee.EmployeeDTO;
-import kr.co.group_workers.dto.workFlow.WorkFlowDTO;
-import kr.co.group_workers.service.workFlow.WorkFlow2ServiceImpl;
+
+import kr.co.groupworks.dto.employee.EmployeeDTO;
+import kr.co.groupworks.dto.workFlow.WorkFlowDTO;
+import kr.co.groupworks.service.workFlow.WorkFlow2ServiceImpl;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
