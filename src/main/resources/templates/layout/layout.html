@@ -10,6 +10,9 @@
     <title>[[${title}]]</title>
 
     <th:block th:replace="~{layout/header::header}" />
+
+    <!--/* !선택 필요한 style code 와 link 는 여기에 추가 */-->
+    <th:block th:replace="~{::style}" />
 </head>
 <body class="sb-nav-fixed">
 
@@ -38,5 +41,8 @@
         <footer th:replace="~{layout/footer::footer}"></footer>
         </div>
     </div>
+
+    <!--/* Add External link 필요한 추가 링크는 여기에... */-->
+    <th:block th:replace="~{::srcLinks}" />
 </body>
 </html>

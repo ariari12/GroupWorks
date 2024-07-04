@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<!--/* !필수 Header */-->
+<header th:replace="/layout/header::header"></header>
+</head>
+<body class="sb-nav-fixed">
+
+<!--/* !필수 Top Menu */-->
+<nav th:replace="/layout/topNav::top-nav"></nav>
+
+<!--/* !필수 Side Bar Menu */-->
+<div th:replace="/layout/sideMenu::side"></div>
+
+<!--/* !필수 Contents Start */-->
+<div id="layoutSidenav_content">
+    <main>
+        <div class="container-fluid px-4">
+            <h1 class="mt-4">
+                <a th:href="${workFlowUrl}">[[${subTitle}]]</a>
+            </h1>
+            <ol class="breadcrumb mb-4">
+                <li class="breadcrumb-item active">
+                    <a th:href="${workFlowUrl}">[[${subTitle}]]</a>
+                </li>
+            </ol>
+
+            <!--/* !필수 Contents */-->
+            <!--/* 여기에 메인 코드를 채워주세요... 스타일은 반드시 부트스트랩 class... */-->
+            <!--/* Front 에서 보이지 않는 주석
+                th:replace : 해당 구분으로 감싼 태그로 코드 대체 (태그를 대체)
+                th:insert : 해당 구문으로 감싼 태그로 삽입(태그 안에 추가)
+            */-->
+
+            <!--/* approvalWait Table */-->
+            <div th:replace="/work_flow/approvalWait :: approvalWait"></div>
+            <div th:replace="/work_flow/approvalWait02 :: approvalWait02"></div>
+            <div th:replace="/work_flow/approvalWait03 :: approvalWait03"></div>
+
+    <!--/* !필수 footer */-->
+    <footer th:replace="/layout/footer::footer"></footer>
+
+<!--/* Add External link 필요한 추가 링크는 여기에... */-->
+<!--/* Table */-->
+<script src="/js/tables/appoval-wait-tables.js"></script>
+<script>
+    function load() {
+        window.location = "request";
+    }
+</script>
+
+</body>
+</html>

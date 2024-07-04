@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<!--/* Section: WorkFlow approval Wait Tables */-->
+<div class="card mb-4" th:fragment="approvalWait">
+
+    <div class="card-header">
+        <i class="bi bi-folder-fill"></i>
+        승인대기
+    </div>
+
+    <div class="card-body">
+        <table id="datatablesSimple" class="table table-hover" style="width:100%">
+            <thead>
+            <tr>
+                <th>Name01</th>
+                <th>Position01</th>
+                <th>Office01</th>
+                <th>Name02</th>
+                <th>Position02</th>
+                <th>Office02</th>
+                <th>Name03</th>
+                <th>Position03</th>
+                <th>Office03</th>
+                <th>Graph</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <!--/* 상세 보기 이동 시 onclick 이벤트 핸들러로 Javascript 함수 추가 */-->
+<!--                <tr onclick="" th:each="lsit : ${dtoList}">-->
+            <tr th:onclick="load();">
+                <td>Name 01</td>
+                <td>Position 01</td>
+                <td>Office 01</td>
+                <td>Name 02</td>
+                <td>Position 02</td>
+                <td>Office 02</td>
+                <td>Name 03</td>
+                <td>Position 03</td>
+                <td>Office 03</td>
+                <td>
+                    <div class="progress" role="progressbar" aria-label="Success example" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+                        <div class="progress-bar bg-success" style="width: 25%">25%</div>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+    </div>
+</div>
