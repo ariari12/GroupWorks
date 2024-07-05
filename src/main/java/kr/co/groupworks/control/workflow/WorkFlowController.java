@@ -47,7 +47,7 @@ public class WorkFlowController {
     private String title;
 
     /* 결제 요청 Form */
-    @GetMapping( APPROVAL_REQUEST)
+    @GetMapping(APPROVAL_REQUEST)
     public String approvalRequest(Model model, HttpSession session) {
         // Test Use Session
         EmployeeDTO employeeDto = new EmployeeDTO()
@@ -108,6 +108,7 @@ public class WorkFlowController {
         return "workflow/workWait";
     }
 
+    /* 결재 내용 상세보기 및 결재 승인하기 */
     /* 결재 요청 받기 */
     @PostMapping(REQUEST_OK)
     public String requestOk(@ModelAttribute WorkFlowDTO workFlowDTO) {
@@ -115,6 +116,10 @@ public class WorkFlowController {
 
         return "redirect:" + SEPARATOR + WORKFLOW_URL + WORK_STATUS;
     }
+
+
+
+
 
 
     /* Test Controller */

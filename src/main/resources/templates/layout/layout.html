@@ -27,12 +27,9 @@
         <div id="layoutSidenav_content">
             <main>
                 <div class="container-fluid px-4">
-                    <h1 class="mt-4">
-                        <a th:href="@{${workFlowUrl}}" th:text="${subTitle}"></a>
-                    </h1>
+                    <h1 class="mt-4" th:text="${subTitle}"></h1>
                     <ol class="breadcrumb mb-4">
-                        <li class="breadcrumb-item active">
-                            <a th:href="@{${workFlowUrl}}" th:text="${subTitle}"></a></li>
+                        <li class="breadcrumb-item active" th:text="${title}"></li>
                     </ol>
 
                     <!--/* !필수 Contents */-->
