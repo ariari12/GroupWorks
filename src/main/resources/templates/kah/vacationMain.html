@@ -1,11 +1,14 @@
 <!doctype html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/layout::layout}">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<div layout:fragment="css">
+</div>
+<div layout:fragment="javascript">
+      <script src="/js/tables/datatables-demo.js"></script>
+</div>
 
-<th:block th:fragment="style">
-      <!--/* !선택 필요한 style code 와 link 는 여기에 추가 */-->
-</th:block>
-
-<div th:fragment="contnet">
+<div layout:fragment="content">
       <div class="row">
             <h5>휴가 등록</h5>
             <hr>
@@ -40,42 +43,11 @@
                   <br>
             </div>
       </div>
-      <div>
-            <h5>예정 휴가</h5>
-            <hr>
-            <table class="table">
-                  <thead>
-                  <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">First</th>
-                        <th scope="col">Last</th>
-                        <th scope="col">Handle</th>
-                  </tr>
-                  </thead>
-                  <tbody>
-                  <tr>
-                        <th scope="row">1</th>
-                        <td>Mark</td>
-                        <td>Otto</td>
-                        <td>@mdo</td>
-                  </tr>
-                  <tr>
-                        <th scope="row">2</th>
-                        <td>Jacob</td>
-                        <td>Thornton</td>
-                        <td>@fat</td>
-                  </tr>
-                  <tr>
-                        <th scope="row">3</th>
-                        <td colspan="2">Larry the Bird</td>
-                        <td>@twitter</td>
-                  </tr>
-                  </tbody>
-            </table>
-      </div>
+      <th:block th:replace="kah/fragments/vacationMyHistory::scheduledVaction">
+      </th:block>
+      <th:block th:replace="kah/fragments/vacationMyHistory::vacationHistory">
+      </th:block>
 
-      <!--/* Section: Tables 예시 */-->
-      <div th:replace="kah/fragments/vacation_requests.html::tables" ></div>
 
 
       <!-- Modal -->
@@ -106,19 +78,3 @@
             </div>
       </div>
 </div>
-
-<th:block th:fragment="srcLinks">
-      <!--/* Add External link 필요한 추가 링크는 여기에... */-->
-      <!--/* ===== 링크 예시 ===== */-->
-
-      <!--/* Chart Graph */-->
-      <!--<script src="/js/chart/chart-area-demo.js"></script>-->
-      <!--<script src="/js/chart/chart-bar-demo.js"></script>-->
-
-      <!--/* Card */-->
-      <!--<script src="/js/cards/chart-pie-demo.js"></script>-->
-
-      <!--/* Table */-->
-      <!--<script src="/js/tables/datatables-demo.js"></script>-->
-</th:block>
-</html>

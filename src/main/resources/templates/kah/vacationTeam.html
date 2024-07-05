@@ -1,49 +1,20 @@
-<!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
-<!--/* !필수 Header */-->
-<header>
-      <th:block th:replace="layout/header::header">
-      </th:block>
-</header>
-<body class="sb-nav-fixed">
+<!doctype html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<div layout:fragment="css">
 
-<!--/* !필수 Top Menu */-->
-<nav th:replace="layout/topNav::top-nav"></nav>
+</div>
+<div layout:fragment="javascript">
 
-<!--/* !필수 Side Bar Menu */-->
-<div th:replace="layout/sideMenu::side"></div>
-
-<!--/* !필수 Contents Start */-->
-<div id="layoutSidenav_content">
-      <main>
-            <div class="container-fluid px-4">
-                  <h2 class="mt-4">
-                        <span><a href="" th:href="@{/templates/kah}" class="text-body-tertiary text-decoration-none" >내 휴가</a></span>
-                        <span> / </span>
-                        <span class="border-bottom border-dark border-2">구성원 휴가</span>
-                  </h2>
-                  <ol class="breadcrumb mb-4">
-                        <li class="breadcrumb-item active  border-bottom border-dark border-2">휴가 신청 내역</li>
-                        <li class="breadcrumb-item active">휴가 보유 & 사용현황</li>
-                  </ol>
-
-
-<!--/* !필수 Contents */-->
-<!--/* 여기에 메인 코드를 채워주세요... 스타일은 반드시 부트스트랩 class... */-->
-<!--/* Front 에서 보이지 않는 주석
-       th:replace : 해당 구분으로 감싼 태그로 코드 대체 (태그를 대체)
-       th:insert : 해당 구문으로 감싼 태그로 삽입(태그 안에 추가)
-*/-->
-
-      <!--/* 참조 코드 예시 */-->
-
-
+</div>
+<div layout:fragment="content">
       <!-- 조건문으로 하나만 나오게 할거임-->
       <th:block>
-            <div th:replace="kah/fragments/vacation_requests.html::tables" ></div>
+            <div th:replace="kah/fragments/vacationRequests.html::tables" ></div>
       </th:block>
       <th:block>
-            <div th:replace="kah/fragments/vacation_status.html::tables" ></div>
+            <div th:replace="kah/fragments/vacationStatus.html::tables" ></div>
       </th:block>
 
       <!-- Modal -->
@@ -73,30 +44,5 @@
                   </div>
             </div>
       </div>
-
-
-      <!--/*
-            layout 을 미리 구성하여
-            Content 파일 경로를 넘겨서
-            해당 파일을 불러와서 내용을
-            대체하는 방식도 가능
-       */-->
-      <!--/* <div th:include="${path} :: ${name}"></div> */-->
-
-<!--/* !필수 footer */-->
-<footer th:replace="layout/footer::footer"></footer>
-
-<!--/* Add External link 필요한 추가 링크는 여기에... */-->
-<!--/* ===== 링크 예시 ===== */-->
-<!--/* Chart Graph */-->
-<script src="/js/chart/chart-area-demo.js"></script>
-<script src="/js/chart/chart-bar-demo.js"></script>
-
-<!--/* Card */-->
-<script src="/js/cards/chart-pie-demo.js"></script>
-
-<!--/* Table */-->
-<script src="/js/tables/datatables-demo.js"></script>
-
-</body>
-</html>
+</div>
+</div>

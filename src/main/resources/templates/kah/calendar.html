@@ -1,11 +1,16 @@
-<!DOCTYPE html>
-
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
-<!--/* !필수 Header */-->
-<head>
-    <th:block th:replace="layout/header.html::header">
-    </th:block>
-
+<!doctype html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<div layout:fragment="css">
+    <style>
+        #calendar {
+            max-width: 1100px;
+            margin: 40px auto;
+        }
+    </style>
+</div>
+<div layout:fragment="javascript">
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.14/index.global.min.js'></script>
     <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/google-calendar@6.1.14/index.global.min.js'></script>
     <script>
@@ -25,29 +30,8 @@
             });
             calendar.render();
         });
-
     </script>
-</head>
-<body class="sb-nav-fixed">
-
-<!--/* !필수 Top Menu */-->
-<nav th:replace="layout/topNav::top-nav"></nav>
-
-<!--/* !필수 Side Bar Menu */-->
-<div th:replace="layout/sideMenu::side"></div>
-
-<!--/* !필수 Contents Start */-->
-<div id="layoutSidenav_content">
-    <main>
-        <div class="container-fluid px-4">
-            <h1 class="mt-4">Calendar</h1>
-
-
-            <div id='calendar'></div>
-
-
-
-            <!--/* !필수 footer */-->
-            <footer th:replace="layout/footer::footer"></footer>
-</body>
-</html>
+</div>
+<div layout:fragment="content">
+    <div id='calendar'></div>
+</div>
