@@ -26,6 +26,7 @@ public class VacationController {
 
         // header title 넘겨주기
         model.addAttribute("title", "구성원 휴가");
+        model.addAttribute("subtitle", "구성원 휴가");
         return "kah/vacationTeam";
     }
 }

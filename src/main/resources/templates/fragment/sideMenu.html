@@ -1,8 +1,12 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 
 <!--/* Sidebar */-->
-<div id="layoutSidenav_nav" th:fragment="side">
+<th:block th:fragment="side">
+
+
+<div id="layoutSidenav_nav">
     <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
 
         <div class="sb-sidenav-menu">
@@ -163,3 +167,20 @@
         </div>
     </nav>
 </div>
+<div id="layoutSidenav_content">
+    <main>
+        <div class="container-fluid px-4">
+            <h1 class="mt-4">[[${title}]]</h1>
+            <ol class="breadcrumb mb-4">
+                <li class="breadcrumb-item active">[[${subtitle}]]</li>
+            </ol>
+            <!--/* !필수 Contents */-->
+            <th:block layout:fragment="content">
+
+            </th:block>
+        </div>
+    </main>
+    <!--/* !필수 footer */-->
+    <footer th:replace="~{fragment/footer::footer}"></footer>
+</div>
+</th:block>
