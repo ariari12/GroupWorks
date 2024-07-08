@@ -1,8 +1,12 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 
 <!--/* Sidebar */-->
-<div id="layoutSidenav_nav" th:fragment="side">
+<th:block th:fragment="side">
+
+
+<div id="layoutSidenav_nav">
     <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
 
         <div class="sb-sidenav-menu">
@@ -122,6 +126,39 @@
                     </nav>
                 </div>
 
+
+                <!--/* Pages 최상위 */-->
+
+                <a class="nav-link collapsed" data-bs-toggle="collapse" data-bs-target="#vacationPages" aria-expanded="false" aria-controls="collapsePages">
+                    <div class="sb-nav-link-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-suitcase2" viewBox="0 0 16 16">
+                        <path d="M6.5 0a.5.5 0 0 0-.5.5V3H5a2 2 0 0 0-2 2v8a2 2 0 0 0 1.031 1.75A1.003 1.003 0 0 0 5 16a1 1 0 0 0 1-1h4a1 1 0 1 0 1.969-.25A2 2 0 0 0 13 13V5a2 2 0 0 0-2-2h-1V.5a.5.5 0 0 0-.5-.5zM9 3H7V1h2zm3 10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7h8zM5 4h6a1 1 0 0 1 1 1v1H4V5a1 1 0 0 1 1-1"/>
+                    </svg>
+                    </div>휴가
+                    <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                </a>
+
+                <div class="collapse" id="vacationPages" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
+                    <nav class="sb-sidenav-menu-nested nav accordion">
+                        <a class="nav-link collapsed" href="/vacation">
+                            내 휴가 관리
+                        </a>
+
+                        <a class="nav-link collapsed" href="/vacation/team">
+                            구성원 휴가 관리
+                        </a>
+                    </nav>
+                </div>
+
+                <a class="nav-link collapsed" href="/calendar">
+                    <div class="sb-nav-link-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar" viewBox="0 0 16 16">
+                            <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z"/>
+                        </svg>
+                    </div>캘린더
+                    <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                </a>
+
                 <!--/* Sidebar Menu 필요한 만큼 추가 */-->
                 <!--/* 그룹 소 제목 */-->
                 <div class="sb-sidenav-menu-heading">Addons</div>
@@ -145,3 +182,20 @@
         </div>
     </nav>
 </div>
+<div id="layoutSidenav_content">
+    <main>
+        <div class="container-fluid px-4">
+            <h1 class="mt-4">[[${title}]]</h1>
+            <ol class="breadcrumb mb-4">
+                <li class="breadcrumb-item active">[[${subtitle}]]</li>
+            </ol>
+            <!--/* !필수 Contents */-->
+            <th:block layout:fragment="content">
+
+            </th:block>
+        </div>
+    </main>
+    <!--/* !필수 footer */-->
+    <footer th:replace="~{fragment/footer::footer}"></footer>
+</div>
+</th:block>

@@ -22,7 +22,6 @@ public class WorkFlowController {
 
     private static final String WORKFLOW_URL = "work-flow";
     private static final String APPROVAL_REQUEST = "/request";
-    private static final String MY_APPROVED = "/my-approved";
     private static final String WORK_STATUS = "/stat";
     private static final String WORK_WAIT = "/wait";
     private static final String REQUEST_OK = "/request-ok";
@@ -47,7 +46,7 @@ public class WorkFlowController {
     private String title;
 
     /* 결제 요청 Form */
-    @GetMapping(APPROVAL_REQUEST)
+    @GetMapping( APPROVAL_REQUEST)
     public String approvalRequest(Model model, HttpSession session) {
         // Test Use Session
         EmployeeDTO employeeDto = new EmployeeDTO()
@@ -74,14 +73,7 @@ public class WorkFlowController {
         model.addAttribute(AttributeName.WORK_FLOW_URL.getStatus(), WORK_STATUS);
         model.addAttribute(AttributeName.WORK_FLOW_DTO.getStatus(), workFlowDTO);
 
-        return "workflow/approvalForm";
-    }
-
-    @GetMapping(MY_APPROVED)
-    public String myApproved(Model model, HttpSession session) {
-        log.info("WorkFlowController - myApproved");
-
-        return "workflow/myRequest";
+        return "work_flow/approvalForm";
     }
 
     /* 결재 현황 */
@@ -93,7 +85,7 @@ public class WorkFlowController {
         model.addAttribute(AttributeName.TITLE.getStatus(), title);
         model.addAttribute(AttributeName.SUB_TITLE.getStatus(), title);
         model.addAttribute(AttributeName.WORK_FLOW_URL.getStatus(), WORK_STATUS);
-        return "workflow/workStatus";
+        return "work_flow/workStatus";
     }
 
     /* 결재 대기(승인대기 / 요청대기) 목록 */
@@ -105,10 +97,9 @@ public class WorkFlowController {
         model.addAttribute(AttributeName.TITLE.getStatus(), title);
         model.addAttribute(AttributeName.SUB_TITLE.getStatus(), title);
         model.addAttribute(AttributeName.WORK_FLOW_URL.getStatus(), WORK_STATUS);
-        return "workflow/workWait";
+        return "work_flow/workWait";
     }
 
-    /* 결재 내용 상세보기 및 결재 승인하기 */
     /* 결재 요청 받기 */
     @PostMapping(REQUEST_OK)
     public String requestOk(@ModelAttribute WorkFlowDTO workFlowDTO) {
@@ -116,10 +107,6 @@ public class WorkFlowController {
 
         return "redirect:" + SEPARATOR + WORKFLOW_URL + WORK_STATUS;
     }
-
-
-
-
 
 
     /* Test Controller */
@@ -136,6 +123,7 @@ public class WorkFlowController {
         for (String s: names) {
             log.info("WorkFlowController - test, name = {}", s);
         }
+
         return names;
     }
 

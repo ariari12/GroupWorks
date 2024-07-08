@@ -29,6 +29,7 @@ public class MainController {
 
         // header title 넘겨주기
         model.addAttribute("title", "MAIN");
+        model.addAttribute("subtitle", "SUBMAIN");
         return "main";
     }
 }

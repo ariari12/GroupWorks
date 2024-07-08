@@ -1,0 +1,88 @@
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<!--/* Section: Tables */-->
+<div class="card mb-4" th:fragment="tables">
+
+    <div class="card-header">
+        <i class="fas fa-table me-1"></i>
+        휴가 신청 내역
+    </div>
+
+    <div class="card-body">
+        <table id="datatablesSimple" class="table table-hover" style="width:100%">
+            <thead>
+            <tr>
+                <th>이름</th>
+                <th>사번</th>
+                <th>직급</th>
+                <th>기간</th>
+                <th>종류</th>
+                <th>사용기간</th>
+                <th>증명자료</th>
+                <th>승인</th>
+            </tr>
+            </thead>
+
+
+            <tbody>
+            <!--/* 상세 보기 이동 시 onclick 이벤트 핸들러로 Javascript 함수 추가 */-->
+            <tr onclick="" data-bs-toggle="modal" data-bs-target="#vacationRequestHistory">
+                <td>Name 01</td>
+                <td>Position 01</td>
+                <td>Office 01</td>
+                <td>Name 01</td>
+                <td>Position 01</td>
+                <td>Office 01</td>
+                <td>Name 01</td>
+                <td>Position 01</td>
+            </tr>
+            </tbody>
+        </table>
+
+        <!-- Modal -->
+        <div class="modal fade" id="vacationRequestHistory" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="staticBackdropLabel">@@@님의 휴가 요청</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <h6 class="container">2022-11-11 12:12</h6>
+                    <div class="modal-body">
+                        <h5>요청내역 인증완료(표시)</h5>
+                        <div class="container border">
+                            <table>
+                                <tr>
+                                    <th>휴가 종류 : </th>
+                                    <td> 기타</td>
+                                </tr>
+                                <tr>
+                                    <th>휴가 기간 : </th>
+                                    <td>2022-12-25(일) ~ 2022-12-25(일)</td>
+                                </tr>
+                                <tr>
+                                    <th>사용 기간 : </th>
+                                    <td>기타</td>
+                                </tr>
+                                <tr>
+                                    <th>휴가 내용 : </th>
+                                    <td>휴가 떠납니다</td>
+                                </tr>
+                                <tr>
+                                    <th>첨부 파일 : </th>
+                                    <td>asdf.png</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Understood</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+

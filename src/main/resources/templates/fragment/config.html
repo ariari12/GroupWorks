@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<th:block th:fragment="config">
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+
+    <title>[[${title}]]</title>
+
+    <!--/*공용 CSS*/-->
+    <th:block th:replace="~{common/css.html}"></th:block>
+    <!--/*현재페이지를 위한 CSS*/-->
+    <th:block layout:fragment="css"></th:block>
+    <!--/*공용 javascriptt*/-->
+    <th:block th:replace="~{common/javascript.html}"></th:block>
+    <!--/*현재페이지를 위한 javascript*/-->
+    <th:block layout:fragment="javascript"></th:block>
+</th:block>
