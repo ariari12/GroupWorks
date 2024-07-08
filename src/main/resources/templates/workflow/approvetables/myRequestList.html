@@ -6,23 +6,24 @@
 
     <div class="card-header">
         <i class="bi bi-folder-fill"></i>
-        발송 결재 목록
+        발송 결재 반려 목록
     </div>
 
     <div class="card-body">
         <table id="MyRequestList" class="table table-hover" style="width:100%">
             <thead>
             <tr>
-                <th>Name01</th>
-                <th>Position01</th>
-                <th>Office01</th>
-                <th>Name02</th>
-                <th>Position02</th>
-                <th>Office02</th>
-                <th>Name03</th>
-                <th>Position03</th>
-                <th>Office03</th>
-                <th>Graph</th>
+                <th>결재 번호</th>
+                <th>결재 제목</th>
+                <th>기안자</th>
+                <th>소속</th>
+                <th>직급</th>
+                <th>기안 일</th>
+                <th>최종 승인일</th>
+                <th>최종 결재자</th>
+                <th>소속</th>
+                <th>직급</th>
+                <th>진행도</th>
             </tr>
             </thead>
 
@@ -32,6 +33,7 @@
             <tr th:onclick="load()">
                 <td>Name 01</td>
                 <td>Position 01</td>
+                <td>Office 01</td>
                 <td>Office 01</td>
                 <td>Name 02</td>
                 <td>Position 02</td>

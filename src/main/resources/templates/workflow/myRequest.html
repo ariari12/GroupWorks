@@ -14,11 +14,11 @@
            th:replace : 해당 구분으로 감싼 태그로 코드 대체 (태그를 대체)
            th:insert : 해당 구문으로 감싼 태그로 삽입(태그 안에 추가)
     */-->
-    <div th:replace="/workflow/approvedList.html :: approvedList"></div>
-    <div th:replace="/workflow/myRequestWaitList.html :: MyRequestWaitList"></div>
+    <div th:replace="/workflow/approvetables/approvedList.html :: approvedList"></div>
+    <div th:replace="/workflow/approvetables/myRequestWaitList.html :: MyRequestWaitList"></div>
 </th:block>
 
 <th:block th:fragment="srcLinks">
     <!--/* Add External link 필요한 추가 링크는 여기에... */-->
-    <script src="/js/tables/appoval-wait-tables.js"></script>
+    <script src="/js/tables/approval-tables.js"></script>
 </th:block>

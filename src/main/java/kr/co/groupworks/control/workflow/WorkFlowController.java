@@ -9,10 +9,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @Controller
@@ -20,7 +21,9 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class WorkFlowController {
 
+    private static final String TITLE = "Work Flow";
     private static final String WORKFLOW_URL = "work-flow";
+    private static final String APPROVAL_HISTORY = "/approval-history";
     private static final String APPROVAL_REQUEST = "/request";
     private static final String WORK_STATUS = "/stat";
     private static final String WORK_WAIT = "/wait";
@@ -66,15 +69,93 @@ public class WorkFlowController {
                 .setDepartment(employeeDTO.getDepartmentName());
 
         title = "Approval Request";
-        log.info("WorkFlowController - request title: {}", title);
+        log.info("");
+        log.info("WorkFlowController - request title: {}, setDto: {}",
+                title, workFlowDTO);
 
         model.addAttribute(AttributeName.TITLE.getStatus(), title);
         model.addAttribute(AttributeName.SUB_TITLE.getStatus(), title);
-        model.addAttribute(AttributeName.WORK_FLOW_URL.getStatus(), WORK_STATUS);
+//        model.addAttribute(AttributeName.WORK_FLOW_URL.getStatus(), WORK_STATUS);
         model.addAttribute(AttributeName.WORK_FLOW_DTO.getStatus(), workFlowDTO);
 
-        return "work_flow/approvalForm";
+        return "workflow/approvalForm";
     }
+
+    /* 결재 발송 내역 */
+    @GetMapping(APPROVAL_HISTORY)
+    public String approvalHistory(Model model) {
+        /* 승인 내역 */
+        List<WorkFlowDTO> approvalList = new ArrayList<>();
+        for (int i = 0; i < 20; i++) {
+            approvalList.add(
+                    new WorkFlowDTO()
+                            .setEmployeeId(i)
+                            .setEmployeeName("기안자명")
+                            .setDraftDate(LocalDateTime.now().format(
+                                    DateTimeFormatter.ofPattern("yyyy/MM/dd")))
+                            .setApprovalDate(LocalDateTime.now().format(
+                                    DateTimeFormatter.ofPattern("yyyy/MM/dd")))
+                            .setTitle("Approval History")
+                            .setCode("12121212-1-1212121122")
+                            .setWorkFlowType("전결")
+                            .setApproverCount(3)
+                            .setApprovalCount(3)
+                            .setDepartment("부서명")
+                            .setCost(1000000)
+                            .setEmployeeRank("사원")
+                            .setStatus("승인")
+            );
+        }
+
+        /* 진행 내역 */
+        List<WorkFlowDTO> progress = new ArrayList<>();
+        for (int i = 0; i < 20; i++) {
+            progress.add(
+                    new WorkFlowDTO()
+                            .setEmployeeId(i)
+                            .setEmployeeName("기안자명")
+                            .setDraftDate(LocalDateTime.now().format(
+                                    DateTimeFormatter.ofPattern("yyyy/MM/dd")))
+                            .setTitle("Approval History")
+                            .setCode("12121212-1-1212121122")
+                            .setApproverCount(3)
+                            .setApprovalCount(1)
+                            .setDepartment("부서명")
+                            .setCost(1000000)
+                            .setEmployeeRank("사원")
+                            .setStatus("진행")
+            );
+        }
+
+
+        /* 반려 내역 */
+        List<WorkFlowDTO> rejection = new ArrayList<>();
+        for (int i = 0; i < 20; i++) {
+            rejection.add(
+                    new WorkFlowDTO()
+                            .setEmployeeId(i)
+                            .setEmployeeName("기안자명")
+                            .setDraftDate(LocalDateTime.now().format(
+                                    DateTimeFormatter.ofPattern("yyyy/MM/dd")))
+                            .setDraftDate(LocalDateTime.now().format(
+                                    DateTimeFormatter.ofPattern("yyyy/MM/dd")))
+                            .setTitle("Approval History")
+                            .setCode("12121212-1-1212121122")
+                            .setApproverCount(3)
+                            .setApprovalCount(1)
+                            .setDepartment("부서명")
+                            .setCost(1000000)
+                            .setEmployeeRank("사원")
+                            .setStatus("반려")
+            );
+        }
+
+        model.addAttribute("approvalList", approvalList);
+        model.addAttribute("progress", progress);
+        model.addAttribute("rejection", rejection);
+        return "workflow/approvalHistory";
+    }
+
 
     /* 결재 현황 */
     @GetMapping(WORK_STATUS)
@@ -85,7 +166,7 @@ public class WorkFlowController {
         model.addAttribute(AttributeName.TITLE.getStatus(), title);
         model.addAttribute(AttributeName.SUB_TITLE.getStatus(), title);
         model.addAttribute(AttributeName.WORK_FLOW_URL.getStatus(), WORK_STATUS);
-        return "work_flow/workStatus";
+        return "workflow/workStatus";
     }
 
     /* 결재 대기(승인대기 / 요청대기) 목록 */
@@ -97,17 +178,8 @@ public class WorkFlowController {
         model.addAttribute(AttributeName.TITLE.getStatus(), title);
         model.addAttribute(AttributeName.SUB_TITLE.getStatus(), title);
         model.addAttribute(AttributeName.WORK_FLOW_URL.getStatus(), WORK_STATUS);
-        return "work_flow/workWait";
+        return "workflow/workWait";
     }
-
-    /* 결재 요청 받기 */
-    @PostMapping(REQUEST_OK)
-    public String requestOk(@ModelAttribute WorkFlowDTO workFlowDTO) {
-        log.info("WorkFlowController - request ok, workFlowDTO: {}", workFlowDTO);
-
-        return "redirect:" + SEPARATOR + WORKFLOW_URL + WORK_STATUS;
-    }
-
 
     /* Test Controller */
     private static final String TEST = "/test";
@@ -125,20 +197,5 @@ public class WorkFlowController {
         }
 
         return names;
-    }
-
-    @PostMapping(FILE_SEND)
-    @ResponseBody
-    public Map<String, String> fileSendTest(
-            @RequestParam("attach_file") MultipartFile[] files) {
-        log.info("WorkFlowController - request ok, files: {}", files.length);
-        for (MultipartFile file : files) {
-            log.info("WorkFlowController - request ok, file: {}", file.getOriginalFilename());
-        }
-
-        // 응답을 JSON 형식으로 반환
-        Map<String, String> response = new HashMap<>();
-        response.put("status", "success");
-        return response;
     }
 }

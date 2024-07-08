@@ -2,45 +2,42 @@ package kr.co.groupworks.dto.workflow;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 
-@Data
-@Builder
+@Getter @Setter
+@ToString
 @Accessors(chain = true)
-@NoArgsConstructor
-@AllArgsConstructor
-public class ApproverDTO {
-    // 1, 결재자 pk
-    private int id;
-    @NotEmpty @NotNull
+public class ApproverVO {
+    @NotNull
     // 2, 결재요청 fk
     private int workFlowId;
-    @NotEmpty @NotNull
+
+    @NotNull
     // 3, 결재 순서
     private int sequenceNum;
-    @NotEmpty @NotNull
+
+    @NotNull
     // 4, 결재자, 협조자, 참조자 구분
     private int approverType;
-    @NotEmpty @NotNull
+
+    @NotNull
     // 5, 결재자 사원 pk
     private int employeeId;
+
     @NotEmpty @NotNull
     // 6, 결재자 명
     private String approverName;
+
+    @NotEmpty @NotNull
     // 7, 결재자 직급
     private String approverRank;
+
+    @NotEmpty @NotNull
     // 8, 결재자 소속
     private String department;
-    // 9, 결재 방식
-    private int approvalMethod;
-    // 10, 반려사유/협의안/코멘트
-    private String comment;
-    // 11, 결재 승인 일자
-    private String approvalDate;
-    // 12, 승인 여부
-    private Boolean approval;
+
+    public ApproverVO() {}
 }

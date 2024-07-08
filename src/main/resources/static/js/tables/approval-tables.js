@@ -10,6 +10,8 @@ $(document).ready(function() {
         paging: true,
         scrollCollapse: true,
         scrollY: 450,
+        lengthMenu: [ 10, 20, 30, 40, 50 ],
+        displayLength: 20,
     });
 
     // 승인된 결재 목록 테이블 생성
@@ -21,6 +23,8 @@ $(document).ready(function() {
         paging: true,
         scrollCollapse: true,
         scrollY: 450,
+        lengthMenu: [ 10, 20, 30, 40, 50 ],
+        displayLength: 20,
     });
 
     // 내 결재 요청 대기 목록 테이블 생성
@@ -32,6 +36,8 @@ $(document).ready(function() {
         paging: true,
         scrollCollapse: true,
         scrollY: 450,
+        lengthMenu: [ 10, 20, 30, 40, 50 ],
+        displayLength: 20,
     });
 
     // 결재 승인 대기 목록 테이블 생성
@@ -43,5 +49,7 @@ $(document).ready(function() {
         paging: true,
         scrollCollapse: true,
         scrollY: 450,
+        lengthMenu: [ 10, 20, 30, 40, 50 ],
+        displayLength: 20,
     });
 });

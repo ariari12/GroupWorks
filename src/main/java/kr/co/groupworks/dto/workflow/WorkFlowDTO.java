@@ -1,18 +1,16 @@
 package kr.co.groupworks.dto.workflow;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 
-import java.time.LocalDateTime;
-
-@Data
-@Builder
+@Getter @Setter @ToString
 @Accessors(chain = true)
 @NoArgsConstructor
-@AllArgsConstructor
 public class WorkFlowDTO {
     // 1, 결재 요청 pk
     private String id;
@@ -28,18 +26,26 @@ public class WorkFlowDTO {
     private String employeeName;
     // 7, 결재 요청 코드
     private String code;
+    @NotEmpty @NotNull
     // 8, 결재 요청 분류
     private String workFlowType;
+    @NotEmpty @NotNull
     // 9, 결재 명
     private String title;
     // 10, 결재 내용
     private String description;
+    @NotEmpty @NotNull
     // 11, 결재 요청 일
-    private LocalDateTime draftDate;
-    // 12, 결재 인원
+    private String draftDate;
+    // 12, 최종 결재 일
+    private String approvalDate;
+    @NotNull
+    // 13, 결재 인원
     private int approverCount;
-    // 13, 승인된 수
+    // 14, 승인된 수
     private int approvalCount;
-    // 14, 비용 청구
+    // 15, 비용 청구
     private int cost;
+    // 16, 최종 승인여부
+    private String status;
 }
