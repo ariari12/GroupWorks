@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<div layout:fragment="css">
+</div>
+<div layout:fragment="javascript">
+      <script src="/js/tables/datatables-demo.js"></script>
+</div>
+
+<div layout:fragment="content">
+      <div class="row">
+            <h5>휴가 등록</h5>
+            <hr>
+            <div class="col-sm-3 mb-3 mb-sm-0">
+                  <div class="card">
+                        <div class="card-body">
+                              <h5 class="card-title">연차</h5>
+                              <p class="card-text">6일</p>
+                              <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" >신청하기</a>
+                        </div>
+                  </div>
+                  <br>
+            </div>
+            <div class="col-sm-3 mb-3 mb-sm-0">
+                  <div class="card">
+                        <div class="card-body">
+                              <h5 class="card-title">연차</h5>
+                              <p class="card-text">6일</p>
+                              <a href="#" class="btn btn-primary">신청하기</a>
+                        </div>
+                  </div>
+                  <br>
+            </div>
+            <div class="col-sm-3 mb-3 mb-sm-0">
+                  <div class="card">
+                        <div class="card-body">
+                              <h5 class="card-title">연차</h5>
+                              <p class="card-text">6일</p>
+                              <a href="#" class="btn btn-primary">신청하기</a>
+                        </div>
+                  </div>
+                  <br>
+            </div>
+      </div>
+      <th:block th:replace="kah/fragments/vacationMyHistory::scheduledVaction">
+      </th:block>
+      <th:block th:replace="kah/fragments/vacationMyHistory::vacationHistory">
+      </th:block>
+
+
+
+      <!-- Modal -->
+      <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                  <div class="modal-content">
+                        <div class="modal-header">
+                              <h1 class="modal-title fs-5" id="staticBackdropLabel">@@@님의 휴가 요청</h1>
+                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <h6 class="container">2022-11-11 12:12</h6>
+                        <div class="modal-body">
+
+                              <h5>사용 가능 연차</h5>
+                              <span>6일</span>
+                              <h5>휴가 일정 & 필요 정보 입력</h5>
+                              <label for="start">시작일</label><input type="date" name="" id="start">
+                              <label for="end">종료일</label><input type="date" name="" id="end">
+                              <label>
+                                    <textarea placeholder="휴가 등록 메세지 입력"></textarea>
+                              </label>
+                        </div>
+                        <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                              <button type="button" class="btn btn-primary">Understood</button>
+                        </div>
+                  </div>
+            </div>
+      </div>
+</div>
