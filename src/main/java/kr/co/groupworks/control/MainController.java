@@ -1,7 +1,6 @@
 package kr.co.groupworks.control;
 
 import jakarta.servlet.http.HttpSession;
-import kr.co.groupworks.dto.employee.EmployeeDTO;
 import kr.co.groupworks.service.cis.EmployeeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,16 +24,6 @@ public class MainController {
         if(session.getAttribute("employeeId") != null) {
             log.info("MainController - mainView");
 
-            EmployeeDTO employeeDto = new EmployeeDTO()
-                    .setEmployeeId(114107)
-                    .setEmployeeName("XxAaBb")
-                    .setDepartmentId(152115)
-                    .setDepartmentName("회계3팀");
-
-            // Test Use Session
-            session.setAttribute("employee", employeeDto);
-
-            // header title 넘겨주기
             model.addAttribute("title", "MAIN");
             model.addAttribute("subtitle", "SUBMAIN");
             return "main";
