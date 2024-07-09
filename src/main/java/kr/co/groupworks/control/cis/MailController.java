@@ -12,31 +12,31 @@ public class MailController {
     //    받은 메일함
     @GetMapping("/receive")
     public String receive() {
-        return "mail/receive";
+        return "cis/mail/receive";
     }
 
     //    보낸 메일함
     @GetMapping("/send")
     public String send() {
-        return "mail/send";
+        return "cis/mail/send";
     }
 
     //    중요 메일함
     @GetMapping("/important")
     public String important() {
-        return "mail/important";
+        return "cis/mail/important";
     }
 
     //    휴지통 메일함
     @GetMapping("/trash")
     public String trash() {
-        return "mail/trash";
+        return "cis/mail/trash";
     }
 
     //    메일 쓰기 (메일 쓰기 버튼 누를 때 writeForm으로 이동)
     @GetMapping("/write")
     public String write() {
-        return "mail/writeForm";
+        return "cis/mail/writeForm";
     }
 
     //    메일 쓰기 완료 후 받은 메일함으로 redirect

@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/employee")
 @RequiredArgsConstructor
@@ -19,6 +21,23 @@ public class EmployeeController {
     public ResponseEntity<Employee> addEmployee(@RequestBody Employee employee) {
         employeeService.saveEmployee(employee);
         System.out.println(employee.toString() + "입력");
+        return ResponseEntity.ok().body(employee);
+    }
+
+    @GetMapping("/list")
+    public ResponseEntity<List<Employee>> getEmployees() {
+        List<Employee> list = employeeService.findAll();
+        for (Employee employee : list) {
+            System.out.println(employee.toString());
+        }
+        return ResponseEntity.ok().body(list);
+
+    }
+
+    @GetMapping("/list/{employeeId}")
+    public ResponseEntity<Employee> getEmployeeById(@PathVariable Integer employeeId) {
+        Employee employee = employeeService.findByEmployeeId(employeeId);
+        System.out.println(employee.getEmployeeName());
         return ResponseEntity.ok().body(employee);
     }
 }

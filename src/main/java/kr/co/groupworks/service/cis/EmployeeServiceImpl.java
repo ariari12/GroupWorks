@@ -3,8 +3,9 @@ package kr.co.groupworks.service.cis;
 import kr.co.groupworks.entity.cis.Employee;
 import kr.co.groupworks.repository.cis.EmployeeRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -13,5 +14,15 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     public void saveEmployee(Employee employee) {
         employeeRepository.save(employee);
+    }
+
+    @Override
+    public List<Employee> findAll() {
+        return employeeRepository.findAll();
+    }
+
+    @Override
+    public Employee findByEmployeeId(Integer employeeId) {
+        return employeeRepository.findByEmployeeId(employeeId);
     }
 }
