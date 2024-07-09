@@ -1,4 +1,4 @@
-package kr.co.groupworks.dto.employee;
+package kr.co.groupworks.dto.cis.employee;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -40,3 +40,4 @@ public class EmployeeDTO {
     //  선임 사원번호
     private int supervisorId;
 }
+

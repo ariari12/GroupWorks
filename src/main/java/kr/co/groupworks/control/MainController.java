@@ -1,7 +1,7 @@
 package kr.co.groupworks.control;
 
 import jakarta.servlet.http.HttpSession;
-import kr.co.groupworks.dto.employee.EmployeeDTO;
+import kr.co.groupworks.dto.cis.employee.EmployeeDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
