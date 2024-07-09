@@ -12,18 +12,17 @@ import java.time.LocalDateTime;
 @Document(collection = "employee")
 @Builder @ToString
 public class Employee {
-    private Integer employeeId;
+    private String employeeId;
+    private String employeePW;
     private String employeeName;
     private Integer rankId;
     private String rankName;
-    private Integer departmentId;
     private String departmentName;
     private String email;
     private String phoneNumber;
     private String address;
     private String gender;
     private LocalDateTime joinDate;
-    private String name;
     private Integer salary;
     private Integer supervisorId;
 }

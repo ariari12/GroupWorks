@@ -11,4 +11,7 @@ public interface EmployeeService {
 
 
     Employee findByEmployeeId(Integer employeeId);
+
+    boolean findByEmployeeIdAndEmployeePWAndEmployeeName(String emplyoeeId, String pw, String name);
+
 }

@@ -25,4 +25,12 @@ public class EmployeeServiceImpl implements EmployeeService {
     public Employee findByEmployeeId(Integer employeeId) {
         return employeeRepository.findByEmployeeId(employeeId);
     }
+
+    @Override
+    public boolean findByEmployeeIdAndEmployeePWAndEmployeeName(String emplyoeeId, String pw, String name) {
+        if(employeeRepository.findByEmployeeIdAndEmployeePWAndEmployeeName(emplyoeeId,pw,name) != null)
+            return true;
+        else return false;
+    }
+
 }
