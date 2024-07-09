@@ -27,6 +27,8 @@ public class WorkFlowRestController {
     private static final String WORKFLOW_URL = "work-flow";
     private static final String FILE_SEND = "/file-send";
     private static final String APPROVAL_REQUEST = "/request";
+    private static final String APPROVAL = "/approval";
+    private static final String APPROVER_SEND = "/approver-send";
     private static final String WORK_STATUS = "/stat";
     private static final String SEPARATOR = "/";
 
@@ -34,8 +36,8 @@ public class WorkFlowRestController {
     private enum AttributeName {
         TITLE("title"),
         SUB_TITLE("subTitle"),
-        WORK_FLOW_URL("workFlowUrl"),
-        WORK_FLOW_DTO("workFlowDto"),
+//        WORK_FLOW_URL("workFlowUrl"),
+//        WORK_FLOW_DTO("workFlowDto"),
         EMPLOYEE("employee"),
         ;
 
@@ -99,23 +101,7 @@ public class WorkFlowRestController {
     }
 
 
-    /* Test Controller */
-    private static final String TEST = "/test";
-    private static final String APPROVER_SEND = "/approver-send";
-
-    @PostMapping(TEST)
-    public String[] test(
-            @RequestParam("names") String[] names,
-            Model model) {
-        log.info("WorkFlowRestController - test");
-
-        for (String s: names) {
-            log.info("WorkFlowRestController - test, name = {}", s);
-        }
-
-        return names;
-    }
-
+    /* 결재자 정보 받기 */
     @PostMapping(value = SEPARATOR + WORKFLOW_URL + APPROVER_SEND, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Map<String, String>> approverSend(
             @Valid @RequestBody List<ApproverVO> approverVOs,
@@ -141,4 +127,6 @@ public class WorkFlowRestController {
         }
         return ResponseEntity.ok().body(response);
     }
+
+
 }

@@ -17,10 +17,10 @@
     */-->
 
     <!--/* approvalWait Table */-->
-    <div th:replace="~{/workflow/approvetables/approvedList :: approvedList}"></div>
+    <div th:replace="~{/workflow/approvetables/approvedHistory :: approvedList}"></div>
 <!--    <div th:replace="/workflow/approvalWaitList.html :: approvalWaitList"></div>-->
-    <div th:replace="~{/workflow/approvetables/myRequestList.html :: MyRequestList}"></div>
-    <div th:replace="~{/workflow/approvetables/myRequestWaitList.html :: MyRequestWaitList}"></div>
+    <div th:replace="~{/workflow/approvetables/rejectionHistory.html :: MyRequestList}"></div>
+    <div th:replace="~{/workflow/approvetables/progressHistory.html :: MyRequestWaitList}"></div>
 </th:block>
 
 <th:block layout:fragment="javascript">
@@ -31,5 +31,5 @@
     </script>
     <!--/* Add External link 필요한 추가 링크는 여기에... */-->
     <!--/* Table */-->
-    <script src="/js/tables/approval-tables.js"></script>
+    <script src="/js/tables/approval-history-tables.js"></script>
 </th:block>

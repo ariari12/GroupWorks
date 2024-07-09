@@ -39,5 +39,6 @@ public class ApproverVO {
     // 8, 결재자 소속
     private String department;
 
-    public ApproverVO() {}
+    // 최종 결재자 정보
+    private ApproverVO finalApprover;
 }

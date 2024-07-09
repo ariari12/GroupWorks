@@ -5,14 +5,201 @@
       layout:decorate="~{layout/layout}"
 >
 
+<!--/* !선택 필요한 style code 와 link 는 여기에 추가 */-->
 <th:block layout:fragment="css">
-
+    <style>
+        .file-list {
+            margin-top: -6px;
+            height: 200px;
+            overflow: auto;
+            border: 1px solid #989898;
+            padding: 10px;
+        }
+        .file-list .filebox p {
+            font-size: 14px;
+            margin-top: 10px;
+            display: inline-block;
+        }
+        .file-list .filebox .delete i{
+            color: #ff5353;
+            margin-left: 5px;
+        }
+    </style>
 </th:block>
 
 <th:block layout:fragment="content">
+    <!--/*@thymesVar id="workFlowDto" type="kr.co.groupworks.dto.workflow.WorkFlowDTO"*/-->
 
+    <div class="input-group mb-3"  style="width: 822px;">
+        <span class="input-group-text">결재 구분</span>
+        <input class="form-control prevent-enter-submit" type="text"
+               th:field="${workFlowDto.workFlowType}" disabled readonly>
+
+        <span class="input-group-text">기안자 명</span>
+        <label>
+            <input class="form-control prevent-enter-submit" type="text"
+                   th:field="${workFlowDto.employeeName}" disabled readonly>
+        </label>
+
+        <span class="input-group-text">소속부서</span>
+        <label>
+            <input class="form-control prevent-enter-submit" type="text"
+                   th:field="${workFlowDto.department}" disabled readonly>
+        </label>
+    </div>
+
+    <div class="input-group mb-3">
+        <span class="input-group-text">결재 번호</span>
+        <label for="docsNum">
+            <input type="hidden" th:field="${workFlowDto.id}">
+            <input class="form-control prevent-enter-submit" id="docsNum" type="text"
+                   th:field="${workFlowDto.code}" size="40" disabled readonly>
+        </label>
+
+        <span class="input-group-text">기안날짜</span>
+        <label for="draft-date">
+            <input type="datetime-local" class="form-control" id="draft-date"
+                   th:field="${workFlowDto.draftDate}" placeholder="기안일" aria-label="기안일"
+                   aria-describedby="basic-addon2" required>
+        </label>
+    </div>
+
+    <div class="input-group mb-3">
+        <span class="input-group-text">결재 제목</span>
+        <input type="text" class="form-control prevent-enter-submit" th:field="${workFlowDto.title}"
+            placeholder="결재 제목을 입력해주세요." aria-label="결재 제목을 입력해주세요." required>
+    </div>
+
+    <!--/* 결재선 */-->
+    <table style="font-family: 'Times New Roman', Times, serif; font-weight: 700; font-size: 22px;" >
+        <tr>
+            <td class="border" rowspan="5" style="width: 50px; font-size: 35px;" >기<br>안</td>
+        </tr>
+        <tr>
+            <td class="border" style="width: 120px;">사원</td>
+        </tr>
+        <tr>
+            <td class="border">회계</td>
+        </tr>
+        <tr>
+            <td class="border"><img style="width: 90px;" src="/static/img/승인.png" alt=""></td>
+        </tr>
+        <tr>
+            <td class="border">결재자명</td>
+        </tr>
+        <tr>
+            <td class="border" rowspan="5" style="width: 50px; font-size: 35px;" >결<br>재</td>
+        </tr>
+        <tr>
+            <td class="border" style="width: 120px;">팀장</td>
+            <td class="border" style="width: 120px;">부장</td>
+            <td class="border" style="width: 120px;">대표이사</td>
+        </tr>
+        <tr>
+            <td class="border">회계</td>
+            <td class="border">임원</td>
+            <td class="border">대표</td>
+        </tr>
+        <tr>
+            <td class="border"><img style="width: 90px;" src="/static/img/승인.png" alt=""></td>
+            <td class="border"><img style="width: 90px;" src="/static/img/승인.png" alt=""></td>
+            <td class="border"><img style="width: 90px;" src="/static/img/반려.png" alt=""></td>
+        </tr>
+        <tr>
+            <td class="border">결재자명</td>
+            <td class="border">결재자명</td>
+            <td class="border">결재자명</td>
+        </tr>
+        <tr>
+            <td class="border" rowspan="5" style="width: 50px; font-size: 35px;" >협<br>조</td>
+        </tr>
+        <tr>
+            <td class="border" style="width: 120px;">직급</td>
+            <td class="border" style="width: 120px;">직급</td>
+            <td class="border" style="width: 120px;">직급</td>
+        </tr>
+        <tr>
+            <td class="border">부서</td>
+            <td class="border">부서</td>
+            <td class="border">부선</td>
+        </tr>
+        <tr>
+            <td class="border"><img style="width: 90px;" src="/static/img/승인.png" alt=""></td>
+            <td class="border"><img style="width: 90px;" src="/static/img/승인.png" alt=""></td>
+            <td class="border"><img style="width: 90px;" src="/static/img/반려.png" alt=""></td>
+        </tr>
+        <tr>
+            <td class="border">협조자명</td>
+            <td class="border">협조자명</td>
+            <td class="border">협조자명</td>
+        </tr>
+    </table>
+
+    <div class="input-group">
+        <span class="input-group-text">결재 내용</span>
+        <textarea class="form-control" id="description" name="description" th:field="${workFlowDto.description}"
+            rows="10" placeholder="결재 내용을 입력하세요." aria-label="결재 내용을 입력하세요."
+            style="resize: none;" required>
+        </textarea>
+    </div>
+
+    <div class="mb-3">
+        <div class="input-group">
+            <span class="input-group-text">비용</span>
+            <input type="text" class="form-control prevent-enter-submit" id="cost" name="cost"
+                   th:field="${workFlowDto.cost}" aria-label="Amount (to the nearest dollar)">
+            <span class="input-group-text">\</span>
+        </div>
+        <div class="form-text">필요 시 작성하세요.</div>
+    </div>
+    <div class="input-group mb-3">
+        <input type="file" class="form-control" id="files" onchange="addFile(this);" multiple>
+        <button class="btn btn-outline-secondary" type="button" onclick="resetFile()">초기화</button>
+    </div>
+    <div id="file-list"></div>
+
+    <div class="col-12">
+        <!--/* Button trigger modal */-->
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            결재 승인
+        </button>
+
+        <!--/* Modal */-->
+        <div class="modal fade" id="exampleModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">결재 승인 알림</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body"><h5 class="text-center">
+                        해당 결재를<br/>
+                        승인 하시겠습니까?</h5>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary">승인</button>
+                        <button type="button" class="btn btn-danger">반려</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </th:block>
 
 <th:block layout:fragment="javascript">
+    <script>
 
+        /* 엔터 키 전송 막기 */
+        function disableEnterSubmit() {
+            $('.prevent-enter-submit').on('keydown', function(event) {
+                if (event.key === 'Enter') {
+                    event.preventDefault();
+                }
+            });
+        }
+
+    </script>
+    <script src="/js/add-line.js"></script>
+    <script src="/js/file-select.js"></script>
 </th:block>
