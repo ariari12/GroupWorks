@@ -17,11 +17,11 @@
            th:insert : 해당 구문으로 감싼 태그로 삽입(태그 안에 추가)
     */-->
 
-    <div th:replace="/workflow/approvetables/approvalWaitList.html :: approvalWaitList"></div>
-    <div th:replace="/workflow/approvetables/progressHistory.html :: MyRequestWaitList"></div>
+    <div th:replace="/workflow/approvehistorytables/approvalWaitList.html :: approvalWaitList"></div>
+    <div th:replace="/workflow/approvehistorytables/progressHistory.html :: MyRequestWaitList"></div>
 </th:block>
 
 <th:block layout:fragment="javascript">
     <!--/* Add External link 필요한 추가 링크는 여기에... */-->
-    <script src="/js/tables/approval-history-tables.js"></script>
+    <script src="/js/tables/workflow/approval-history-tables.js"></script>
 </th:block>

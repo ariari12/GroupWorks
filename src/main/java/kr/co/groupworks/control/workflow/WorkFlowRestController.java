@@ -128,5 +128,20 @@ public class WorkFlowRestController {
         return ResponseEntity.ok().body(response);
     }
 
+    /* 결재 승인/반려 요청 */
+    @PostMapping(value = SEPARATOR + WORKFLOW_URL + APPROVAL)
+    public ResponseEntity<Map<String, Object>> approval(
+            @RequestBody int id, @RequestBody boolean choose) {
+        log.info("WorkFlowRestController - approval ok, chose: {}", choose);
+
+        /* TODO: 승인 처리 로직 */
+
+        final String DETAIL = "/detail/";
+        Map<String, Object> response = new HashMap<>();
+        response.put("status", "success");
+        response.put("url", SEPARATOR + WORKFLOW_URL + DETAIL + id);
+
+        return ResponseEntity.ok().body(response);
+    }
 
 }

@@ -42,8 +42,10 @@ function addFile(obj){
             let htmlData = '';
             htmlData += '<div id="file' + fileNo + '" class="filebox">';
             htmlData += '   <p class="name">' + file.name + '</p>';
-            htmlData += '   <a class="delete" onclick="deleteFile(' + fileNo + ');"><i class="far fa-minus-square"></i></a>';
+            htmlData += '   <a class="delete" onclick="deleteFile(' + fileNo + ');">';
+            htmlData += '<i class="far fa-minus-square"></i></a>';
             htmlData += '</div>';
+
             $('.file-list').append(htmlData);
             fileNo++;
         }

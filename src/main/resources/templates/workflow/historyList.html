@@ -8,9 +8,9 @@
 
 <th:block layout:fragment="content">
     <!--/* approvalWait Table */-->
-    <div th:replace="~{/workflow/approvetables/approvedHistory :: approvedHistory}"></div>
-    <div th:replace="~{/workflow/approvetables/progressHistory.html :: progressHistory}"></div>
-    <div th:replace="~{/workflow/approvetables/rejectionHistory.html :: rejectionHistory}"></div>
+    <div th:replace="~{/workflow/approvehistorytables/approvedHistory :: approvedHistory}"></div>
+    <div th:replace="~{/workflow/approvehistorytables/progressHistory.html :: progressHistory}"></div>
+    <div th:replace="~{/workflow/approvehistorytables/rejectionHistory.html :: rejectionHistory}"></div>
 </th:block>
 
 <th:block layout:fragment="javascript">
@@ -20,5 +20,5 @@
         }
     </script>
     <!--/* history tables js */-->
-    <script src="/js/tables/approval-history-tables.js"></script>
+    <script src="/js/tables/workflow/approval-history-tables.js"></script>
 </th:block>

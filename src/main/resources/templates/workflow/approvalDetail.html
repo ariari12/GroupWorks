@@ -50,113 +50,151 @@
 
     <div class="input-group mb-3">
         <span class="input-group-text">결재 번호</span>
-        <label for="docsNum">
+        <label>
             <input type="hidden" th:field="${workFlowDto.id}">
-            <input class="form-control prevent-enter-submit" id="docsNum" type="text"
+            <input class="form-control prevent-enter-submit" type="text"
                    th:field="${workFlowDto.code}" size="40" disabled readonly>
         </label>
 
         <span class="input-group-text">기안날짜</span>
-        <label for="draft-date">
-            <input type="datetime-local" class="form-control" id="draft-date"
-                   th:field="${workFlowDto.draftDate}" placeholder="기안일" aria-label="기안일"
-                   aria-describedby="basic-addon2" required>
+        <label>
+            <input class="form-control prevent-enter-submit" type="text"
+                   th:field="${workFlowDto.draftDate}" disabled readonly>
         </label>
     </div>
 
     <div class="input-group mb-3">
         <span class="input-group-text">결재 제목</span>
-        <input type="text" class="form-control prevent-enter-submit" th:field="${workFlowDto.title}"
-            placeholder="결재 제목을 입력해주세요." aria-label="결재 제목을 입력해주세요." required>
+        <input type="text" class="form-control prevent-enter-submit"
+               th:field="${workFlowDto.title}" disabled readonly>
     </div>
 
-    <!--/* 결재선 */-->
-    <table style="font-family: 'Times New Roman', Times, serif; font-weight: 700; font-size: 22px;" >
-        <tr>
-            <td class="border" rowspan="5" style="width: 50px; font-size: 35px;" >기<br>안</td>
-        </tr>
-        <tr>
-            <td class="border" style="width: 120px;">사원</td>
-        </tr>
-        <tr>
-            <td class="border">회계</td>
-        </tr>
-        <tr>
-            <td class="border"><img style="width: 90px;" src="/static/img/승인.png" alt=""></td>
-        </tr>
-        <tr>
-            <td class="border">결재자명</td>
-        </tr>
-        <tr>
-            <td class="border" rowspan="5" style="width: 50px; font-size: 35px;" >결<br>재</td>
-        </tr>
-        <tr>
-            <td class="border" style="width: 120px;">팀장</td>
-            <td class="border" style="width: 120px;">부장</td>
-            <td class="border" style="width: 120px;">대표이사</td>
-        </tr>
-        <tr>
-            <td class="border">회계</td>
-            <td class="border">임원</td>
-            <td class="border">대표</td>
-        </tr>
-        <tr>
-            <td class="border"><img style="width: 90px;" src="/static/img/승인.png" alt=""></td>
-            <td class="border"><img style="width: 90px;" src="/static/img/승인.png" alt=""></td>
-            <td class="border"><img style="width: 90px;" src="/static/img/반려.png" alt=""></td>
-        </tr>
-        <tr>
-            <td class="border">결재자명</td>
-            <td class="border">결재자명</td>
-            <td class="border">결재자명</td>
-        </tr>
-        <tr>
-            <td class="border" rowspan="5" style="width: 50px; font-size: 35px;" >협<br>조</td>
-        </tr>
-        <tr>
-            <td class="border" style="width: 120px;">직급</td>
-            <td class="border" style="width: 120px;">직급</td>
-            <td class="border" style="width: 120px;">직급</td>
-        </tr>
-        <tr>
-            <td class="border">부서</td>
-            <td class="border">부서</td>
-            <td class="border">부선</td>
-        </tr>
-        <tr>
-            <td class="border"><img style="width: 90px;" src="/static/img/승인.png" alt=""></td>
-            <td class="border"><img style="width: 90px;" src="/static/img/승인.png" alt=""></td>
-            <td class="border"><img style="width: 90px;" src="/static/img/반려.png" alt=""></td>
-        </tr>
-        <tr>
-            <td class="border">협조자명</td>
-            <td class="border">협조자명</td>
-            <td class="border">협조자명</td>
-        </tr>
-    </table>
+    <div class="input-group mb-3">
+        <!--/* 결재선 */-->
+        <div class="input-group mb-3 text-center">
+            <!-- 기안 -->
+            <table style="font-family: 'Times New Roman', Times, serif; font-weight: 700; font-size: 22px;" >
+                <tr>
+                    <td class="border" rowspan="5" style="width: 50px; font-size: 35px;" >기<br>안</td>
+                </tr>
+                <tr>
+                    <td class="border" style="width: 120px;">사원</td>
+                </tr>
+                <tr>
+                    <td class="border">회계</td>
+                </tr>
 
-    <div class="input-group">
+                <td class="border"><img style="width: 80px;" src="/img/승인.png" alt=""></td>
+                </tr>
+                <tr>
+                    <td class="border">기안자명</td>
+                </tr>
+            </table>
+            <!-- 결재 -->
+            <table style="font-family: 'Times New Roman', Times, serif; font-weight: 700; font-size: 22px;" >
+                <tr>
+                    <td class="border" rowspan="5" style="width: 50px; font-size: 35px;" >결<br>재</td>
+                </tr>
+                <tr>
+                    <td class="border" style="width: 120px;">팀장</td>
+                    <td class="border" style="width: 120px;">부장</td>
+                    <td class="border" style="width: 120px;">대표이사</td>
+                </tr>
+                <tr>
+                    <td class="border">회계</td>
+                    <td class="border">임원</td>
+                    <td class="border">대표</td>
+                </tr>
+
+                <tr>
+                    <td class="border"><img style="width: 80px;" src="/img/승인.png" alt=""></td>
+                    <td class="border"><img style="width: 80px;" src="/img/승인.png" alt=""></td>
+                    <td class="border"><img style="width: 80px;" src="/img/반려.png" alt=""></td>
+                </tr>
+                <tr>
+                    <td class="border">결재자명</td>
+                    <td class="border">결재자명</td>
+                    <td class="border">결재자명</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="input-group mb-3 text-center">
+            <!-- 협조자 -->
+            <table style="font-family: 'Times New Roman', Times, serif; font-weight: 700; font-size: 22px;" >
+                <tr>
+                    <td class="border" rowspan="5" style="width: 50px; font-size: 35px;" >협<br>조</td>
+                </tr>
+                <tr>
+                    <td class="border" style="width: 120px;">직급</td>
+                    <td class="border" style="width: 120px;">직급</td>
+                    <td class="border" style="width: 120px;">직급</td>
+                </tr>
+                <tr>
+                    <td class="border">부서</td>
+                    <td class="border">부서</td>
+                    <td class="border">부선</td>
+                </tr>
+                <tr></tr>
+                <tr>
+                    <td class="border">협조자명</td>
+                    <td class="border">협조자명</td>
+                    <td class="border">협조자명</td>
+                </tr>
+            </table>
+            <!-- 참조자 -->
+            <table style="font-family: 'Times New Roman', Times, serif; font-weight: 700; font-size: 22px;" >
+                <tr>
+                    <td class="border" rowspan="5" style="width: 50px; font-size: 35px;" >참<br>조</td>
+                </tr>
+                <tr>
+                    <td class="border" style="width: 120px;">직급</td>
+                    <td class="border" style="width: 120px;">직급</td>
+                    <td class="border" style="width: 120px;">직급</td>
+                </tr>
+                <tr>
+                    <td class="border">부서</td>
+                    <td class="border">부서</td>
+                    <td class="border">부선</td>
+                </tr>
+                <tr></tr>
+                <tr>
+                    <td class="border">협조자명</td>
+                    <td class="border">협조자명</td>
+                    <td class="border">협조자명</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+
+    <div class="input-group mb-3">
         <span class="input-group-text">결재 내용</span>
         <textarea class="form-control" id="description" name="description" th:field="${workFlowDto.description}"
-            rows="10" placeholder="결재 내용을 입력하세요." aria-label="결재 내용을 입력하세요."
-            style="resize: none;" required>
+            rows="10" style="resize: none;" disabled readonly>
         </textarea>
     </div>
 
-    <div class="mb-3">
+    <div class="input-group mb-3">
         <div class="input-group">
             <span class="input-group-text">비용</span>
             <input type="text" class="form-control prevent-enter-submit" id="cost" name="cost"
-                   th:field="${workFlowDto.cost}" aria-label="Amount (to the nearest dollar)">
+                   th:field="${workFlowDto.cost}" aria-label="Amount (to the nearest dollar)" disabled readonly>
             <span class="input-group-text">\</span>
         </div>
-        <div class="form-text">필요 시 작성하세요.</div>
     </div>
+
     <div class="input-group mb-3">
-        <input type="file" class="form-control" id="files" onchange="addFile(this);" multiple>
-        <button class="btn btn-outline-secondary" type="button" onclick="resetFile()">초기화</button>
+        <span>첨부 파일</span>
     </div>
-    <div id="file-list"></div>
+    <div class="file-list">
+        <div id="file" class="filebox">
+            <a class="delete" onclick="deleteFile(' + fileNo + ');">
+                <p class="name">' + file.name + '</p>
+            </a>
+        </div>
+    </div>
+    <br/>
 
     <div class="col-12">
         <!--/* Button trigger modal */-->

@@ -91,6 +91,7 @@ public class WorkFlowController {
     /* 결재 발송 내역 */
     @GetMapping(APPROVAL_HISTORY)
     public String approvalHistory(Model model) {
+        title = "Approval History";
         log.info("WorkFlowController - approval history");
 
         /* 승인 내역 */
@@ -106,7 +107,7 @@ public class WorkFlowController {
                         .setEmployeeName("기안자명")
                         .setWorkFlowType("업무결재")
                         .setCode("12121212-1-1212121122")
-                        .setTitle("Approval History")
+                        .setTitle("Approval History Test" + i)
                         .setDescription("결재요청 테스트")
                         .setDraftDate(LocalDateTime.now().format(
                                 DateTimeFormatter.ofPattern("yyyy/MM/dd")))
@@ -135,7 +136,7 @@ public class WorkFlowController {
                         .setEmployeeName("기안자명")
                         .setWorkFlowType("업무결재")
                         .setCode("12121212-1-1212121122")
-                        .setTitle("Approval History")
+                        .setTitle("Approval History Test" + (i *4))
                         .setDescription("결재요청 테스트")
                         .setDraftDate(LocalDateTime.now().format(
                                 DateTimeFormatter.ofPattern("yyyy/MM/dd")))
@@ -162,7 +163,7 @@ public class WorkFlowController {
                         .setEmployeeName("기안자명")
                         .setWorkFlowType("업무결재")
                         .setCode("12121212-1-1212121122")
-                        .setTitle("Approval History")
+                        .setTitle("Approval History Test" + (i *8))
                         .setDescription("결재요청 테스트")
                         .setDraftDate(LocalDateTime.now().format(
                                 DateTimeFormatter.ofPattern("yyyy/MM/dd")))
@@ -178,6 +179,8 @@ public class WorkFlowController {
             );
         }
 
+        model.addAttribute(AttributeName.TITLE.getStatus(), title);
+        model.addAttribute(AttributeName.SUB_TITLE.getStatus(), title);
         model.addAttribute(AttributeName.APPROVAl.getStatus(), approval);   // 승인내역
         model.addAttribute(AttributeName.PROGRESS.getStatus(), progress);   // 진행내역
         model.addAttribute(AttributeName.REJECTION.getStatus(), rejection); // 반려내역
@@ -190,7 +193,8 @@ public class WorkFlowController {
             HttpSession session,
             Model model,
             @PathVariable int id) {
-        log.info("WorkFlowController - approval detail, id: {}", id);
+        title = "Approval Detail";
+        log.info("WorkFlowController - approval detail, id: {}, title: {}", id, title);
 
         // 세션에서 사원 정보 가져오기
         EmployeeDTO employee = (EmployeeDTO) session.getAttribute("employee");
@@ -280,22 +284,18 @@ public class WorkFlowController {
 
 
         List<ApprovalAttachmentDTO> attachmentDTOS = new ArrayList<>();
-        referrers.add(
-                new ApproverDTO()
-                        .setId(4)
-                        .setWorkFlowId(1)
-                        .setSequenceNum(1)
-                        .setApproverType(2)
-                        .setEmployeeId(4)
-                        .setApproverName("참조자")
-                        .setApproverRank("사원5")
-                        .setDepartment("부서5")
-                        .setApprovalMethodInt(0)
-                        .setApprovalMethodStr("")
-                        .setApproval(true)
-                        .setApprovalStr("")
-        );
+        for (int i = 1; i < 4; i++) {
+            attachmentDTOS.add(
+                    new ApprovalAttachmentDTO()
+                            .setId(i)
+                            .setWorkFlowId(1)
+                            .setFileName("Test.Test")
+                            .setSavePath("Test.Test")
+            );
+        }
 
+        model.addAttribute(AttributeName.TITLE.getStatus(), workFlow.getTitle());
+        model.addAttribute(AttributeName.SUB_TITLE.getStatus(), "");
         model.addAttribute(AttributeName.WORK_FLOW_DTO.getStatus(), workFlow);
         model.addAttribute("approvers", approvers);
         model.addAttribute("collaborators", collaborators);

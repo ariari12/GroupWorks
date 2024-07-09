@@ -1,35 +1,144 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout/layout}"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{layout/layout}"
 >
 
 <th:block layout:fragment="css">
     <!--/* !선택 필요한 style code 와 link 는 여기에 추가 */-->
+    <style>
+        .chartContainer {
+            height: 458px; /* 차트 컨테이너의 너비를 조절합니다 */
+        }
+    </style>
 </th:block>
 
 <th:block layout:fragment="content">
-    <!--/* !필수 Contents */-->
-    <!--/* 여기에 메인 코드를 채워주세요... 스타일은 반드시 부트스트랩 class... */-->
-    <!--/* Front 에서 보이지 않는 주석
-        th:replace : 해당 구분으로 감싼 태그로 코드 대체 (태그를 대체)
-        th:insert : 해당 구문으로 감싼 태그로 삽입(태그 안에 추가)
-    */-->
+    <!--/* Approval Statistics Chart */-->
+    <div class="row">
+        <div class="col-xl-3 col-md-6">
+            <div class="card bg-primary text-white mb-4">
+                <div class="card-body">Primary Card</div>
+                <div class="card-footer d-flex align-items-center justify-content-between">
+                    <a class="small text-white stretched-link" href="#">View Details</a>
+                    <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                </div>
+            </div>
+        </div>
 
-    <!--/* approvalWait Table */-->
-    <div th:replace="~{/workflow/approvetables/approvedHistory :: approvedList}"></div>
-<!--    <div th:replace="/workflow/approvalWaitList.html :: approvalWaitList"></div>-->
-    <div th:replace="~{/workflow/approvetables/rejectionHistory.html :: MyRequestList}"></div>
-    <div th:replace="~{/workflow/approvetables/progressHistory.html :: MyRequestWaitList}"></div>
+        <div class="col-xl-3 col-md-6">
+            <div class="card bg-warning text-white mb-4">
+                <div class="card-body">Warning Card</div>
+                <div class="card-footer d-flex align-items-center justify-content-between">
+                    <a class="small text-white stretched-link" href="#">View Details</a>
+                    <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+            <div class="card bg-success text-white mb-4">
+                <div class="card-body">Success Card</div>
+                <div class="card-footer d-flex align-items-center justify-content-between">
+                    <a class="small text-white stretched-link" href="#">View Details</a>
+                    <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+            <div class="card bg-danger text-white mb-4">
+                <div class="card-body">Danger Card</div>
+                <div class="card-footer d-flex align-items-center justify-content-between">
+                    <a class="small text-white stretched-link" href="#">View Details</a>
+                    <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="row">
+        <!--/* Chart Area */-->
+        <div class="col-xl-6">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <i class="fas fa-chart-area me-1"></i>
+                    월 별 결재 승인 건
+                </div>
+                <div class="card-body">
+                    <canvas id="myAreaChart" width="100%" height="40"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!--/* Chart Bar */-->
+        <div class="col-xl-6">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <i class="fas fa-chart-bar me-1"></i>
+                    부서별 결재 승인 건
+                </div>
+                <div class="card-body">
+                    <canvas id="myBarChart" width="100%" height="40"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-6">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pie-chart" viewBox="0 0 16 16">
+                        <path d="M7.5 1.018a7 7 0 0 0-4.79 11.566L7.5 7.793zm1 0V7.5h6.482A7 7 0 0 0 8.5 1.018M14.982 8.5H8.207l-4.79 4.79A7 7 0 0 0 14.982 8.5M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8"/>
+                    </svg>
+                    업무별 결재 발송 건
+                </div>
+                <div class="card-body chartContainer">
+                    <canvas id="myCircleChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-6">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pie-chart" viewBox="0 0 16 16">
+                        <path d="M7.5 1.018a7 7 0 0 0-4.79 11.566L7.5 7.793zm1 0V7.5h6.482A7 7 0 0 0 8.5 1.018M14.982 8.5H8.207l-4.79 4.79A7 7 0 0 0 14.982 8.5M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8"/>
+                    </svg>
+                    뭘로 하지?
+                </div>
+                <div class="card-body chartContainer">
+                    <canvas id="myCircleChart2"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </th:block>
 
 <th:block layout:fragment="javascript">
-    <script>
-        function load() {
-            window.location = "request";
-        }
-    </script>
     <!--/* Add External link 필요한 추가 링크는 여기에... */-->
-    <!--/* Table */-->
-    <script src="/js/tables/approval-history-tables.js"></script>
+    <!--/* Chart */-->
+    <script src="/js/chart/workflow/approval-statistics-chart.js"></script>
+    <script>
+        $(document).ready(function() {
+            bar(
+                ["January", "February", "March", "April", "May", "June"],
+                [4215, 5312, 6251, 7841, 9821, 14984]
+            );
+            line(
+                ["Mar 1", "Mar 2", "Mar 3", "Mar 4", "Mar 5", "Mar 6", "Mar 7", "Mar 8", "Mar 9", "Mar 10", "Mar 11", "Mar 12", "Mar 13"],
+                [10000, 30162, 26263, 18394, 18287, 28682, 31274, 33259, 25849, 24159, 32651, 31984, 38451]
+            );
+            circle1(
+                ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+                [12, 19, 3, 5, 2, 3]
+            );
+            circle2(
+                ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+                [3, 19, 2, 5, 10, 3]
+            );
+        });
+    </script>
 </th:block>
