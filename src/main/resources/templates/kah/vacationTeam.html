@@ -2,12 +2,12 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/layout}">
-<div layout:fragment="css">
+<th:block layout:fragment="css">
 
-</div>
-<div layout:fragment="javascript">
-
-</div>
+</th:block>
+<th:block layout:fragment="javascript">
+      <script src="/js/tables/kah/datatables.js"></script>
+</th:block>
 <div layout:fragment="content">
       <!-- 조건문으로 하나만 나오게 할거임-->
       <th:block>

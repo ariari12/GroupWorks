@@ -2,16 +2,16 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/layout}">
-<div layout:fragment="css">
+<th:block layout:fragment="css">
       <style>
             h3 { color : aquamarine}
       </style>
-</div>
-<div layout:fragment="javascript">
+</th:block>
+<th:block layout:fragment="javascript">
       <script>
             alert("현재 페이지에서만 적용하는 javascript");
       </script>
-</div>
-<div layout:fragment="content">
+</th:block>
+<th:block layout:fragment="content">
       <h3>sdafasdf</h3>
-</div>
+</th:block>
