@@ -27,7 +27,6 @@ public class WorkFlowController {
     private static final String APPROVAL_REQUEST = "/request";
     private static final String WORK_STATUS = "/stat";
     private static final String WORK_WAIT = "/wait";
-    private static final String REQUEST_OK = "/request-ok";
     private static final String SEPARATOR = "/";
 
     @Getter
@@ -53,10 +52,10 @@ public class WorkFlowController {
     public String approvalRequest(Model model, HttpSession session) {
         // Test Use Session
         EmployeeDTO employeeDto = new EmployeeDTO()
-                .setEmployeeId(114107)
-                .setEmployeeName("XxAaBb")
-                .setDepartmentId(152115)
-                .setDepartmentName("회계3팀");
+            .setEmployeeId(114107)
+            .setEmployeeName("XxAaBb")
+            .setDepartmentId(152115)
+            .setDepartmentName("회계3팀");
         session.setAttribute("employee", employeeDto);
 
         // 사원정보 받아오기
@@ -64,14 +63,13 @@ public class WorkFlowController {
                 .getAttribute(AttributeName.EMPLOYEE.getStatus());
 
         WorkFlowDTO workFlowDTO = new WorkFlowDTO()
-                .setEmployeeId(employeeDTO.getEmployeeId())
-                .setEmployeeName(employeeDTO.getEmployeeName())
-                .setDepartment(employeeDTO.getDepartmentName());
+            .setEmployeeId(employeeDTO.getEmployeeId())
+            .setEmployeeName(employeeDTO.getEmployeeName())
+            .setDepartment(employeeDTO.getDepartmentName());
 
         title = "Approval Request";
         log.info("");
-        log.info("WorkFlowController - request title: {}, setDto: {}",
-                title, workFlowDTO);
+        log.info("WorkFlowController - request title: {}, setDto: {}", title, workFlowDTO);
 
         model.addAttribute(AttributeName.TITLE.getStatus(), title);
         model.addAttribute(AttributeName.SUB_TITLE.getStatus(), title);
@@ -88,22 +86,22 @@ public class WorkFlowController {
         List<WorkFlowDTO> approvalList = new ArrayList<>();
         for (int i = 0; i < 20; i++) {
             approvalList.add(
-                    new WorkFlowDTO()
-                            .setEmployeeId(i)
-                            .setEmployeeName("기안자명")
-                            .setDraftDate(LocalDateTime.now().format(
-                                    DateTimeFormatter.ofPattern("yyyy/MM/dd")))
-                            .setApprovalDate(LocalDateTime.now().format(
-                                    DateTimeFormatter.ofPattern("yyyy/MM/dd")))
-                            .setTitle("Approval History")
-                            .setCode("12121212-1-1212121122")
-                            .setWorkFlowType("전결")
-                            .setApproverCount(3)
-                            .setApprovalCount(3)
-                            .setDepartment("부서명")
-                            .setCost(1000000)
-                            .setEmployeeRank("사원")
-                            .setStatus("승인")
+                new WorkFlowDTO()
+                    .setEmployeeId(i)
+                    .setEmployeeName("기안자명")
+                    .setDraftDate(LocalDateTime.now().format(
+                            DateTimeFormatter.ofPattern("yyyy/MM/dd")))
+                    .setApprovalDate(LocalDateTime.now().format(
+                            DateTimeFormatter.ofPattern("yyyy/MM/dd")))
+                    .setTitle("Approval History")
+                    .setCode("12121212-1-1212121122")
+                    .setWorkFlowType("전결")
+                    .setApproverCount(3)
+                    .setApprovalCount(3)
+                    .setDepartment("부서명")
+                    .setCost(1000000)
+                    .setEmployeeRank("사원")
+                    .setStatus("승인")
             );
         }
 
@@ -111,19 +109,19 @@ public class WorkFlowController {
         List<WorkFlowDTO> progress = new ArrayList<>();
         for (int i = 0; i < 20; i++) {
             progress.add(
-                    new WorkFlowDTO()
-                            .setEmployeeId(i)
-                            .setEmployeeName("기안자명")
-                            .setDraftDate(LocalDateTime.now().format(
-                                    DateTimeFormatter.ofPattern("yyyy/MM/dd")))
-                            .setTitle("Approval History")
-                            .setCode("12121212-1-1212121122")
-                            .setApproverCount(3)
-                            .setApprovalCount(1)
-                            .setDepartment("부서명")
-                            .setCost(1000000)
-                            .setEmployeeRank("사원")
-                            .setStatus("진행")
+                new WorkFlowDTO()
+                    .setEmployeeId(i)
+                    .setEmployeeName("기안자명")
+                    .setDraftDate(LocalDateTime.now().format(
+                            DateTimeFormatter.ofPattern("yyyy/MM/dd")))
+                    .setTitle("Approval History")
+                    .setCode("12121212-1-1212121122")
+                    .setApproverCount(3)
+                    .setApprovalCount(1)
+                    .setDepartment("부서명")
+                    .setCost(1000000)
+                    .setEmployeeRank("사원")
+                    .setStatus("진행")
             );
         }
 
@@ -132,21 +130,21 @@ public class WorkFlowController {
         List<WorkFlowDTO> rejection = new ArrayList<>();
         for (int i = 0; i < 20; i++) {
             rejection.add(
-                    new WorkFlowDTO()
-                            .setEmployeeId(i)
-                            .setEmployeeName("기안자명")
-                            .setDraftDate(LocalDateTime.now().format(
-                                    DateTimeFormatter.ofPattern("yyyy/MM/dd")))
-                            .setDraftDate(LocalDateTime.now().format(
-                                    DateTimeFormatter.ofPattern("yyyy/MM/dd")))
-                            .setTitle("Approval History")
-                            .setCode("12121212-1-1212121122")
-                            .setApproverCount(3)
-                            .setApprovalCount(1)
-                            .setDepartment("부서명")
-                            .setCost(1000000)
-                            .setEmployeeRank("사원")
-                            .setStatus("반려")
+                new WorkFlowDTO()
+                    .setEmployeeId(i)
+                    .setEmployeeName("기안자명")
+                    .setDraftDate(LocalDateTime.now().format(
+                            DateTimeFormatter.ofPattern("yyyy/MM/dd")))
+                    .setDraftDate(LocalDateTime.now().format(
+                            DateTimeFormatter.ofPattern("yyyy/MM/dd")))
+                    .setTitle("Approval History")
+                    .setCode("12121212-1-1212121122")
+                    .setApproverCount(3)
+                    .setApprovalCount(1)
+                    .setDepartment("부서명")
+                    .setCost(1000000)
+                    .setEmployeeRank("사원")
+                    .setStatus("반려")
             );
         }
 
