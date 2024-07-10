@@ -65,7 +65,7 @@ function circle2(labels, data) {
     });
 }
 
-function line(labels, data) {
+function MyApprovalStats(labels, data1, data2, data3) {
     // Area Chart Example
     var ctx = document.getElementById("myAreaChart");
     var myLineChart = new Chart(ctx, {
@@ -73,21 +73,53 @@ function line(labels, data) {
         data: {
             // 그래프 라벨
             labels: labels,
-            datasets: [{
-                label: "Sessions",
-                lineTension: 0.3,
-                backgroundColor: "rgba(2,117,216,0.2)",
-                borderColor: "rgba(2,117,216,1)",
-                pointRadius: 5,
-                pointBackgroundColor: "rgba(2,117,216,1)",
-                pointBorderColor: "rgba(255,255,255,0.8)",
-                pointHoverRadius: 5,
-                pointHoverBackgroundColor: "rgba(2,117,216,1)",
-                pointHitRadius: 50,
-                pointBorderWidth: 2,
-                // 그래프 value
-                data: data,
-            }],
+            datasets: [
+                {
+                    label: "발송 건",
+                    lineTension: 0.3,
+                    backgroundColor: "rgba(2,117,216,0.2)",
+                    borderColor: "rgba(2,117,216,1)",
+                    pointRadius: 5,
+                    pointBackgroundColor: "rgba(2,117,216,1)",
+                    pointBorderColor: "rgba(255,255,255,0.8)",
+                    pointHoverRadius: 5,
+                    pointHoverBackgroundColor: "rgba(2,117,216,1)",
+                    pointHitRadius: 50,
+                    pointBorderWidth: 2,
+                    // 그래프 value
+                    data: data1,
+                },
+                {
+                    label: "승인 건",
+                    lineTension: 0.3,
+                    backgroundColor: "rgba(153, 102, 255, 0.2)",
+                    borderColor: "rgba(153, 102, 255, 1)",
+                    pointRadius: 5,
+                    pointBackgroundColor: "rgba(75, 192, 192, 0.6)",
+                    pointBorderColor: "rgba(75, 192, 192, 1)",
+                    pointHoverRadius: 5,
+                    pointHoverBackgroundColor: "rgba(75, 192, 192, 1)",
+                    pointHitRadius: 50,
+                    pointBorderWidth: 2,
+                    // 그래프 value
+                    data: data2,
+                },
+                {
+                    label: "반려 건",
+                    lineTension: 0.3,
+                    backgroundColor: "rgba(153, 102, 255, 0.2)",
+                    borderColor: "rgba(153, 102, 255, 1)",
+                    pointRadius: 5,
+                    pointBackgroundColor: "rgba(153, 102, 255, 0.6)",
+                    pointBorderColor: "rgba(153, 102, 255, 1)",
+                    pointHoverRadius: 5,
+                    pointHoverBackgroundColor: "rgba(153, 102, 255, 1)",
+                    pointHitRadius: 50,
+                    pointBorderWidth: 2,
+                    // 그래프 value
+                    data: data3,
+                }
+            ],
         },
         options: {
             scales: {
@@ -110,7 +142,8 @@ function line(labels, data) {
     });
 }
 
-function bar(labels, data) {
+/* 부서별 결재 발송, 승인, 결재 건 */
+function approvalStatsByDepartment(labels, data1, data2, data3) {
     // Bar Chart Example
     var ctx = document.getElementById("myBarChart");
     var myLineChart = new Chart(ctx, {
@@ -118,13 +151,29 @@ function bar(labels, data) {
         data: {
             // 차트 라벨
             labels: labels,
-            datasets: [{
-                label: "Revenue",
-                backgroundColor: "rgba(2,117,216,1)",
-                borderColor: "rgba(2,117,216,1)",
-                // 차트 value
-                data: data,
-            }],
+            datasets: [
+                {
+                    label: "발송 건",
+                    backgroundColor: "rgba(2,117,216,1)",
+                    borderColor: "rgba(2,117,216,1)",
+                    // 차트 value
+                    data: data1,
+                },
+                {
+                    label: "승인 건",
+                    backgroundColor: "rgba(255,99,132,0.8)",
+                    borderColor: "rgba(255,99,132,1)",
+                    // 차트 value
+                    data: data2,
+                },
+                {
+                    label: "반려 건",
+                    backgroundColor: "rgba(75,192,192,0.8)",
+                    borderColor: "rgba(75,192,192,1)",
+                    // 차트 value
+                    data: data3,
+                }
+            ],
         },
         options: {
             scales: {

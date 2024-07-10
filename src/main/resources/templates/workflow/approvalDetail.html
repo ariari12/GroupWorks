@@ -10,7 +10,6 @@
     <style>
         .file-list {
             margin-top: -6px;
-            height: 200px;
             overflow: auto;
             border: 1px solid #989898;
             padding: 10px;
@@ -20,40 +19,22 @@
             margin-top: 10px;
             display: inline-block;
         }
-        .file-list .filebox .delete i{
-            color: #ff5353;
-            margin-left: 5px;
-        }
     </style>
 </th:block>
 
 <th:block layout:fragment="content">
     <!--/*@thymesVar id="workFlowDto" type="kr.co.groupworks.dto.workflow.WorkFlowDTO"*/-->
 
-    <div class="input-group mb-3"  style="width: 822px;">
+    <div class="input-group mb-3">
         <span class="input-group-text">결재 구분</span>
         <input class="form-control prevent-enter-submit" type="text"
                th:field="${workFlowDto.workFlowType}" disabled readonly>
 
-        <span class="input-group-text">기안자 명</span>
-        <label>
-            <input class="form-control prevent-enter-submit" type="text"
-                   th:field="${workFlowDto.employeeName}" disabled readonly>
-        </label>
-
-        <span class="input-group-text">소속부서</span>
-        <label>
-            <input class="form-control prevent-enter-submit" type="text"
-                   th:field="${workFlowDto.department}" disabled readonly>
-        </label>
-    </div>
-
-    <div class="input-group mb-3">
         <span class="input-group-text">결재 번호</span>
         <label>
             <input type="hidden" th:field="${workFlowDto.id}">
             <input class="form-control prevent-enter-submit" type="text"
-                   th:field="${workFlowDto.code}" size="40" disabled readonly>
+                   th:field="${workFlowDto.code}" size="60" disabled readonly>
         </label>
 
         <span class="input-group-text">기안날짜</span>
@@ -72,96 +53,89 @@
     <div class="input-group mb-3">
         <!--/* 결재선 */-->
         <div class="input-group mb-3 text-center">
-            <!-- 기안 -->
+            <!--/* 기안 */-->
             <table style="font-family: 'Times New Roman', Times, serif; font-weight: 700; font-size: 22px;" >
-                <tr>
-                    <td class="border" rowspan="5" style="width: 50px; font-size: 35px;" >기<br>안</td>
-                </tr>
-                <tr>
-                    <td class="border" style="width: 120px;">사원</td>
-                </tr>
-                <tr>
-                    <td class="border">회계</td>
-                </tr>
-
-                <td class="border"><img style="width: 80px;" src="/img/승인.png" alt=""></td>
-                </tr>
-                <tr>
-                    <td class="border">기안자명</td>
-                </tr>
+                <tr><td class="border" rowspan="5" style="width: 50px; font-size: 35px;" >
+                    기<br>안
+                </td></tr>
+                <tr><td class="border" style="width: 120px;" th:text="${workFlowDto.employeeRank}"></td></tr>
+                <tr><td class="border" th:text="${workFlowDto.department}"></td></tr>
+                <tr><td class="border"><img style="width: 80px;" src="/img/승인.png" alt=""></td></tr>
+                <tr><td class="border" th:text="${workFlowDto.employeeName}"></td></tr>
             </table>
-            <!-- 결재 -->
-            <table style="font-family: 'Times New Roman', Times, serif; font-weight: 700; font-size: 22px;" >
-                <tr>
-                    <td class="border" rowspan="5" style="width: 50px; font-size: 35px;" >결<br>재</td>
-                </tr>
-                <tr>
-                    <td class="border" style="width: 120px;">팀장</td>
-                    <td class="border" style="width: 120px;">부장</td>
-                    <td class="border" style="width: 120px;">대표이사</td>
-                </tr>
-                <tr>
-                    <td class="border">회계</td>
-                    <td class="border">임원</td>
-                    <td class="border">대표</td>
-                </tr>
 
-                <tr>
-                    <td class="border"><img style="width: 80px;" src="/img/승인.png" alt=""></td>
-                    <td class="border"><img style="width: 80px;" src="/img/승인.png" alt=""></td>
-                    <td class="border"><img style="width: 80px;" src="/img/반려.png" alt=""></td>
+            <!--/* 결재 */-->
+            <table style="font-family: 'Times New Roman', Times, serif; font-weight: 700; font-size: 22px;" >
+                <tr><td class="border" rowspan="5" style="width: 50px; font-size: 35px;">
+                    결<br>재</td>
                 </tr>
                 <tr>
-                    <td class="border">결재자명</td>
-                    <td class="border">결재자명</td>
-                    <td class="border">결재자명</td>
+                    <th:block th:each="approve : ${approvers}">
+                        <td class="border" style="width: 120px;" th:text="${approve.department}"></td>
+                    </th:block>
+                </tr>
+                <tr>
+                    <th:block th:each="approve : ${approvers}">
+                        <td class="border" style="width: 120px;" th:text="${approve.approverRank}"></td>
+                    </th:block>
+                </tr>
+                <tr>
+                    <th:block th:each="approve : ${approvers}">
+                        <td class="border" style="width: 120px;">
+                            <img th:if="${approve.approvalStr.equals('승인')}" style="width: 80px;" src="/img/승인.png" alt="승인">
+                            <img th:if="${approve.approvalStr.equals('반려')}" style="width: 80px;" src="/img/반려.png" alt="반려">
+                        </td>
+                    </th:block>
+                </tr>
+                <tr>
+                    <th:block th:each="approve : ${approvers}">
+                        <td class="border" style="width: 120px;" th:text="${approve.approverName}"></td>
+                    </th:block>
                 </tr>
             </table>
         </div>
 
         <div class="input-group mb-3 text-center">
-            <!-- 협조자 -->
+            <!--/* 협조자 */-->
             <table style="font-family: 'Times New Roman', Times, serif; font-weight: 700; font-size: 22px;" >
-                <tr>
-                    <td class="border" rowspan="5" style="width: 50px; font-size: 35px;" >협<br>조</td>
+                <tr><td class="border" rowspan="5" style="width: 50px; font-size: 35px;" >
+                    협<br>조</td>
                 </tr>
                 <tr>
-                    <td class="border" style="width: 120px;">직급</td>
-                    <td class="border" style="width: 120px;">직급</td>
-                    <td class="border" style="width: 120px;">직급</td>
+                    <th:block th:each="collaver : ${collaborators}">
+                        <td class="border" style="width: 120px;" th:text="${collaver.approverRank}"></td>
+                    </th:block>
                 </tr>
                 <tr>
-                    <td class="border">부서</td>
-                    <td class="border">부서</td>
-                    <td class="border">부선</td>
+                    <th:block th:each="collaver : ${collaborators}">
+                        <td class="border" style="width: 120px;" th:text="${collaver.department}"></td>
+                    </th:block>
                 </tr>
-                <tr></tr>
                 <tr>
-                    <td class="border">협조자명</td>
-                    <td class="border">협조자명</td>
-                    <td class="border">협조자명</td>
+                    <th:block th:each="collaver : ${collaborators}">
+                        <td class="border" style="width: 120px;" th:text="${collaver.approverName}"></td>
+                    </th:block>
                 </tr>
             </table>
-            <!-- 참조자 -->
+            <!--/* 참조자 */-->
             <table style="font-family: 'Times New Roman', Times, serif; font-weight: 700; font-size: 22px;" >
-                <tr>
-                    <td class="border" rowspan="5" style="width: 50px; font-size: 35px;" >참<br>조</td>
+                <tr><td class="border" rowspan="5" style="width: 50px; font-size: 35px;" >
+                    참<br>조</td>
                 </tr>
                 <tr>
-                    <td class="border" style="width: 120px;">직급</td>
-                    <td class="border" style="width: 120px;">직급</td>
-                    <td class="border" style="width: 120px;">직급</td>
+                    <th:block th:each="referrer : ${referrers}">
+                        <td class="border" style="width: 120px;" th:text="${referrer.approverRank}"></td>
+                    </th:block>
                 </tr>
                 <tr>
-                    <td class="border">부서</td>
-                    <td class="border">부서</td>
-                    <td class="border">부선</td>
+                    <th:block th:each="referrer : ${referrers}">
+                        <td class="border" style="width: 120px;" th:text="${referrer.department}"></td>
+                    </th:block>
                 </tr>
-                <tr></tr>
                 <tr>
-                    <td class="border">협조자명</td>
-                    <td class="border">협조자명</td>
-                    <td class="border">협조자명</td>
+                    <th:block th:each="referrer : ${referrers}">
+                        <td class="border" style="width: 120px;" th:text="${referrer.approverName}"></td>
+                    </th:block>
                 </tr>
             </table>
         </div>
@@ -170,8 +144,8 @@
 
     <div class="input-group mb-3">
         <span class="input-group-text">결재 내용</span>
-        <textarea class="form-control" id="description" name="description" th:field="${workFlowDto.description}"
-            rows="10" style="resize: none;" disabled readonly>
+        <textarea class="form-control" id="description" name="description"
+            th:field="${workFlowDto.description}" rows="10" style="resize: none;" disabled readonly>
         </textarea>
     </div>
 
@@ -180,64 +154,111 @@
             <span class="input-group-text">비용</span>
             <input type="text" class="form-control prevent-enter-submit" id="cost" name="cost"
                    th:field="${workFlowDto.cost}" aria-label="Amount (to the nearest dollar)" disabled readonly>
-            <span class="input-group-text">\</span>
+            <span class="input-group-text">￦</span>
         </div>
     </div>
 
-    <div class="input-group mb-3">
-        <span>첨부 파일</span>
-    </div>
-    <div class="file-list">
-        <div id="file" class="filebox">
-            <a class="delete" onclick="deleteFile(' + fileNo + ');">
-                <p class="name">' + file.name + '</p>
-            </a>
-        </div>
+    <div class="form-floating">
+        <a href="#" id="attachFile" class="form-control">
+           fileName: Test
+        </a>
+        <label>첨부 파일</label>
     </div>
     <br/>
 
-    <div class="col-12">
-        <!--/* Button trigger modal */-->
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-            결재 승인
-        </button>
+    <div class="input-group mb-3">
+        <span>Comment</span>
+    </div>
+    <th:block th:each="collaver : ${collaborators}">
+        <th:block th:if="${!(collaver.comment == null || collaver.comment.isEmpty())}">
+            <div class="form-floating">
+                <textarea class="form-control" id="floatingTextarea2"
+                          th:text="${collaver.comment}" disabled style="resize: none"></textarea>
+                <label for="floatingTextarea2"
+                    th:text="${'작성자: ' + collaver.approverName + ' 작성일: ' + collaver.approvalDate}">
+                </label>
+            </div>
+        </th:block>
+    </th:block>
+    <br>
 
-        <!--/* Modal */-->
-        <div class="modal fade" id="exampleModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">결재 승인 알림</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body"><h5 class="text-center">
-                        해당 결재를<br/>
-                        승인 하시겠습니까?</h5>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-primary">승인</button>
-                        <button type="button" class="btn btn-danger">반려</button>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+    <!--/* 발송 취소 버튼 활성화 */-->
+    <th:block th:if="${changePossible}">
+        <div class="col-12">
+            <!--/* Button trigger modal */-->
+            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                결재 발송 취소
+            </button>
+
+            <!--/* Modal */-->
+            <div class="modal fade" id="exampleModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="exampleModalLabel">발송 취소 알림</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body"><h5 class="text-center">
+                            해당 결재를<br/>
+                            발송 취소 하시겠습니까?</h5>
+                        </div>
+                        <div class="modal-footer">
+                            <a href="#" class="btn btn-danger">발송 취소</a>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    </th:block>
+
+    <!--/* 발송 취소 버튼 비활성화 */-->
+    <th:block th:if="${!changePossible}">
+        <button type="button" class="btn btn-secondary" id="addToastBtn">발송 취소</button>
+
+        <div class="toast-container position-fixed bottom-0 end-0 p-3">
+            <div id="toastTemplate" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="toast-header">
+                    <img src="" class="rounded me-2" alt="">
+                    <strong class="me-auto">발송 취소 알림</strong>
+                    <small class="text-body-secondary">1 sec ago</small>
+                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+                <div class="toast-body">
+                </div>
+            </div>
+        </div>
+    </th:block>
+
 </th:block>
 
 <th:block layout:fragment="javascript">
+    <th:block th:if="${!changePossible}">
     <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const addToastBtn = document.getElementById('addToastBtn');
+            const toastContainer = document.querySelector('.toast-container');
 
-        /* 엔터 키 전송 막기 */
-        function disableEnterSubmit() {
-            $('.prevent-enter-submit').on('keydown', function(event) {
-                if (event.key === 'Enter') {
-                    event.preventDefault();
-                }
-            });
-        }
+            if (addToastBtn) {
+                addToastBtn.addEventListener('click', () => {
+                    // 템플릿 토스트 요소를 복제하여 새로운 토스트 생성
+                    const toastTemplate = document.getElementById('toastTemplate');
+                    const clonedToast = toastTemplate.cloneNode(true);
 
+                    // 토스트 내용 업데이트 (각 클릭마다 증가하는 숫자로 메시지 변경)
+                    clonedToast.querySelector('.toast-body').textContent = `
+                    결재가 진행 중인 경우 발송을 취소할 수 없습니다.
+                    결재자들에게 반려 요청을 보내세요.`;
+
+                    // 복제된 토스트를 토스트 컨테이너에 추가
+                    toastContainer.appendChild(clonedToast);
+
+                    // Initialize Bootstrap Toast for the new toast
+                    const newToast = new bootstrap.Toast(clonedToast);
+                    newToast.show();
+                });
+            }
+        });
     </script>
-    <script src="/js/add-line.js"></script>
-    <script src="/js/file-select.js"></script>
+    </th:block>
 </th:block>

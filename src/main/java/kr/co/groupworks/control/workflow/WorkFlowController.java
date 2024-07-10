@@ -221,6 +221,7 @@ public class WorkFlowController {
                 .setApprovalCount(3)
                 .setCost(1000000)
                 .setStatus("승인");
+        log.info("WorkFlowController - approval detail, WorkFlowDTO: {}", workFlow);
 
         /* 결재자 정보 */
         List<ApproverDTO> approvers = new ArrayList<>();
@@ -230,7 +231,7 @@ public class WorkFlowController {
                             .setId(i)
                             .setWorkFlowId(1)
                             .setSequenceNum(i)
-                            .setApproverType(1)
+                            .setApproverType(1) // 1:결재자
                             .setEmployeeId(i)
                             .setApproverName("결재자" +i)
                             .setApproverRank("사원" +i)
@@ -244,24 +245,33 @@ public class WorkFlowController {
                             .setApprovalStr("승인")
             );
         }
+        approvers.set(2, approvers.get(2).setApprovalStr("반려"));
         
         /* 협조자 정보 */
         List<ApproverDTO> collaborators = new ArrayList<>();
-        collaborators.add(
-                new ApproverDTO()
-                        .setId(4)
-                        .setWorkFlowId(1)
-                        .setSequenceNum(1)
-                        .setApproverType(2)
-                        .setEmployeeId(4)
-                        .setApproverName("협조자")
-                        .setApproverRank("사원4")
-                        .setDepartment("부서4")
-                        .setApprovalMethodInt(0)
-                        .setApprovalMethodStr("")
-                        .setComment("괜찮은 것 같습니다.")
-                        .setApproval(true)
-                        .setApprovalStr("")
+        for (int i = 4; i < 6; i++) {
+            collaborators.add(
+                    new ApproverDTO()
+                            .setId(i)
+                            .setWorkFlowId(1)
+                            .setSequenceNum(i -3)
+                            .setApproverType(2) // 2:협조자
+                            .setEmployeeId(i)
+                        .setApproverName("협조자" +(i-3))
+                            .setApproverRank("사원" +i)
+                            .setDepartment("부서" +i)
+                            .setApprovalMethodInt(0) // 협조자는 결재X
+                            .setApprovalMethodStr("")// 협조자는 결재X
+                            .setApproval(true)
+                            .setApprovalStr("")
+            );
+        }
+        // 코멘트
+        collaborators.set(0, collaborators.get(0)
+                .setComment("괜찮은 것 같습니다." +0)
+                .setApprovalDate(LocalDateTime.now()
+                        .format(DateTimeFormatter.ofPattern("yyyy/MM/dd"))
+                )
         );
 
         /* 참조자 정보 */
@@ -294,12 +304,18 @@ public class WorkFlowController {
             );
         }
 
+
         model.addAttribute(AttributeName.TITLE.getStatus(), workFlow.getTitle());
         model.addAttribute(AttributeName.SUB_TITLE.getStatus(), "");
         model.addAttribute(AttributeName.WORK_FLOW_DTO.getStatus(), workFlow);
         model.addAttribute("approvers", approvers);
         model.addAttribute("collaborators", collaborators);
         model.addAttribute("referrers", referrers);
+
+        // Test Variable
+        final boolean TEST_VARIABLE = true;
+        model.addAttribute("changePossible",
+                TEST_VARIABLE ? true : false);
 
         return "workflow/approvalDetail";
     }

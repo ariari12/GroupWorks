@@ -6,11 +6,6 @@
 
 <th:block layout:fragment="css">
     <!--/* !선택 필요한 style code 와 link 는 여기에 추가 */-->
-    <style>
-        .chartContainer {
-            height: 458px; /* 차트 컨테이너의 너비를 조절합니다 */
-        }
-    </style>
 </th:block>
 
 <th:block layout:fragment="content">
@@ -57,28 +52,12 @@
         </div>
     </div>
 
-
-
-    <div class="row">
-        <!--/* Chart Area */-->
-        <div class="col-xl-6">
-            <div class="card mb-4">
-                <div class="card-header">
-                    <i class="fas fa-chart-area me-1"></i>
-                    월 별 결재 승인 건
-                </div>
-                <div class="card-body">
-                    <canvas id="myAreaChart" width="100%" height="40"></canvas>
-                </div>
-            </div>
-        </div>
-
-        <!--/* Chart Bar */-->
+    <div class="row"><!--/* Chart Bar */-->
         <div class="col-xl-6">
             <div class="card mb-4">
                 <div class="card-header">
                     <i class="fas fa-chart-bar me-1"></i>
-                    부서별 결재 승인 건
+                    부서별 결재 발송/승인/반려 건
                 </div>
                 <div class="card-body">
                     <canvas id="myBarChart" width="100%" height="40"></canvas>
@@ -92,10 +71,23 @@
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pie-chart" viewBox="0 0 16 16">
                         <path d="M7.5 1.018a7 7 0 0 0-4.79 11.566L7.5 7.793zm1 0V7.5h6.482A7 7 0 0 0 8.5 1.018M14.982 8.5H8.207l-4.79 4.79A7 7 0 0 0 14.982 8.5M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8"/>
                     </svg>
-                    업무별 결재 발송 건
+                    2024년 전체 결재 발송 건 구분
                 </div>
                 <div class="card-body chartContainer">
-                    <canvas id="myCircleChart"></canvas>
+                    <canvas id="myCircleChart2" width="100%" height="307"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!--/* Chart Area */-->
+        <div class="col-xl-6">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <i class="fas fa-chart-area me-1"></i>
+                    월 별 결재 발송/승인/반려 건
+                </div>
+                <div class="card-body">
+                    <canvas id="myAreaChart" width="100%" height="40"></canvas>
                 </div>
             </div>
         </div>
@@ -106,10 +98,10 @@
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pie-chart" viewBox="0 0 16 16">
                         <path d="M7.5 1.018a7 7 0 0 0-4.79 11.566L7.5 7.793zm1 0V7.5h6.482A7 7 0 0 0 8.5 1.018M14.982 8.5H8.207l-4.79 4.79A7 7 0 0 0 14.982 8.5M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8"/>
                     </svg>
-                    뭘로 하지?
+                    내 누적 결재 발송 건 구분
                 </div>
                 <div class="card-body chartContainer">
-                    <canvas id="myCircleChart2"></canvas>
+                    <canvas id="myCircleChart" width="100%" height="307"></canvas>
                 </div>
             </div>
         </div>
@@ -122,22 +114,28 @@
     <!--/* Chart */-->
     <script src="/js/chart/workflow/approval-statistics-chart.js"></script>
     <script>
+        const classification = ['업무 건', '재무 건', '예산 건', '구매 건', '보고 건', '특별 건'];
+
         $(document).ready(function() {
-            bar(
-                ["January", "February", "March", "April", "May", "June"],
-                [4215, 5312, 6251, 7841, 9821, 14984]
+            approvalStatsByDepartment(
+                ["재무팀", "회계팀", "전산팀", "개발팀", "설계팀", "영업팀"],
+                [4215, 8417, 6251, 5312, 9821, 14984],
+                [2154, 7841, 5162, 3125, 8219, 12984],
+                [1542, 4178, 2516, 1253, 2189, 9841]
             );
-            line(
-                ["Mar 1", "Mar 2", "Mar 3", "Mar 4", "Mar 5", "Mar 6", "Mar 7", "Mar 8", "Mar 9", "Mar 10", "Mar 11", "Mar 12", "Mar 13"],
-                [10000, 30162, 26263, 18394, 18287, 28682, 31274, 33259, 25849, 24159, 32651, 31984, 38451]
+            MyApprovalStats(
+                ["1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월", "13월"],
+                [33259, 30162, 33259, 30274, 33451, 32651, 31274, 34984, 38451, 36162, 32651, 31984, 30451],
+                [28682, 25849, 24159, 21849, 24159, 24849, 23159, 26682, 28849, 27682, 25849, 24159, 24849],
+                [18394, 18682, 14000, 13394, 12287, 10000, 11591, 12394, 13940, 14839, 15394, 16394, 17394]
             );
             circle1(
-                ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+                classification,
                 [12, 19, 3, 5, 2, 3]
             );
             circle2(
-                ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-                [3, 19, 2, 5, 10, 3]
+                classification,
+                [330000, 1900000, 200000, 500000, 1000000, 300000]
             );
         });
     </script>

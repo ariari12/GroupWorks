@@ -21,8 +21,10 @@ public class MainController {
                 .setEmployeeId(114107)
                 .setEmployeeName("XxAaBb")
                 .setDepartmentId(152115)
-                .setDepartmentName("회계3팀");
-
+                .setDepartmentName("회계3팀")
+                .setRankName("사원")
+                .setEmail("text@text.com")
+                ;
         // Test Use Session
         session.setAttribute("employee", employeeDto);
 
