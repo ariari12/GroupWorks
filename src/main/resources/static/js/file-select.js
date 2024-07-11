@@ -119,10 +119,12 @@ $(() => {
     $("#approveForm").submit(function(event) {
         event.preventDefault(); // 기본 폼 제출 동작을 막음
 
-
         // 폼데이터 담기
         var form = $(this);
         var formData = new FormData(form[0]);
+
+        console.dir(form);
+        console.dir(formData);
 
         // 폼 데이터를 서버로 전송하여 유효성 검사 수행
         $.ajax({

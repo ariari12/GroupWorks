@@ -14,6 +14,7 @@
             <thead>
             <tr>
                 <th>결재 번호</th>
+                <th>결재 구분</th>
                 <th>결재 제목</th>
                 <th>
                     <div style="font-weight: bolder">기안자 : </div>
@@ -28,14 +29,16 @@
                 <th>직급</th>
                 <th>결재자 명</th>
                 <th>결재 여부</th>
+                <th>결재 인원</th>
                 <th>진행도</th>
             </tr>
             </thead>
 
             <tbody>
-            <!--/*@thymesVar id="approval" type="kr.co.groupworks.dto.workflow.WorkFlowDTO"*/-->
+            <!--/*@thymesVar id="approval" type="kr.co.groupworks.dto.workflow.WorkFlowInsertDTO"*/-->
             <tr th:onclick="load([[${list.id}]])" th:each="list : ${approval}">
                 <td>[[${list.id}]]</td>
+                <td>[[${list.workFlowType}]]</td>
                 <td>[[${list.title}]]</td>
                 <!--/* 기안자 정보 */-->
                 <td>[[${list.department}]]</td>
@@ -48,6 +51,7 @@
                 <td>[[${list.finalApprovalDepartment}]]</td>
                 <td>[[${list.finalApprovalName}]]</td>
                 <td>[[${list.status}]]</td>
+                <td>[[${list.approvalCount} + '/' + ${list.approverCount}]]</td>
                 <td>
                     <div class="progress" role="progressbar" aria-label="Success example" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
                         <div class="progress-bar bg-success"

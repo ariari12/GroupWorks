@@ -1,15 +1,14 @@
 package kr.co.groupworks.control.workflow;
 
-import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import kr.co.groupworks.dto.workflow.ApproverVO;
-import kr.co.groupworks.dto.workflow.WorkFlowDTO;
+import kr.co.groupworks.dto.workflow.WorkFlowInsertDTO;
+import kr.co.groupworks.service.workflow.WorkFlowService;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +22,7 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 public class WorkFlowRestController {
+    private final WorkFlowService workFlowService;
 
     private static final String WORKFLOW_URL = "work-flow";
     private static final String FILE_SEND = "/file-send";
@@ -53,10 +53,8 @@ public class WorkFlowRestController {
     /* 결재 요청 받기 */
     @PostMapping(SEPARATOR + WORKFLOW_URL + APPROVAL_REQUEST)
     public ResponseEntity<Map<String, Object>> requestOk(
-                    @Valid @ModelAttribute("workFlowDto") WorkFlowDTO workFlowDTO,
-                    BindingResult bindingResult,
-                    HttpSession session,
-                    Model model) {
+                    @Valid WorkFlowInsertDTO workFlowDTO,
+                    BindingResult bindingResult) {
         log.info("");
         Map<String, Object> response = new HashMap<>();
         title = "Approval Request";

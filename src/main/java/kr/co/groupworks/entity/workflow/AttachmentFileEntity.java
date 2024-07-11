@@ -1,17 +1,19 @@
-package kr.co.groupworks.dto.workflow;
+package kr.co.groupworks.entity.workflow;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
+import jakarta.persistence.*;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.Accessors;
 
-@Data
-@Builder
+@Entity
+@Table(name = "attachment_file")
+@Getter @Setter
 @Accessors(chain = true)
 @NoArgsConstructor
-@AllArgsConstructor
-public class ApprovalAttachmentDTO {
+public class AttachmentFileEntity {
+    @Id @Column(name = "af_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     // 1, 결재 첨부파일 pk
     // service 에서 미리 UUID 지정, 컨트롤러를 통해 view js로 전달
     private int id;
