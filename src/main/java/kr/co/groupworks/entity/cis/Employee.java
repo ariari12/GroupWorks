@@ -25,4 +25,6 @@ public class Employee {
     private LocalDateTime joinDate;
     private Integer salary;
     private Integer supervisorId;
+
+    
 }

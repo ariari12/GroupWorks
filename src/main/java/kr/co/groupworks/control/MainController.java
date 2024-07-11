@@ -39,7 +39,8 @@ public class MainController {
                           @RequestParam("pw") String pw,
                           @RequestParam("id") String id, HttpSession session, Model model) {
         System.out.println("로그인 시도 정보 : name : " + name + " pw : " + pw + " id : " + id);
-//        로그인 성공 시
+
+        //        로그인 성공 시
         if(employeeService.findByEmployeeIdAndEmployeePWAndEmployeeName(id,pw,name)){
             session.setAttribute("employeeId", id);
             session.setAttribute("employeeName", name);
