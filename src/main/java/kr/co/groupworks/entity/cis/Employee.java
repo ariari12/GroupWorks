@@ -26,5 +26,4 @@ public class Employee {
     private Integer salary;
     private Integer supervisorId;
 
-    
 }
