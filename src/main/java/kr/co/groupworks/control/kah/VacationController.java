@@ -15,6 +15,10 @@ public class VacationController {
     public String vacationMain(Model model) {
         log.info("VacationController - vacationMain");
 
+        // 휴가 신청 내역 조회
+        // 휴가 보유 사용현황 조회
+
+
         // header title 넘겨주기
         model.addAttribute("title", "내 휴가");
         model.addAttribute("subtitle", "휴가 신청내역");
