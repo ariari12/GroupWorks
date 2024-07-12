@@ -1,4 +1,4 @@
-package kr.co.groupworks.dto.employee;
+package kr.co.groupworks.dto.cis.employee;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,28 +11,33 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 @NoArgsConstructor
 public class EmployeeDTO {
-    // 1, 사원번호 pk
+    //  사원번호 pk
     private int employeeId;
-    // 2, 사원명
+    //  사원명
     private String employeeName;
-    // 3, 직급 fk
+    //  직급 fk
     private int rankId;
-    // 4, 직급 명
+    //  직급 명
     private String rankName;
-    // 5, 부서 번호 fk
+    //  부서 번호 fk
     private int departmentId;
-    // 6, 부서 명
+    //  부서 명
     private String departmentName;
-    // 7, 이메일
+    //  이메일
     private String email;
-    // 8, 비밀번호
-    private String password;
-    // 9, 연락처
-    private String phone;
-    // 10, 거주지
+    //  연락처
+    private String phoneNumber;
+    //  거주지
     private String address;
-    // 11, 성별
+    //  성별
     private String gender;
-    // 12, 입사일
+    //  입사일
     private String joinDate;
+    //  이름
+    private String name;
+    //  급여
+    private int salary;
+    //  선임 사원번호
+    private int supervisorId;
 }
+

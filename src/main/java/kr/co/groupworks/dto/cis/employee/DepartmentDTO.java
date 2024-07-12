@@ -1,4 +1,4 @@
-package kr.co.groupworks.dto.employee;
+package kr.co.groupworks.dto.cis.employee;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
