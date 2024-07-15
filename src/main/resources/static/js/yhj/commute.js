@@ -17,5 +17,5 @@ $(document).ready(function(){
         $("#time").text(`${hours}:${minutes}:${seconds}`);
     }
     updateTime();
-    setInterval(updateTime, 1000);
+    setInterval(updateTime, 500);
 });
