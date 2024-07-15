@@ -1,19 +1,24 @@
 package kr.co.groupworks.security;
 
+import jakarta.servlet.http.HttpSession;
 import kr.co.groupworks.entity.cis.Employee;
 import lombok.Data;
+import lombok.Getter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.net.http.HttpRequest;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-
+@Getter
 public class CustomUserDetails implements UserDetails {
 
     private final Employee employee;
+
 
     public CustomUserDetails(Employee employee) {
         this.employee = employee;
@@ -22,13 +27,8 @@ public class CustomUserDetails implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Collection<GrantedAuthority> collect = new ArrayList<>();
-        collect.add(new GrantedAuthority() {
-            @Override
-            public String getAuthority() {
-                return employee.getRankName();
-            }
-        });
-        return List.of();
+        collect.add(() -> employee.getRankName());
+        return collect;
     }
 
     @Override
