@@ -8,11 +8,20 @@
       <script src="/js/tables/kah/datatables.js"></script>
       <script>
             document.addEventListener('DOMContentLoaded', function() {
-                  flatpickr("#vacationDate", {
+                  flatpickr(".vacationDate", {
                         locale: "ko", // 한국어 설정
                         mode: "range"
                   });
 
+                  flatpickr(".halfDate", {
+                        locale: "ko", // 한국어 설정
+                        wrap: true
+                  });
+
+                  flatpickr(".sickDate", {
+                        locale: "ko", // 한국어 설정
+                        mode: "range"
+                  });
             });
       </script>
 </th:block>
@@ -24,7 +33,7 @@
             <div class="col-sm-3 mb-3 mb-sm-0">
                   <div class="card">
                         <div class="card-body">
-                              <h5 class="card-title">연차</h5>
+                              <h5 class="card-title">🌴 연차</h5>
                               <p class="card-text">25일</p>
                               <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#annual" >신청하기</a>
                         </div>
@@ -34,7 +43,7 @@
             <div class="col-sm-3 mb-3 mb-sm-0">
                   <div class="card">
                         <div class="card-body">
-                              <h5 class="card-title">반차</h5>
+                              <h5 class="card-title">🕒 반차</h5>
                               <p class="card-text">25일</p>
                               <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#halfDay">신청하기</a>
                         </div>
@@ -44,7 +53,7 @@
             <div class="col-sm-3 mb-3 mb-sm-0">
                   <div class="card">
                         <div class="card-body">
-                              <h5 class="card-title">병가</h5>
+                              <h5 class="card-title">🤒 병가</h5>
                               <p class="card-text">6일</p>
                               <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#sick">신청하기</a>
                         </div>
@@ -54,7 +63,7 @@
             <div class="col-sm-3 mb-3 mb-sm-0">
                   <div class="card">
                         <div class="card-body">
-                              <h5 class="card-title">기타</h5>
+                              <h5 class="card-title">💼 기타</h5>
                               <p class="card-text">6일</p>
                               <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#other">신청하기</a>
                         </div>
@@ -62,7 +71,8 @@
                   <br>
             </div>
       </div>
-      <th:block th:replace="kah/fragments/vacationMyHistory::scheduledVaction">
+
+      <th:block th:replace="kah/fragments/vacationStatus :: tables">
       </th:block>
       <th:block th:replace="kah/fragments/vacationMyHistory::vacationHistory">
       </th:block>
@@ -76,13 +86,12 @@
                               <h1 class="modal-title fs-5" id="annualLabel">@@@님의 연차 요청</h1>
                               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <h6 class="container">2022-11-11 12:12</h6>
                         <div class="modal-body container">
                               <h6>사용 가능 연차</h6>
                               <div>6일</div>
                               <br>
-                              <label for="vacationDate">휴일 일정</label>
-                              <input type="text" name="" id="vacationDate" class="form-control">
+                              <label>휴일 일정</label>
+                              <input type="text" name="" placeholder="Select Date.." class="form-control vacationDate">
                               <br>
                               <label for="vacationText">상세 내용</label>
                               <textarea class="form-control" id="vacationText" name="vacationText" placeholder="휴가 등록 메세지 입력"></textarea>
@@ -100,24 +109,49 @@
             <div class="modal-dialog">
                   <div class="modal-content">
                         <div class="modal-header">
-                              <h1 class="modal-title fs-5" id="halfDayLabel">@@@님의 휴가 요청</h1>
+                              <h1 class="modal-title fs-5" id="halfDayLabel">@@@님의 반차 요청</h1>
                               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <h6 class="container">2022-11-11 12:12</h6>
-                        <div class="modal-body">
+                        <div class="modal-body container">
+                              <h6>사용 가능 반차</h6>
+                              <div>6일</div>
+                              <br>
 
-                              <h5>사용 가능 연차</h5>
-                              <span>6일</span>
-                              <h5>휴가 일정 & 필요 정보 입력</h5>
-                              <label for="start">시작일</label><input type="date" name="" id="start">
-                              <label for="end">종료일</label><input type="date" name="" id="end">
-                              <label>
-                                    <textarea placeholder="휴가 등록 메세지 입력"></textarea>
-                              </label>
+                              <h6>휴일 일정</h6>
+                              <!--오전 오후 -->
+                              <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
+                                    <label class="form-check-label" for="flexRadioDefault1">
+                                          오전
+                                    </label>
+                              </div>
+                              <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" checked>
+                                    <label class="form-check-label" for="flexRadioDefault2">
+                                          오후
+                                    </label>
+                              </div>
+
+                              <div class="halfDate">
+                                    <input type="text" placeholder="Select Date.." data-input> <!-- input is mandatory -->
+
+                                    <a class="input-button" title="toggle" data-toggle>
+                                          <i class="icon-calendar"></i>
+                                    </a>
+
+                                    <a class="input-button" title="clear" data-clear>
+                                          <i class="icon-close"></i>
+                                    </a>
+                              </div>
+                              <br>
+                              <label for="vacationText2">상세 내용</label>
+                              <textarea class="form-control" id="vacationText2" name="vacationText2" placeholder="휴가 등록 메세지 입력"></textarea>
+
+
                         </div>
                         <div class="modal-footer">
                               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-                              <button type="button" class="btn btn-primary">휴가 신청</button>
+                              <button type="button" class="btn btn-primary">신청</button>
                         </div>
                   </div>
             </div>
@@ -128,24 +162,25 @@
             <div class="modal-dialog">
                   <div class="modal-content">
                         <div class="modal-header">
-                              <h1 class="modal-title fs-5" id="sickLabel">@@@님의 휴가 요청</h1>
+                              <h1 class="modal-title fs-5" id="sickLabel">@@@님의 병가 요청</h1>
                               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <h6 class="container">2022-11-11 12:12</h6>
                         <div class="modal-body">
 
-                              <h5>사용 가능 연차</h5>
-                              <span>6일</span>
-                              <h5>휴가 일정 & 필요 정보 입력</h5>
-                              <label for="start">시작일</label><input type="date" name="" id="start">
-                              <label for="end">종료일</label><input type="date" name="" id="end">
-                              <label>
-                                    <textarea placeholder="휴가 등록 메세지 입력"></textarea>
-                              </label>
+                              <h5>병가 일정</h5>
+                              <input type="text" name="" placeholder="Select Date.." class="form-control vacationDate">
+                              <br>
+
+                              <h5>상세 사유</h5>
+                              <textarea class="form-control" id="vacationText3" name="vacationText3" placeholder="병가 사유 입력"></textarea>
+
+                              <br>
+                              <h5>첨부 파일</h5>
+                              <td><input type="file" name="fileupload" class="form-control" multiple></td>
                         </div>
                         <div class="modal-footer">
-                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                              <button type="button" class="btn btn-primary">Understood</button>
+                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                              <button type="button" class="btn btn-primary">신청</button>
                         </div>
                   </div>
             </div>
@@ -156,24 +191,25 @@
             <div class="modal-dialog">
                   <div class="modal-content">
                         <div class="modal-header">
-                              <h1 class="modal-title fs-5" id="otherLabel">@@@님의 휴가 요청</h1>
+                              <h1 class="modal-title fs-5" id="otherLabel">@@@님의 기타 휴가 요청</h1>
                               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <h6 class="container">2022-11-11 12:12</h6>
-                        <div class="modal-body">
+                        <div class="modal-body ">
 
-                              <h5>사용 가능 연차</h5>
-                              <span>6일</span>
-                              <h5>휴가 일정 & 필요 정보 입력</h5>
-                              <label for="start">시작일</label><input type="date" name="" id="start">
-                              <label for="end">종료일</label><input type="date" name="" id="end">
-                              <label>
-                                    <textarea placeholder="휴가 등록 메세지 입력"></textarea>
-                              </label>
+                              <h5>휴가 일정</h5>
+                              <input type="text" name="" placeholder="Select Date.." class="form-control vacationDate">
+                              <br>
+
+                              <h5>상세 사유</h5>
+                              <textarea class="form-control" id="vacationText4" name="vacationText4" placeholder="휴가 등록 메세지 입력"></textarea>
+                              <br>
+                              <h5>첨부 파일</h5>
+                              <td><input type="file" name="fileupload" class="form-control" multiple></td>
+
                         </div>
                         <div class="modal-footer">
-                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                              <button type="button" class="btn btn-primary">Understood</button>
+                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                              <button type="button" class="btn btn-primary">신청</button>
                         </div>
                   </div>
             </div>
