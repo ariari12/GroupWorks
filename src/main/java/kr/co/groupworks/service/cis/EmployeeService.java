@@ -10,7 +10,7 @@ public interface EmployeeService {
     public List<Employee> findAll();
 
 
-    Employee findByEmployeeId(Integer employeeId);
+    Employee findByEmployeeId(String employeeId);
 
     boolean findByEmployeeIdAndEmployeePWAndEmployeeName(String emplyoeeId, String pw, String name);
 
