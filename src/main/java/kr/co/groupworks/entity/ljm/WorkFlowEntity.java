@@ -1,34 +1,33 @@
 package kr.co.groupworks.entity.ljm;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.experimental.Accessors;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-@Getter
-@Setter
+@Builder
+@Getter @ToString
 @Table(name = "workflow")
-@Accessors(chain = true)
+@AllArgsConstructor
 @NoArgsConstructor
 public class WorkFlowEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     // 1, 결재 요청 pk
-    private int id;
+    private long id;
 
     // 2, 기안자 사원번호 fk
-    private int employeeId;
+    private long employeeId;
     // 3, 기안자 이메일
     private String email;
+    // 4, 기안자 연락처
+    private String phone;
     // 4, 기안자 직급
     private String employeeRank;
     // 5, 기안자 소속번호
-    private Integer departmentId;
+    private long departmentId;
     // 6, 기안자 소속명
     private String department;
     // 7, 기안자 명
@@ -37,7 +36,7 @@ public class WorkFlowEntity {
     // 8, 결재 기안 코드
     private String code;
     // 9, 결재 요청 분류
-    private String workFlowType;
+    private int workFlowType;
     // 10, 결재 명
     private String title;
 
@@ -60,15 +59,15 @@ public class WorkFlowEntity {
     // 18, 승인된 수
     private int approvalCount;
     // 19, 비용 청구
-    private int cost;
+    private long cost;
     // 20, 최종 승인여부
-    private String status;
+    private int status;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "appover_id")
     private List<ApproverEntity> approvers;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "af_id")
     private List<AttachmentFileEntity> attachmentFiles;
 }

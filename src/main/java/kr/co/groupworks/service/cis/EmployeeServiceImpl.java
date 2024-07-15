@@ -22,12 +22,12 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public Employee findByEmployeeId(String employeeId) {
+    public Employee findByEmployeeId(Long employeeId) {
         return employeeRepository.findByEmployeeId(employeeId);
     }
 
     @Override
-    public boolean findByEmployeeIdAndEmployeePWAndEmployeeName(String emplyoeeId, String pw, String name) {
+    public boolean findByEmployeeIdAndEmployeePWAndEmployeeName(Long emplyoeeId, String pw, String name) {
         if(employeeRepository.findByEmployeeIdAndEmployeePWAndEmployeeName(emplyoeeId,pw,name) != null)
             return true;
         else return false;

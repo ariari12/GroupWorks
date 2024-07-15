@@ -1,7 +1,8 @@
-package kr.co.groupworks.dto.ljm.workflow;
+package kr.co.groupworks.dto.ljm.vo;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import kr.co.groupworks.dto.ljm.WorkFlowType;
 import kr.co.groupworks.entity.ljm.WorkFlowEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,22 +11,23 @@ import lombok.ToString;
 import lombok.experimental.Accessors;
 
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @Getter @Setter @ToString
 @Accessors(chain = true)
 @NoArgsConstructor
-public class WorkFlowDetailDTO {
+public class WorkFlowDetailVO {
     // 1, 결재 요청 pk
-    private int id;
+    private long id;
 
     // 2, 기안자 사원번호 fk
-    private int employeeId;
+    private long employeeId;
     // 3, 기안자 이메일
     private String email;
     // 4, 기안자 직급
     private String employeeRank;
     // 5, 기안자 소속번호
-    private Integer departmentId;
+    private long departmentId;
     // 6, 기안자 소속명
     private String department;
     // 7, 기안자 명
@@ -61,11 +63,14 @@ public class WorkFlowDetailDTO {
     // 18, 승인된 수
     private int approvalCount;
     // 19, 비용 청구
-    private int cost;
+    private long cost;
     // 20, 최종 승인여부
     private String status;
 
-    public WorkFlowDetailDTO entityToDto(WorkFlowEntity workFlowEntity) {
+    // 결재자들 정보(결재자, 협조자, 참조자)
+    private List<ApproverVO> approvers;
+
+    public WorkFlowDetailVO(WorkFlowEntity workFlowEntity) {
         String drftDate = workFlowEntity.getDraftDate().format(DateTimeFormatter.ofPattern("yyyy/MM/dd"));
         String approvalDate = null;
 
@@ -73,49 +78,41 @@ public class WorkFlowDetailDTO {
             approvalDate = workFlowEntity.getApprovalDate().format(DateTimeFormatter.ofPattern("yyyy/MM/dd"));
         }
 
-        return new WorkFlowDetailDTO()
+        int checkApproval = workFlowEntity.getStatus();
+        String statusConvert = checkApproval == 0 ? "진행" :
+                checkApproval == 1 ? "승인" :
+                        "반려";
+
+        this
                 // pk
                 .setId(workFlowEntity.getId())
-                // fk
+                // fk 기안자
                 .setEmployeeId(workFlowEntity.getEmployeeId())
                 .setEmail(workFlowEntity.getEmail())
                 .setEmployeeRank(workFlowEntity.getEmployeeRank())
                 .setDepartmentId(workFlowEntity.getDepartmentId())
                 .setDepartment(workFlowEntity.getDepartment())
                 .setEmployeeName(workFlowEntity.getEmployeeName())
-
+                // 결재내용
                 .setCode(workFlowEntity.getCode())
-                .setWorkFlowType(workFlowEntity.getWorkFlowType())
+                .setWorkFlowType(WorkFlowType.getMatch(workFlowEntity.getWorkFlowType()))
                 .setTitle(workFlowEntity.getTitle())
                 .setDescription(workFlowEntity.getDescription())
                 .setDraftDate(drftDate)
                 .setApprovalDate(approvalDate)
-
+                // 최종 결재자
                 .setFinalApprovalRank(workFlowEntity.getFinalApprovalRank())
                 .setFinalApprovalDepartment(workFlowEntity.getFinalApprovalDepartment())
                 .setFinalApprovalName(workFlowEntity.getFinalApprovalName())
-
+                // 결재상황
                 .setApproverCount(workFlowEntity.getApproverCount())
                 .setApprovalCount(workFlowEntity.getApprovalCount())
                 .setCost(workFlowEntity.getCost())
-                .setStatus(workFlowEntity.getStatus())
-                ;
-    }
+                .setStatus(statusConvert)
 
-    public WorkFlowEntity dtoToEntity() {
-        /* draftDate=2024-07-12T04:58 */
-        return new WorkFlowEntity()
-                .setId(id)
-                .setEmployeeId(employeeId)
-                .setEmail(email)
-                .setEmployeeRank(employeeRank)
-                .setDepartmentId(departmentId)
-                .setDepartment(department)
-                .setEmployeeName(employeeName)
-                .setCode(code)
-                .setWorkFlowType(workFlowType)
-                .setTitle(title)
-                .setDescription(description)
+                // 결재자들
+                .setApprovers(workFlowEntity.getApprovers().stream()
+                        .map(ApproverVO::new).toList())
                 ;
     }
 }

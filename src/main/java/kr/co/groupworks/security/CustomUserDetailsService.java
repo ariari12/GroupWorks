@@ -19,7 +19,8 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Employee employee = employeeRepository.findByEmployeeId(username);
+        Long employeeid = Long.valueOf(username);
+        Employee employee = employeeRepository.findByEmployeeId(employeeid);
         if(employee != null) {
             return new CustomUserDetails(employee);
         }

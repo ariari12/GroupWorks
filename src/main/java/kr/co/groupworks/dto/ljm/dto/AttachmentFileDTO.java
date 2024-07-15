@@ -1,13 +1,12 @@
-package kr.co.groupworks.dto.ljm.workflow;
+package kr.co.groupworks.dto.ljm.dto;
 
+import kr.co.groupworks.entity.ljm.AttachmentFileEntity;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 @Data
-@Builder
 @Accessors(chain = true)
 @NoArgsConstructor
 @AllArgsConstructor
@@ -21,4 +20,13 @@ public class AttachmentFileDTO {
     private String savePath;
     // 4, 첨부 파일 명
     private String fileName;
+
+    public AttachmentFileEntity dtoToEntity() {
+        return AttachmentFileEntity.builder()
+                .id(id)
+                .workFlowId(workFlowId)
+                .savePath(savePath)
+                .fileName(fileName)
+                .build();
+    }
 }

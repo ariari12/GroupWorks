@@ -41,7 +41,7 @@ public class EmployeeController {
 
     @GetMapping("/list/{employeeId}")
     public ResponseEntity<Employee> getEmployeeById(@PathVariable String employeeId) {
-        Employee employee = employeeService.findByEmployeeId(employeeId);
+        Employee employee = employeeService.findByEmployeeId(Long.valueOf(employeeId));
         System.out.println(employee.getEmployeeName());
         return ResponseEntity.ok().body(employee);
     }
