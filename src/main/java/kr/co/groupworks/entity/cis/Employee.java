@@ -32,6 +32,9 @@ public class Employee {
     @Column(name = "department_name")
     private String departmentName;
 
+    @Column(name = "department_id")
+    private Integer departmentId;
+
     @Column(name = "email", nullable = false, unique = true)
     private String email;
 
