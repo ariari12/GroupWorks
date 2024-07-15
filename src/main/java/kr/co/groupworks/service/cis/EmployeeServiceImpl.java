@@ -27,6 +27,11 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
+    public Employee findByEmployeeEmail(String employeeEmail) {
+        return employeeRepository.findByEmail(employeeEmail);
+    }
+
+    @Override
     public boolean findByEmployeeIdAndEmployeePWAndEmployeeName(Long emplyoeeId, String pw, String name) {
         if(employeeRepository.findByEmployeeIdAndEmployeePWAndEmployeeName(emplyoeeId,pw,name) != null)
             return true;

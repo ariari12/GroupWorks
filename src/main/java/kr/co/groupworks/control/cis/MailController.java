@@ -1,14 +1,25 @@
 package kr.co.groupworks.control.cis;
 
+import jakarta.servlet.http.HttpSession;
+import kr.co.groupworks.entity.cis.Mail;
+import kr.co.groupworks.service.cis.EmployeeService;
+import kr.co.groupworks.service.cis.MailService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Controller
 @RequestMapping("/mail")
+@RequiredArgsConstructor
+@Slf4j
 public class MailController {
+
+    private final MailService mailService;
+    private final EmployeeService employeeService;
 
     //    받은 메일함
     @GetMapping("/receive")
@@ -42,7 +53,21 @@ public class MailController {
 
     //    메일 쓰기 완료 후 받은 메일함으로 redirect
     @PostMapping("/write")
-    public String writePost() {
+    public String writePost(@ModelAttribute Mail mail, HttpSession session) {
+        mail.setMailSender(employeeService.findByEmployeeId((Long) session.getAttribute("employeeId")).getEmail());
+        mail.setMailSenderName(employeeService.findByEmployeeId((Long) session.getAttribute("employeeId")).getEmployeeName());
+
+//        받는 사람 이메일에 해당하는 사람의 이름
+        mail.setMailReceiverName(employeeService.findByEmployeeEmail((mail.getMailReceiver())).getEmployeeName());
+//        참조되는 사람 이메일에 해당하는 사람의 이름
+        mail.setMailReferrerName(employeeService.findByEmployeeEmail((mail.getMailReferrer())).getEmployeeName());
+        mail.setMailSendTime(LocalDateTime.now());
+        mail.setMailStatus(0);
+        mail.setMailIsRead(0);
+
+        log.info("메일 작성 : " + mail.toString());
+
+        mailService.saveOne(mail);
         return "redirect:/mail/receive";
     }
 
