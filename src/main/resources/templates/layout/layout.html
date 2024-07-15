@@ -2,18 +2,18 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
-    <th:block th:replace="~{fragment/config::config}" />
+  <th:block th:replace="~{fragment/config::config}" />
 </head>
 <body class="sb-nav-fixed">
 
-    <!--/* !필수 header */-->
-    <nav th:replace="~{fragment/header::header}"></nav>
+<!--/* !필수 header */-->
+<nav th:replace="~{fragment/header::header}"></nav>
 
-    <div id="layoutSidenav">
+<div id="layoutSidenav">
 
-        <!--/* !필수 Side Bar Menu */-->
-        <div th:replace="~{fragment/sideMenu::side}"></div>
+  <!--/* !필수 Side Bar Menu */-->
+  <div th:replace="~{fragment/sideMenu::side}"></div>
 
-    </div>
+</div>
 </body>
 </html>

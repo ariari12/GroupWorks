@@ -63,6 +63,9 @@ function approveAdd() {
         addLine.append(memberItem);
         approvIdx++;
     }
+
+    // 결재자 수 변경
+    $("#approverCount").val(approvIdx);
 }
 
 // 협조라인 추가
@@ -126,6 +129,9 @@ function approveCancel(i) {
     const NAME = 'approves';
     cancelLine(i, "#approval-line", NAME, FUNCTIONAL_NAME);
     approvIdx--;
+
+    // 결재자 수 변경
+    $("#approverCount").val(approvIdx);
 }
 // 협조라인 제거
 function collaboratorCancel(i) {
@@ -167,4 +173,80 @@ function cancelLine(i, tag, name, func) {
         changeEle += '</li>';
     }
     addLine.html(changeEle);
+}
+
+function approversSendList(fk) {
+    const APPORVER = 1;
+    const  COLLABORATOR = 2;
+    const REFERRER = 3;
+
+    let approverList = [];
+
+    let cnt = 1;
+    for (var approverEle of $("#approval-line").children()) {
+        let idx = $(approverEle).children().eq(1).val();
+
+        // memberList에서 특정 id 값을 가진 객체 찾기
+        let member = memberList.find(i => i.id === parseInt(idx));
+        approverList.push({
+            'workFlowId': fk,
+            'sequenceNum': cnt,
+            'approverType': APPORVER,
+            'employeeId': member.id,
+            'approverName': member.name,
+            'approverRank': member.rank,
+            'department': member.dept
+        });
+        cnt++;
+    }
+
+    cnt = 1;
+    for (var approverEle of $("#collaborator-line").children()) {
+        let idx = $(approverEle).children().eq(1).val();
+
+        let member = memberList.find(i => i.id === parseInt(idx));
+        approverList.push({
+            'workFlowId': fk,
+            'sequenceNum': cnt,
+            'approverType': COLLABORATOR,
+            'employeeId': member.id,
+            'approverName': member.name,
+            'approverRank': member.rank,
+            'department': member.dept
+        });
+        cnt++;
+    }
+
+    cnt = 1;
+    for (var approverEle of $("#referrer-line").children()) {
+        let idx = $(approverEle).children().eq(1).val();
+
+        let member = memberList.find(i => i.id === parseInt(idx));
+        approverList.push({
+            'workFlowId': fk,
+            'sequenceNum': cnt,
+            'approverType': REFERRER,
+            'employeeId': member.id,
+            'approverName': member.name,
+            'approverRank': member.rank,
+            'department': member.dept
+        });
+        cnt++;
+    }
+
+    console.dir(approverList);
+
+    $.ajax({
+        url: "/work-flow/approver-send",
+        type: "post",
+        data: JSON.stringify(approverList),
+        processData: false,
+        contentType: "application/json",
+        dataType: 'json',
+        success: function(response) {
+            console.log(response);
+        },
+        error: function() {
+        }
+    });
 }
