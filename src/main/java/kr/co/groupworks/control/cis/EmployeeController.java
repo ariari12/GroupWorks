@@ -6,6 +6,7 @@ import kr.co.groupworks.service.cis.EmployeeServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,8 +18,12 @@ public class EmployeeController {
 
     private final EmployeeService employeeService;
 
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
     @PostMapping("/save")
     public ResponseEntity<Employee> addEmployee(@RequestBody Employee employee) {
+        String encPassword = bCryptPasswordEncoder.encode(employee.getEmployeePW());
+        employee.setEmployeePW(encPassword);
         employeeService.saveEmployee(employee);
         System.out.println(employee.toString() + "입력");
         return ResponseEntity.ok().body(employee);
@@ -35,7 +40,7 @@ public class EmployeeController {
     }
 
     @GetMapping("/list/{employeeId}")
-    public ResponseEntity<Employee> getEmployeeById(@PathVariable Integer employeeId) {
+    public ResponseEntity<Employee> getEmployeeById(@PathVariable String employeeId) {
         Employee employee = employeeService.findByEmployeeId(employeeId);
         System.out.println(employee.getEmployeeName());
         return ResponseEntity.ok().body(employee);
