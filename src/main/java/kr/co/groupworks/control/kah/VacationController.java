@@ -23,7 +23,7 @@ public class VacationController {
     public String vacationMain(HttpSession session, Model model) {
         log.info("VacationController - vacationMain");
 
-        String employeeId = (String) session.getAttribute("employeeId");
+        Long employeeId = (Long) session.getAttribute("employeeId");
         log.info("세션 값 : "+employeeId);
 
         // 휴가 신청 내역 조회
