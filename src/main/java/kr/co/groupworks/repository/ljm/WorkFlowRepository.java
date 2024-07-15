@@ -1,4 +1,4 @@
-package kr.co.groupworks.repository.workflow;
+package kr.co.groupworks.repository.ljm;
 
 import org.springframework.stereotype.Repository;
 

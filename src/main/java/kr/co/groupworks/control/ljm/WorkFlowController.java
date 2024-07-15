@@ -35,6 +35,7 @@ public class WorkFlowController {
     private static final String WORK_STATUS = "/stat";
     private static final String WORK_WAIT = "/wait";
     private static final String SEPARATOR = "/";
+    private static final String DIRECTORY = "/ljm-workflow";
 
     @Getter
     private enum AttributeName {
@@ -88,7 +89,7 @@ public class WorkFlowController {
         model.addAttribute(AttributeName.SUB_TITLE.getStatus(), title);
         model.addAttribute(AttributeName.WORK_FLOW_DTO.getStatus(), workFlowDTO);
 
-        return "workflow/approvalForm";
+        return DIRECTORY + "/approvalForm";
     }
 
     /* 결재 발송 내역 */
@@ -187,7 +188,7 @@ public class WorkFlowController {
         model.addAttribute(AttributeName.APPROVAl.getStatus(), approval);   // 승인내역
         model.addAttribute(AttributeName.PROGRESS.getStatus(), progress);   // 진행내역
         model.addAttribute(AttributeName.REJECTION.getStatus(), rejection); // 반려내역
-        return "workflow/historyList";
+        return DIRECTORY + "/historyList";
     }
 
     /* 결재 상세 내용 */
@@ -339,7 +340,7 @@ public class WorkFlowController {
         final boolean TEST_VARIABLE = true;
         model.addAttribute("changePossible", TEST_VARIABLE ? true : false);
 
-        return "workflow/approvalDetail";
+        return DIRECTORY + "/approvalDetail";
     }
 
     /* 결재 현황 */
@@ -351,7 +352,7 @@ public class WorkFlowController {
         model.addAttribute(AttributeName.TITLE.getStatus(), title);
         model.addAttribute(AttributeName.SUB_TITLE.getStatus(), title);
 
-        return "workflow/workStatus";
+        return DIRECTORY + "/workStatus";
     }
 
     /* 결재 대기(승인대기 / 요청대기) 목록 */
@@ -362,7 +363,7 @@ public class WorkFlowController {
 
         model.addAttribute(AttributeName.TITLE.getStatus(), title);
         model.addAttribute(AttributeName.SUB_TITLE.getStatus(), title);
-        return "workflow/approvalWaitList";
+        return DIRECTORY + "/approvalWaitList";
     }
 
 }
