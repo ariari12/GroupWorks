@@ -2,6 +2,7 @@ package kr.co.groupworks.control.cis;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -49,5 +50,11 @@ public class MailController {
     @GetMapping("/delete")
     public String delete() {
         return "redirect:/mail/receive";
+    }
+
+    @GetMapping("/detail/{id}")
+    public String detail(@PathVariable int id ) {
+
+        return "cis/mail/detail";
     }
 }

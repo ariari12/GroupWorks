@@ -1,0 +1,28 @@
+<html xmlns:th="http://www.thymeleaf.org">
+
+<th:block th:fragment="commuteSideMenu">
+    <a class="nav-link collapsed" data-bs-toggle="collapse" data-bs-target="#commutePages" aria-expanded="false" aria-controls="collapsePages">
+        <div class="sb-nav-link-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-suitcase2" viewBox="0 0 16 16">
+                <path d="M8 3.5a.5.5 0 0 1 .5.5v4.293l2.354 2.353a.5.5 0 1 1-.708.708l-2.5-2.5A.5.5 0 0 1 7.5 8V4a.5.5 0 0 1 .5-.5z"/>
+                <path d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1zm0 1a6 6 0 1 1 0 12A6 6 0 0 1 8 2z"/>
+            </svg>
+        </div>근태관리
+        <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+    </a>
+
+    <div class="collapse" id="commutePages" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
+        <nav class="sb-sidenav-menu-nested nav accordion">
+            <a class="nav-link collapsed" href="/commute/list">
+                근태관리
+            </a>
+
+            <a class="nav-link collapsed" href="/commute/manage">
+                근태 수정 관리
+            </a>
+        </nav>
+    </div>
+
+
+</th:block>
+
