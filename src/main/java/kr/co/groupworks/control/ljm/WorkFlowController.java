@@ -1,7 +1,7 @@
 package kr.co.groupworks.control.ljm;
 
 import jakarta.servlet.http.HttpSession;
-import kr.co.groupworks.dto.cis.employee.EmployeeDTO;
+import kr.co.groupworks.dto.ljm.employee.EmployeeDTO;
 import kr.co.groupworks.dto.ljm.workflow.ApproverDTO;
 import kr.co.groupworks.dto.ljm.workflow.AttachmentFileDTO;
 import kr.co.groupworks.dto.ljm.workflow.WorkFlowInsertDTO;
@@ -43,7 +43,7 @@ public class WorkFlowController {
         SUB_TITLE("subTitle"),
 //        WORK_FLOW_URL("workFlowUrl"),
         WORK_FLOW_DTO("workFlowDto"),
-        EMPLOYEE("employee"),   // Test 용 사원정보 세션 생성 용도
+        EMPLOYEE("employeeId"), // 사원정보 세션 가져오기 용도
         APPROVAl("approval"),   // 승인내역
         PROGRESS("progress"),   // 진행 내역
         REJECTION("rejection")  // 반려 내역
@@ -61,23 +61,13 @@ public class WorkFlowController {
     /* 결제 요청 Form */
     @GetMapping( APPROVAL_REQUEST)
     public String approvalRequest(Model model, HttpSession session) {
-        // Test Use Session
-        EmployeeDTO employeeDto = new EmployeeDTO()
-            .setEmployeeId(114107)
-            .setEmployeeName("XxAaBb")
-            .setDepartmentId(152115)
-            .setDepartmentName("회계3팀")
-            .setRankName("사원")
-            .setEmail("text@text.com")
-            ;
-        session.setAttribute("employee", employeeDto);
-
         // 사원정보 받아오기
-        EmployeeDTO employeeDTO = (EmployeeDTO) session
-                .getAttribute(AttributeName.EMPLOYEE.getStatus());
+        EmployeeDTO employeeDTO = workFlowService.getEmployee(String.valueOf(session.getAttribute("employeeId")));
+
+        log.info("WorkFlowController - approvalRequest, employee: {}", employeeDTO);
 
         WorkFlowInsertDTO workFlowDTO = new WorkFlowInsertDTO()
-            .setEmployeeId(employeeDTO.getEmployeeId())
+            .setEmployeeId(employeeDTO.getId())
             .setEmployeeName(employeeDTO.getEmployeeName())
             .setDepartment(employeeDTO.getDepartmentName());
 

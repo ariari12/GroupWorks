@@ -1,12 +1,18 @@
 package kr.co.groupworks.control;
 
 import jakarta.servlet.http.HttpSession;
+import kr.co.groupworks.entity.cis.Employee;
+import kr.co.groupworks.security.CustomUserDetails;
 import kr.co.groupworks.service.cis.EmployeeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Slf4j
 @Controller
@@ -56,11 +62,19 @@ public class MainController {
 //            return "cis/login/loginForm";
 //        }
 //    }
-
 //    로그인 후 메인화면
     @GetMapping("/main")
     public String main(Model model, HttpSession session) {
         log.info("MainController - mainView");
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        CustomUserDetails user = (CustomUserDetails) authentication.getPrincipal();
+
+        Employee employee = employeeService.findByEmployeeId(user.getUsername());
+        System.out.println("employee는 뭐냐면: " + employee);
+        session.setAttribute("employeeId", employee.getEmployeeId());
+        session.setAttribute("employeeName", employee.getEmployeeName());
+        session.setAttribute("departmentId", employee.getDepartmentId());
 
         model.addAttribute("title", "MAIN");
         model.addAttribute("subtitle", "SUBMAIN");

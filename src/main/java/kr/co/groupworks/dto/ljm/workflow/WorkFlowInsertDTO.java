@@ -17,7 +17,7 @@ public class WorkFlowInsertDTO {
     private int id;
 
     // 2, 기안자 사원번호 fk
-    private int employeeId;
+    private String employeeId;
 
     // 3, 기안자 이메일
     private String email;
