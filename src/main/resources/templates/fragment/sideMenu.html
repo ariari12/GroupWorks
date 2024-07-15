@@ -11,13 +11,15 @@
 
             <div class="sb-sidenav-menu">
 
-                <div class="nav">
-                    <!--/* 그룹 소 제목 */-->
-                    <div class="sb-sidenav-menu-heading">Core</div>
-                    <a class="nav-link" href="/main">
-                        <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                        MAIN
-                    </a>
+            <div class="nav">
+                <th:block th:replace="/yhj/fragments/commuteTime::commuteTime"></th:block>
+
+                <!--/* 그룹 소 제목 */-->
+                <div class="sb-sidenav-menu-heading">Core</div>
+                <a class="nav-link" href="/main">
+                    <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                    MAIN
+                </a>
 
                     <!--/* 그룹 소 제목 */-->
                     <div class="sb-sidenav-menu-heading">Interface</div>
@@ -79,12 +81,15 @@
                         </nav>
                     </div>
 
+                <th:block th:replace="workflow/workFlowSideMenu.html :: workFlowSideMenu"></th:block>
 
-                    <th:block th:replace="workflow/workFlowSideMenu.html :: workFlowSideMenu"></th:block>
+                <th:block th:replace="yhj/fragments/boardSideMenu :: boardSideMenu"></th:block>
 
-                    <th:block th:replace="kah/fragments/kahSideMenu :: kahSideMenu"></th:block>
+                <th:block th:replace="kah/fragments/kahSideMenu :: kahSideMenu"></th:block>
 
-                    <th:block th:replace="cis/fragments/cisSideMenu :: cisSideMenu"></th:block>
+                <th:block th:replace="yhj/fragments/commuteSideMenu :: commuteSideMenu"></th:block>
+
+                <th:block th:replace="cis/fragments/cisSideMenu :: cisSideMenu"></th:block>
 
                     <!--/* Sidebar Menu 필요한 만큼 추가 */-->
                     <!--/* 그룹 소 제목 */-->
