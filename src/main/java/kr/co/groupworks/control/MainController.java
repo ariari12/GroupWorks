@@ -70,7 +70,7 @@ public class MainController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         CustomUserDetails user = (CustomUserDetails) authentication.getPrincipal();
 
-        Employee employee = employeeService.findByEmployeeId(user.getUsername());
+        Employee employee = employeeService.findByEmployeeId(Long.valueOf(user.getUsername()));
         System.out.println("employee는 뭐냐면: " + employee);
         session.setAttribute("employeeId", employee.getEmployeeId());
         session.setAttribute("employeeName", employee.getEmployeeName());
