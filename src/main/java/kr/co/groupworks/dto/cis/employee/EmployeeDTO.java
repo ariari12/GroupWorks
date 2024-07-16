@@ -12,7 +12,7 @@ import lombok.experimental.Accessors;
 @NoArgsConstructor
 public class EmployeeDTO {
     //  사원번호 pk
-    private int employeeId;
+    private Long employeeId;
     //  사원명
     private String employeeName;
     //  직급 fk

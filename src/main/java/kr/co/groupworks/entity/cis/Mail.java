@@ -36,7 +36,7 @@ public class Mail {
     @Field(name = "mail_referrername")
     private String mailReferrerName;
     @Field(name = "mail_sendtime")
-    private LocalDateTime mailSendTime;
+    private String mailSendTime;
     @Field(name = "mail_isread")
     private Integer mailIsRead;
 //    0은 일반, 1 중요, 2 휴지통
