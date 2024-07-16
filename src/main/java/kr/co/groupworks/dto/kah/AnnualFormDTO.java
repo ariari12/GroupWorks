@@ -1,5 +1,6 @@
 package kr.co.groupworks.dto.kah;
 
+import kr.co.groupworks.entity.kah.Vacation;
 import lombok.*;
 
 

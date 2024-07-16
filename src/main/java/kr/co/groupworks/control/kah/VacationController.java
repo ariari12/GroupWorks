@@ -1,15 +1,14 @@
 package kr.co.groupworks.control.kah;
 
 import jakarta.servlet.http.HttpSession;
+import kr.co.groupworks.dto.kah.AnnualFormDTO;
 import kr.co.groupworks.service.cis.EmployeeService;
 import kr.co.groupworks.service.kah.VacationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @Controller
@@ -44,5 +43,12 @@ public class VacationController {
         // header title 넘겨주기
         model.addAttribute("title", "구성원 휴가");
         return "kah/vacationTeam";
+    }
+
+
+    @PostMapping("/annual")
+    public String vacationAnnual(@ModelAttribute AnnualFormDTO dto){
+        vacationService.save(dto);
+        return "kah/vacationMain";
     }
 }
