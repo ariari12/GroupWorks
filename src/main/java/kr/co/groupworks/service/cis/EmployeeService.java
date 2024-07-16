@@ -11,6 +11,7 @@ public interface EmployeeService {
 
 
     Employee findByEmployeeId(Long employeeId);
+    Employee findByEmployeeEmail(String employeeEmail);
 
     boolean findByEmployeeIdAndEmployeePWAndEmployeeName(Long emplyoeeId, String pw, String name);
 
