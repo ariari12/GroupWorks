@@ -1,6 +1,7 @@
 package kr.co.groupworks.control.kah;
 
 import jakarta.servlet.http.HttpSession;
+import kr.co.groupworks.dto.cis.employee.SessionEmployeeDTO;
 import kr.co.groupworks.dto.kah.AnnualFormDTO;
 import kr.co.groupworks.service.cis.EmployeeService;
 import kr.co.groupworks.service.kah.VacationService;
@@ -47,8 +48,10 @@ public class VacationController {
 
 
     @PostMapping("/annual")
-    public String vacationAnnual(@ModelAttribute AnnualFormDTO dto){
-        vacationService.save(dto);
+    public String vacationAnnual(@ModelAttribute AnnualFormDTO dto,
+                                 @SessionAttribute(name = "employee")SessionEmployeeDTO sessionEmployeeDTO){
+        Long employeeId = sessionEmployeeDTO.getEmployeeId();
+        vacationService.save(dto,employeeId);
         return "kah/vacationMain";
     }
 }

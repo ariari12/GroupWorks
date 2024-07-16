@@ -4,6 +4,7 @@ package kr.co.groupworks.entity.kah;
 import jakarta.persistence.*;
 import kr.co.groupworks.entity.cis.Employee;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -12,6 +13,7 @@ import java.util.List;
 
 @Entity
 @Getter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class Calendar {
