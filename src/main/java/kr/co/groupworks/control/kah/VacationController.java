@@ -1,21 +1,33 @@
 package kr.co.groupworks.control.kah;
 
+import jakarta.servlet.http.HttpSession;
+import kr.co.groupworks.dto.cis.employee.SessionEmployeeDTO;
+import kr.co.groupworks.dto.kah.AnnualFormDTO;
+import kr.co.groupworks.service.cis.EmployeeService;
+import kr.co.groupworks.service.kah.VacationService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @Controller
 @RequestMapping("/vacation")
+@RequiredArgsConstructor
 public class VacationController {
+    private final EmployeeService employeeService;
+    private final VacationService vacationService;
 
     @GetMapping("")
-    public String vacationMain(Model model) {
+    public String vacationMain(HttpSession session, Model model) {
         log.info("VacationController - vacationMain");
 
+        Long employeeId = (Long) session.getAttribute("employeeId");
+        log.info("세션 값 : "+employeeId);
+
         // 휴가 신청 내역 조회
+
         // 휴가 보유 사용현황 조회
 
 
@@ -32,5 +44,14 @@ public class VacationController {
         // header title 넘겨주기
         model.addAttribute("title", "구성원 휴가");
         return "kah/vacationTeam";
+    }
+
+
+    @PostMapping("/annual")
+    public String vacationAnnual(@ModelAttribute AnnualFormDTO dto,
+                                 @SessionAttribute(name = "employee")SessionEmployeeDTO sessionEmployeeDTO){
+        Long employeeId = sessionEmployeeDTO.getEmployeeId();
+        vacationService.save(dto,employeeId);
+        return "kah/vacationMain";
     }
 }

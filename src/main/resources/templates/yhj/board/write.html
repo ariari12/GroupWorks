@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+
+<th:block layout:fragment="css">
+    <style>
+        #editorjs {
+            margin: 0 auto; /* 가운데 정렬 */
+        }
+        .codex-editor__redactor {
+            padding-bottom: 50px !important; /* 변경할 padding-bottom 값 */
+        }
+    </style>
+</th:block>
+
+<th:block layout:fragment="javascript">
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/header@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/simple-image@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/delimiter@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/list@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/checklist@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/quote@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/code@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/embed@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/table@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/link@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/warning@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/marker@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/inline-code@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/editorjs@latest"></script>
+    <script>
+
+        $( document ).ready(function() {
+            var editor = new EditorJS({
+                readOnly: false,
+                holder: 'editorjs',
+                tools: {
+                    header: {
+                        class: Header,
+                        inlineToolbar: ['marker', 'link'],
+                        config: {
+                            placeholder: '제목을 입력하세요'
+                        },
+                        shortcut: 'CMD+SHIFT+H'
+                    },
+                    image: SimpleImage,
+                    list: {
+                        class: List,
+                        inlineToolbar: true,
+                        shortcut: 'CMD+SHIFT+L'
+                    },
+                    checklist: {
+                        class: Checklist,
+                        inlineToolbar: true,
+                    },
+                    quote: {
+                        class: Quote,
+                        inlineToolbar: true,
+                        config: {
+                            quotePlaceholder: '인용문을 입력하세요',
+                            captionPlaceholder: '인용자의 이름',
+                        },
+                        shortcut: 'CMD+SHIFT+O'
+                    },
+                    warning: Warning,
+                    marker: {
+                        class: Marker,
+                        shortcut: 'CMD+SHIFT+M'
+                    },
+                    code: {
+                        class: CodeTool,
+                        shortcut: 'CMD+SHIFT+C'
+                    },
+                    delimiter: Delimiter,
+                    inlineCode: {
+                        class: InlineCode,
+                        shortcut: 'CMD+SHIFT+I'
+                    },
+                    linkTool: LinkTool,
+                    embed: Embed,
+                    table: {
+                        class: Table,
+                        inlineToolbar: true,
+                        shortcut: 'CMD+ALT+T'
+                    },
+                },
+            });
+        });
+    </script>
+</th:block>
+
+<th:block layout:fragment="content">
+    <form action="/board/write" method="post">
+        <div class="container" style="margin: 50px; width: 75%;">
+            <h3>부서 게시판 글쓰기</h3>
+            <div style="border: 1px solid #ebecef; border-radius: 10px; padding: 10px;">
+                <select class="form-select" aria-label="말머리">
+                    <option value="1" selected>일반</option>
+                    <option value="2">제안</option>
+                    <option value="3">오류</option>
+                    <option value="4">문의</option>
+                    <option value="5">공지</option>
+                    <option value="6">필독</option>
+                </select>
+                <hr>
+                <input type="text" name="title" placeholder="제목을 입력하세요" style="border-radius:5px; width:100%; padding:5px;">
+            </div>
+
+            <div style="margin: 20px 0 20px 0; border: 1px solid #ebecef; border-radius: 10px; padding: 10px;" >
+                <div id="editorjs"></div>
+            </div>
+
+            <div>
+                <input type="button" class="btn btn-success" value="등록하기">
+            </div>
+        </div>
+    </form>
+
+</th:block>
