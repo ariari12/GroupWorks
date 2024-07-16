@@ -1,5 +1,6 @@
 package kr.co.groupworks.service.cis;
 
+import kr.co.groupworks.dto.cis.employee.EmployeeDTO;
 import kr.co.groupworks.entity.cis.Employee;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,7 @@ class EmployeeServiceTest {
 
     @Test
     void saveEmployee() {
-        Employee employee = Employee.builder()
+        EmployeeDTO employee = EmployeeDTO.builder()
                 .employeeId(2106L)
                 .employeePW("971120")
                 .employeeName("최일성")

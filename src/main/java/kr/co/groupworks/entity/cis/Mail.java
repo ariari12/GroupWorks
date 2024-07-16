@@ -11,7 +11,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
 import java.time.LocalDateTime;
 
 @Document(collection = "mail")
-@Data
+@Getter
 @AllArgsConstructor @NoArgsConstructor
 @Builder @ToString
 public class Mail {

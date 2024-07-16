@@ -2,6 +2,7 @@ package kr.co.groupworks.control.cis;
 
 import jakarta.servlet.http.HttpSession;
 import kr.co.groupworks.dto.cis.employee.SessionEmployeeDTO;
+import kr.co.groupworks.dto.cis.mail.MailDTO;
 import kr.co.groupworks.entity.cis.Mail;
 import kr.co.groupworks.service.cis.EmployeeService;
 import kr.co.groupworks.service.cis.MailService;
@@ -71,7 +72,7 @@ public class MailController {
         String receiverEmail = employeeDTO.getEmail();
         log.info(receiverEmail + "의 중요 메일함 컨트롤러 동작 중");
         List<Mail> mailList =
-                mailService.getEmailListByReceiverEmail(receiverEmail);
+                mailService.getImportantEmailListByReceiverEmail(receiverEmail);
 
         log.info(receiverEmail + "의 받은 메일 목록");
         log.info(mailList.toString());
@@ -93,25 +94,25 @@ public class MailController {
 
     //    메일 쓰기 완료 후 받은 메일함으로 redirect
     @PostMapping("/write")
-    public String writePost(@ModelAttribute Mail mail, HttpSession session) {
-        mail.setMailSender(employeeService.findByEmployeeId((Long) session.getAttribute("employeeId")).getEmail());
-        mail.setMailSenderName(employeeService.findByEmployeeId((Long) session.getAttribute("employeeId")).getEmployeeName());
+    public String writePost(@ModelAttribute MailDTO mailDTO, HttpSession session) {
+        mailDTO.setMailSender(employeeService.findByEmployeeId((Long) session.getAttribute("employeeId")).getEmail());
+        mailDTO.setMailSenderName(employeeService.findByEmployeeId((Long) session.getAttribute("employeeId")).getEmployeeName());
 
 //        받는 사람 이메일에 해당하는 사람의 이름
-        mail.setMailReceiverName(employeeService.findByEmployeeEmail((mail.getMailReceiver())).getEmployeeName());
+        mailDTO.setMailReceiverName(employeeService.findByEmployeeEmail((mailDTO.getMailReceiver())).getEmployeeName());
 //        참조되는 사람 이메일에 해당하는 사람의 이름
-        mail.setMailReferrerName(employeeService.findByEmployeeEmail((mail.getMailReferrer())).getEmployeeName());
+        mailDTO.setMailReferrerName(employeeService.findByEmployeeEmail((mailDTO.getMailReferrer())).getEmployeeName());
 
         Date date = new Date();
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd hh:mm");
-        mail.setMailSendTime(formatter.format(date));
+        mailDTO.setMailSendTime(formatter.format(date));
 
-        mail.setMailStatus(0);
-        mail.setMailIsRead(0);
+        mailDTO.setMailStatus(0);
+        mailDTO.setMailIsRead(0);
 
-        log.info("메일 작성 : " + mail.toString());
+        log.info("메일 작성 : " + mailDTO.toString());
 
-        mailService.saveOne(mail);
+        mailService.saveOne(mailDTO);
         return "redirect:/mail/receive";
     }
 
