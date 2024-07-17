@@ -6,7 +6,6 @@ import lombok.experimental.SuperBuilder;
 
 @Entity
 @Getter
-@ToString(exclude = "calendar")
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder
