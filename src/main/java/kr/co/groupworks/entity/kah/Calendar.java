@@ -3,22 +3,23 @@ package kr.co.groupworks.entity.kah;
 
 import jakarta.persistence.*;
 import kr.co.groupworks.entity.cis.Employee;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Getter
-@Builder
+@ToString
+@SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
+@Inheritance(strategy = InheritanceType.JOINED)
+@DiscriminatorColumn(name = "dtype")
 public class Calendar {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long calendarId;
     // 제목
     private String title;
@@ -33,8 +34,7 @@ public class Calendar {
     @ManyToOne
     @JoinColumn(name = "employee_id")
     private Employee employee;
-    //휴가 외래키
-    @OneToMany(mappedBy = "calendar", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Vacation> vacationList = new ArrayList<>();
+
+
 
 }

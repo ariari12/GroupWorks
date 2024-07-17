@@ -1,4 +1,4 @@
-package kr.co.groupworks.dto.kah;
+package kr.co.groupworks.entity.kah;
 
 public enum LeaveType {
     // 연차
