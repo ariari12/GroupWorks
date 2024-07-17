@@ -3,6 +3,7 @@ package kr.co.groupworks.entity.cis;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.*;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -11,14 +12,13 @@ import org.springframework.data.mongodb.core.mapping.Field;
 import java.time.LocalDateTime;
 
 @Document(collection = "mail")
-@Data
+@Getter
 @AllArgsConstructor @NoArgsConstructor
 @Builder @ToString
 public class Mail {
 
-//    @Field(name = "mail_id")
-//    private Integer mailId;
-
+    @Id
+    private String id;
     @Field(name = "mail_title")
     private String mailTitle;
     @Field(name = "mail_content")
@@ -36,7 +36,7 @@ public class Mail {
     @Field(name = "mail_referrername")
     private String mailReferrerName;
     @Field(name = "mail_sendtime")
-    private LocalDateTime mailSendTime;
+    private String mailSendTime;
     @Field(name = "mail_isread")
     private Integer mailIsRead;
 //    0은 일반, 1 중요, 2 휴지통
