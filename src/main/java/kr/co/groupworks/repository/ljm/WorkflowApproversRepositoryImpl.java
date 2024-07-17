@@ -15,8 +15,6 @@ import java.util.List;
 public class WorkflowApproversRepositoryImpl extends QuerydslRepositorySupport implements WorkflowApproversRepository {
     private JPAQueryFactory queryFactory;
 
-    
-    
     @Autowired
     public WorkflowApproversRepositoryImpl(EntityManager em) {
         super(WorkFlowEntity.class);
