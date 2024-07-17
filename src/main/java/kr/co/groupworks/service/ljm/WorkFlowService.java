@@ -6,6 +6,7 @@ import kr.co.groupworks.dto.ljm.dto.WorkFlowInsertDTO;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Map;
 
 public interface WorkFlowService {
     /* 사원 정보 EmployeeDTO */
@@ -24,8 +25,11 @@ public interface WorkFlowService {
     long setWorkFlowRequest(WorkFlowInsertDTO workFlowInsertDTO);
 
     /* ApproverEntityList Save */
-    void setApproverList(List<ApproverDTO> approverList);
+    boolean setApproverList(List<ApproverDTO> approverList);
 
     /* AttachFileList Save */
-    void setAttachmentFileList(MultipartFile[] files);
+    boolean setAttachmentFileList(MultipartFile[] files, long pk);
+
+    /* AttachmentFile Select */
+    Map<String, Object> getAttachmentFile(long fileId);
 }

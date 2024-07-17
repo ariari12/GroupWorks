@@ -1,7 +1,10 @@
 package kr.co.groupworks.entity.ljm;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "attachment_file")
@@ -9,9 +12,8 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AttachmentFileEntity {
+public class AttachmentFileOnlyEntity {
     @Id @Column(name = "af_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     // 1, 결재 첨부파일 pk
     // service 에서 미리 UUID 지정, 컨트롤러를 통해 view js로 전달
     private long id;

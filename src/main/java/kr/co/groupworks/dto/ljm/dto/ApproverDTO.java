@@ -47,17 +47,21 @@ public class ApproverDTO {
     // 10, 결재자 소속
     private String department;
 
-    // 11, 결재 방식
+    // 11, 결재 방식 1:선결, 2:후결, 3:대결, 4:전결, 5:반려
     private int approvalMethod;
     // 12, 반려사유/협의안/코멘트
     private String comment;
     // 13, 결재 승인 일자
     private String approvalDate;
-    // 14, 승인 여부 String
+    // 14, 승인 여부 0:진행, 1:승인, 2:반려
     private int approval;
 
     public ApproverEntity dtoToEntity() {
         /* approvalDate: 2024-07-12T04:58 */
+        String datePattern = "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}$";
+        LocalDateTime finalDate = (approvalDate == null || approvalDate.matches(datePattern)) ? null :
+                LocalDateTime.parse(approvalDate, DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm"));
+
         return ApproverEntity.builder()
                 /* 결재 문서 정보 */
                 .id(id)
@@ -74,9 +78,33 @@ public class ApproverDTO {
                 /* 결재 정보 */
                 .approvalMethod(approvalMethod)
                 .comment(comment)
-                .approvalDate(LocalDateTime.parse(approvalDate,
-                        DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm")))
+                .approvalDate(finalDate)
                 .approval(approval)
                 .build();
+    }
+
+    public static ApproverDTO entityToDto(ApproverEntity approverEntity) {
+        String datePattern = "yyyy-MM-dd'T'HH:mm";
+        String approvalDate = approverEntity.getApprovalDate() == null ? null :
+                approverEntity.getApprovalDate().format(DateTimeFormatter.ofPattern(datePattern));
+
+        return new ApproverDTO()
+                .setId(approverEntity.getId())
+                .setWorkFlowId(approverEntity.getWorkFlowId())
+                .setSequenceNum(approverEntity.getSequenceNum())
+
+                .setApproverType(approverEntity.getApproverType())
+                .setEmployeeId(approverEntity.getEmployeeId())
+                .setApproverEmail(approverEntity.getApproverEmail())
+                .setApproverPhone(approverEntity.getApproverPhone())
+                .setApproverName(approverEntity.getApproverName())
+                .setApproverRank(approverEntity.getApproverRank())
+                .setDepartment(approverEntity.getDepartment())
+
+                .setApprovalMethod(approverEntity.getApprovalMethod())
+                .setComment(approverEntity.getComment())
+                .setApprovalDate(approvalDate)
+                .setApproval(approverEntity.getApproval())
+                ;
     }
 }

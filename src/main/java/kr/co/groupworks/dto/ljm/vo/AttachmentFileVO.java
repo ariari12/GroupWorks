@@ -12,9 +12,9 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 public class AttachmentFileVO {
     // 1, 결재 첨부파일 pk
-    private int id;
+    private long id;
     // 2, 결재 요청 fk
-    private int workFlowId;
+    private long workFlowId;
     // 3, 첨부 파일 경로
     // 파일저장 경로 예시) 공통경로/부서/이름/UUID/파일이름
     private String savePath;
@@ -23,10 +23,10 @@ public class AttachmentFileVO {
 
     public AttachmentFileVO(AttachmentFileEntity attachmentFileEntity) {
         this
-            .setId(id)
-            .setWorkFlowId(workFlowId)
-            .setSavePath(savePath)
-            .setFileName(fileName)
+            .setId(attachmentFileEntity.getId())
+            .setWorkFlowId(attachmentFileEntity.getWorkFlowId())
+            .setSavePath(attachmentFileEntity.getSavePath())
+            .setFileName(attachmentFileEntity.getFileName())
         ;
     }
 }

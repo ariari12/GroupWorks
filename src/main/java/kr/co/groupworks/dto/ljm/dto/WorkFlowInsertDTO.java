@@ -1,5 +1,6 @@
 package kr.co.groupworks.dto.ljm.dto;
 
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import kr.co.groupworks.entity.ljm.WorkFlowEntity;
@@ -11,6 +12,7 @@ import lombok.experimental.Accessors;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @Getter @Setter @ToString
 @Accessors(chain = true)
@@ -51,21 +53,37 @@ public class WorkFlowInsertDTO {
     @NotEmpty @NotNull
     // 13, 결재 요청 일
     private String draftDate;
+    // 14, 최종 결재 일
+    private String approvalDate;
 
-    // 14, 최종 결재자 직급
+    // 15, 최종 결재자 직급
     private String finalApprovalRank;
-    // 15, 최종 결재자 소속
+    // 16, 최종 결재자 소속
     private String finalApprovalDepartment;
-    // 16, 최종 결재자 명
+    // 17, 최종 결재자 명
     private String finalApprovalName;
 
-    @NotNull
-    // 17, 결재 인원
+    @NotNull @Min(value = 1)
+    // 18, 결재 인원
     private int approverCount;
-    // 18, 비용 청구
+    // 19, 승인된 수
+    private int approvalCount;
+    // 20, 비용 청구
     private long cost;
+    // 21, 최종 승인여부
+    private int status;
+
+    private List<ApproverDTO> approvers;
+    private List<AttachmentFileDTO> attachmentFiles;
 
     public WorkFlowEntity dtoToEntity() {
+        // 2024-07-16T:07:32, 2024-07-12T04:58
+        String datePattern = "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}$";
+
+        LocalDateTime finalDate = (approvalDate == null || approvalDate.matches(datePattern)) ? null :
+                LocalDateTime.parse(approvalDate, DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm"));
+
+
         return WorkFlowEntity.builder()
                 .id(id)
                 /* 기안자 */
@@ -85,11 +103,53 @@ public class WorkFlowInsertDTO {
                 .draftDate(LocalDateTime.parse(draftDate,
                         DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm")))
                 /* 최종 결재자 정보 */
+                .approvalDate(finalDate)
                 .finalApprovalRank(finalApprovalRank)
                 .finalApprovalDepartment(finalApprovalDepartment)
                 .finalApprovalName(finalApprovalName)
                 /* 결재 상황 */
                 .approverCount(approverCount)
+                .approvalCount(approvalCount)
+                .status(status)
+                .approvers(approvers != null ? approvers.stream().map(ApproverDTO::dtoToEntity).toList() : null)
+                .attachmentFiles(attachmentFiles != null ? attachmentFiles.stream().map(AttachmentFileDTO::dtoToEntity).toList() : null)
                 .build();
+    }
+
+    public static WorkFlowInsertDTO entityToDto(WorkFlowEntity workFlowEntity) {
+        String draftDate = workFlowEntity.getDraftDate() == null ? null :
+                DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm").format(workFlowEntity.getDraftDate());
+        String approvalDate = workFlowEntity.getApprovalDate() == null ? null :
+                DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm").format(workFlowEntity.getApprovalDate());
+
+        return new WorkFlowInsertDTO()
+                .setId(workFlowEntity.getId())
+
+                .setEmployeeId(workFlowEntity.getEmployeeId())
+                .setEmail(workFlowEntity.getEmail())
+                .setPhone(workFlowEntity.getPhone())
+                .setEmployeeRank(workFlowEntity.getEmployeeRank())
+                .setDepartmentId(workFlowEntity.getDepartmentId())
+                .setDepartment(workFlowEntity.getDepartment())
+                .setEmployeeName(workFlowEntity.getEmployeeName())
+
+                .setCode(workFlowEntity.getCode())
+                .setWorkFlowType(workFlowEntity.getWorkFlowType())
+                .setTitle(workFlowEntity.getTitle())
+                .setDescription(workFlowEntity.getDescription())
+                .setCost(workFlowEntity.getCost())
+                .setDraftDate(draftDate)
+                .setApprovalDate(approvalDate)
+
+                .setFinalApprovalRank(workFlowEntity.getFinalApprovalRank())
+                .setFinalApprovalDepartment(workFlowEntity.getFinalApprovalDepartment())
+                .setFinalApprovalName(workFlowEntity.getFinalApprovalName())
+
+                .setApproverCount(workFlowEntity.getApproverCount())
+                .setApprovalCount(workFlowEntity.getApprovalCount())
+                .setStatus(workFlowEntity.getStatus())
+                .setApprovers(workFlowEntity.getApprovers() != null ? workFlowEntity.getApprovers().stream().map(ApproverDTO::entityToDto).toList() : null)
+                .setAttachmentFiles(workFlowEntity.getAttachmentFiles() != null ? workFlowEntity.getAttachmentFiles().stream().map(AttachmentFileDTO::entityToDto).toList() : null)
+                ;
     }
 }

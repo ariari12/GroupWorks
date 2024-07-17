@@ -1,5 +1,6 @@
 package kr.co.groupworks.service.ljm;
 
+import kr.co.groupworks.dto.ljm.dto.ApproverDTO;
 import kr.co.groupworks.dto.ljm.employee.EmployeeDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
@@ -8,6 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @SpringBootTest
@@ -46,7 +52,45 @@ class WorkFlowServiceImplTest {
         files[1] = new MockMultipartFile(fileName2, fileName2, "text/plain", content2);
 
         // 서비스 메서드 호출
-        workFlowService.setAttachmentFileList(files);
+        workFlowService.setAttachmentFileList(files, 1L);
+    }
+
+    @Test @DisplayName("ApproverList Insert Test")
+    public void approverListInsertTest() {
+        List<ApproverDTO> approverDTOList = new ArrayList<>();
+        Map<String, Integer[]> approverMap = new HashMap<>();
+        approverMap.put("approve", new Integer[]{4, 7, 10});
+        approverMap.put("collaborate", new Integer[]{2, 5, 8});
+        approverMap.put("refer", new Integer[]{3, 6, 9});
+
+        for (int i = 1; i < approverMap.get("approve").length; i++) {
+            approverDTOList.add(
+                    workFlowService.getApproverDTO(approverMap.get("approve")[i -1])
+                            .setWorkFlowId(1L)
+                            .setSequenceNum(i)
+                            .setApproverType(1)
+            );
+        }
+
+        for (int i = 0; i < approverMap.get("collaborate").length; i++) {
+            approverDTOList.add(
+                    workFlowService.getApproverDTO(approverMap.get("collaborate")[i])
+                            .setWorkFlowId(1L)
+                            .setSequenceNum(i)
+                            .setApproverType(2)
+            );
+        }
+
+        for (int i = 0; i < approverMap.get("refer").length; i++) {
+            approverDTOList.add(
+                    workFlowService.getApproverDTO(approverMap.get("refer")[i])
+                            .setWorkFlowId(1L)
+                            .setSequenceNum(i)
+                            .setApproverType(3)
+            );
+        }
+
+        workFlowService.setApproverList(approverDTOList);
     }
 
 }
