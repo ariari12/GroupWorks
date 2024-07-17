@@ -13,4 +13,6 @@ public interface MailService {
     List<Mail> getEmailListBySenderEmail(String senderEmail);
 
     List<Mail> getImportantEmailListByReceiverEmail(String receiverEmail);
+
+    boolean updateMailStatus(String id, Integer mailStatus);
 }

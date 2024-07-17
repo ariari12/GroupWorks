@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
-public interface MailRepository extends MongoRepository<Mail, Integer> {
+public interface MailRepository extends MongoRepository<Mail, String> {
 //    받은 메일함에 사용하는 JPA
     List<Mail> findAllByMailReceiver(String receiverEmail);
 

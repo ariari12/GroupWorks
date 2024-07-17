@@ -9,6 +9,8 @@ import kr.co.groupworks.service.cis.MailService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Session;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +20,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 
 @Controller
@@ -95,8 +99,10 @@ public class MailController {
     //    메일 쓰기 완료 후 받은 메일함으로 redirect
     @PostMapping("/write")
     public String writePost(@ModelAttribute MailDTO mailDTO, HttpSession session) {
-        mailDTO.setMailSender(employeeService.findByEmployeeId((Long) session.getAttribute("employeeId")).getEmail());
-        mailDTO.setMailSenderName(employeeService.findByEmployeeId((Long) session.getAttribute("employeeId")).getEmployeeName());
+        SessionEmployeeDTO employeeDTO = (SessionEmployeeDTO) session.getAttribute("employee");
+
+        mailDTO.setMailSender(employeeService.findByEmployeeId(employeeDTO.getEmployeeId()).getEmail());
+        mailDTO.setMailSenderName(employeeService.findByEmployeeId(employeeDTO.getEmployeeId()).getEmployeeName());
 
 //        받는 사람 이메일에 해당하는 사람의 이름
         mailDTO.setMailReceiverName(employeeService.findByEmployeeEmail((mailDTO.getMailReceiver())).getEmployeeName());
@@ -113,7 +119,7 @@ public class MailController {
         log.info("메일 작성 : " + mailDTO.toString());
 
         mailService.saveOne(mailDTO);
-        return "redirect:/mail/receive";
+        return "redirect:/mail/send";
     }
 
     //    휴지통 메일 지우기
@@ -122,9 +128,23 @@ public class MailController {
         return "redirect:/mail/receive";
     }
 
+    //    메일 상세보기
     @GetMapping("/detail/{id}")
     public String detail(@PathVariable int id ) {
 
         return "cis/mail/detail";
+    }
+
+//      중요메일 표시하기
+    @PostMapping("/updateMailStatus")
+    @ResponseBody
+    public ResponseEntity<String> updateMailStatus(@RequestBody Map<String, Object> mail) {
+        log.info(mail.get("id") + " " + mail.get("status"));
+        if(mailService.updateMailStatus((String)mail.get("id"),(Integer) mail.get("status"))){
+            return ResponseEntity.ok("메일 상태가 업데이트되었습니다.");
+        }else{
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("메일을 찾을 수 없습니다.");
+        }
+
     }
 }
