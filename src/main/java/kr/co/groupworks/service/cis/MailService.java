@@ -15,4 +15,16 @@ public interface MailService {
     List<Mail> getImportantEmailListByReceiverEmail(String receiverEmail);
 
     boolean updateMailStatus(String id, Integer mailStatus);
+
+    List<Mail> getTrashEmailListTrashByReceiverEmail(String receiverEmail);
+
+    MailDTO getEmailById(String id);
+
+    List<Mail> getEmailListByReceiverEmailAndMailTitle(String receiverEmail, String mailTitle);
+
+    List<Mail> getEmailListByReceiverEmailAndMailSenderName(String receiverEmail, String mailSenderName);
+
+    List<Mail> getEmailListBySenderEmailAndMailTitle(String senderEmail, String mailTitle);
+
+    List<Mail> getEmailListBySenderEmailAndMailReceiverName(String senderEmail, String mailRecieverName);
 }

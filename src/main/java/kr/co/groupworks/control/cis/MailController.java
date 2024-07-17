@@ -36,20 +36,46 @@ public class MailController {
 
     //    받은 메일함
     @GetMapping("/receive")
-    public String receive(HttpSession session, Model model) {
+    public String receive(HttpSession session, Model model)
+    {
         SessionEmployeeDTO employeeDTO = (SessionEmployeeDTO) session.getAttribute("employee");
-
-//        로그인 한 사람이 받은 메일들 가져오기
         String receiverEmail = employeeDTO.getEmail();
         log.info(receiverEmail + "의 받은 메일함 컨트롤러 동작 중");
-        List<Mail> mailList =
-                mailService.getEmailListByReceiverEmail(receiverEmail);
-
+        List<Mail> mailList = mailService.getEmailListByReceiverEmail(receiverEmail);
         log.info(receiverEmail + "의 받은 메일 목록");
         log.info(mailList.toString());
         model.addAttribute("mailList", mailList);
         return "cis/mail/receive";
     }
+
+    //      받은 메일함에서 검색할 때
+    @GetMapping("/receive/search")
+    public String receive(HttpSession session, Model model, @RequestParam("keytype") String keytype
+                                                          , @RequestParam("keyword") String keyword ) {
+        SessionEmployeeDTO employeeDTO = (SessionEmployeeDTO) session.getAttribute("employee");
+
+//        로그인 한 사람이 받은 메일들 가져오기
+        String receiverEmail = employeeDTO.getEmail();
+        log.info("검색어 타입은 " + keytype + " 내용은 " + keyword);
+        log.info(receiverEmail + "의 받은 메일함 컨트롤러 동작 중");
+        List<Mail> mailList = null;
+//        만약 키워드가 주워졌다면
+        if(keytype!=null && keyword!=null){
+//            키워드가 제목일 때
+            if(keytype.equals("제목")){
+                mailList = mailService.getEmailListByReceiverEmailAndMailTitle(receiverEmail, keyword);
+//            키워드가 발신자 이름일 때
+            }else if(keytype.equals("발신자이름")){
+                mailList = mailService.getEmailListByReceiverEmailAndMailSenderName(receiverEmail, keyword);
+            }
+        }
+
+        log.info(receiverEmail + "의 받은 메일 중 검색결과 목록");
+        log.info(mailList.toString());
+        model.addAttribute("mailList", mailList);
+        return "cis/mail/receive";
+    }
+
 
     //    보낸 메일함
     @GetMapping("/send")
@@ -62,6 +88,34 @@ public class MailController {
                 mailService.getEmailListBySenderEmail(senderEmail);
 
         log.info(senderEmail + "이 보낸 메일 목록");
+        log.info(mailList.toString());
+        model.addAttribute("mailList", mailList);
+        return "cis/mail/send";
+    }
+
+    //      보낸 메일함에서 검색할 때
+    @GetMapping("/send/search")
+    public String send(HttpSession session, Model model, @RequestParam("keytype") String keytype
+            , @RequestParam("keyword") String keyword ) {
+        SessionEmployeeDTO employeeDTO = (SessionEmployeeDTO) session.getAttribute("employee");
+
+//        로그인 한 사람이 보낸 메일들 가져오기
+        String senderEmail = employeeDTO.getEmail();
+        log.info("검색어 타입은 " + keytype + " 내용은 " + keyword);
+        log.info(senderEmail + "이 보낸 메일함 컨트롤러 동작 중");
+        List<Mail> mailList = null;
+//        만약 키워드가 주워졌다면
+        if(keytype!=null && keyword!=null){
+//            키워드가 제목일 때
+            if(keytype.equals("제목")){
+                mailList = mailService.getEmailListBySenderEmailAndMailTitle(senderEmail, keyword);
+//            키워드가 발신자 이름일 때
+            }else if(keytype.equals("수신자이름")){
+                mailList = mailService.getEmailListBySenderEmailAndMailReceiverName(senderEmail, keyword);
+            }
+        }
+
+        log.info(senderEmail + "의 보낸 메일 중 검색결과 목록");
         log.info(mailList.toString());
         model.addAttribute("mailList", mailList);
         return "cis/mail/send";
@@ -86,7 +140,17 @@ public class MailController {
 
     //    휴지통 메일함
     @GetMapping("/trash")
-    public String trash() {
+    public String trash(HttpSession session, Model model) {
+
+        SessionEmployeeDTO employeeDTO = (SessionEmployeeDTO) session.getAttribute("employee");
+        String receiverEmail = employeeDTO.getEmail();
+        log.info(receiverEmail + "의 휴지통 컨트롤러 동작 중");
+        List<Mail> mailList =
+                mailService.getTrashEmailListTrashByReceiverEmail(receiverEmail);
+
+        log.info(receiverEmail + "의 휴디통 메일 목록");
+        log.info(mailList.toString());
+        model.addAttribute("mailList", mailList);
         return "cis/mail/trash";
     }
 
@@ -130,8 +194,12 @@ public class MailController {
 
     //    메일 상세보기
     @GetMapping("/detail/{id}")
-    public String detail(@PathVariable int id ) {
+    public String detail(@PathVariable String id , Model model) {
 
+        log.info(id + "메일 상세보기 컨트롤러 작동 중");
+//        아이디로 메일 찾기
+        MailDTO mailDTO = mailService.getEmailById(id);
+        model.addAttribute("mailDTO",mailDTO);
         return "cis/mail/detail";
     }
 

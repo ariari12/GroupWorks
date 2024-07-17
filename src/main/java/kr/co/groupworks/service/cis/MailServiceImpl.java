@@ -5,8 +5,6 @@ import kr.co.groupworks.entity.cis.Mail;
 import kr.co.groupworks.repository.cis.MailRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -60,7 +58,48 @@ public class MailServiceImpl implements MailService{
         }
     }
 
-//    dto to entity
+    @Override
+    public List<Mail> getTrashEmailListTrashByReceiverEmail(String receiverEmail) {
+        return mailRepository.findTrashByReceiver(receiverEmail);
+    }
+
+    @Override
+    public MailDTO getEmailById(String id) {
+        Mail mail = mailRepository.findById(id).get();
+
+        MailDTO mailDTO = toDTO(mail);
+
+        //  만약 isRead가 0이면 1로 변경한 후 document에 저장
+        if(mailDTO.getMailIsRead() == 0){
+            mailDTO.setMailIsRead(1);
+            mail = toEntity(mailDTO);
+            mailRepository.save(mail);
+        }
+        return mailDTO;
+    }
+
+//    받은 메일함 제목으로 찾기
+    @Override
+    public List<Mail> getEmailListByReceiverEmailAndMailTitle(String receiverEmail, String mailTitle) {
+        return mailRepository.findAllByMailReceiverAndMailTitle(receiverEmail,mailTitle);
+    }
+//    받은 메일함 보낸사람으로 찾기
+    @Override
+    public List<Mail> getEmailListByReceiverEmailAndMailSenderName(String receiverEmail, String mailSenderName) {
+        return mailRepository.findAllByMailReceiverAndMailSenderName(receiverEmail,mailSenderName);
+    }
+
+    @Override
+    public List<Mail> getEmailListBySenderEmailAndMailTitle(String senderEmail, String mailTitle) {
+        return mailRepository.findAllByMailSenderAndMailTitle(senderEmail,mailTitle);
+    }
+
+    @Override
+    public List<Mail> getEmailListBySenderEmailAndMailReceiverName(String senderEmail, String mailRecieverName) {
+        return mailRepository.findAllByMailSenderAndMailReceiverName(senderEmail,mailRecieverName);
+    }
+
+    //    dto to entity
     public Mail toEntity(MailDTO mailDTO) {
         return Mail.builder()
                 .id(mailDTO.getId())
