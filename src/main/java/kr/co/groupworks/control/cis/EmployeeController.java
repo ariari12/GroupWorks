@@ -4,6 +4,7 @@ import kr.co.groupworks.entity.cis.Employee;
 import kr.co.groupworks.service.cis.EmployeeService;
 import kr.co.groupworks.service.cis.EmployeeServiceImpl;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -14,14 +15,19 @@ import java.util.List;
 @RestController
 @RequestMapping("/employee")
 @RequiredArgsConstructor
+@Slf4j
 public class EmployeeController {
 
     private final EmployeeService employeeService;
 
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
+
     @PostMapping("/save")
     public ResponseEntity<Employee> addEmployee(@RequestBody Employee employee) {
+
+        log.info("새로운 사원 추가 : " + employee.toString());
+
         String encPassword = bCryptPasswordEncoder.encode(employee.getEmployeePW());
         employee.setEmployeePW(encPassword);
         employeeService.saveEmployee(employee);

@@ -1,6 +1,8 @@
 package kr.co.groupworks.control;
 
 import jakarta.servlet.http.HttpSession;
+import kr.co.groupworks.dto.cis.employee.EmployeeDTO;
+import kr.co.groupworks.dto.cis.employee.SessionEmployeeDTO;
 import kr.co.groupworks.entity.cis.Employee;
 import kr.co.groupworks.security.CustomUserDetails;
 import kr.co.groupworks.service.cis.EmployeeService;
@@ -71,11 +73,17 @@ public class MainController {
         CustomUserDetails user = (CustomUserDetails) authentication.getPrincipal();
 
         Employee employee = employeeService.findByEmployeeId(Long.valueOf(user.getUsername()));
-        System.out.println("employee는 뭐냐면: " + employee);
-        session.setAttribute("employeeId", employee.getEmployeeId());
-        session.setAttribute("employeeName", employee.getEmployeeName());
-        session.setAttribute("departmentId", employee.getDepartmentId());
+        System.out.println("로그인 employee : " + employee);
 
+        SessionEmployeeDTO sessionEmployeeDTO = new SessionEmployeeDTO();
+
+        sessionEmployeeDTO.setEmployeeId(employee.getEmployeeId());
+        sessionEmployeeDTO.setEmployeeName(employee.getEmployeeName());
+        sessionEmployeeDTO.setEmail(employee.getEmail());
+        sessionEmployeeDTO.setDepartmentId(employee.getDepartmentId());
+
+        session.setAttribute("employee", sessionEmployeeDTO);
+        log.info("employee" + sessionEmployeeDTO);
         model.addAttribute("title", "MAIN");
         model.addAttribute("subtitle", "SUBMAIN");
         return "main";
