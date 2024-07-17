@@ -60,7 +60,7 @@ public class WorkFlowEntity {
     private int approvalCount;
     // 20, 비용 청구
     private long cost;
-    // 21, 최종 승인여부
+    // 21, 최종 승인여부 0:진행, 1:승인, 2:반려
     private int status;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)

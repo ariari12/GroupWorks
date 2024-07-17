@@ -35,7 +35,7 @@
             </thead>
 
             <tbody>
-            <!--/*@thymesVar id="progress" type="kr.co.groupworks.dto.ljm.dto.WorkFlowInsertDTO"*/-->
+            <!--/*@thymesVar id="progress" type="kr.co.groupworks.dto.ljm.dto.WorkFlowDTO"*/-->
             <tr th:onclick="load([[${list.id}]])" th:each="list : ${progress}">
                 <td>[[${list.id}]]</td>
                 <td>[[${list.workFlowType}]]</td>

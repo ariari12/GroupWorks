@@ -38,15 +38,15 @@ public class ApproverOnlyEntity {
     private String approverName;
     // 9, 결재자 직급
     private String approverRank;
-    // 10, 결재자 소속 String
+    // 10, 결재자 소속
     private String department;
 
-    // 11, 결재 방식 Integer
+    // 11, 결재 방식 1:선결, 2:후결, 3:대결, 4:전결, 5:반려
     private int approvalMethod;
     // 12, 반려사유/협의안/코멘트
     private String comment;
     // 13, 결재 승인 일자
     private LocalDateTime approvalDate;
-    // 14, 승인 여부
+    // 14, 승인 여부 0:진행, 1:승인, 2:반려
     private int approval;
 }

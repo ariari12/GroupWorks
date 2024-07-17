@@ -1,14 +1,15 @@
 package kr.co.groupworks.service.ljm;
 
+import kr.co.groupworks.control.ljm.WorkFlowController;
 import kr.co.groupworks.dto.ljm.dto.ApproverDTO;
 import kr.co.groupworks.dto.ljm.dto.AttachmentFileDTO;
-import kr.co.groupworks.dto.ljm.dto.WorkFlowInsertDTO;
+import kr.co.groupworks.dto.ljm.dto.WorkFlowDTO;
 import kr.co.groupworks.dto.ljm.employee.EmployeeDTO;
-import kr.co.groupworks.entity.ljm.AttachmentFileOnlyEntity;
+import kr.co.groupworks.entity.ljm.AttachmentFileEntity;
 import kr.co.groupworks.entity.ljm.WorkFlowEntity;
 import kr.co.groupworks.repository.cis.EmployeeRepository;
 import kr.co.groupworks.repository.ljm.ApproversOnlyRepository;
-import kr.co.groupworks.repository.ljm.AttachmentFileOnlyRepository;
+import kr.co.groupworks.repository.ljm.AttachmentFileRepository;
 import kr.co.groupworks.repository.ljm.WorkFlowRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,47 +35,77 @@ public class WorkFlowServiceImpl implements WorkFlowService {
     private final WorkFlowRepository workFlowRepository;
 
     private final ApproversOnlyRepository approversOnlyRepository;
-    private final AttachmentFileOnlyRepository attachmentFileOnlyRepository;
+    private final AttachmentFileRepository attachmentFileRepository;
 
     @Value("${file.upload-dir}")
     private String uploadDir;
 
-    /* 사원 정보 EmployeeDTO */
+    /* EmployeeId -> EmployeeDTO */
     @Override
-    public EmployeeDTO getEmployee(long employeeId) {
+    public EmployeeDTO getEmployeeDTO(long employeeId) {
         return EmployeeDTO.entityToDto(employeeRepository.findByEmployeeId(employeeId));
     }
 
-    /* 사원 정보 WorkFlowInsertDTO */
+    /* All EmployeeDTO */
     @Override
-    public WorkFlowInsertDTO getWorkflowDto(long employeeId) {
+    public List<EmployeeDTO> getEmployeeAllDTOList() {
+        return employeeRepository.findAll(Sort.by(Sort.Direction.ASC, "departmentName"))
+                .stream().map(EmployeeDTO::entityToDto).toList();
+    }
+
+    /* EmployeeId -> WorkFlowDTO */
+    @Override
+    public WorkFlowDTO getWorkflowDTO(long employeeId) {
         return EmployeeDTO.entityToWorkflowDTO(employeeRepository.findByEmployeeId(employeeId));
     }
 
-    /* 사원 정보 WorkFlowInsertDTO */
+    /* EmployeeId -> ApproverDTO */
     @Override
     public ApproverDTO getApproverDTO(long employeeId) {
         return EmployeeDTO.entityToApproverDto(employeeRepository.findByEmployeeId(employeeId));
     }
 
-    /* 전체 사원 정보 */
-    @Override
-    public List<EmployeeDTO> getEmployeeAll() {
-        return employeeRepository.findAll(Sort.by(Sort.Direction.ASC, "departmentName"))
-                .stream().map(EmployeeDTO::entityToDto).toList();
-    }
-
     /* WorkFlowEntity Save */
     @Override
-    public long setWorkFlowRequest(WorkFlowInsertDTO workFlowInsertDTO) {
-        return workFlowRepository.save(workFlowInsertDTO.dtoToEntity()).getId();
+    public long setWorkFlowDTO(WorkFlowDTO workFlowDTO) {
+        return workFlowRepository.save(workFlowDTO.dtoToEntity()).getId();
     }
 
+    /* EmployeeId -> WorkFLowDTOList */
+    @Override
+    public Map<String, List<WorkFlowDTO>> getMyWorkFlowDTOList(long employeeId) {
+        /*
+        * Referenced is drafter(Employee) of submitted approval request 
+        * 사원번호로 결재 발송 내역 조회
+        */
+        List<WorkFlowDTO> workFlowList = workFlowRepository.findByEmployeeId(employeeId).stream().map(WorkFlowDTO::entityToDto).toList();
+
+        /* approval(승인), progress(진행), rejection(반려) */
+        Map<String, List<WorkFlowDTO>> result = new HashMap<>();
+        result.put(WorkFlowController.AttributeName.PROGRESS.getStatus(), workFlowList.stream().filter(d -> d.getStatus() == 0).toList());
+        result.put(WorkFlowController.AttributeName.APPROVAl.getStatus(), workFlowList.stream().filter(d -> d.getStatus() == 1).toList());
+        result.put(WorkFlowController.AttributeName.REJECTION.getStatus(), workFlowList.stream().filter(d -> d.getStatus() == 2).toList());
+
+        return result;
+    }
+
+    /* ApproverId -> WorkFlowDTOList */
+    @Override
+    public Map<String, List<WorkFlowDTO>> getApproverWorkFlowDTOList(long approverId) {
+        /* Referenced is approver of submitted approval request */
+        List<WorkFlowDTO> myWorkFlowDTOList;
+
+        return null;
+    }
+
+    @Override
+    public WorkFlowDTO getDetailWorkFlow(long workflowId) {
+        return WorkFlowDTO.entityToDto(Objects.requireNonNull(workFlowRepository.findById(workflowId).orElse(null)));
+    }
 
     /* ApproverEntityList Save */
     @Override
-    @Transactional
-    public boolean setApproverList(List<ApproverDTO> approverList) {
+    public boolean setApproverDTOList(List<ApproverDTO> approverList) {
         Optional<ApproverDTO> finalApproverOption = approverList.stream().filter(i -> i.getApproverType() == 1).max(Comparator.comparingInt(ApproverDTO::getSequenceNum));
         ApproverDTO finalApprover;
         if(finalApproverOption.isEmpty()) return false;
@@ -84,22 +115,21 @@ public class WorkFlowServiceImpl implements WorkFlowService {
         Optional<WorkFlowEntity> workFlow = workFlowRepository.findById(finalApprover.getWorkFlowId());
         if(workFlow.isEmpty()) return false;
 
-        WorkFlowInsertDTO workFlowInsertDTO = WorkFlowInsertDTO.entityToDto(workFlow.get())
+        WorkFlowDTO workFlowDTO = WorkFlowDTO.entityToDto(workFlow.get())
                 .setFinalApprovalRank(finalApprover.getApproverRank())
                 .setFinalApprovalDepartment(finalApprover.getDepartment())
                 .setFinalApprovalName(finalApprover.getApproverName())
                 .setStatus(0)
                 .setApprovers(approverList)
                 ;
-        workFlowInsertDTO = WorkFlowInsertDTO.entityToDto(workFlowRepository.save(workFlowInsertDTO.dtoToEntity()));
-        log.info("workFlowDTO: {}", workFlowInsertDTO);
+        workFlowDTO = WorkFlowDTO.entityToDto(workFlowRepository.save(workFlowDTO.dtoToEntity()));
+        log.info("workFlowDTO: {}", workFlowDTO);
 
         return true;
     }
 
     /* AttachFileList Save */
     @Override
-    @Transactional
     public boolean setAttachmentFileList(MultipartFile[] files, long workflowId) {
 //        log.info("upload dir: " + uploadDir);
         String fileUploadDir = uploadDir + File.separator + UUID.randomUUID();
@@ -123,11 +153,9 @@ public class WorkFlowServiceImpl implements WorkFlowService {
                                     .setSavePath(filePath)
                     );
                 }
-                WorkFlowInsertDTO workFlowDTO = WorkFlowInsertDTO.entityToDto(workFlowEntity)
+                WorkFlowDTO workFlowDTO = WorkFlowDTO.entityToDto(workFlowEntity)
                         .setAttachmentFiles(attachmentFileList);
                 workFlowRepository.save(workFlowDTO.dtoToEntity());
-//                attachFileRepository.saveAll(attachmentFileList.stream()
-//                        .map(AttachmentFileDTO::dtoToEntity).toList());
             } catch (IOException e) {
                 e.printStackTrace();
                 return false;
@@ -143,7 +171,7 @@ public class WorkFlowServiceImpl implements WorkFlowService {
     @Override
     public Map<String, Object> getAttachmentFile(long fileId) {
         Map<String, Object> result = new HashMap<>();
-        AttachmentFileOnlyEntity fileEntity = attachmentFileOnlyRepository.findById(fileId).orElse(null);
+        AttachmentFileEntity fileEntity = attachmentFileRepository.findById(fileId).orElse(null);
         result.put("result", fileEntity != null);
         if(fileEntity != null) {
             File file = new File(fileEntity.getSavePath());

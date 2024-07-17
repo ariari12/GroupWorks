@@ -22,7 +22,7 @@ public class WorkflowApproversRepositoryImpl extends QuerydslRepositorySupport i
     }
 
     @Override
-    public List<WorkFlowEntity> findByApproverEmployeeId(long approverEmployeeId) {
+    public List<WorkFlowEntity> workflowListFindByApproverId(long approverEmployeeId) {
         QWorkFlowEntity workFlowEntity = QWorkFlowEntity.workFlowEntity;
         QApproverEntity approverEntity = QApproverEntity.approverEntity;
 

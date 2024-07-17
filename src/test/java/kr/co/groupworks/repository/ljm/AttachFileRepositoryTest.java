@@ -13,11 +13,11 @@ import java.io.File;
 @SpringBootTest
 class AttachFileRepositoryTest {
     @Autowired
-    private AttachFileRepository attachFileRepository;
+    private AttachmentFileRepository attachmentFileRepository;
 
     @Test @DisplayName("fileLoad Test")
     public void fileLoadTest() {
-        attachFileRepository.findAll().forEach(e -> {
+        attachmentFileRepository.findAll().forEach(e -> {
             File file = new File(e.getSavePath());
             if(file.exists()) {
                 log.info("file exists: {}", new AttachmentFileVO(e));

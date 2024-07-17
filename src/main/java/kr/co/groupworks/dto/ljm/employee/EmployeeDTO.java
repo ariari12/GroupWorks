@@ -1,7 +1,7 @@
 package kr.co.groupworks.dto.ljm.employee;
 
 import kr.co.groupworks.dto.ljm.dto.ApproverDTO;
-import kr.co.groupworks.dto.ljm.dto.WorkFlowInsertDTO;
+import kr.co.groupworks.dto.ljm.dto.WorkFlowDTO;
 import kr.co.groupworks.entity.cis.Employee;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -30,8 +30,8 @@ public class EmployeeDTO {
                 .setDepartmentName(employee.getDepartmentName());
     }
 
-    public static WorkFlowInsertDTO entityToWorkflowDTO(Employee employee) {
-        return new WorkFlowInsertDTO()
+    public static WorkFlowDTO entityToWorkflowDTO(Employee employee) {
+        return new WorkFlowDTO()
                 .setEmployeeId(employee.getEmployeeId())
                 .setEmployeeName(employee.getEmployeeName())
                 .setEmail(employee.getEmail())

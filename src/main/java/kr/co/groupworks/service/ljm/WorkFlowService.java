@@ -2,30 +2,38 @@ package kr.co.groupworks.service.ljm;
 
 import kr.co.groupworks.dto.ljm.employee.EmployeeDTO;
 import kr.co.groupworks.dto.ljm.dto.ApproverDTO;
-import kr.co.groupworks.dto.ljm.dto.WorkFlowInsertDTO;
+import kr.co.groupworks.dto.ljm.dto.WorkFlowDTO;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Map;
 
 public interface WorkFlowService {
-    /* 사원 정보 EmployeeDTO */
-    EmployeeDTO getEmployee(long employeeId);
+    /* EmployeeId -> EmployeeDTO */
+    EmployeeDTO getEmployeeDTO(long employeeId);
 
-    /* 사원 정보 WorkFlowInsertDTO */
-    WorkFlowInsertDTO getWorkflowDto(long employeeId);
+    /* EmployeeId -> WorkFlowDTO */
+    WorkFlowDTO getWorkflowDTO(long employeeId);
 
-    /* 사원 정보 WorkFlowInsertDTO */
+    /* EmployeeId -> ApproverDTO */
     ApproverDTO getApproverDTO(long employeeId);
 
-    /* 전체 사원 정보 */
-    List<EmployeeDTO> getEmployeeAll();
+    /* All EmployeeDTO */
+    List<EmployeeDTO> getEmployeeAllDTOList();
 
     /* WorkFlowEntity Save */
-    long setWorkFlowRequest(WorkFlowInsertDTO workFlowInsertDTO);
+    long setWorkFlowDTO(WorkFlowDTO workFlowDTO);
+
+    /* EmployeeId -> WorkFlowDTOList */
+    Map<String, List<WorkFlowDTO>> getMyWorkFlowDTOList(long employeeId);
+
+    /* ApproverId -> WorkFlowDTOList */
+    Map<String, List<WorkFlowDTO>> getApproverWorkFlowDTOList(long approverId);
+
+    WorkFlowDTO getDetailWorkFlow(long workflowId);
 
     /* ApproverEntityList Save */
-    boolean setApproverList(List<ApproverDTO> approverList);
+    boolean setApproverDTOList(List<ApproverDTO> approverList);
 
     /* AttachFileList Save */
     boolean setAttachmentFileList(MultipartFile[] files, long pk);

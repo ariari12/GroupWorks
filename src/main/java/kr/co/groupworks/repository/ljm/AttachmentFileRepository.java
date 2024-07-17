@@ -1,9 +1,9 @@
 package kr.co.groupworks.repository.ljm;
 
-import kr.co.groupworks.entity.ljm.AttachmentFileOnlyEntity;
+import kr.co.groupworks.entity.ljm.AttachmentFileEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface AttachmentFileOnlyRepository extends JpaRepository<AttachmentFileOnlyEntity, Long> {
+public interface AttachmentFileRepository extends JpaRepository<AttachmentFileEntity, Long> {
 }

@@ -14,7 +14,7 @@ class WorkFlowRepositoryTest {
 
     @Test @DisplayName("findByApproverEmployeeId Test")
     void findByApproverEmployeeId() {
-        workFlowRepository.findByApproverEmployeeId(1)
+        workFlowRepository.workflowListFindByApproverId(1)
                 .forEach(entity -> log.info("Workflow: {}", entity.toString()));
     }
 

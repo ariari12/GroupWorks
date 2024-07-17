@@ -23,12 +23,12 @@ class WorkFlowServiceImplTest {
 
     @Test @DisplayName("Employee Select Test")
     public void employeeSelectTest() {
-        log.info("employeeSelectTest employee: {}", workFlowService.getEmployee(1));
+        log.info("employeeSelectTest employee: {}", workFlowService.getEmployeeDTO(1));
     }
 
     @Test @DisplayName("Employee All Select Test")
     public void employeeAllSelectTest() {
-        for (EmployeeDTO employeeDTO : workFlowService.getEmployeeAll()) {
+        for (EmployeeDTO employeeDTO : workFlowService.getEmployeeAllDTOList()) {
             log.info("employeeAllSelectTest employee: {}", employeeDTO);
         }
     }
@@ -90,7 +90,14 @@ class WorkFlowServiceImplTest {
             );
         }
 
-        workFlowService.setApproverList(approverDTOList);
+        workFlowService.setApproverDTOList(approverDTOList);
+    }
+
+    @Test @DisplayName("Workflow List Test")
+    public void workflowListTest() {
+        workFlowService.getMyWorkFlowDTOList(1L).forEach((s, i) -> {
+            log.info("{} list length: {}", s, i.size());
+        });
     }
 
 }

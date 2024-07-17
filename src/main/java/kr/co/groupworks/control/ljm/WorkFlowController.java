@@ -3,7 +3,7 @@ package kr.co.groupworks.control.ljm;
 import jakarta.servlet.http.HttpSession;
 import kr.co.groupworks.dto.ljm.dto.ApproverDTO;
 import kr.co.groupworks.dto.ljm.dto.AttachmentFileDTO;
-import kr.co.groupworks.dto.ljm.dto.WorkFlowInsertDTO;
+import kr.co.groupworks.dto.ljm.dto.WorkFlowDTO;
 import kr.co.groupworks.dto.ljm.employee.EmployeeDTO;
 import kr.co.groupworks.service.ljm.WorkFlowService;
 import lombok.Getter;
@@ -19,6 +19,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Controller
@@ -39,7 +40,7 @@ public class WorkFlowController {
     private static final String DIRECTORY = "/ljm-workflow";
 
     @Getter
-    private enum AttributeName {
+    public enum AttributeName {
         TITLE("title"),
         SUB_TITLE("subTitle"),
 //        WORK_FLOW_URL("workFlowUrl"),
@@ -60,13 +61,12 @@ public class WorkFlowController {
 
     private String title;
 
-    /* 결제 요청 Form */
+    /* Request Approval(결제 요청) Form */
     @GetMapping( APPROVAL_REQUEST)
     public String approvalRequest(Model model, HttpSession session) {
-        log.info("");
         // 사원정보 받아오기
         long employeeId = (long) session.getAttribute(AttributeName.EMPLOYEE_ID.getStatus());
-        WorkFlowInsertDTO workFlowDTO = workFlowService.getWorkflowDto(employeeId);
+        WorkFlowDTO workFlowDTO = workFlowService.getWorkflowDTO(employeeId);
 
         title = "Approval Request";
         log.info("WorkFlowController - request title: {}, setDto: {}", title, workFlowDTO);
@@ -78,40 +78,35 @@ public class WorkFlowController {
         return DIRECTORY + "/approvalForm";
     }
 
-    /* 결재 발송 내역 */
+    /* Approval History (결재 발송 내역) */
     @GetMapping(APPROVAL_HISTORY)
-    public String approvalHistory(Model model) {
+    public String approvalHistory(Model model, HttpSession session) {
         title = "Approval History";
         log.info("WorkFlowController - approval history");
 
-        /* 승인 내역 */
-        List<WorkFlowInsertDTO> approval = new ArrayList<>();
-        /* 진행 내역 */
-        List<WorkFlowInsertDTO> progress = new ArrayList<>();
-        /* 반려 내역 */
-        List<WorkFlowInsertDTO> rejection = new ArrayList<>();
-
+        Map<String, List<WorkFlowDTO>> result = workFlowService.getMyWorkFlowDTOList((long) session.getAttribute(AttributeName.EMPLOYEE_ID.getStatus()));
 
         model.addAttribute(AttributeName.TITLE.getStatus(), title);
         model.addAttribute(AttributeName.SUB_TITLE.getStatus(), title);
-        model.addAttribute(AttributeName.APPROVAl.getStatus(), approval);   // 승인내역
-        model.addAttribute(AttributeName.PROGRESS.getStatus(), progress);   // 진행내역
-        model.addAttribute(AttributeName.REJECTION.getStatus(), rejection); // 반려내역
+        // approval(승인), progress(진행), rejection(반려)
+        for (String key : result.keySet()) {
+            model.addAttribute(key, result.get(key));
+        }
         return DIRECTORY + "/historyList";
     }
 
-    /* 결재 상세 내용 */
+    /* Approval History details (결재 상세 내용) */
     @GetMapping(value = DETAIL + "{id}")
     public String detail( HttpSession session, Model model, @PathVariable int id) {
         title = "Approval Detail";
         log.info("WorkFlowController - approval detail, id: {}, title: {}", id, title);
         
-        int result = 0; // default: 참조자
+        int result = 0; // default: refer(참조자)
 
-        // 세션에서 사원 정보 가져오기
-        EmployeeDTO employee = (EmployeeDTO) session.getAttribute("employee");
+        // getSession -> Employee Data Set (세션으로 사원정보 가져오기)
+        EmployeeDTO employeeDTO = workFlowService.getEmployeeDTO((long) session.getAttribute(AttributeName.EMPLOYEE_ID.getStatus()));
 
-        WorkFlowInsertDTO workFlow = new WorkFlowInsertDTO();
+        WorkFlowDTO workFlow = new WorkFlowDTO();
         log.info("WorkFlowController - approval detail, WorkFlowDTO: {}", workFlow);
         /* TODO: 사용자가(사원번호pk) 기안자인지 확인 
          * 사용자가 기안자라면 현재 승인한 결재자가 있는지 확인

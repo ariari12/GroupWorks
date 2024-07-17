@@ -17,7 +17,7 @@ import java.util.List;
 @Getter @Setter @ToString
 @Accessors(chain = true)
 @NoArgsConstructor
-public class WorkFlowInsertDTO {
+public class WorkFlowDTO {
     /* 결재요청 정보를 저장하는 DTO -> Entity 변환 */
 
     // 1, 결재 요청 pk
@@ -70,7 +70,7 @@ public class WorkFlowInsertDTO {
     private int approvalCount;
     // 20, 비용 청구
     private long cost;
-    // 21, 최종 승인여부
+    // 21, 최종 승인여부 0:진행, 1:승인, 2:반려
     private int status;
 
     private List<ApproverDTO> approvers;
@@ -116,13 +116,13 @@ public class WorkFlowInsertDTO {
                 .build();
     }
 
-    public static WorkFlowInsertDTO entityToDto(WorkFlowEntity workFlowEntity) {
+    public static WorkFlowDTO entityToDto(WorkFlowEntity workFlowEntity) {
         String draftDate = workFlowEntity.getDraftDate() == null ? null :
                 DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm").format(workFlowEntity.getDraftDate());
         String approvalDate = workFlowEntity.getApprovalDate() == null ? null :
                 DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm").format(workFlowEntity.getApprovalDate());
 
-        return new WorkFlowInsertDTO()
+        return new WorkFlowDTO()
                 .setId(workFlowEntity.getId())
 
                 .setEmployeeId(workFlowEntity.getEmployeeId())

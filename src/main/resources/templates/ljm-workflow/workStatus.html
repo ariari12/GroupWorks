@@ -98,7 +98,7 @@
             </thead>
 
             <tbody>
-            <!--/*@thymesVar id="approval" type="kr.co.groupworks.dto.ljm.dto.WorkFlowInsertDTO"*/-->
+            <!--/*@thymesVar id="approval" type="kr.co.groupworks.dto.ljm.dto.WorkFlowDTO"*/-->
             <tr th:onclick="load([[${list.id}]])" th:each="list : ${approval}">
                 <td>[[${list.id}]]</td>
                 <td>[[${list.workFlowType}]]</td>

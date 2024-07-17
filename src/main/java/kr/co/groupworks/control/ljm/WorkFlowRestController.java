@@ -2,7 +2,7 @@ package kr.co.groupworks.control.ljm;
 
 import jakarta.validation.Valid;
 import kr.co.groupworks.dto.ljm.dto.ApproverDTO;
-import kr.co.groupworks.dto.ljm.dto.WorkFlowInsertDTO;
+import kr.co.groupworks.dto.ljm.dto.WorkFlowDTO;
 import kr.co.groupworks.dto.ljm.employee.EmployeeDTO;
 import kr.co.groupworks.service.ljm.WorkFlowService;
 import lombok.Getter;
@@ -59,28 +59,24 @@ public class WorkFlowRestController {
     /* 결재 요청 받기 */
     @PostMapping(SEPARATOR + WORKFLOW_URL + APPROVAL_REQUEST)
     public ResponseEntity<Map<String, Object>> requestOk(
-                    @Valid WorkFlowInsertDTO workFlowDTO,
+                    @Valid WorkFlowDTO workFlowDTO,
                     BindingResult bindingResult) {
-        log.info("");
         Map<String, Object> response = new HashMap<>();
         title = "Approval Request";
-        log.info("WorkFlowRestController - request ok, workFlowDTO: {}", workFlowDTO);
+//        log.info("WorkFlowRestController - request ok, workFlowDTO: {}", workFlowDTO);
 
         if (bindingResult.hasErrors()) {
             // 필수 입력항목의 유효성 결과 실패 시
-            log.info("WorkFlowRestController - request ok, Fail");
-            log.info("WorkFlowRestController - request ok, bindingResult ErrorCnt: {}", bindingResult.getErrorCount());
             for (FieldError fieldError : bindingResult.getFieldErrors()) {
-                log.info("WorkFlowRestController - request ok, FieldError: {}", fieldError);
+                log.info("WorkFlowRestController - request Fail! Error: {}", fieldError);
             }
             response.put("valid", false);
             response.put("errors", bindingResult.getAllErrors());
         }
         else {
             // 데이터 저장 로직
-            long id = workFlowService.setWorkFlowRequest(workFlowDTO);
+            long id = workFlowService.setWorkFlowDTO(workFlowDTO);
             response.put("valid", true);
-            // response.put("primaryKey", primaryKey);
             response.put("primaryKey", id);
         }
         return ResponseEntity.ok().body(response);
@@ -91,11 +87,10 @@ public class WorkFlowRestController {
     public ResponseEntity<Map<String, String>> fileSendTest(
             @RequestParam("attach_file") MultipartFile[] files,
             @RequestParam("pk") long pk) {
-        log.info("WorkFlowRestController - file-receive ok, files: {}", files.length);
-
-        for (MultipartFile file : files) {
-            log.info("WorkFlowRestController - file-receive ok, file: {}", file.getOriginalFilename());
-        }
+//        log.info("WorkFlowRestController - file-receive ok, files: {}", files.length);
+//        for (MultipartFile file : files) {
+//            log.info("WorkFlowRestController - file-receive ok, file: {}", file.getOriginalFilename());
+//        }
 
         // 응답을 JSON 형식으로 반환
         Map<String, String> response = new HashMap<>();
@@ -114,18 +109,17 @@ public class WorkFlowRestController {
 
         Map<String, String> response = new HashMap<>();
         if (bindingResult.hasErrors()) {
-            log.info("WorkFlowRestController - approverSend, Fail");
             response.put("result", "fail");
             for (FieldError fieldError : bindingResult.getFieldErrors()) {
-                log.info("WorkFlowRestController - approverSend, error: {}", fieldError);
+                log.info("WorkFlowRestController - approverSend Field! Error: {}", fieldError);
             }
         }
         // Service Logic
-        else if(!workFlowService.setApproverList(approverDTOS)) {
-            log.info("WorkFlowRestController - approverSend, Service Fail");
+        else if(!workFlowService.setApproverDTOList(approverDTOS)) {
+//            log.info("WorkFlowRestController - approverSend, Service Fail");
             response.put("result", "fail");
         } else {
-            log.info("WorkFlowRestController - approverSend, success");
+//            log.info("WorkFlowRestController - approverSend, success");
             response.put("result", "success");
             response.put("url", SEPARATOR + WORKFLOW_URL + WORK_STATUS);
         }
@@ -151,7 +145,7 @@ public class WorkFlowRestController {
     /* 전체 사원정보 */
     @GetMapping(value = SEPARATOR + WORKFLOW_URL + EMPLOYEE)
     public ResponseEntity<Map<String, Object>> employee() {
-        List<EmployeeDTO> employeeList = workFlowService.getEmployeeAll();
+        List<EmployeeDTO> employeeList = workFlowService.getEmployeeAllDTOList();
         log.info("WorkFlowRestController - employee ok");
 
         Map<String, Object> response = new HashMap<>();
