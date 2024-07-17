@@ -1,6 +1,7 @@
 package kr.co.groupworks.control.kah;
 
 import kr.co.groupworks.dto.kah.AnnualFormDTO;
+import kr.co.groupworks.dto.kah.select.VacationMyHistoryDTO;
 import kr.co.groupworks.entity.cis.Employee;
 import kr.co.groupworks.entity.kah.LeaveType;
 import kr.co.groupworks.entity.kah.Vacation;
@@ -14,6 +15,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
@@ -23,7 +27,8 @@ class VacationControllerTest {
     @Autowired
     private EmployeeRepository employeeRepository;
 
-    static AnnualFormDTO dummyData;
+    static AnnualFormDTO dummyData1;
+    static AnnualFormDTO dummyData2;
     static Employee employee1;
     static Employee employee2;
     static Employee employee3;
@@ -39,28 +44,51 @@ class VacationControllerTest {
         employee5 = new Employee(5L, "password202", "Michael Johnson", 105, "Junior Developer", "IT", 202, "michael.johnson@example.com", "567-890-1234", "202 Birch St", "Male", LocalDateTime.of(2022, 5, 10, 0, 0), 45000, 302);
 
 
-
-        dummyData = kr.co.groupworks.dto.kah.AnnualFormDTO.builder()
+        dummyData1 = kr.co.groupworks.dto.kah.AnnualFormDTO.builder()
                 .startDate("2024-07-01")
                 .endDate("2024-07-10")
                 .contents("Family vacation to Hawaii")
                 .type(LeaveType.ANNUAL)
                 .build();
 
+        dummyData2 = kr.co.groupworks.dto.kah.AnnualFormDTO.builder()
+                .startDate("2024-08-01")
+                .endDate("2024-08-10")
+                .contents("Family asdlkfjlsdakj")
+                .type(LeaveType.ANNUAL)
+                .build();
+
     }
 
+
+    // 연차 저장 테스트
     @Test
-    void vacationAnnual() {
+    void saveVacationAnnual() {
 
-        Vacation vacation = vacationService.save(dummyData, 1L);
-        employeeRepository.save(employee1);
+        Vacation vacation = vacationService.save(dummyData1, employee1.getEmployeeId());
+        Employee employee = employeeRepository.findByEmployeeId(employee1.getEmployeeId());
 
-        Assertions.assertThat(vacation.getContents()).isEqualTo(dummyData.getContents());
-        Assertions.assertThat(vacation.getTitle()).isEqualTo("연차");
-        Assertions.assertThat(vacation.getStatus()).isEqualTo("검토중");
-        Assertions.assertThat(vacation.getStartDate()).isEqualTo(dummyData.getStartDate());
-        Assertions.assertThat(vacation.getEndDate()).isEqualTo(dummyData.getEndDate());
-        Assertions.assertThat(vacation.getEndDate()).isEqualTo(dummyData.getEndDate());
+        assertThat(vacation.getContents()).isEqualTo(dummyData1.getContents());
+        assertThat(vacation.getTitle()).isEqualTo("연차");
+        assertThat(vacation.getStatus()).isEqualTo("검토중");
+        assertThat(vacation.getStartDate()).isEqualTo(dummyData1.getStartDate());
+        assertThat(vacation.getEndDate()).isEqualTo(dummyData1.getEndDate());
+        assertThat(vacation.getEmployee()).isEqualTo(employee);
+
+    }
+
+    //연차 신청 내역 테스트
+    @Test
+    @Transactional(readOnly = false)
+    void selectVacationRequest(){
+        Employee savedEmployee1 = employeeRepository.save(employee1);
+        vacationService.save(dummyData1, savedEmployee1.getEmployeeId());
+        vacationService.save(dummyData2, savedEmployee1.getEmployeeId());
+
+        List<VacationMyHistoryDTO> vacationRequestList = vacationService.findAllByEmployeeId(employee1.getEmployeeId());
+
+        assertThat(vacationRequestList).isNotNull();
+        assertThat(vacationRequestList).hasSize(2);
 
     }
 }
