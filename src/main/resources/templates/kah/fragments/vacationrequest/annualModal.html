@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<th:block th:fragment="annualModal">
+    <form method="post" action="/vacation/annual" id="annualForm">
+        <div class="modal fade" id="annual" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="annualLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="annualLabel" th:text="|${session.employee.employeeName}님의 연차 요청|">@@@님의 연차 요청</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body container">
+                        <h6>사용 가능 연차</h6>
+                        <div>6일</div>
+                        <br>
+                        <label>휴일 일정</label>
+                        <input type="text" name="" placeholder="Select Date.." class="form-control vacationDate" id="vDate">
+                        <br>
+                        <label for="vacationText">상세 내용</label>
+                        <textarea class="form-control" id="vacationText" name="vacationText" placeholder="휴가 등록 메세지 입력"></textarea>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                        <button type="button" class="btn btn-primary" id="annualBtn">신청</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <script>
+        $("#annualBtn").on("click",function (){
+            let val = $("#vDate").val();
+            $("#annualForm").submit();
+        });
+    </script>
+</th:block>
