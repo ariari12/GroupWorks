@@ -13,7 +13,9 @@ import lombok.experimental.Accessors;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-@Getter @Setter @ToString
+@Getter
+@Setter
+@ToString
 @Accessors(chain = true)
 @NoArgsConstructor
 public class WorkFlowDetailVO {
