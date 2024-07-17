@@ -1,8 +1,8 @@
 package kr.co.groupworks.control.cis;
 
+import kr.co.groupworks.dto.cis.employee.EmployeeDTO;
 import kr.co.groupworks.entity.cis.Employee;
 import kr.co.groupworks.service.cis.EmployeeService;
-import kr.co.groupworks.service.cis.EmployeeServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,15 +24,15 @@ public class EmployeeController {
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @PostMapping("/save")
-    public ResponseEntity<Employee> addEmployee(@RequestBody Employee employee) {
+    public ResponseEntity<EmployeeDTO> addEmployee(@RequestBody EmployeeDTO employeeDTO) {
 
-        log.info("새로운 사원 추가 : " + employee.toString());
+        log.info("새로운 사원 추가 : " + employeeDTO.toString());
 
-        String encPassword = bCryptPasswordEncoder.encode(employee.getEmployeePW());
-        employee.setEmployeePW(encPassword);
-        employeeService.saveEmployee(employee);
-        System.out.println(employee.toString() + "입력");
-        return ResponseEntity.ok().body(employee);
+        String encPassword = bCryptPasswordEncoder.encode(employeeDTO.getEmployeePW());
+        employeeDTO.setEmployeePW(encPassword);
+        employeeService.saveEmployee(employeeDTO);
+        System.out.println(employeeDTO.toString() + "입력");
+        return ResponseEntity.ok().body(employeeDTO);
     }
 
     @GetMapping("/list")
