@@ -1,11 +1,12 @@
 package kr.co.groupworks.entity.kah;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import kr.co.groupworks.entity.cis.Employee;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Entity
 @Getter
@@ -31,4 +32,7 @@ public class Notification {
     private boolean isRead;
 
     // 사원 외래키
+    @ManyToOne
+    @JoinColumn(name = "employee_id")
+    private Employee employee;
 }

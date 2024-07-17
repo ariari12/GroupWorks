@@ -1,20 +1,16 @@
 package kr.co.groupworks.entity.kah;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @Getter
+@ToString(exclude = "calendar")
 @AllArgsConstructor
 @NoArgsConstructor
-public class Vacation {
-    @Id
-    @GeneratedValue
-    private Long vacationId;
-    // 요청 휴일 개수
-    private String requestedLeaveDays;
+@SuperBuilder
+public class Vacation extends Calendar{
     // 클라이언트가 올린 파일이름
     private String fileName;
     // 실제 저장 파일 경로
@@ -23,12 +19,8 @@ public class Vacation {
     private String status;
     // 승인하는 사람
     private String approver;
+    //휴가 종류
+    @Enumerated(EnumType.STRING)
+    private LeaveType vacationType;
 
-    @ManyToOne
-    @JoinColumn(name = "calendar_id")
-    Calendar calendar;
-
-    @OneToOne
-    @JoinColumn(name = "vacation_type_id")
-    private VacationType vacationType;
 }
