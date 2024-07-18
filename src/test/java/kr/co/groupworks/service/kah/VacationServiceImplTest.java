@@ -24,7 +24,7 @@ import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
-class VacationServiceTest {
+class VacationServiceImplTest {
     @Autowired
     private VacationService vacationService;
     @Autowired
