@@ -146,7 +146,7 @@
 
             <th:block th:each="mail : ${mailList}">
                 <!--한개 시작-->
-                <div class="d-flex text-body-secondary pt-3">
+                <div class="d-flex text-body-secondary pt-3" style="padding-top: 2rem !important;">
                     <a th:href="@{/mail/detail/{mid}(mid=${mail.getId()})}" style="color: inherit; text-decoration-line: none">
                         <div class="pb-3 mb-0 small lh-sm border-bottom w-100">
 

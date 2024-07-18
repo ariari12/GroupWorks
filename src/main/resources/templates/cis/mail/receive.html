@@ -196,7 +196,7 @@
             </div>
             <th:block th:each="mail : ${mailList}">
                 <!--한개 시작-->
-                <div class="d-flex text-body-secondary pt-3">
+                <div class="d-flex text-body-secondary pt-3" style="padding-top: 2rem !important;">
                     <!--중요한 메일 x-->
                     <th:block th:if="${mail.getMailStatus()==0}">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
