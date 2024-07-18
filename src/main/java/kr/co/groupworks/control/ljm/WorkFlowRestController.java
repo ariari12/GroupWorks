@@ -1,12 +1,16 @@
 package kr.co.groupworks.control.ljm;
 
 import jakarta.validation.Valid;
-import kr.co.groupworks.dto.ljm.workflow.ApproverVO;
-import kr.co.groupworks.dto.ljm.workflow.WorkFlowInsertDTO;
+import kr.co.groupworks.dto.ljm.dto.ApproverDTO;
+import kr.co.groupworks.dto.ljm.dto.WorkFlowDTO;
+import kr.co.groupworks.dto.ljm.employee.EmployeeDTO;
 import kr.co.groupworks.service.ljm.WorkFlowService;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -25,7 +29,9 @@ public class WorkFlowRestController {
     private final WorkFlowService workFlowService;
 
     private static final String WORKFLOW_URL = "work-flow";
+    private static final String EMPLOYEE = "/employee";
     private static final String FILE_SEND = "/file-send";
+    private static final String FILE_RECEIVE = "/file-download";
     private static final String APPROVAL_REQUEST = "/request";
     private static final String APPROVAL = "/approval";
     private static final String APPROVER_SEND = "/approver-send";
@@ -53,73 +59,67 @@ public class WorkFlowRestController {
     /* 결재 요청 받기 */
     @PostMapping(SEPARATOR + WORKFLOW_URL + APPROVAL_REQUEST)
     public ResponseEntity<Map<String, Object>> requestOk(
-                    @Valid WorkFlowInsertDTO workFlowDTO,
+                    @Valid WorkFlowDTO workFlowDTO,
                     BindingResult bindingResult) {
-        log.info("");
         Map<String, Object> response = new HashMap<>();
         title = "Approval Request";
-        log.info("WorkFlowRestController - request ok, workFlowDTO: {}", workFlowDTO);
+//        log.info("WorkFlowRestController - request ok, workFlowDTO: {}", workFlowDTO);
 
         if (bindingResult.hasErrors()) {
             // 필수 입력항목의 유효성 결과 실패 시
-            log.info("WorkFlowRestController - request ok, Fail");
-            log.info("WorkFlowRestController - request ok, bindingResult ErrorCnt: {}", bindingResult.getErrorCount());
             for (FieldError fieldError : bindingResult.getFieldErrors()) {
-                log.info("WorkFlowRestController - request ok, FieldError: {}",
-                        fieldError);
+                log.info("WorkFlowRestController - request Fail! Error: {}", fieldError);
             }
             response.put("valid", false);
             response.put("errors", bindingResult.getAllErrors());
         }
         else {
-
             // 데이터 저장 로직
-            // Long primaryKey = saveData(workFlowDTO);
+            long id = workFlowService.setWorkFlowDTO(workFlowDTO);
             response.put("valid", true);
-            // response.put("primaryKey", primaryKey);
-            response.put("primaryKey", 1);
+            response.put("primaryKey", id);
         }
-
         return ResponseEntity.ok().body(response);
     }
 
     /* 결재 요청 첨부파일 받기 */
     @PostMapping(SEPARATOR + WORKFLOW_URL + FILE_SEND)
-    public Map<String, String> fileSendTest(
-            @RequestParam("attach_file") MultipartFile[] files) {
-        log.info("WorkFlowRestController - file-receive ok, files: {}", files.length);
-        for (MultipartFile file : files) {
-            log.info("WorkFlowRestController - file-receive ok, file: {}", file.getOriginalFilename());
-        }
+    public ResponseEntity<Map<String, String>> fileSendTest(
+            @RequestParam("attach_file") MultipartFile[] files,
+            @RequestParam("pk") long pk) {
+//        log.info("WorkFlowRestController - file-receive ok, files: {}", files.length);
+//        for (MultipartFile file : files) {
+//            log.info("WorkFlowRestController - file-receive ok, file: {}", file.getOriginalFilename());
+//        }
 
         // 응답을 JSON 형식으로 반환
         Map<String, String> response = new HashMap<>();
-        response.put("status", "success");
-        return response;
+        if(workFlowService.setAttachmentFileList(files, pk)) {
+            response.put("status", "success");
+            return ResponseEntity.ok().body(response);
+        }
+        response.put("status", "fail");
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
     }
-
 
     /* 결재자 정보 받기 */
     @PostMapping(value = SEPARATOR + WORKFLOW_URL + APPROVER_SEND, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Map<String, String>> approverSend(
-            @Valid @RequestBody List<ApproverVO> approverVOs,
-            BindingResult bindingResult) {
-        for (ApproverVO approverVO : approverVOs) {
-            log.info("WorkFlowRestController - approverSend, ApproverVO: {}", approverVO);
-        }
-        Map<String, String> response = new HashMap<>();
+            @Valid @RequestBody List<ApproverDTO> approverDTOS, BindingResult bindingResult) {
 
+        Map<String, String> response = new HashMap<>();
         if (bindingResult.hasErrors()) {
-            log.info("WorkFlowRestController - approverSend, Fail");
             response.put("result", "fail");
             for (FieldError fieldError : bindingResult.getFieldErrors()) {
-                log.info("WorkFlowRestController - approverSend, error: {}", fieldError);
+                log.info("WorkFlowRestController - approverSend Field! Error: {}", fieldError);
             }
-            response.put("url", SEPARATOR + WORKFLOW_URL + APPROVAL_REQUEST);
         }
-        else {
-            log.info("WorkFlowRestController - approverSend, success");
-            // Service Logic
+        // Service Logic
+        else if(!workFlowService.setApproverDTOList(approverDTOS)) {
+//            log.info("WorkFlowRestController - approverSend, Service Fail");
+            response.put("result", "fail");
+        } else {
+//            log.info("WorkFlowRestController - approverSend, success");
             response.put("result", "success");
             response.put("url", SEPARATOR + WORKFLOW_URL + WORK_STATUS);
         }
@@ -141,5 +141,35 @@ public class WorkFlowRestController {
 
         return ResponseEntity.ok().body(response);
     }
+
+    /* 전체 사원정보 */
+    @GetMapping(value = SEPARATOR + WORKFLOW_URL + EMPLOYEE)
+    public ResponseEntity<Map<String, Object>> employee() {
+        List<EmployeeDTO> employeeList = workFlowService.getEmployeeAllDTOList();
+        log.info("WorkFlowRestController - employee ok");
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("status", "success");
+        response.put("result", true);
+        response.put(AttributeName.EMPLOYEE.getStatus(), employeeList);
+
+        return ResponseEntity.ok().body(response);
+    }
+
+    @GetMapping(value = SEPARATOR + WORKFLOW_URL + FILE_RECEIVE + SEPARATOR + "{fileId}")
+    public ResponseEntity<Resource> fileReceive(@PathVariable long fileId) {
+        log.info("WorkFlowRestController - file-receive ok, id: {}", fileId);
+
+        Map<String, Object> result = workFlowService.getAttachmentFile(fileId);
+        if (result != null || (boolean)result.get("result")) {
+            HttpHeaders headers = new HttpHeaders();
+            Resource resource = (Resource) result.get("fileResource");
+            headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + result.get("fileName") + "\"");
+            headers.add(HttpHeaders.CONTENT_LENGTH, result.get("fileSize") + "");
+            return ResponseEntity.ok().headers(headers).body(resource);
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+    }
+
 
 }
