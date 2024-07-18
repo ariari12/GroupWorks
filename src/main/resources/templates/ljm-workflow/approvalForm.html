@@ -29,15 +29,15 @@
 
 <th:block layout:fragment="content">
 
-    <!--/*@thymesVar id="workFlowDto" type="kr.co.groupworks.dto.ljm.workflow.WorkFlowInsertDTO"*/-->
+    <!--/*@thymesVar id="workFlowDto" type="kr.co.groupworks.dto.ljm.dto.WorkFlowDTO"*/-->
     <form id="approveForm" class="row g-3 needs-validation" th:action="@{/work-flow/request}" th:object="${workFlowDto}"
-        enctype="multipart/form-data" method="post" novalidate >
+        enctype="multipart/form-data" method="post" novalidate>
 
         <!--/* 결재 구분 */-->
-        <div class="input-group mb-3">
+        <div class="input-group mb-3" style="width: 1200px;">
             <label class="input-group-text" for="category">결재 구분</label>
-            <select class="form-select" id="category" th:field="*{workFlowType}" required>
-                <option selected value="">결재분류를 선택하세요.</option>
+            <select class="form-select" id="category" th:field="*{workFlowType}">
+                <option selected value="0">결재분류를 선택하세요.</option>
                 <option value="1">업무 결재</option>
                 <option value="2">재무 결재</option>
                 <option value="3">예산 결재</option>
@@ -45,34 +45,49 @@
                 <option value="5">보고 결재</option>
                 <option value="6">특별 결재</option>
             </select>
-
-            <span class="input-group-text">기안자 명</span>
-            <label>
-                <input class="form-control prevent-enter-submit" type="text" th:field="*{employeeName}" readonly>
-            </label>
-
-            <span class="input-group-text">소속부서</span>
-            <label>
-                <input class="form-control prevent-enter-submit" type="text" th:field="*{department}" readonly>
-            </label>
-
             <span class="input-group-text">결재 번호</span>
             <label for="docsNum">
                 <input type="hidden" th:field="*{id}">
                 <input class="form-control prevent-enter-submit" id="docsNum" type="text" th:field="*{code}" size="40" readonly>
             </label>
-
             <span class="input-group-text">기안날짜</span>
             <label for="draft-date">
-                <input type="datetime-local" class="form-control" id="draft-date" th:field="*{draftDate}"
-                    placeholder="기안일" aria-label="기안일" aria-describedby="basic-addon2" required>
+                <input type="datetime-local" class="form-control" id="draft-date" th:field="*{draftDate}" placeholder="기안일" aria-label="기안일" aria-describedby="basic-addon2">
+            </label>
+        </div>
+
+        <div class="input-group mb-3">
+            <span class="input-group-text">사원번호</span>
+            <label>
+                <input class="form-control prevent-enter-submit" type="text" th:field="*{employeeId}" size="15" readonly>
+            </label>
+            <span class="input-group-text">기안자 명</span>
+            <label>
+                <input class="form-control prevent-enter-submit" type="text" th:field="*{employeeName}" size="7" readonly>
+            </label>
+            <span class="input-group-text">소속부서</span>
+            <label>
+                <input type="hidden" th:field="*{departmentId}">
+                <input class="form-control prevent-enter-submit" type="text" th:field="*{department}" size="15" readonly>
+            </label>
+            <span class="input-group-text">직급</span>
+            <label>
+                <input class="form-control prevent-enter-submit" type="text" th:field="*{employeeRank}" size="5" readonly>
+            </label>
+            <span class="input-group-text">이메일</span>
+            <label>
+                <input class="form-control prevent-enter-submit" type="text" th:field="*{email}" size="40" readonly>
+            </label>
+            <span class="input-group-text">연락처</span>
+            <label>
+                <input class="form-control prevent-enter-submit" type="text" th:field="*{phone}" size="20" readonly>
             </label>
         </div>
 
         <div class="input-group mb-3">
             <span class="input-group-text">결재 제목</span>
             <input type="text" class="form-control prevent-enter-submit" th:field="*{title}"
-                placeholder="결재 제목을 입력해주세요." aria-label="결재 제목을 입력해주세요." required>
+                placeholder="결재 제목을 입력해주세요." aria-label="결재 제목을 입력해주세요.">
         </div>
 
         <!--/* 결재선 */-->
@@ -123,8 +138,7 @@
         <div class="input-group">
             <span class="input-group-text">결재 내용</span>
             <textarea class="form-control" id="description" name="description" th:field="*{description}"
-                rows="10" placeholder="결재 내용을 입력하세요." aria-label="결재 내용을 입력하세요."
-                style="resize: none;" required>
+                rows="10" placeholder="결재 내용을 입력하세요." aria-label="결재 내용을 입력하세요." style="resize: none;">
             </textarea>
         </div>
 
@@ -173,8 +187,8 @@
 <th:block layout:fragment="javascript">
     <!--/* Add External link 필요한 추가 링크는 여기에... */-->
     <script>
-        const userNum = "[[${session.employee.employeeId}]]";
-        const deptNum = "[[${session.employee.departmentId}]]";
+        const userNum = "[[${workFlowDto.employeeId}]]";
+        const deptNum = "[[${workFlowDto.departmentId}]]";
         const tabNames = ["#category", "#draft-date"];
 
         $(() => {

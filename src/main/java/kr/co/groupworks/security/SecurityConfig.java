@@ -1,17 +1,13 @@
 package kr.co.groupworks.security;
 
-import kr.co.groupworks.repository.cis.EmployeeRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Slf4j
@@ -52,7 +48,7 @@ public class SecurityConfig {
                 .formLogin(auth -> auth
                         .loginPage("/") // 커스텀 로그인 페이지
                         .loginProcessingUrl("/loginProc") // 로그인 인증 경로
-                        .defaultSuccessUrl("/main") // 로그인 후 페이지
+                        .defaultSuccessUrl("/main", true) // 로그인 후 페이지
                         .failureUrl("/") // 로그인 실패 시
                 );
 
@@ -73,6 +69,4 @@ public class SecurityConfig {
         return web->
                 web.ignoring().requestMatchers("/css/**","/js/**","/img/**","/fonts/**");
     }
-
-
 }

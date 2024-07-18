@@ -6,7 +6,7 @@
 
     <div class="card-header">
         <i class="bi bi-folder-fill"></i>
-        승인된 결재 목록
+        승인한 결재 목록
     </div>
 
     <div class="card-body">
@@ -35,7 +35,7 @@
             </thead>
 
             <tbody>
-            <!--/*@thymesVar id="approval" type="kr.co.groupworks.dto.ljm.workflow.WorkFlowInsertDTO"*/-->
+            <!--/*@thymesVar id="approval" type="kr.co.groupworks.dto.ljm.dto.WorkFlowDTO"*/-->
             <tr th:onclick="load([[${list.id}]])" th:each="list : ${approval}">
                 <td>[[${list.id}]]</td>
                 <td>[[${list.workFlowType}]]</td>

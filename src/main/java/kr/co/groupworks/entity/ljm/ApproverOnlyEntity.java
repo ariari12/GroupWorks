@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Table(name = "approver")
 @AllArgsConstructor
 @NoArgsConstructor
-public class ApproverEntity {
+public class ApproverOnlyEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "approver_id")
