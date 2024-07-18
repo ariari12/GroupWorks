@@ -14,12 +14,14 @@ public class Vacation extends Calendar{
     private String fileName;
     // 실제 저장 파일 경로
     private String filePath;
-    // 승인 상태
-    private String status;
+
     // 승인하는 사람
     private String approver;
+    // 승인 상태
+    @Enumerated(EnumType.STRING)
+    private VacationStatus status;
     //휴가 종류
     @Enumerated(EnumType.STRING)
-    private LeaveType vacationType;
+    private VacationType vacationType;
 
 }

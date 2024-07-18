@@ -4,6 +4,7 @@ import kr.co.groupworks.dto.kah.AnnualFormDTO;
 import kr.co.groupworks.dto.kah.select.VacationMyHistoryDTO;
 import kr.co.groupworks.entity.cis.Employee;
 import kr.co.groupworks.entity.kah.Vacation;
+import kr.co.groupworks.entity.kah.VacationStatus;
 import kr.co.groupworks.repository.cis.EmployeeRepository;
 import kr.co.groupworks.repository.kah.VacationRepository;
 import lombok.RequiredArgsConstructor;
@@ -35,7 +36,7 @@ public class VacationServiceImpl implements VacationService{
                 .contents(dto.getContents())
                 .startDate(dto.getStartDate())
                 .endDate(dto.getEndDate())
-                .status("검토중")
+                .status(VacationStatus.PENDING)
                 .vacationType(dto.getType())
                 .employee(employee)
                 .build();
@@ -49,14 +50,12 @@ public class VacationServiceImpl implements VacationService{
         List<Vacation> vacationList = vacationRepository.findAllByEmployeeId(employeeId);
         return vacationList.stream()
                 .map(vacation ->
-                        new VacationMyHistoryDTO(
-                                vacation.getEmployee().getEmployeeName(),
-                                vacation.getStartDate(),
-                                vacation.getEndDate(),
-                                vacation.getVacationType(),
-                                vacation.getFileName(),
-                                vacation.getStatus()
-                        ))
+                        VacationMyHistoryDTO.builder()
+                                .startDate(vacation.getStartDate())
+                                .endDate(vacation.getEndDate())
+                                .vacationType(vacation.getVacationType())
+                                .fileName(vacation.getFileName())
+                                .status(vacation.getStatus()).build())
                 .toList();
     }
 }

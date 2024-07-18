@@ -3,7 +3,7 @@ package kr.co.groupworks.entity.kah;
 import lombok.Getter;
 
 @Getter
-public enum LeaveType {
+public enum VacationType {
     // 연차
     ANNUAL("연차"),
     // 병가
@@ -13,9 +13,9 @@ public enum LeaveType {
     // 반차
     HALF("반차");
 
-    private String leave;
+    private final String description;
 
-    LeaveType(String leave) {
-        this.leave = leave;
+    VacationType(String description) {
+        this.description = description;
     }
 }
