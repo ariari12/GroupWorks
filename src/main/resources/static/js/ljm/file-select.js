@@ -123,8 +123,8 @@ $(() => {
         var form = $(this);
         var formData = new FormData(form[0]);
 
-        console.dir(form);
-        console.dir(formData);
+        // console.dir(form);
+        // console.dir(formData);
 
         // 폼 데이터를 서버로 전송하여 유효성 검사 수행
         $.ajax({
@@ -134,21 +134,21 @@ $(() => {
             processData: false,
             contentType: false,
             success: function(response) {
-
                 if (response.valid) {
                     fileSend(formData, response.primaryKey);
                     approversSendList(response.primaryKey);
-
-                    alert("결재 발송");
                 } else {
-                    alert("결재 요청 정보를 기입해주세요.");
                     // 유효성 검사 실패 시 에러 메시지 표시 또는 다른 처리
+                    alert("결재 요청 필수 정보를 기입해주세요.\n" +
+                        "필수 입력 : 결재제목, 결재내용, 기안날짜, 결재 구분, 결재자");
                 }
-                // window.location = response.url;
             },
             error: function() {
                 alert("결재 발송 실패!");
             }
         });
     });
+
+    /* Modal Auto Close */
+    $("#exampleModal").modal('hide');
 });

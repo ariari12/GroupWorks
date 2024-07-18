@@ -5,18 +5,27 @@ let employeeNum;
 let addLine;
 let memberList = [];
 
-// !임시 더미 데이터 추후 삭제 예정
-for(let i = 1; i <= 50; i++) {
-    memberList[i -1] = {
-        id: i,
-        name: "member" + i,
-        dpptno: (i % 5) + "0" + (i % 3),
-        dept: "members" + i,
-        rank: "rank" + i,
-    };
+function getEmployeeAll() {
+    $.ajax({
+        url: "/work-flow/employee",
+        type: "GET",
+        dataType: "json",
+        contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+        success: function (response) {
+            // console.dir(response);
+            if(response.result) {
+                memberList = response.employee;
+            }
+        },
+        error: function (err) {
+            console.log(err)
+        }
+    })
 }
 
 window.onload = () => {
+    getEmployeeAll();
+
     let searchForm = $("#search"); // 검색 입력
     let suggestion = $(".dropdown-menu"); // 추천 키워드
 
@@ -24,10 +33,10 @@ window.onload = () => {
         suggestion.empty();
 
         for (const item of memberList) {
-            if(item.name.indexOf(this.value) > -1 || item.dept.indexOf(this.value) > -1 || item.rank.indexOf(this.value) > -1) {
+            if(item.name.indexOf(this.value) > -1 || item.departmentName.indexOf(this.value) > -1 || item.rank.indexOf(this.value) > -1) {
                 suggestion.append(
                 '<li class="dropdown-item" onclick="selectVal(this);" value="' + item.id +'"">'
-                + "사원: " + item.name + " 부서: " + item.dept + ' 직급: ' + item.rank
+                + "사원: " + item.name + " 부서: " + item.departmentName + ' 직급: ' + item.rank
                 );
             }
         }
@@ -114,8 +123,7 @@ function addMember(idx, name, func) {
     add += '<span>' + (idx +1) + '</span> ';
     add += searchForm.val();
     add += '<input type="hidden" name="' + name + '" value="' + employeeNum + '">';
-    add += '<button type="button" class="btn-close" aria-label="Close" onclick="'
-        + func + '(' + idx + ')">';
+    add += '<button type="button" class="btn-close" aria-label="Close" onclick="' + func + '(' + idx + ')">';
     add += '</button></li>';
 
     employeeNum = undefined;
@@ -159,8 +167,7 @@ function cancelLine(i, tag, name, func) {
         changeEle += "<span>" + child[j].childNodes[0].innerText + "</span>";
         changeEle += child[j].childNodes[1].data;
         changeEle += '<input type="hidden" name="' + name + '" value="' + child[j].childNodes[2].value + '">';
-        changeEle += '<button type="button" class="btn-close" aria-label="Close" onclick="'
-            + func + '(' + j + ');"></button>';
+        changeEle += '<button type="button" class="btn-close" aria-label="Close" onclick="' + func + '(' + j + ');"></button>';
         changeEle += '</li>';
     }
     for (let j = i +1; j < child.length; j++) {
@@ -168,8 +175,7 @@ function cancelLine(i, tag, name, func) {
         changeEle += '<span>' + (parseInt(child[j].childNodes[0].innerText) -1) + '</span>';
         changeEle += child[j].childNodes[1].data;
         changeEle += '<input type="hidden" name="' + name + '" value="' + child[j].childNodes[2].value + '">';
-        changeEle += '<button type="button" class="btn-close" aria-label="Close" onclick="'
-            + func + '(' + (j -1) + ');"></button>';
+        changeEle += '<button type="button" class="btn-close" aria-label="Close" onclick="' + func + '(' + (j -1) + ');"></button>';
         changeEle += '</li>';
     }
     addLine.html(changeEle);
@@ -181,21 +187,28 @@ function approversSendList(fk) {
     const REFERRER = 3;
 
     let approverList = [];
-
     let cnt = 1;
+
+    if($("#approval-line").children().length < 1) {
+        alert("결재자를 최소 1명 이상 지정해야 합니다.");
+        return;
+    }
+
     for (var approverEle of $("#approval-line").children()) {
         let idx = $(approverEle).children().eq(1).val();
 
         // memberList에서 특정 id 값을 가진 객체 찾기
-        let member = memberList.find(i => i.id === parseInt(idx));
+        const member= memberList.find(i => i.id === parseInt(idx));
         approverList.push({
             'workFlowId': fk,
             'sequenceNum': cnt,
             'approverType': APPORVER,
             'employeeId': member.id,
+            'approverEmail': member.email,
+            'approverPhone': member.phone,
             'approverName': member.name,
             'approverRank': member.rank,
-            'department': member.dept
+            'department': member.departmentName,
         });
         cnt++;
     }
@@ -204,15 +217,17 @@ function approversSendList(fk) {
     for (var approverEle of $("#collaborator-line").children()) {
         let idx = $(approverEle).children().eq(1).val();
 
-        let member = memberList.find(i => i.id === parseInt(idx));
+        const member = memberList.find(i => i.id === parseInt(idx));
         approverList.push({
             'workFlowId': fk,
             'sequenceNum': cnt,
             'approverType': COLLABORATOR,
             'employeeId': member.id,
+            'approverEmail': member.email,
+            'approverPhone': member.phone,
             'approverName': member.name,
             'approverRank': member.rank,
-            'department': member.dept
+            'department': member.departmentName
         });
         cnt++;
     }
@@ -221,20 +236,20 @@ function approversSendList(fk) {
     for (var approverEle of $("#referrer-line").children()) {
         let idx = $(approverEle).children().eq(1).val();
 
-        let member = memberList.find(i => i.id === parseInt(idx));
+        const member = memberList.find(i => i.id === parseInt(idx));
         approverList.push({
             'workFlowId': fk,
             'sequenceNum': cnt,
             'approverType': REFERRER,
             'employeeId': member.id,
+            'approverEmail': member.email,
+            'approverPhone': member.phone,
             'approverName': member.name,
             'approverRank': member.rank,
-            'department': member.dept
+            'department': member.departmentName
         });
         cnt++;
     }
-
-    console.dir(approverList);
 
     $.ajax({
         url: "/work-flow/approver-send",
@@ -244,9 +259,13 @@ function approversSendList(fk) {
         contentType: "application/json",
         dataType: 'json',
         success: function(response) {
-            console.log(response);
+            alert("결재 발송");
+            window.location = response.url;
         },
-        error: function() {
+        error: function(response) {
+            console.log(response);
         }
     });
+
+    // console.dir(approverList);
 }
