@@ -1,23 +1,16 @@
 package kr.co.groupworks.control.kah;
 
 import kr.co.groupworks.dto.kah.AnnualFormDTO;
-import kr.co.groupworks.dto.kah.select.VacationMyHistoryDTO;
 import kr.co.groupworks.entity.cis.Employee;
-import kr.co.groupworks.entity.kah.LeaveType;
-import kr.co.groupworks.entity.kah.Vacation;
+import kr.co.groupworks.entity.kah.VacationType;
 import kr.co.groupworks.repository.cis.EmployeeRepository;
 import kr.co.groupworks.service.kah.VacationService;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
@@ -51,14 +44,14 @@ class VacationControllerTest {
                 .startDate("2024-07-01")
                 .endDate("2024-07-10")
                 .contents("Family vacation to Hawaii")
-                .type(LeaveType.ANNUAL)
+                .type(VacationType.ANNUAL)
                 .build();
 
         dummyData2 = kr.co.groupworks.dto.kah.AnnualFormDTO.builder()
                 .startDate("2024-08-01")
                 .endDate("2024-08-10")
                 .contents("Family asdlkfjlsdakj")
-                .type(LeaveType.ANNUAL)
+                .type(VacationType.ANNUAL)
                 .build();
 
     }

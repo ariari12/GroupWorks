@@ -35,18 +35,13 @@
             <th:block th:unless="${vacationRequestList == null} or ${vacationRequestList.size() == 0}">
 
                 <tr onclick="" th:each="dto : ${vacationRequestList}">
-                    <td th:text="${session.employee.employeeName}">Name 01</td>
-                    <td th:text="|${dto.startDate} ~ ${dto.endDate}|">Name 01</td>
-                    <td th:switch="${#strings.toString(dto.VacationType)}">
-                        <span th:case="ANNUAL">연차</span>
-                        <span th:case="SICK">병가</span>
-                        <span th:case="OTHER">기타</span>
-                        <span th:case="HALF">반차</span>
-                    </td>
-
+                    <td th:text="${session.employee.employeeName}">사원 이름</td>
+                    <td th:text="|${dto.startDate} ~ ${dto.endDate}|">사용 기간</td>
+                    <td th:text="${dto.vacationType.description}">종류</td>
                     <!--<td th:text="${dto.VacationType}">Position 01</td>-->
-                    <td th:text="${dto.fileName}? ${data} : '첨부 파일 없음'">Name 01</td>
-                    <td th:text="${dto.status}">Position 01</td>
+                    <td th:text="${dto.fileName}? ${data} : '첨부 파일 없음'">증명자료</td>
+                    <td th:text="${dto.status.description}">승인</td>
+<!--                    <td th:text="${dto.status}">Position 01</td>-->
                 </tr>
             </th:block>
 

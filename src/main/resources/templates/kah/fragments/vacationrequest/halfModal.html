@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<th:block th:fragment="halfModal">
+    <div class="modal fade" id="halfDay" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="halfDayLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="halfDayLabel" th:text="|${session.employee.employeeName} 님의 반차 요청|">@@@님의 반차 요청</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body container">
+                    <h6>사용 가능 반차</h6>
+                    <div>6일</div>
+                    <br>
+
+                    <h6>휴일 일정</h6>
+                    <!--오전 오후 -->
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
+                        <label class="form-check-label" for="flexRadioDefault1">
+                            오전
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2">
+                        <label class="form-check-label" for="flexRadioDefault2">
+                            오후
+                        </label>
+                    </div>
+
+                    <div class="halfDate">
+                        <input type="text" placeholder="Select Date.." data-input> <!-- input is mandatory -->
+
+                        <a class="input-button" title="toggle" data-toggle>
+                            <i class="icon-calendar"></i>
+                        </a>
+
+                        <a class="input-button" title="clear" data-clear>
+                            <i class="icon-close"></i>
+                        </a>
+                    </div>
+                    <br>
+                    <label for="vacationText2">상세 내용</label>
+                    <textarea class="form-control" id="vacationText2" name="vacationText2" placeholder="휴가 등록 메세지 입력"></textarea>
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                    <button type="button" class="btn btn-primary">신청</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</th:block>

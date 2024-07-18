@@ -1,10 +1,8 @@
 package kr.co.groupworks.dto.kah.select;
 
-import kr.co.groupworks.entity.kah.LeaveType;
+import kr.co.groupworks.entity.kah.VacationStatus;
+import kr.co.groupworks.entity.kah.VacationType;
 import lombok.*;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 @Getter
@@ -22,9 +20,9 @@ public class VacationMyHistoryDTO {
     private String startDate;
     private String endDate;
     // 휴가 종류
-    private LeaveType VacationType;
+    private VacationType vacationType;
     // 첨부파일이름
     private String fileName;
     // 승인 상태
-    private String status;
+    private VacationStatus status;
 }

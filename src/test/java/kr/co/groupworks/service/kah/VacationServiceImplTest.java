@@ -3,11 +3,11 @@ package kr.co.groupworks.service.kah;
 import kr.co.groupworks.dto.kah.AnnualFormDTO;
 import kr.co.groupworks.dto.kah.select.VacationMyHistoryDTO;
 import kr.co.groupworks.entity.cis.Employee;
-import kr.co.groupworks.entity.kah.LeaveType;
+import kr.co.groupworks.entity.kah.VacationStatus;
+import kr.co.groupworks.entity.kah.VacationType;
 import kr.co.groupworks.entity.kah.Vacation;
 import kr.co.groupworks.repository.cis.EmployeeRepository;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 
@@ -16,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
@@ -39,14 +38,14 @@ class VacationServiceTest {
                 .startDate("2024-07-01")
                 .endDate("2024-07-10")
                 .contents("Family vacation to Hawaii")
-                .type(LeaveType.ANNUAL)
+                .type(VacationType.ANNUAL)
                 .build();
 
         annualFormDTO2 = kr.co.groupworks.dto.kah.AnnualFormDTO.builder()
                 .startDate("2024-08-01")
                 .endDate("2024-08-10")
                 .contents("Family asdlkfjlsdakj")
-                .type(LeaveType.ANNUAL)
+                .type(VacationType.ANNUAL)
                 .build();
     }
 
@@ -84,7 +83,7 @@ class VacationServiceTest {
 
         assertThat(vacation.getContents()).isEqualTo(annualFormDTO1.getContents());
         assertThat(vacation.getTitle()).isEqualTo("연차");
-        assertThat(vacation.getStatus()).isEqualTo("검토중");
+        assertThat(vacation.getStatus()).isEqualTo(VacationStatus.PENDING);
         assertThat(vacation.getStartDate()).isEqualTo(annualFormDTO1.getStartDate());
         assertThat(vacation.getEndDate()).isEqualTo(annualFormDTO1.getEndDate());
         assertThat(vacation.getEmployee()).isEqualTo(employee);

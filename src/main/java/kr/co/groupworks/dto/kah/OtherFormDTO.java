@@ -1,6 +1,6 @@
 package kr.co.groupworks.dto.kah;
 
-import kr.co.groupworks.entity.kah.LeaveType;
+import kr.co.groupworks.entity.kah.VacationType;
 import lombok.*;
 
 
@@ -16,7 +16,7 @@ public class OtherFormDTO {
     private String startDate;
     private String endDate;
     private String contents;
-    private LeaveType type = LeaveType.OTHER;
+    private VacationType type = VacationType.OTHER;
     private String filePath;
     private String fileName;
 
