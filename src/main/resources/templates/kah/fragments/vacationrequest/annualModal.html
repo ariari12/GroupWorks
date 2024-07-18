@@ -15,9 +15,11 @@
                         <br>
                         <label>휴일 일정</label>
                         <input type="text" name="" placeholder="Select Date.." class="form-control vacationDate" id="vDate">
+                        <input type="hidden" id="startDate" name="startDate">
+                        <input type="hidden" id="endDate" name="endDate">
                         <br>
                         <label for="vacationText">상세 내용</label>
-                        <textarea class="form-control" id="vacationText" name="vacationText" placeholder="휴가 등록 메세지 입력"></textarea>
+                        <textarea class="form-control" id="vacationText" name="contents" placeholder="휴가 등록 메세지 입력"></textarea>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
@@ -29,9 +31,28 @@
     </form>
 
     <script>
-        $("#annualBtn").on("click",function (){
-            let val = $("#vDate").val();
-            $("#annualForm").submit();
+        $(function (){
+            $("#annualBtn").on("click",
+                function (e) {
+                    e.preventDefault(); // 기본 submit 동작을 막음
+                    // 날짜 값을 분리
+                    let split = $("#vDate").val().split("~");
+                    console.log(split);
+                    let startDate = split[0].trim();
+                    let endDate = split[1].trim();
+                    let text = $("#vacationText").val();
+
+                    // 분리된 값을 폼에 추가
+                    $("#startDate").val(startDate);
+                    $("#endDate").val(endDate);
+                    // 결과 출력 (디버깅용)
+                    console.log("startDate: ", startDate);
+                    console.log("endDate: ", endDate);
+                    console.log("text: ",text);
+
+                    // 폼 제출
+                    $("#annualForm").submit();
+                });
         });
     </script>
 </th:block>

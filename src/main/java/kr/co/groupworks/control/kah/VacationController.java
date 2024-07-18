@@ -55,10 +55,12 @@ public class VacationController {
     }
 
 
+    // 연차 신청
     @PostMapping("/annual")
     public String vacationAnnual(@ModelAttribute AnnualFormDTO dto,
                                  @SessionAttribute(name = "employee")SessionEmployeeDTO sessionEmployeeDTO){
         Long employeeId = sessionEmployeeDTO.getEmployeeId();
+        log.info("dto : {}",dto);
         vacationService.save(dto, employeeId);
         return "kah/vacationMain";
     }

@@ -21,13 +21,16 @@
 
             <tbody>
             <!--/* 상세 보기 이동 시 onclick 이벤트 핸들러로 Javascript 함수 추가 */-->
-            <tr onclick="" th:each="dto : ${vacationRequestList}">
-                <td th:text="${dto.name}">Name 01</td>
-                <td th:text="|${dto.startVacation} ~ ${dto.endVacation}|">Name 01</td>
-                <td th:text="${dto.VacationType}">Position 01</td>
-                <td th:text="${dto.fileName}">Name 01</td>
-                <td th:text="${dto.status}">Position 01</td>
-            </tr>
+            <th:block th:unless="${vacationRequestList == null} or ${vacationRequestList.size() == 0}">
+                <tr onclick="" th:each="dto : ${vacationRequestList}">
+                    <td th:text="${session.employeeName}">Name 01</td>
+                    <td th:text="|${dto.startDate} ~ ${dto.endDate}|">Name 01</td>
+                    <td th:text="${dto.VacationType}">Position 01</td>
+                    <td th:text="${dto.fileName}">Name 01</td>
+                    <td th:text="${dto.status}">Position 01</td>
+                </tr>
+            </th:block>
+
             </tbody>
         </table>
     </div>
