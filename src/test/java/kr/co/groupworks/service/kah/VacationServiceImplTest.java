@@ -78,8 +78,6 @@ class VacationServiceTest {
     // 연차 저장 테스트
     @Test
     void saveVacationAnnual() {
-
-
         Employee employee = employeeRepository.findByEmployeeId(1L);
         Vacation vacation = vacationService.save(annualFormDTO1,1L);
 
@@ -95,13 +93,11 @@ class VacationServiceTest {
 
     //연차 신청 내역 테스트
     @Test
-    @Transactional(readOnly = false)
     void selectVacationRequest(){
-        Employee employee = employeeRepository.findByEmployeeId(1L);
-        vacationService.save(annualFormDTO1, employee.getEmployeeId());
-        vacationService.save(annualFormDTO2, employee.getEmployeeId());
+        vacationService.save(annualFormDTO1, 1L);
+        vacationService.save(annualFormDTO2, 1L);
 
-        List<VacationMyHistoryDTO> vacationRequestList = vacationService.findAllByEmployeeId(employee.getEmployeeId());
+        List<VacationMyHistoryDTO> vacationRequestList = vacationService.findAllByEmployeeId(1L);
 
         assertThat(vacationRequestList).isNotNull();
         assertThat(vacationRequestList).hasSize(2);

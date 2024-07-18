@@ -79,30 +79,7 @@
 
 
       <!--  연차 Modal -->
-      <div class="modal fade" id="annual" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="annualLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                  <div class="modal-content">
-                        <div class="modal-header">
-                              <h1 class="modal-title fs-5" id="annualLabel" th:text="|${session.employee.employeeName}님의 연차 요청|">@@@님의 연차 요청</h1>
-                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body container">
-                              <h6>사용 가능 연차</h6>
-                              <div>6일</div>
-                              <br>
-                              <label>휴일 일정</label>
-                              <input type="text" name="" placeholder="Select Date.." class="form-control vacationDate">
-                              <br>
-                              <label for="vacationText">상세 내용</label>
-                              <textarea class="form-control" id="vacationText" name="vacationText" placeholder="휴가 등록 메세지 입력"></textarea>
-                        </div>
-                        <div class="modal-footer">
-                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-                              <button type="button" class="btn btn-primary">신청</button>
-                        </div>
-                  </div>
-            </div>
-      </div>
+      <th:block th:replace="kah/fragments/vacationrequest/annualModal :: annualModal"></th:block>
 
       <!--  반차 Modal -->
       <div class="modal fade" id="halfDay" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="halfDayLabel" aria-hidden="true">

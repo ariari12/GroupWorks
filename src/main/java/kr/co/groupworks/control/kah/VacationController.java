@@ -33,6 +33,7 @@ public class VacationController {
 
         // 휴가 신청 내역 조회
         List<VacationMyHistoryDTO> vacationRequestList = vacationService.findAllByEmployeeId(employeeId);
+        log.info("휴가 신청 내역 조회 : {}",vacationRequestList);
 
 
         // 휴가 보유 사용현황 조회
@@ -55,11 +56,13 @@ public class VacationController {
     }
 
 
+    // 연차 신청
     @PostMapping("/annual")
     public String vacationAnnual(@ModelAttribute AnnualFormDTO dto,
                                  @SessionAttribute(name = "employee")SessionEmployeeDTO sessionEmployeeDTO){
         Long employeeId = sessionEmployeeDTO.getEmployeeId();
+        log.info("dto : {}",dto);
         vacationService.save(dto, employeeId);
-        return "kah/vacationMain";
+        return "redirect:/vacation";
     }
 }

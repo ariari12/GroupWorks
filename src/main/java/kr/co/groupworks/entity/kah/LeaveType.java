@@ -1,12 +1,21 @@
 package kr.co.groupworks.entity.kah;
 
+import lombok.Getter;
+
+@Getter
 public enum LeaveType {
     // 연차
-    ANNUAL,
+    ANNUAL("연차"),
     // 병가
-    SICK,
+    SICK("병가"),
     // 기타
-    OTHER,
+    OTHER("기타"),
     // 반차
-    HALF
+    HALF("반차");
+
+    private String leave;
+
+    LeaveType(String leave) {
+        this.leave = leave;
+    }
 }
