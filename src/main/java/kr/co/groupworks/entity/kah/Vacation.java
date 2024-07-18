@@ -11,8 +11,10 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 public class Vacation extends Calendar{
     // 클라이언트가 올린 파일이름
+    @Column(name = "file_name")
     private String fileName;
     // 실제 저장 파일 경로
+    @Column(name = "file_path")
     private String filePath;
 
     // 승인하는 사람
@@ -22,6 +24,7 @@ public class Vacation extends Calendar{
     private VacationStatus status;
     //휴가 종류
     @Enumerated(EnumType.STRING)
+    @Column(name = "vacation_type")
     private VacationType vacationType;
 
 }

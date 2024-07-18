@@ -16,6 +16,7 @@ import lombok.experimental.SuperBuilder;
 @DiscriminatorColumn(name = "dtype")
 public class Calendar {
     @Id
+    @Column(name = "caldendar_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long calendarId;
     // 제목
