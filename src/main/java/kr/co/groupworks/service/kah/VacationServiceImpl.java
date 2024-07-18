@@ -7,12 +7,14 @@ import kr.co.groupworks.entity.kah.Vacation;
 import kr.co.groupworks.repository.cis.EmployeeRepository;
 import kr.co.groupworks.repository.kah.VacationRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
+@Slf4j
 @Transactional
 @RequiredArgsConstructor
 public class VacationServiceImpl implements VacationService{
@@ -25,6 +27,7 @@ public class VacationServiceImpl implements VacationService{
     public Vacation save(AnnualFormDTO dto, Long employeeId) {
         // 사원 엔티티 반환
         Employee employee = employeeRepository.findByEmployeeId(employeeId);
+        log.info("employee = {}",employee);
 
         // 휴가 엔티티 변환
         Vacation vacation = Vacation.builder()

@@ -1,14 +1,18 @@
 package kr.co.groupworks.dto.kah.select;
 
 import kr.co.groupworks.entity.kah.LeaveType;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@AllArgsConstructor
+
+@Getter
+@Setter
+@Builder
+@ToString
 @NoArgsConstructor
+@AllArgsConstructor
 public class VacationMyHistoryDTO {
     //이름 잔여연차 잔여병가	기타 사용일
     //기간 종류 사용기간	증명자료 승인
