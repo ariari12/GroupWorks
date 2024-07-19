@@ -52,7 +52,7 @@ public class SecurityConfig {
                 .formLogin(auth -> auth
                         .loginPage("/") // 커스텀 로그인 페이지
                         .loginProcessingUrl("/loginProc") // 로그인 인증 경로
-                        .defaultSuccessUrl("/main") // 로그인 후 페이지
+                        .defaultSuccessUrl("/main",true) // 로그인 후 페이지
                         .failureUrl("/") // 로그인 실패 시
                 );
 
