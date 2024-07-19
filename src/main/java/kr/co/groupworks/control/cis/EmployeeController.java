@@ -23,6 +23,7 @@ public class EmployeeController {
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
+//    사원 저장
     @PostMapping("/save")
     public ResponseEntity<EmployeeDTO> addEmployee(@RequestBody EmployeeDTO employeeDTO) {
 
@@ -35,6 +36,7 @@ public class EmployeeController {
         return ResponseEntity.ok().body(employeeDTO);
     }
 
+//    사원 목록
     @GetMapping("/list")
     public ResponseEntity<List<Employee>> getEmployees() {
         List<Employee> list = employeeService.findAll();
@@ -45,6 +47,7 @@ public class EmployeeController {
 
     }
 
+//    사원 디테일
     @GetMapping("/list/{employeeId}")
     public ResponseEntity<Employee> getEmployeeById(@PathVariable String employeeId) {
         Employee employee = employeeService.findByEmployeeId(Long.valueOf(employeeId));

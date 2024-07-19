@@ -96,6 +96,10 @@ public class MainController {
         return "redirect:/main";
     }
 
-
-
+// 마이페이지
+    @GetMapping("/mypage")
+    public String myPage(Model model, HttpSession session) {
+        log.info("MainController - myPage");
+        return "cis/employee/myPage";
+    }
 }
