@@ -195,7 +195,7 @@ public class MailController {
         log.info(deleteMailList.toString());
 
         mailService.deleteMailById(deleteMailList);
-        return "redirect:/mail/delete";
+        return "redirect:/mail/trash";
     }
 
     //    메일 상세보기
