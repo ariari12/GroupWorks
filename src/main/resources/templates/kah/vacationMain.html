@@ -72,75 +72,21 @@
             </div>
       </div>
 
-      <th:block th:replace="kah/fragments/vacationStatus :: tables">
+      <th:block th:replace="~{kah/fragments/vacationStatus :: tables}">
       </th:block>
-      <th:block th:replace="kah/fragments/vacationMyHistory::vacationHistory">
+      <th:block th:replace="~{kah/fragments/vacationMyHistory::vacationHistory}">
       </th:block>
 
 
       <!--  연차 Modal -->
-      <th:block th:replace="kah/fragments/vacationrequest/annualModal :: annualModal"></th:block>
+      <th:block th:replace="~{kah/fragments/vacationrequest/annualModal :: annualModal}"></th:block>
 
       <!--  반차 Modal -->
-      <th:block th:replace="kah/fragments/vacationrequest/halfModal :: halfModal">
-
-      </th:block>
+      <th:block th:replace="~{kah/fragments/vacationrequest/halfModal :: halfModal}"></th:block>
 
       <!--  병가 Modal -->
-      <div class="modal fade" id="sick" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="sickLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                  <div class="modal-content">
-                        <div class="modal-header">
-                              <h1 class="modal-title fs-5" id="sickLabel">@@@님의 병가 요청</h1>
-                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-
-                              <h5>병가 일정</h5>
-                              <input type="text" name="" placeholder="Select Date.." class="form-control vacationDate">
-                              <br>
-
-                              <h5>상세 사유</h5>
-                              <textarea class="form-control" id="vacationText3" name="vacationText3" placeholder="병가 사유 입력"></textarea>
-
-                              <br>
-                              <h5>첨부 파일</h5>
-                              <td><input type="file" name="fileupload" class="form-control" multiple></td>
-                        </div>
-                        <div class="modal-footer">
-                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-                              <button type="button" class="btn btn-primary">신청</button>
-                        </div>
-                  </div>
-            </div>
-      </div>
+      <th:block th:replace="~{kah/fragments/vacationrequest/sickModal :: sickModal}"></th:block>
 
       <!--  기타 Modal -->
-      <div class="modal fade" id="other" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="otherLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                  <div class="modal-content">
-                        <div class="modal-header">
-                              <h1 class="modal-title fs-5" id="otherLabel">@@@님의 기타 휴가 요청</h1>
-                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body ">
-
-                              <h5>휴가 일정</h5>
-                              <input type="text" name="" placeholder="Select Date.." class="form-control vacationDate">
-                              <br>
-
-                              <h5>상세 사유</h5>
-                              <textarea class="form-control" id="vacationText4" name="vacationText4" placeholder="휴가 등록 메세지 입력"></textarea>
-                              <br>
-                              <h5>첨부 파일</h5>
-                              <td><input type="file" name="fileupload" class="form-control" multiple></td>
-
-                        </div>
-                        <div class="modal-footer">
-                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-                              <button type="button" class="btn btn-primary">신청</button>
-                        </div>
-                  </div>
-            </div>
-      </div>
+      <th:block th:replace="~{kah/fragments/vacationrequest/otherModal :: otherModal}"></th:block>
 </div>

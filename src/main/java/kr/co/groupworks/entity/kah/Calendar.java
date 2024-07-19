@@ -6,6 +6,9 @@ import kr.co.groupworks.entity.cis.Employee;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Getter
 @ToString
@@ -32,6 +35,10 @@ public class Calendar {
     @ManyToOne
     @JoinColumn(name = "employee_id")
     private Employee employee;
+
+    // 양방향 관계 (조회용)
+    @OneToMany(mappedBy = "calendar")
+    private List<CalendarAttachment> attachmentList = new ArrayList<>();
 
 
 

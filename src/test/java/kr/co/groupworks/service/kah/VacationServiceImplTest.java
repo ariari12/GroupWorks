@@ -1,7 +1,7 @@
 package kr.co.groupworks.service.kah;
 
 import kr.co.groupworks.dto.kah.AnnualFormDTO;
-import kr.co.groupworks.dto.kah.select.VacationMyHistoryDTO;
+import kr.co.groupworks.dto.kah.VacationMyHistoryDTO;
 import kr.co.groupworks.entity.cis.Employee;
 import kr.co.groupworks.entity.kah.VacationStatus;
 import kr.co.groupworks.entity.kah.VacationType;
@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
@@ -35,15 +36,15 @@ class VacationServiceImplTest {
     @BeforeAll
     static void beforeAll() {
         annualFormDTO1 = kr.co.groupworks.dto.kah.AnnualFormDTO.builder()
-                .startDate("2024-07-01")
-                .endDate("2024-07-10")
+                .startDate(LocalDate.of(2500,6,22))
+                .endDate(LocalDate.of(2500,8,22))
                 .contents("Family vacation to Hawaii")
                 .type(VacationType.ANNUAL)
                 .build();
 
         annualFormDTO2 = kr.co.groupworks.dto.kah.AnnualFormDTO.builder()
-                .startDate("2024-08-01")
-                .endDate("2024-08-10")
+                .startDate(LocalDate.of(2500,10,22))
+                .endDate(LocalDate.of(2500,12,22))
                 .contents("Family asdlkfjlsdakj")
                 .type(VacationType.ANNUAL)
                 .build();
@@ -84,8 +85,8 @@ class VacationServiceImplTest {
         assertThat(vacation.getContents()).isEqualTo(annualFormDTO1.getContents());
         assertThat(vacation.getTitle()).isEqualTo("연차");
         assertThat(vacation.getStatus()).isEqualTo(VacationStatus.PENDING);
-        assertThat(vacation.getStartDate()).isEqualTo(annualFormDTO1.getStartDate());
-        assertThat(vacation.getEndDate()).isEqualTo(annualFormDTO1.getEndDate());
+        assertThat(vacation.getStartDate()).isEqualTo(String.valueOf(annualFormDTO1.getStartDate()));
+        assertThat(vacation.getEndDate()).isEqualTo(String.valueOf(annualFormDTO1.getEndDate()));
         assertThat(vacation.getEmployee()).isEqualTo(employee);
 
     }

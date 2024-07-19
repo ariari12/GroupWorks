@@ -39,7 +39,7 @@
                     <td th:text="|${dto.startDate} ~ ${dto.endDate}|">사용 기간</td>
                     <td th:text="${dto.vacationType.description}">종류</td>
                     <!--<td th:text="${dto.VacationType}">Position 01</td>-->
-                    <td th:text="${dto.fileName}? ${data} : '첨부 파일 없음'">증명자료</td>
+                    <td th:text="${dto.fileList.size>0}? '첨부 파일 있음' : '첨부 파일 없음'">증명자료</td>
                     <td th:text="${dto.status.description}">승인</td>
 <!--                    <td th:text="${dto.status}">Position 01</td>-->
                 </tr>

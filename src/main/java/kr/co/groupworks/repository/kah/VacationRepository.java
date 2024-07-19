@@ -11,4 +11,6 @@ import java.util.List;
 public interface VacationRepository extends JpaRepository<Vacation, Long>, VacationRepositoryCustom {
     @Query("select v from Vacation v where v.employee.employeeId = :id")
     List<Vacation> findAllByEmployeeId(@Param("id")Long id);
+
+
 }

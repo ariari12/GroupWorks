@@ -1,6 +1,4 @@
-package kr.co.groupworks.dto.kah.select;
-
-import lombok.*;
+package kr.co.groupworks.dto.kah;
 
 //@Getter
 //@Setter

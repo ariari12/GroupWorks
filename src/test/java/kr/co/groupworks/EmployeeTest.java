@@ -71,7 +71,6 @@ public class EmployeeTest {
                         .email("emma.purple@example.com").phoneNumber("555-7891").address("707 Cherry St").gender("Female")
                         .joinDate(LocalDateTime.of(2023, 3, 18, 9, 0)).salary(62000).supervisorId(9).build()
         );
-
         employeeRepository.saveAll(employees);
     }
 

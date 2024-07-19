@@ -10,12 +10,6 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @SuperBuilder
 public class Vacation extends Calendar{
-    // 클라이언트가 올린 파일이름
-    @Column(name = "file_name")
-    private String fileName;
-    // 실제 저장 파일 경로
-    @Column(name = "file_path")
-    private String filePath;
 
     // 승인하는 사람
     private String approver;

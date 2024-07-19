@@ -1,11 +1,12 @@
 package kr.co.groupworks.service.kah;
 
 import kr.co.groupworks.dto.kah.AnnualFormDTO;
-import kr.co.groupworks.dto.kah.select.VacationMyHistoryDTO;
+import kr.co.groupworks.dto.kah.VacationMyHistoryDTO;
 import kr.co.groupworks.entity.cis.Employee;
 import kr.co.groupworks.entity.kah.Vacation;
 import kr.co.groupworks.entity.kah.VacationStatus;
 import kr.co.groupworks.repository.cis.EmployeeRepository;
+import kr.co.groupworks.repository.kah.CalendarAttachmentRepository;
 import kr.co.groupworks.repository.kah.VacationRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +22,7 @@ import java.util.List;
 public class VacationServiceImpl implements VacationService{
     private final VacationRepository vacationRepository;
     private final EmployeeRepository employeeRepository;
+    private final CalendarAttachmentRepository calendarAttachmentRepository;
 
 
     // 연차 저장
@@ -34,8 +36,8 @@ public class VacationServiceImpl implements VacationService{
         Vacation vacation = Vacation.builder()
                 .title("연차")
                 .contents(dto.getContents())
-                .startDate(dto.getStartDate())
-                .endDate(dto.getEndDate())
+                .startDate(String.valueOf(dto.getStartDate()))
+                .endDate(String.valueOf(dto.getEndDate()))
                 .status(VacationStatus.PENDING)
                 .vacationType(dto.getType())
                 .employee(employee)
@@ -48,13 +50,14 @@ public class VacationServiceImpl implements VacationService{
     @Override
     public List<VacationMyHistoryDTO> findAllByEmployeeId(Long employeeId) {
         List<Vacation> vacationList = vacationRepository.findAllByEmployeeId(employeeId);
+        // 휴가 번호로 첨부파일 조회
         return vacationList.stream()
                 .map(vacation ->
                         VacationMyHistoryDTO.builder()
                                 .startDate(vacation.getStartDate())
                                 .endDate(vacation.getEndDate())
                                 .vacationType(vacation.getVacationType())
-                                .fileName(vacation.getFileName())
+                                .fileList(vacation.getAttachmentList())
                                 .status(vacation.getStatus()).build())
                 .toList();
     }

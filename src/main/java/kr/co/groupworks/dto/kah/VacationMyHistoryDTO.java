@@ -1,8 +1,11 @@
-package kr.co.groupworks.dto.kah.select;
+package kr.co.groupworks.dto.kah;
 
+import kr.co.groupworks.entity.kah.CalendarAttachment;
 import kr.co.groupworks.entity.kah.VacationStatus;
 import kr.co.groupworks.entity.kah.VacationType;
 import lombok.*;
+
+import java.util.List;
 
 
 @Getter
@@ -21,8 +24,8 @@ public class VacationMyHistoryDTO {
     private String endDate;
     // 휴가 종류
     private VacationType vacationType;
-    // 첨부파일이름
-    private String fileName;
+    // 첨부파일들
+    private List<CalendarAttachment> fileList;
     // 승인 상태
     private VacationStatus status;
 }
