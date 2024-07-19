@@ -33,6 +33,7 @@ public class MailController {
     private final MailService mailService;
     private final EmployeeService employeeService;
 
+    private final int SIZE_PER_PAGE = 10;
 
     //    받은 메일함
     @GetMapping("/receive")
@@ -187,9 +188,14 @@ public class MailController {
     }
 
     //    휴지통 메일 지우기
-    @GetMapping("/delete")
-    public String delete() {
-        return "redirect:/mail/receive";
+    @PostMapping("/delete")
+    public String delete(HttpSession session, @RequestParam("individualCheck") List<String> deleteMailList) {
+        SessionEmployeeDTO employeeDTO = (SessionEmployeeDTO) session.getAttribute("employee");
+        log.info(employeeDTO.getEmployeeId() +"의 삭제 요청 이메일 리스트");
+        log.info(deleteMailList.toString());
+
+        mailService.deleteMailById(deleteMailList);
+        return "redirect:/mail/delete";
     }
 
     //    메일 상세보기

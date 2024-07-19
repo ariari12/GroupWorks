@@ -99,6 +99,13 @@ public class MailServiceImpl implements MailService{
         return mailRepository.findAllByMailSenderAndMailReceiverName(senderEmail,mailRecieverName);
     }
 
+    @Override
+    public void deleteMailById(List<String> deleteMailList) {
+        for(String mailId : deleteMailList){
+            mailRepository.deleteById(mailId);
+        }
+    }
+
     //    dto to entity
     public Mail toEntity(MailDTO mailDTO) {
         return Mail.builder()
