@@ -27,9 +27,9 @@ public class VacationServiceImpl implements VacationService{
 
     // 연차 저장
     @Override
-    public Vacation save(AnnualFormDTO dto, Long employeeId) {
+    public Vacation save(AnnualFormDTO dto) {
         // 사원 엔티티 반환
-        Employee employee = employeeRepository.findByEmployeeId(employeeId);
+        Employee employee = employeeRepository.findByEmployeeId(dto.getEmployeeId());
         log.info("employee = {}",employee);
 
         // 휴가 엔티티 변환

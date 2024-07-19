@@ -79,7 +79,7 @@ class VacationServiceImplTest {
     @Test
     void saveVacationAnnual() {
         Employee employee = employeeRepository.findByEmployeeId(1L);
-        Vacation vacation = vacationService.save(annualFormDTO1,1L);
+        Vacation vacation = vacationService.save(annualFormDTO1);
 
 
         assertThat(vacation.getContents()).isEqualTo(annualFormDTO1.getContents());
@@ -94,8 +94,8 @@ class VacationServiceImplTest {
     //연차 신청 내역 테스트
     @Test
     void selectVacationRequest(){
-        vacationService.save(annualFormDTO1, 1L);
-        vacationService.save(annualFormDTO2, 1L);
+        vacationService.save(annualFormDTO1);
+        vacationService.save(annualFormDTO2);
 
         List<VacationMyHistoryDTO> vacationRequestList = vacationService.findAllByEmployeeId(1L);
 

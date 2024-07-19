@@ -17,6 +17,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class AnnualFormDTO {
     //남은 휴가, 휴일 일정, 상세 내용
+    private Long employeeId;
     @Future
     private LocalDate startDate;
     @Future
