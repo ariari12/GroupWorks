@@ -33,6 +33,7 @@ public class MailController {
     private final MailService mailService;
     private final EmployeeService employeeService;
 
+    private final int SIZE_PER_PAGE = 10;
 
     //    받은 메일함
     @GetMapping("/receive")
@@ -148,7 +149,7 @@ public class MailController {
         List<Mail> mailList =
                 mailService.getTrashEmailListTrashByReceiverEmail(receiverEmail);
 
-        log.info(receiverEmail + "의 휴지통 메일 목록");
+        log.info(receiverEmail + "의 휴디통 메일 목록");
         log.info(mailList.toString());
         model.addAttribute("mailList", mailList);
         return "cis/mail/trash";
@@ -188,13 +189,13 @@ public class MailController {
 
     //    휴지통 메일 지우기
     @PostMapping("/delete")
-    public String delete(HttpSession session, @RequestParam("individualCheck") List<String> mailIdList) {
+    public String delete(HttpSession session, @RequestParam("individualCheck") List<String> deleteMailList) {
         SessionEmployeeDTO employeeDTO = (SessionEmployeeDTO) session.getAttribute("employee");
-        log.info(employeeDTO.getEmail() +"의 휴지통 삭제 요청 메일 목록");
-        log.info(mailIdList.toString());
+        log.info(employeeDTO.getEmployeeId() +"의 삭제 요청 이메일 리스트");
+        log.info(deleteMailList.toString());
 
-        mailService.deleteById(mailIdList);
-        return "redirect:/mail/trash";
+        mailService.deleteMailById(deleteMailList);
+        return "redirect:/mail/delete";
     }
 
     //    메일 상세보기
@@ -202,8 +203,7 @@ public class MailController {
     public String detail(@PathVariable String id , Model model) {
 
         log.info(id + "메일 상세보기 컨트롤러 작동 중");
-
-    //    아이디로 메일 찾기
+//        아이디로 메일 찾기
         MailDTO mailDTO = mailService.getEmailById(id);
         model.addAttribute("mailDTO",mailDTO);
         return "cis/mail/detail";

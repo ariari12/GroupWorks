@@ -100,8 +100,8 @@ public class MailServiceImpl implements MailService{
     }
 
     @Override
-    public void deleteById(List<String> mailIdList) {
-        for (String mailId : mailIdList) {
+    public void deleteMailById(List<String> deleteMailList) {
+        for(String mailId : deleteMailList){
             mailRepository.deleteById(mailId);
         }
     }

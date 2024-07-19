@@ -104,26 +104,22 @@
 
 <th:block layout:fragment="content">
     <h3>휴지통</h3>
+    <form action="/mail/delete" method="post">
 
     <main class="container">
-        <form action="/mail/delete" method="post">
         <div class="my-3 p-3 bg-body rounded shadow-sm">
             <h6 class="border-bottom pb-2 mb-0">
-                <input type="checkbox" name="allCheck" id="" > 휴지통 <span th:text="'(' + ${mailList.size()} + ')'" style="font-size: 16px"></span>
+                <input type="checkbox" name="allCheck" id="allCheck"> 휴지통 <span th:text="'(' + ${mailList.size()} + ')'" style="font-size: 16px"></span>
 
             </h6>
             <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start" style="position: relative; margin-top: 10px">
             </div>
-
-
-
             <th:block th:each="mail : ${mailList}">
                 <!--한개 시작-->
-                <div class="d-flex text-body-secondary pt-3" style="padding-top: 2rem !important;">
 
+                <div class="d-flex text-body-secondary pt-3" style="padding-top: 2rem !important;">
                     <a th:href="@{/mail/detail/{mid}(mid=${mail.getId()})}" style="color: inherit; text-decoration-line: none">
                         <div class="pb-3 mb-0 small lh-sm border-bottom w-100">
-
                             <!--발송자 및 시간-->
                             <input type="checkbox" name="individualCheck" class="individualCheck" th:value="${mail.getId()}">
                             <div class="d-flex justify-content-between" style="margin: 0 0 10px 0">
@@ -137,10 +133,7 @@
                             <div class="d-flex justify-content-between">
                                 <span class="text-gray-dark" th:text="${mail.getMailTitle()}"></span>
                                 <a href="" style="color: black" class="trashicon" th:data-id="${mail.getId()}">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
-                                        <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
-                                        <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
-                                    </svg>
+
                                 </a>
                             </div>
 
@@ -152,13 +145,13 @@
 
             <div class="d-flex text-body-secondary pt-3" style="padding-top: 2rem !important;">
                 <div class="pb-3 mb-0 small lh-sm border-bottom w-100">
-                    <button type="submit" class="btn btn-secondary">비우기</button>
+                    <input type="submit" value="비우기" class="btn btn-secondary">
                 </div>
 
             </div>
         </div>
-        </form>
     </main>
+    </form>
     <script src="../js/bootstrap/bootstrap.bundle.min.js"></script>
 
     <script src="../js/mail/offcanvas-navbar.js"></script>

@@ -28,5 +28,5 @@ public interface MailService {
 
     List<Mail> getEmailListBySenderEmailAndMailReceiverName(String senderEmail, String mailRecieverName);
 
-    void deleteById(List<String> mailIdList);
+    void deleteMailById(List<String> deleteMailList);
 }
