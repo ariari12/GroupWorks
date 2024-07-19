@@ -9,6 +9,9 @@ import kr.co.groupworks.service.cis.MailService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Session;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -33,125 +36,112 @@ public class MailController {
     private final MailService mailService;
     private final EmployeeService employeeService;
 
-    private final int SIZE_PER_PAGE = 10;
+    private final int PAGE_SIZE = 10;
+
+    Page<Mail> mailPage = null;
+    Pageable pageable = null;
 
     //    받은 메일함
     @GetMapping("/receive")
-    public String receive(HttpSession session, Model model)
-    {
+    public String receive(HttpSession session, Model model,
+                          @RequestParam(value = "keytype", required = false) String keytype,
+                          @RequestParam(value = "keyword", required = false) String keyword,
+                          @RequestParam(value = "pageNumber", required = false, defaultValue = "0") int pageNumber) {
         SessionEmployeeDTO employeeDTO = (SessionEmployeeDTO) session.getAttribute("employee");
         String receiverEmail = employeeDTO.getEmail();
         log.info(receiverEmail + "의 받은 메일함 컨트롤러 동작 중");
-        List<Mail> mailList = mailService.getEmailListByReceiverEmail(receiverEmail);
-        log.info(receiverEmail + "의 받은 메일 목록");
-        log.info(mailList.toString());
-        model.addAttribute("mailList", mailList);
-        return "cis/mail/receive";
-    }
 
-    //      받은 메일함에서 검색할 때
-    @GetMapping("/receive/search")
-    public String receive(HttpSession session, Model model, @RequestParam("keytype") String keytype
-                                                          , @RequestParam("keyword") String keyword ) {
-        SessionEmployeeDTO employeeDTO = (SessionEmployeeDTO) session.getAttribute("employee");
+        pageable = PageRequest.of(pageNumber, PAGE_SIZE);
 
-//        로그인 한 사람이 받은 메일들 가져오기
-        String receiverEmail = employeeDTO.getEmail();
-        log.info("검색어 타입은 " + keytype + " 내용은 " + keyword);
-        log.info(receiverEmail + "의 받은 메일함 컨트롤러 동작 중");
-        List<Mail> mailList = null;
-//        만약 키워드가 주워졌다면
-        if(keytype!=null && keyword!=null){
-//            키워드가 제목일 때
-            if(keytype.equals("제목")){
-                mailList = mailService.getEmailListByReceiverEmailAndMailTitle(receiverEmail, keyword);
-//            키워드가 발신자 이름일 때
-            }else if(keytype.equals("발신자이름")){
-                mailList = mailService.getEmailListByReceiverEmailAndMailSenderName(receiverEmail, keyword);
+        if (keytype != null && keyword != null) {
+            log.info("검색어 타입은 " + keytype + " 내용은 " + keyword);
+            log.info(receiverEmail + "의 받은 메일 중 검색결과 목록");
+
+            if (keytype.equals("제목")) {
+                mailPage = mailService.getEmailListByReceiverEmailAndMailTitle(receiverEmail, keyword, pageable);
+            } else if (keytype.equals("발신자이름"))  {
+                mailPage = mailService.getEmailListByReceiverEmailAndMailSenderName(receiverEmail, keyword, pageable);
             }
+        } else {
+            mailPage = mailService.getEmailListByReceiverEmail(receiverEmail, pageable);
         }
 
-        log.info(receiverEmail + "의 받은 메일 중 검색결과 목록");
-        log.info(mailList.toString());
-        model.addAttribute("mailList", mailList);
+        model.addAttribute("mailList", mailPage);
         return "cis/mail/receive";
     }
 
-
-    //    보낸 메일함
+    //    보낸 메일함 (검색기능을 포함한)
     @GetMapping("/send")
-    public String send(HttpSession session, Model model) {
+    public String send(HttpSession session, Model model,
+                       @RequestParam(value = "keytype",required = false) String keytype,
+                       @RequestParam(value = "keyword",required = false) String keyword,
+                       @RequestParam(value = "pageNumber", required = false, defaultValue = "0") int pageNumber) {
+
         SessionEmployeeDTO employeeDTO = (SessionEmployeeDTO) session.getAttribute("employee");
+
         //        로그인 한 사람이 보낸 메일들 가져오기
         String senderEmail = employeeDTO.getEmail();
         log.info(senderEmail + "이 보낸 메일함 컨트롤러 동작 중");
-        List<Mail> mailList =
-                mailService.getEmailListBySenderEmail(senderEmail);
 
-        log.info(senderEmail + "이 보낸 메일 목록");
-        log.info(mailList.toString());
-        model.addAttribute("mailList", mailList);
-        return "cis/mail/send";
-    }
+        pageable = PageRequest.of(pageNumber, PAGE_SIZE);
 
-    //      보낸 메일함에서 검색할 때
-    @GetMapping("/send/search")
-    public String send(HttpSession session, Model model, @RequestParam("keytype") String keytype
-            , @RequestParam("keyword") String keyword ) {
-        SessionEmployeeDTO employeeDTO = (SessionEmployeeDTO) session.getAttribute("employee");
 
-//        로그인 한 사람이 보낸 메일들 가져오기
-        String senderEmail = employeeDTO.getEmail();
-        log.info("검색어 타입은 " + keytype + " 내용은 " + keyword);
-        log.info(senderEmail + "이 보낸 메일함 컨트롤러 동작 중");
-        List<Mail> mailList = null;
-//        만약 키워드가 주워졌다면
+        //        만약 키워드가 주워졌다면
         if(keytype!=null && keyword!=null){
+            log.info("검색어 타입은 " + keytype + " 내용은 " + keyword);
 //            키워드가 제목일 때
             if(keytype.equals("제목")){
-                mailList = mailService.getEmailListBySenderEmailAndMailTitle(senderEmail, keyword);
+                mailPage = mailService.getEmailListBySenderEmailAndMailTitle(senderEmail, keyword, pageable);
 //            키워드가 발신자 이름일 때
             }else if(keytype.equals("수신자이름")){
-                mailList = mailService.getEmailListBySenderEmailAndMailReceiverName(senderEmail, keyword);
+                mailPage = mailService.getEmailListBySenderEmailAndMailReceiverName(senderEmail, keyword, pageable);
             }
+            log.info(senderEmail + "의 보낸 메일 중 검색결과 목록");
+            log.info(mailPage.toString());
+        }else{
+            mailPage = mailService.getEmailListBySenderEmail(senderEmail, pageable);
         }
 
-        log.info(senderEmail + "의 보낸 메일 중 검색결과 목록");
-        log.info(mailList.toString());
-        model.addAttribute("mailList", mailList);
+        model.addAttribute("mailList", mailPage);
         return "cis/mail/send";
     }
+
 
     //    중요 메일함
     @GetMapping("/important")
-    public String important(HttpSession session, Model model) {
+    public String important(HttpSession session, Model model,
+                            @RequestParam(value = "pageNumber", required = false, defaultValue = "0") int pageNumber) {
         SessionEmployeeDTO employeeDTO = (SessionEmployeeDTO) session.getAttribute("employee");
 
 //        로그인 한 사람이 받은 메일들 가져오기
         String receiverEmail = employeeDTO.getEmail();
         log.info(receiverEmail + "의 중요 메일함 컨트롤러 동작 중");
-        List<Mail> mailList =
-                mailService.getImportantEmailListByReceiverEmail(receiverEmail);
+
+        pageable = PageRequest.of(pageNumber, PAGE_SIZE);
+        mailPage =
+                mailService.getImportantEmailListByReceiverEmail(receiverEmail, pageable);
 
         log.info(receiverEmail + "의 받은 메일 목록");
-        log.info(mailList.toString());
-        model.addAttribute("mailList", mailList);
+        log.info(mailPage.toString());
+        model.addAttribute("mailList", mailPage);
         return "cis/mail/important";
     }
 
     //    휴지통 메일함
     @GetMapping("/trash")
-    public String trash(HttpSession session, Model model) {
+    public String trash(HttpSession session, Model model,
+                        @RequestParam(value = "pageNumber", required = false, defaultValue = "0") int pageNumber) {
 
         SessionEmployeeDTO employeeDTO = (SessionEmployeeDTO) session.getAttribute("employee");
         String receiverEmail = employeeDTO.getEmail();
         log.info(receiverEmail + "의 휴지통 컨트롤러 동작 중");
-        List<Mail> mailList =
-                mailService.getTrashEmailListTrashByReceiverEmail(receiverEmail);
+        pageable = PageRequest.of(pageNumber, PAGE_SIZE);
+        mailPage =
+                mailService.getTrashEmailListTrashByReceiverEmail(receiverEmail, pageable);
 
         log.info(receiverEmail + "의 휴디통 메일 목록");
-        log.info(mailList.toString());
-        model.addAttribute("mailList", mailList);
+        log.info(mailPage.toString());
+        model.addAttribute("mailList", mailPage);
         return "cis/mail/trash";
     }
 

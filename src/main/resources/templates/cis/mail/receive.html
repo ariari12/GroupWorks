@@ -39,53 +39,52 @@
 
         .bi {
             vertical-align: -.125em;
-            fill: currentColor;
+            fill: currentColor.
         }
 
         .nav-scroller {
             position: relative;
             z-index: 2;
             height: 2.75rem;
-            overflow-y: hidden;
+            overflow-y: hidden.
         }
 
         .nav-scroller .nav {
             display: flex;
-            flex-wrap: nowrap;
+            flex-wrap: nowrap.
             padding-bottom: 1rem;
             margin-top: -1px;
             overflow-x: auto;
             text-align: center;
             white-space: nowrap;
-            -webkit-overflow-scrolling: touch;
+            -webkit-overflow-scrolling: touch.
         }
 
         .btn-bd-primary {
             --bd-violet-bg: #712cf9;
-            --bd-violet-rgb: 112.520718, 44.062154, 249.437846;
+            --bd-violet-rgb: 112.520718, 44.062154, 249.437846.
 
             --bs-btn-font-weight: 600;
-            --bs-btn-color: var(--bs-white);
-            --bs-btn-bg: var(--bd-violet-bg);
-            --bs-btn-border-color: var(--bd-violet-bg);
-            --bs-btn-hover-color: var(--bs-white);
-            --bs-btn-hover-bg: #6528e0;
-            --bs-btn-hover-border-color: #6528e0;
-            --bs-btn-focus-shadow-rgb: var(--bd-violet-rgb);
-            --bs-btn-active-color: var(--bs-btn-hover-color);
-            --bs-btn-active-bg: #5a23c8;
-            --bs-btn-active-border-color: #5a23c8;
+            --bs-btn-color: var(--bs-white).
+            --bs-btn-bg: var(--bd-violet-bg).
+            --bs-btn-border-color: var(--bd-violet-bg).
+            --bs-btn-hover-color: var(--bs-white).
+            --bs-btn-hover-bg: #6528e0.
+            --bs-btn-hover-border-color: #6528e0.
+            --bs-btn-focus-shadow-rgb: var(--bd-violet-rgb).
+            --bs-btn-active-color: var(--bs-btn-hover-color).
+            --bs-btn-active-bg: #5a23c8.
+            --bs-btn-active-border-color: #5a23c8.
         }
 
         .bd-mode-toggle {
-            z-index: 1500;
+            z-index: 1500.
         }
 
         .bd-mode-toggle .dropdown-menu .active .bi {
-            display: block !important;
+            display: block !important.
         }
     </style>
-
 </th:block>
 <th:block layout:fragment="javascript">
     <script src="/js/tables/datatables-demo.js"></script>
@@ -177,14 +176,13 @@
     <main class="container">
         <div class="my-3 p-3 bg-body rounded shadow-sm">
             <h6 class="border-bottom pb-2 mb-0">
-                메일수신함 <span th:text="'(' + ${mailList.size()} + ')'" style="font-size: 16px"></span>
+                메일수신함 <span th:text="'(' + ${mailList.totalElements} + ')'" style="font-size: 16px"></span>
             </h6>
 
             <!--검색창-->
             <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start"
                  style="position: relative; margin-top: 10px">
-
-                <form action="/mail/receive/search" class="col-12 d-flex mb-3 mb-lg-0 me-lg-3" role="search">
+                <form action="/mail/receive" class="col-12 d-flex mb-3 mb-lg-0 me-lg-3" role="search">
                     <select name="keytype" id="keytype" class="form-control form-control-white text-bg-white me-2" style="width: 10%">
                         <option>제목</option>
                         <option>발신자이름</option>
@@ -194,11 +192,12 @@
                     <input type="submit" value="검색" class="btn btn-primary">
                 </form>
             </div>
-            <th:block th:each="mail : ${mailList}">
+
+            <th:block th:each="mail : ${mailList.content}">
                 <!--한개 시작-->
                 <div class="d-flex text-body-secondary pt-3" style="padding-top: 2rem !important;">
-                    <!--중요한 메일 x-->
-                    <th:block th:if="${mail.getMailStatus()==0}">
+                    <!--중요하지 않은 메일-->
+                    <th:block th:if="${mail.getMailStatus() == 0}">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
                              class="bi bi-star star-icon" viewBox="0 0 16 16" style="margin: 0px 10px"
                              th:data-id="${mail.getId()}">
@@ -206,8 +205,8 @@
                         </svg>
                     </th:block>
 
-                    <!--중요한 메일 o-->
-                    <th:block th:if="${mail.getMailStatus()==1}">
+                    <!--중요한 메일-->
+                    <th:block th:if="${mail.getMailStatus() == 1}">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
                              class="bi bi-star star-icon-fill" viewBox="0 0 16 16" style="margin: 0px 10px"
                              th:data-id="${mail.getId()}">
@@ -226,7 +225,7 @@
                                 <span class="text-gray-dark" th:text="${mail.getMailTitle()}"></span>
 
                                 <!--안 읽었던 메일이면-->
-                                <th:block th:if="${mail.getMailIsRead()==0}">
+                                <th:block th:if="${mail.getMailIsRead() == 0}">
                                     <div>
                                         <a href="" style="color: black; margin-right: 5px; text-decoration-line: none"
                                            class="trashicon" th:data-id="${mail.getId()}">
@@ -244,7 +243,7 @@
                                 </th:block>
 
                                 <!--읽었던 메일이면-->
-                                <th:block th:if="${mail.getMailIsRead()==1}">
+                                <th:block th:if="${mail.getMailIsRead() == 1}">
                                     <div>
                                         <a href="" style="color: black; margin-right: 5px; text-decoration-line: none"
                                            class="trashicon" th:data-id="${mail.getId()}">
@@ -254,28 +253,42 @@
                                                 <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
                                             </svg>
                                         </a>
-                                        <!--열람 o 메일-->
+                                        <!--열람된 메일-->
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                              fill="currentColor" class="bi bi-envelope-open-fill" viewBox="0 0 16 16">
                                             <path d="M8.941.435a2 2 0 0 0-1.882 0l-6 3.2A2 2 0 0 0 0 5.4v.314l6.709 3.932L8 8.928l1.291.718L16 5.714V5.4a2 2 0 0 0-1.059-1.765zM16 6.873l-5.693 3.337L16 13.372v-6.5Zm-.059 7.611L8 10.072.059 14.484A2 2 0 0 0 2 16h12a2 2 0 0 0 1.941-1.516M0 13.373l5.693-3.163L0 6.873z"/>
                                         </svg>
                                     </div>
                                 </th:block>
-
                             </div>
                         </div>
                     </a>
                 </div>
-
-
             </th:block>
-            <!--한개 끝-->
-
+            <!--한개의 메일 끝-->
+            <!-- 페이지네이션 -->
+            <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item" th:classappend="${mailList.hasPrevious()} ? '' : 'disabled'">
+                        <a class="page-link" th:href="@{/mail/receive(pageNumber=${mailList.number - 1}, size=${mailList.size})}" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    <th:block th:each="i : ${#numbers.sequence(0, mailList.totalPages - 1)}">
+                        <li class="page-item" th:classappend="${mailList.number == i} ? 'active'">
+                            <a class="page-link" th:href="@{/mail/receive(pageNumber=${i}, size=${mailList.size})}" th:text="${i + 1}">1</a>
+                        </li>
+                    </th:block>
+                    <li class="page-item" th:classappend="${mailList.hasNext()} ? '' : 'disabled'">
+                        <a class="page-link" th:href="@{/mail/receive(pageNumber=${mailList.number + 1}, size=${mailList.size})}" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
         </div>
     </main>
     <script src="../js/bootstrap/bootstrap.bundle.min.js"></script>
-
     <script src="../js/mail/offcanvas-navbar.js"></script>
 </th:block>
-
-
+</html>
