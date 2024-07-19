@@ -23,5 +23,14 @@ public class BoardController {
         return "yhj/board/write";
     }
 
+    @GetMapping("/detail")
+    public String detail() {
+        return "yhj/board/detail";
+    }
+
+    @GetMapping("/edit")
+    public String edit() {
+        return "yhj/board/edit";
+    }
 
 }
