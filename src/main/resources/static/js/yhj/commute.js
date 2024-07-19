@@ -18,4 +18,9 @@ $(document).ready(function(){
     }
     updateTime();
     setInterval(updateTime, 500);
+
+
+    $('#commute-btn').on('click', function () {
+        confirm("확인 또는 취소를 눌러주세요.");
+    });
 });
