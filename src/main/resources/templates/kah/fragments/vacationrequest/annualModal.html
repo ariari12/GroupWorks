@@ -80,14 +80,17 @@
                     },
                     error: function(xhr) {
                         if (xhr.status === 400) {
-                            let errors = xhr.responseJSON;
-                            let errorMessage = '';
-                            for (let field in errors) {
-                                errorMessage += field + ': ' + errors[field] + '\n';
+                            let errorResult = xhr.responseJSON;
+                            let errorMessage = errorResult.message + '\n';
+                            if (errorResult.fieldErrors) {
+                                errorMessage += "\n";
+                                for (let field in errorResult.fieldErrors) {
+                                    errorMessage += field + ': ' + errorResult.fieldErrors[field] + '\n';
+                                }
                             }
                             alert("Errors:\n" + errorMessage);
                         } else {
-                            alert("겹치는 휴가기간이 있습니다");
+                            alert("다시 시도해주세요");
                         }
                     }
                 });

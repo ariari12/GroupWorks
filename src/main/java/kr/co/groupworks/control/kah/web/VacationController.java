@@ -1,6 +1,5 @@
-package kr.co.groupworks.control.kah;
+package kr.co.groupworks.control.kah.web;
 
-import jakarta.validation.Valid;
 import kr.co.groupworks.dto.cis.employee.SessionEmployeeDTO;
 import kr.co.groupworks.dto.kah.*;
 import kr.co.groupworks.entity.kah.AmPm;
@@ -16,7 +15,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.HashMap;
 import java.util.List;
@@ -27,7 +25,6 @@ import java.util.Map;
 @RequestMapping("/vacation")
 @RequiredArgsConstructor
 public class VacationController {
-    private final EmployeeService employeeService;
     private final VacationService vacationService;
 
     // enum 상수 값 지속적으로 넘겨주기 위함
@@ -73,39 +70,6 @@ public class VacationController {
     }
 
 
-    // 연차 신청
-    @PostMapping("/annual")
-    @ResponseBody
-    public ResponseEntity<?> vacationAnnual(@Validated @RequestBody AnnualFormDTO dto, BindingResult bindingResult,
-                                 @SessionAttribute(name = "employee")SessionEmployeeDTO sessionEmployeeDTO,
-                                 Model model){
-
-        log.info("AnnualFormDTO ={}",dto);
-        dto.setEmployeeId(sessionEmployeeDTO.getEmployeeId());
-        // 검증에 실패하면 다시 입력 폼으로
-        ResponseEntity<Map<String, String>> BAD_REQUEST = errorResponseEntity(bindingResult, model, dto.getEmployeeId());
-        if (BAD_REQUEST != null) return BAD_REQUEST;
-        vacationService.save(dto);
-        return ResponseEntity.status(HttpStatus.OK).body("연차 신청이 성공적으로 처리되었습니다.");
-    }
-
-    // 반차 신청
-    @PostMapping("/half")
-    @ResponseBody
-    public ResponseEntity<?> vacationHalf(@Validated @RequestBody HalfFormDTO dto, BindingResult bindingResult,
-                                            @SessionAttribute(name = "employee")SessionEmployeeDTO sessionEmployeeDTO,
-                                            Model model){
-
-        log.info("HalfFormDTO ={}",dto);
-        dto.setEmployeeId(sessionEmployeeDTO.getEmployeeId());
-        // 검증에 실패하면 다시 입력 폼으로
-        ResponseEntity<Map<String, String>> BAD_REQUEST = errorResponseEntity(bindingResult, model, dto.getEmployeeId());
-        if (BAD_REQUEST != null) return BAD_REQUEST;
-        vacationService.save(dto);
-        return ResponseEntity.status(HttpStatus.OK).body("반차 신청이 성공적으로 처리되었습니다.");
-    }
-
-
 //    @PostMapping("/sick")
 //    @ResponseBody
 //    public ResponseEntity<?> vacationSick(@Validated @RequestBody SickFormDTO dto, BindingResult bindingResult,
@@ -135,22 +99,6 @@ public class VacationController {
 //        vacationService.save(dto, employeeId);
 //        return ResponseEntity.status(HttpStatus.OK).body("기타 휴가 신청이 성공적으로 처리되었습니다.");
 //    }
-
-
-
-    private ResponseEntity<Map<String, String>> errorResponseEntity(BindingResult bindingResult, Model model, Long employeeId) {
-        if (bindingResult.hasErrors()) {
-            // 휴가 신청 내역 조회 (이걸 안해주면 조회를 안해 줌)
-            List<VacationMyHistoryDTO> vacationRequestList = vacationService.findAllByEmployeeId(employeeId);
-            model.addAttribute("vacationRequestList",vacationRequestList);
-            Map<String, String> errors = new HashMap<>();
-            for (FieldError error : bindingResult.getFieldErrors()) {
-                errors.put(error.getField(), error.getDefaultMessage());
-            }
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
-        }
-        return null;
-    }
 
 
 }

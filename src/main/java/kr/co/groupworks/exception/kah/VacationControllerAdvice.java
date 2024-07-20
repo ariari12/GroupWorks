@@ -1,0 +1,40 @@
+package kr.co.groupworks.exception.kah;
+
+import kr.co.groupworks.exception.exhandler.ErrorResult;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.util.HashMap;
+import java.util.Map;
+
+@Slf4j
+@RestControllerAdvice(basePackages = "kr.co.groupworks.control.kah.rest")
+public class VacationControllerAdvice {
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ErrorResult> handleIllegalArgumentException(IllegalArgumentException ex) {
+        log.error("[handleIllegalArgumentException] ex", ex);
+        ErrorResult errorResult = new ErrorResult("ILLEGAL_ARGUMENT_ERROR", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResult);
+    }
+
+    // 필드 에러
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ErrorResult> handleValidationExceptions(MethodArgumentNotValidException ex) {
+        log.error("[handleValidationExceptions] ex", ex);
+
+        // 필드 오류 수집
+        Map<String, String> fieldErrors = new HashMap<>();
+        for (FieldError fieldError : ex.getBindingResult().getFieldErrors()) {
+            fieldErrors.put(fieldError.getField(), fieldError.getDefaultMessage());
+        }
+
+        ErrorResult errorResult = new ErrorResult("VALIDATION_ERROR", "잘못된 입력입니다. 입력 값을 확인해주세요.", fieldErrors);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResult);
+    }
+}

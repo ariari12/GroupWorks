@@ -1,4 +1,4 @@
-package kr.co.groupworks.control.kah;
+package kr.co.groupworks.control.kah.web;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
