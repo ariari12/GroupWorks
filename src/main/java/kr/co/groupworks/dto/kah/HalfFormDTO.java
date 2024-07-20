@@ -1,9 +1,11 @@
 package kr.co.groupworks.dto.kah;
 
+import kr.co.groupworks.entity.kah.VacationType;
 import lombok.*;
 
 
 @Getter
+@Setter
 @Builder
 @ToString
 @NoArgsConstructor
@@ -15,7 +17,7 @@ public class HalfFormDTO {
     private String amPm;
     private String contents;
     private int remainingVacationDays;
-    private LeaveType type = LeaveType.HALF;
+    private VacationType type = VacationType.HALF;
 
     private String filePath;
     private String fileName;

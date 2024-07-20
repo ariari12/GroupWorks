@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<th:block th:fragment="annualModal">
+    <form method="post" action="/vacation/annual" id="annualForm" th:object="${annualForm}">
+        <input type="hidden" id="validationStatus" value="${validationStatus}" />
+
+        <div class="modal fade" id="annual" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="annualLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="annualLabel" th:text="|${session.employee.employeeName}님의 연차 요청|">@@@님의 연차 요청</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body container" >
+                        <h6>사용 가능 연차</h6>
+                        <div>6일</div>
+                        <br>
+                        <label>휴일 일정</label>
+                        <input type="text" name="" placeholder="Select Date.." class="form-control vacationDate" id="vDate">
+                        <input type="hidden" th:field="*{startDate}">
+                        <input type="hidden" th:field="*{endDate}">
+                        <div th:if="${#fields.hasErrors('startDate')}" th:errors="*{startDate}"></div>
+                        <br>
+                        <label for="contents">상세 내용</label>
+                        <textarea class="form-control" th:field="*{contents}" placeholder="휴가 등록 메세지 입력"></textarea>
+                        <div th:if="${#fields.hasErrors('contents')}" th:errors="*{contents}"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                        <button type="button" class="btn btn-primary" id="annualBtn">신청</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <script>
+
+        $(function (){
+
+
+
+            $("#annualBtn").on("click", function (e) {
+                e.preventDefault(); // 기본 submit 동작을 막음
+
+                // 날짜 값을 분리
+                let split = $("#vDate").val().split("~");
+                console.log(split);
+
+                if (split.length === 2) {
+                    let startDate = split[0].trim();
+                    let endDate = split[1].trim();
+
+                    // 분리된 값을 폼에 추가
+                    $("#startDate").val(startDate);
+                    $("#endDate").val(endDate);
+
+                    // 결과 출력 (디버깅용)
+                    console.log("startDate: ", startDate);
+                    console.log("endDate: ", endDate);
+                    console.log("contents: ", $("#contents").val());
+
+                    $.ajax({
+                        url: '/vacation/annual',
+                        type: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify({
+                            startDate: startDate,
+                            endDate: endDate,
+                            contents: $("#contents").val()
+                        }),
+                        success: function(response) {
+                            console.log("Success:", response);
+                            $('#annual').modal('hide');
+                            location.reload();
+                        },
+                        error: function(xhr) {
+                            if (xhr.status === 400) {
+                                let errors = xhr.responseJSON;
+                                let errorMessage = '';
+                                for (let field in errors) {
+                                    errorMessage += field + ': ' + errors[field] + '\n';
+                                }
+                                alert("Errors:\n" + errorMessage);
+                            } else {
+                                alert("An error occurred");
+                            }
+                        }
+                    });
+                } else {
+                    alert("날짜 형식이 올바르지 않습니다. 'YYYY-MM-DD ~ YYYY-MM-DD' 형식으로 입력해 주세요.");
+                }
+            });
+
+        });
+    </script>
+</th:block>

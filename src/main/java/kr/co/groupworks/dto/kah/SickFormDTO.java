@@ -1,9 +1,11 @@
 package kr.co.groupworks.dto.kah;
 
+import kr.co.groupworks.entity.kah.VacationType;
 import lombok.*;
 
 
 @Getter
+@Setter
 @Builder
 @ToString
 @NoArgsConstructor
@@ -14,7 +16,7 @@ public class SickFormDTO {
     private String startDate;
     private String endDate;
     private String contents;
-    private LeaveType type = LeaveType.SICK;
+    private VacationType type = VacationType.SICK;
     private String filePath;
     private String fileName;
 

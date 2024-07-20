@@ -69,7 +69,7 @@
     <!--/* 부서 기안 결재 */-->
     <div class="card-header">
         <i class="bi bi-folder-fill"></i>
-        <!--[[${부서명}]]--> 기안 승인 결재 목록
+        <!--[[${부서명}]]--> 부서 기안 승인 결재 목록
     </div>
 
     <div class="card-body">
@@ -98,7 +98,7 @@
             </thead>
 
             <tbody>
-            <!--/*@thymesVar id="approval" type="kr.co.groupworks.dto.ljm.workflow.WorkFlowInsertDTO"*/-->
+            <!--/*@thymesVar id="approval" type="kr.co.groupworks.dto.ljm.dto.WorkFlowDTO"*/-->
             <tr th:onclick="load([[${list.id}]])" th:each="list : ${approval}">
                 <td>[[${list.id}]]</td>
                 <td>[[${list.workFlowType}]]</td>
@@ -133,7 +133,7 @@
 <th:block layout:fragment="javascript">
     <!--/* Add External link 필요한 추가 링크는 여기에... */-->
     <!--/* Chart */-->
-    <script src="/js/chart/workflow/approval-statistics-chart.js"></script>
+    <script src="/js/ljm/chart/approval-statistics-chart.js"></script>
     <script>
         const classification = ['업무 건', '재무 건', '예산 건', '구매 건', '보고 건', '특별 건'];
 
