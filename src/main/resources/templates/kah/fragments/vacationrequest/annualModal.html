@@ -42,54 +42,55 @@
 
             $("#annualBtn").on("click", function (e) {
                 e.preventDefault(); // 기본 submit 동작을 막음
+                let startDate;
+                let endDate;
 
                 // 날짜 값을 분리
                 let split = $("#vDate").val().split("~");
                 console.log(split);
 
                 if (split.length === 2) {
-                    let startDate = split[0].trim();
-                    let endDate = split[1].trim();
-
-                    // 분리된 값을 폼에 추가
-                    $("#startDate").val(startDate);
-                    $("#endDate").val(endDate);
-
-                    // 결과 출력 (디버깅용)
-                    console.log("startDate: ", startDate);
-                    console.log("endDate: ", endDate);
-                    console.log("contents: ", $("#contents").val());
-
-                    $.ajax({
-                        url: '/vacation/annual',
-                        type: 'POST',
-                        contentType: 'application/json',
-                        data: JSON.stringify({
-                            startDate: startDate,
-                            endDate: endDate,
-                            contents: $("#contents").val()
-                        }),
-                        success: function(response) {
-                            console.log("Success:", response);
-                            $('#annual').modal('hide');
-                            location.reload();
-                        },
-                        error: function(xhr) {
-                            if (xhr.status === 400) {
-                                let errors = xhr.responseJSON;
-                                let errorMessage = '';
-                                for (let field in errors) {
-                                    errorMessage += field + ': ' + errors[field] + '\n';
-                                }
-                                alert("Errors:\n" + errorMessage);
-                            } else {
-                                alert("An error occurred");
-                            }
-                        }
-                    });
+                    startDate = split[0].trim();
+                    endDate = split[1].trim();
                 } else {
-                    alert("날짜 형식이 올바르지 않습니다. 'YYYY-MM-DD ~ YYYY-MM-DD' 형식으로 입력해 주세요.");
+                    startDate = split[0].trim();
+                    endDate = split[0].trim();
                 }
+                // 분리된 값을 폼에 추가
+                $("#startDate").val(startDate);
+                $("#endDate").val(endDate);
+
+                // 결과 출력 (디버깅용)
+                console.log("startDate: ", startDate);
+                console.log("endDate: ", endDate);
+                console.log("contents: ", $("#contents").val());
+                $.ajax({
+                    url: '/vacation/annual',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        startDate: startDate,
+                        endDate: endDate,
+                        contents: $("#contents").val()
+                    }),
+                    success: function(response) {
+                        console.log("Success:", response);
+                        $('#annual').modal('hide');
+                        location.reload();
+                    },
+                    error: function(xhr) {
+                        if (xhr.status === 400) {
+                            let errors = xhr.responseJSON;
+                            let errorMessage = '';
+                            for (let field in errors) {
+                                errorMessage += field + ': ' + errors[field] + '\n';
+                            }
+                            alert("Errors:\n" + errorMessage);
+                        } else {
+                            alert("겹치는 휴가기간이 있습니다");
+                        }
+                    }
+                });
             });
 
         });

@@ -11,6 +11,7 @@ import kr.co.groupworks.repository.cis.EmployeeRepository;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -32,6 +33,7 @@ class VacationServiceImplTest {
 
     static AnnualFormDTO annualFormDTO1;
     static AnnualFormDTO annualFormDTO2;
+    static AnnualFormDTO annualFormDTO3;
 
     @BeforeAll
     static void beforeAll() {
@@ -42,9 +44,17 @@ class VacationServiceImplTest {
                 .type(VacationType.ANNUAL)
                 .build();
 
+        // annualFormDTO1과 기간을 일부러 겹치게 설정
         annualFormDTO2 = kr.co.groupworks.dto.kah.AnnualFormDTO.builder()
-                .startDate(LocalDate.of(2500,10,22))
+                .startDate(LocalDate.of(2500,6,22))
                 .endDate(LocalDate.of(2500,12,22))
+                .contents("Family asdlkfjlsdakj")
+                .type(VacationType.ANNUAL)
+                .build();
+
+        annualFormDTO3 = kr.co.groupworks.dto.kah.AnnualFormDTO.builder()
+                .startDate(LocalDate.of(2500,3,22))
+                .endDate(LocalDate.of(2500,3,22))
                 .contents("Family asdlkfjlsdakj")
                 .type(VacationType.ANNUAL)
                 .build();
@@ -75,13 +85,13 @@ class VacationServiceImplTest {
 
     }
 
-    // 연차 저장 테스트
     @Test
+    @DisplayName("연차 저장 테스트")
     void saveVacationAnnual() {
         Employee employee = employeeRepository.findByEmployeeId(1L);
         annualFormDTO1.setEmployeeId(employee.getEmployeeId());
-        Vacation vacation = vacationService.save(annualFormDTO1);
 
+        Vacation vacation = vacationService.save(annualFormDTO1);
 
         assertThat(vacation.getContents()).isEqualTo(annualFormDTO1.getContents());
         assertThat(vacation.getTitle()).isEqualTo("연차");
@@ -89,7 +99,6 @@ class VacationServiceImplTest {
         assertThat(vacation.getStartDate()).isEqualTo(String.valueOf(annualFormDTO1.getStartDate()));
         assertThat(vacation.getEndDate()).isEqualTo(String.valueOf(annualFormDTO1.getEndDate()));
         assertThat(vacation.getEmployee()).isEqualTo(employee);
-
     }
 
     //연차 신청 내역 테스트

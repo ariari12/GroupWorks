@@ -8,6 +8,7 @@ import kr.co.groupworks.entity.kah.VacationStatus;
 import kr.co.groupworks.repository.cis.EmployeeRepository;
 import kr.co.groupworks.repository.kah.CalendarAttachmentRepository;
 import kr.co.groupworks.repository.kah.VacationRepository;
+import kr.co.groupworks.util.mapper.VacationMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,7 @@ import java.util.List;
 public class VacationServiceImpl implements VacationService{
     private final VacationRepository vacationRepository;
     private final EmployeeRepository employeeRepository;
+    private final VacationMapper vacationMapper;
     private final CalendarAttachmentRepository calendarAttachmentRepository;
 
 
@@ -32,16 +34,16 @@ public class VacationServiceImpl implements VacationService{
         Employee employee = employeeRepository.findByEmployeeId(dto.getEmployeeId());
         log.info("employee = {}",employee);
 
+        // 기간이 겹치는 휴가가 있는지 확인
+        List<Vacation> overlappingVacations = vacationRepository.findOverlappingVacations(
+                dto.getEmployeeId(), String.valueOf(dto.getStartDate()), String.valueOf(dto.getEndDate()));
+
+        if (!overlappingVacations.isEmpty()) {
+            throw new IllegalArgumentException("겹치는 휴가기간이 있습니다.");
+        }
+
         // 휴가 엔티티 변환
-        Vacation vacation = Vacation.builder()
-                .title("연차")
-                .contents(dto.getContents())
-                .startDate(String.valueOf(dto.getStartDate()))
-                .endDate(String.valueOf(dto.getEndDate()))
-                .status(VacationStatus.PENDING)
-                .vacationType(dto.getType())
-                .employee(employee)
-                .build();
+        Vacation vacation = vacationMapper.toEntity(dto);
         return vacationRepository.save(vacation);
     }
 
