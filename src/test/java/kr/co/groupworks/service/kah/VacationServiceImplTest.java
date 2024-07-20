@@ -79,6 +79,7 @@ class VacationServiceImplTest {
     @Test
     void saveVacationAnnual() {
         Employee employee = employeeRepository.findByEmployeeId(1L);
+        annualFormDTO1.setEmployeeId(employee.getEmployeeId());
         Vacation vacation = vacationService.save(annualFormDTO1);
 
 
