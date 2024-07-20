@@ -1,6 +1,7 @@
 package kr.co.groupworks.service.kah;
 
 import kr.co.groupworks.dto.kah.AnnualFormDTO;
+import kr.co.groupworks.dto.kah.HalfFormDTO;
 import kr.co.groupworks.dto.kah.VacationMyHistoryDTO;
 import kr.co.groupworks.entity.kah.Vacation;
 
@@ -12,4 +13,5 @@ public interface VacationService {
     List<VacationMyHistoryDTO> findAllByEmployeeId(Long employeeId);
 
 
+    Vacation save(HalfFormDTO dto);
 }

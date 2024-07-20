@@ -20,5 +20,9 @@ public class Vacation extends Calendar{
     @Enumerated(EnumType.STRING)
     @Column(name = "vacation_type")
     private VacationType vacationType;
+    // 오전,오후
+    @Enumerated(EnumType.STRING)
+    @Column(name = "am_pm")
+    private AmPm amPm;
 
 }

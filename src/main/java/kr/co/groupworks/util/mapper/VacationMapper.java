@@ -3,6 +3,7 @@ import kr.co.groupworks.dto.kah.AnnualFormDTO;
 import kr.co.groupworks.dto.kah.HalfFormDTO;
 import kr.co.groupworks.dto.kah.OtherFormDTO;
 import kr.co.groupworks.dto.kah.SickFormDTO;
+import kr.co.groupworks.entity.cis.Employee;
 import kr.co.groupworks.entity.kah.Vacation;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -15,15 +16,24 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface VacationMapper {
 
-    @Mapping(target = "title", constant = "연차")
-    @Mapping(target = "contents", source = "contents")
-    @Mapping(target = "startDate", source = "startDate")
-    @Mapping(target = "endDate", source = "endDate")
+    @Mapping(target = "contents", source = "dto.contents")
+    @Mapping(target = "startDate", source = "dto.startDate")
+    @Mapping(target = "endDate", source = "dto.endDate")
     @Mapping(target = "status", expression = "java(kr.co.groupworks.entity.kah.VacationStatus.PENDING)")
-    @Mapping(target = "vacationType", source = "type")
-    @Mapping(target = "employee.employeeId", source = "employeeId")
-    Vacation toEntity(AnnualFormDTO dto);
+    @Mapping(target = "vacationType", expression = "java(kr.co.groupworks.entity.kah.VacationType.ANNUAL)")
+    @Mapping(target = "title", expression = "java(kr.co.groupworks.entity.kah.VacationType.ANNUAL.getDescription())")
+    @Mapping(target = "employee", source = "employee")
+    Vacation toEntity(AnnualFormDTO dto, Employee employee);
 
     @Mapping(target = "employeeId", source = "employee.employeeId")
     AnnualFormDTO toDto(Vacation vacation);
+
+    @Mapping(target = "startDate", source = "dto.halfStartDate")
+    @Mapping(target = "contents", source = "dto.halfContents")
+    @Mapping(target = "amPm", source = "dto.amPm")
+    @Mapping(target = "status", expression = "java(kr.co.groupworks.entity.kah.VacationStatus.PENDING)")
+    @Mapping(target = "vacationType", expression = "java(kr.co.groupworks.entity.kah.VacationType.HALF)")
+    @Mapping(target = "title", expression = "java(kr.co.groupworks.entity.kah.VacationType.HALF.getDescription())")
+    @Mapping(target = "employee", source = "employee")
+    Vacation toEntity(HalfFormDTO dto, Employee employee);
 }

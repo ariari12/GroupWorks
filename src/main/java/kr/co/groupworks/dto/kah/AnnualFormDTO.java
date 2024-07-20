@@ -23,6 +23,5 @@ public class AnnualFormDTO {
     @Future
     private LocalDate endDate;
     private String contents;
-    private VacationType type=VacationType.ANNUAL;
 
 }

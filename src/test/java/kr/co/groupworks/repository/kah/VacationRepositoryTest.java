@@ -3,6 +3,7 @@ package kr.co.groupworks.repository.kah;
 import kr.co.groupworks.dto.kah.AnnualFormDTO;
 import kr.co.groupworks.entity.kah.Vacation;
 import kr.co.groupworks.entity.kah.VacationType;
+import kr.co.groupworks.repository.cis.EmployeeRepository;
 import kr.co.groupworks.util.mapper.VacationMapper;
 import lombok.RequiredArgsConstructor;
 import org.assertj.core.api.Assertions;
@@ -26,6 +27,8 @@ class VacationRepositoryTest {
     @Autowired
     private VacationRepository vacationRepository;
     @Autowired
+    private EmployeeRepository employeeRepository;
+    @Autowired
     private VacationMapper vacationMapper;
 
     static AnnualFormDTO annualFormDTO1;
@@ -36,15 +39,13 @@ class VacationRepositoryTest {
                 .startDate(LocalDate.of(2500,6,22))
                 .endDate(LocalDate.of(2500,8,22))
                 .contents("Family vacation to Hawaii")
-                .type(VacationType.ANNUAL)
                 .build();
 
     }
 
     @BeforeEach
     void setUp() {
-        annualFormDTO1.setEmployeeId(1L);
-        Vacation entity = vacationMapper.toEntity(annualFormDTO1);
+        Vacation entity = vacationMapper.toEntity(annualFormDTO1, employeeRepository.findByEmployeeId(1L));
         vacationRepository.save(entity);
 
     }

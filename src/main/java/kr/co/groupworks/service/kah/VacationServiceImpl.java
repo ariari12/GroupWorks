@@ -1,6 +1,7 @@
 package kr.co.groupworks.service.kah;
 
 import kr.co.groupworks.dto.kah.AnnualFormDTO;
+import kr.co.groupworks.dto.kah.HalfFormDTO;
 import kr.co.groupworks.dto.kah.VacationMyHistoryDTO;
 import kr.co.groupworks.entity.cis.Employee;
 import kr.co.groupworks.entity.kah.Vacation;
@@ -43,7 +44,27 @@ public class VacationServiceImpl implements VacationService{
         }
 
         // 휴가 엔티티 변환
-        Vacation vacation = vacationMapper.toEntity(dto);
+        Vacation vacation = vacationMapper.toEntity(dto,employee);
+        return vacationRepository.save(vacation);
+    }
+
+    // 반차 저장
+    @Override
+    public Vacation save(HalfFormDTO dto) {
+        // 사원 엔티티 반환
+        Employee employee = employeeRepository.findByEmployeeId(dto.getEmployeeId());
+        log.info("employee = {}",employee);
+
+        // 기간이 겹치는 휴가가 있는지 확인
+        List<Vacation> overlappingVacations = vacationRepository.findOverlappingVacations(
+                dto.getEmployeeId(), String.valueOf(dto.getHalfStartDate()), String.valueOf(dto.getHalfStartDate()));
+
+        if (!overlappingVacations.isEmpty()) {
+            throw new IllegalArgumentException("겹치는 휴가기간이 있습니다.");
+        }
+
+        // 휴가 엔티티 변환
+        Vacation vacation = vacationMapper.toEntity(dto,employee);
         return vacationRepository.save(vacation);
     }
 
@@ -57,10 +78,12 @@ public class VacationServiceImpl implements VacationService{
                 .map(vacation ->
                         VacationMyHistoryDTO.builder()
                                 .startDate(vacation.getStartDate())
-                                .endDate(vacation.getEndDate())
+                                .endDate(vacation.getEndDate() != null ? vacation.getEndDate() : vacation.getStartDate())
                                 .vacationType(vacation.getVacationType())
                                 .fileList(vacation.getAttachmentList())
                                 .status(vacation.getStatus()).build())
                 .toList();
     }
+
+
 }
