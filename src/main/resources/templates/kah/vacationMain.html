@@ -13,9 +13,14 @@
                         mode: "range"
                   });
 
-                  halfDate(".vacationDate", {
+                  flatpickr(".halfDate", {
                         locale: "ko", // 한국어 설정
                         wrap: true
+                  });
+
+                  flatpickr(".sickDate", {
+                        locale: "ko", // 한국어 설정
+                        mode: "range"
                   });
             });
       </script>
@@ -28,7 +33,7 @@
             <div class="col-sm-3 mb-3 mb-sm-0">
                   <div class="card">
                         <div class="card-body">
-                              <h5 class="card-title">연차</h5>
+                              <h5 class="card-title">🌴 연차</h5>
                               <p class="card-text">25일</p>
                               <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#annual" >신청하기</a>
                         </div>
@@ -38,9 +43,9 @@
             <div class="col-sm-3 mb-3 mb-sm-0">
                   <div class="card">
                         <div class="card-body">
-                              <h5 class="card-title">반차</h5>
+                              <h5 class="card-title">🕒 반차</h5>
                               <p class="card-text">25일</p>
-                              <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#halfDay">신청하기</a>
+                              <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#half">신청하기</a>
                         </div>
                   </div>
                   <br>
@@ -48,7 +53,7 @@
             <div class="col-sm-3 mb-3 mb-sm-0">
                   <div class="card">
                         <div class="card-body">
-                              <h5 class="card-title">병가</h5>
+                              <h5 class="card-title">🤒 병가</h5>
                               <p class="card-text">6일</p>
                               <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#sick">신청하기</a>
                         </div>
@@ -58,7 +63,7 @@
             <div class="col-sm-3 mb-3 mb-sm-0">
                   <div class="card">
                         <div class="card-body">
-                              <h5 class="card-title">기타</h5>
+                              <h5 class="card-title">💼 기타</h5>
                               <p class="card-text">6일</p>
                               <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#other">신청하기</a>
                         </div>
@@ -66,130 +71,22 @@
                   <br>
             </div>
       </div>
-      <th:block th:replace="kah/fragments/vacationMyHistory::scheduledVaction">
+
+      <th:block th:replace="~{kah/fragments/vacationStatus :: tables}">
       </th:block>
-      <th:block th:replace="kah/fragments/vacationMyHistory::vacationHistory">
+      <th:block th:replace="~{kah/fragments/vacationMyHistory::vacationHistory}">
       </th:block>
 
 
       <!--  연차 Modal -->
-      <div class="modal fade" id="annual" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="annualLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                  <div class="modal-content">
-                        <div class="modal-header">
-                              <h1 class="modal-title fs-5" id="annualLabel">@@@님의 연차 요청</h1>
-                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <h6 class="container">2022-11-11 12:12</h6>
-                        <div class="modal-body container">
-                              <h6>사용 가능 연차</h6>
-                              <div>6일</div>
-                              <br>
-                              <label>휴일 일정</label>
-                              <input type="text" name="" class="form-control vacationDate">
-                              <br>
-                              <label for="vacationText">상세 내용</label>
-                              <textarea class="form-control" id="vacationText" name="vacationText" placeholder="휴가 등록 메세지 입력"></textarea>
-                        </div>
-                        <div class="modal-footer">
-                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-                              <button type="button" class="btn btn-primary">신청</button>
-                        </div>
-                  </div>
-            </div>
-      </div>
+      <th:block th:replace="~{kah/fragments/vacationrequest/annualModal :: annualModal}"></th:block>
 
       <!--  반차 Modal -->
-      <div class="modal fade" id="halfDay" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="halfDayLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                  <div class="modal-content">
-                        <div class="modal-header">
-                              <h1 class="modal-title fs-5" id="halfDayLabel">@@@님의 반차 요청</h1>
-                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <h6 class="container">2022-11-11 12:12</h6>
-                        <div class="modal-body container">
-                              <h6>사용 가능 반차</h6>
-                              <div>6일</div>
-                              <br>
-                              <!--오전 오후 -->
-
-                              <label for="vacationDate">휴일 일정</label>
-                              <div class="halfDate">
-                                    <input type="text" placeholder="Select Date.." data-input> <!-- input is mandatory -->
-
-                                    <a class="input-button" title="toggle" data-toggle>
-                                          <i class="icon-calendar"></i>
-                                    </a>
-
-                                    <a class="input-button" title="clear" data-clear>
-                                          <i class="icon-close"></i>
-                                    </a>
-                              </div>
-                              <label for="vacationText2">상세 내용</label>
-                              <textarea class="form-control" id="vacationText2" name="vacationText" placeholder="휴가 등록 메세지 입력"></textarea>
-                        </div>
-                        <div class="modal-footer">
-                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-                              <button type="button" class="btn btn-primary">신청</button>
-                        </div>
-                  </div>
-            </div>
-      </div>
+      <th:block th:replace="~{kah/fragments/vacationrequest/halfModal :: halfModal}"></th:block>
 
       <!--  병가 Modal -->
-      <div class="modal fade" id="sick" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="sickLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                  <div class="modal-content">
-                        <div class="modal-header">
-                              <h1 class="modal-title fs-5" id="sickLabel">@@@님의 휴가 요청</h1>
-                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <h6 class="container">2022-11-11 12:12</h6>
-                        <div class="modal-body">
-
-                              <h5>사용 가능 연차</h5>
-                              <span>6일</span>
-                              <h5>휴가 일정 & 필요 정보 입력</h5>
-                              <label for="start">시작일</label><input type="date" name="" id="start">
-                              <label for="end">종료일</label><input type="date" name="" id="end">
-                              <label>
-                                    <textarea placeholder="휴가 등록 메세지 입력"></textarea>
-                              </label>
-                        </div>
-                        <div class="modal-footer">
-                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                              <button type="button" class="btn btn-primary">Understood</button>
-                        </div>
-                  </div>
-            </div>
-      </div>
+      <th:block th:replace="~{kah/fragments/vacationrequest/sickModal :: sickModal}"></th:block>
 
       <!--  기타 Modal -->
-      <div class="modal fade" id="other" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="otherLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                  <div class="modal-content">
-                        <div class="modal-header">
-                              <h1 class="modal-title fs-5" id="otherLabel">@@@님의 휴가 요청</h1>
-                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <h6 class="container">2022-11-11 12:12</h6>
-                        <div class="modal-body">
-
-                              <h5>사용 가능 연차</h5>
-                              <span>6일</span>
-                              <h5>휴가 일정 & 필요 정보 입력</h5>
-                              <label for="start">시작일</label><input type="date" name="" id="start">
-                              <label for="end">종료일</label><input type="date" name="" id="end">
-                              <label>
-                                    <textarea placeholder="휴가 등록 메세지 입력"></textarea>
-                              </label>
-                        </div>
-                        <div class="modal-footer">
-                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                              <button type="button" class="btn btn-primary">Understood</button>
-                        </div>
-                  </div>
-            </div>
-      </div>
+      <th:block th:replace="~{kah/fragments/vacationrequest/otherModal :: otherModal}"></th:block>
 </div>

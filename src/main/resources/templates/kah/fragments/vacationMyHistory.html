@@ -1,39 +1,5 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
-
-<div th:fragment="scheduledVaction">
-    <h5>신청 휴가</h5>
-    <hr>
-    <table class="table">
-        <thead>
-        <tr>
-            <th scope="col">#</th>
-            <th scope="col">First</th>
-            <th scope="col">Last</th>
-            <th scope="col">Handle</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <th scope="row">1</th>
-            <td>Mark</td>
-            <td>Otto</td>
-            <td>@mdo</td>
-        </tr>
-        <tr>
-            <th scope="row">2</th>
-            <td>Jacob</td>
-            <td>Thornton</td>
-            <td>@fat</td>
-        </tr>
-        <tr>
-            <th scope="row">3</th>
-            <td colspan="2">Larry the Bird</td>
-            <td>@twitter</td>
-        </tr>
-        </tbody>
-    </table>
-</div>
 <div class="card mb-4" th:fragment="vacationHistory">
     <div class="card-header">
         <i class="fas fa-table me-1"></i>
@@ -45,11 +11,8 @@
             <thead>
             <tr>
                 <th>이름</th>
-                <th>사번</th>
-                <th>직급</th>
-                <th>기간</th>
+                <th>사용 기간</th>
                 <th>종류</th>
-                <th>사용기간</th>
                 <th>증명자료</th>
                 <th>승인</th>
             </tr>
@@ -58,16 +21,32 @@
 
             <tbody>
             <!--/* 상세 보기 이동 시 onclick 이벤트 핸들러로 Javascript 함수 추가 */-->
-            <tr onclick="" data-bs-toggle="modal" data-bs-target="#vacationRequestHistory">
-                <td>Name 01</td>
-                <td>Position 01</td>
-                <td>Office 01</td>
-                <td>Name 01</td>
-                <td>Position 01</td>
-                <td>Office 01</td>
-                <td>Name 01</td>
-                <td>Position 01</td>
-            </tr>
+            <th:block th:if="${vacationRequestList == null} or ${vacationRequestList.size() == 0}">
+                <tr rowspan="5">
+                    <td>신청 내역 없음</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+
+                </tr>
+            </th:block>
+
+            <th:block th:unless="${vacationRequestList == null} or ${vacationRequestList.size() == 0}">
+
+                <tr onclick="" th:each="dto : ${vacationRequestList}">
+                    <td th:text="${session.employee.employeeName}">사원 이름</td>
+                    <td th:text="|${dto.startDate} ~ ${dto.endDate}|">사용 기간</td>
+                    <td th:text="${dto.vacationType.description}">종류</td>
+                    <!--<td th:text="${dto.VacationType}">Position 01</td>-->
+                    <td th:text="${dto.fileList.size>0}? '첨부 파일 있음' : '첨부 파일 없음'">증명자료</td>
+                    <td th:text="${dto.status.description}">승인</td>
+<!--                    <td th:text="${dto.status}">Position 01</td>-->
+                </tr>
+            </th:block>
+
+
+
             </tbody>
         </table>
     </div>
