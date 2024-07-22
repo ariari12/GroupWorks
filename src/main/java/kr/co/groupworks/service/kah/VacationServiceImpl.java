@@ -1,10 +1,7 @@
 package kr.co.groupworks.service.kah;
 
 import jakarta.persistence.EntityNotFoundException;
-import kr.co.groupworks.dto.kah.AnnualFormDTO;
-import kr.co.groupworks.dto.kah.HalfFormDTO;
-import kr.co.groupworks.dto.kah.SickFormDTO;
-import kr.co.groupworks.dto.kah.VacationMyHistoryDTO;
+import kr.co.groupworks.dto.kah.*;
 import kr.co.groupworks.entity.cis.Employee;
 import kr.co.groupworks.entity.kah.CalendarAttachment;
 import kr.co.groupworks.entity.kah.Vacation;
@@ -91,6 +88,15 @@ public class VacationServiceImpl implements VacationService{
         Employee employee = employeeRepository.findById(dto.getEmployeeId())
                 .orElseThrow(() -> new EntityNotFoundException("사원을 찾을 수 없습니다. " + dto.getEmployeeId()));
 
+
+        // 기간이 겹치는 휴가가 있는지 확인
+        List<Vacation> overlappingVacations = vacationRepository.findOverlappingVacations(
+                dto.getEmployeeId(), String.valueOf(dto.getSickStartDate()), String.valueOf(dto.getSickEndDate()));
+
+        if (!overlappingVacations.isEmpty()) {
+            throw new IllegalArgumentException("겹치는 휴가기간이 있습니다.");
+        }
+
         File uploadDir = new File(uploadDirectory);
         if (!uploadDir.exists()) {
             uploadDir.mkdirs();
@@ -117,6 +123,47 @@ public class VacationServiceImpl implements VacationService{
         log.info("employee = {}",dto.getEmployeeId());
         return vacationRepository.save(vacation).getCalendarId();
 
+    }
+
+    @Override
+    public Long save(OtherFormDTO dto, MultipartFile[] files) {
+        Employee employee = employeeRepository.findById(dto.getEmployeeId())
+                .orElseThrow(() -> new EntityNotFoundException("사원을 찾을 수 없습니다. " + dto.getEmployeeId()));
+
+
+        // 기간이 겹치는 휴가가 있는지 확인
+        List<Vacation> overlappingVacations = vacationRepository.findOverlappingVacations(
+                dto.getEmployeeId(), String.valueOf(dto.getOtherStartDate()), String.valueOf(dto.getOtherEndDate()));
+
+        if (!overlappingVacations.isEmpty()) {
+            throw new IllegalArgumentException("겹치는 휴가기간이 있습니다.");
+        }
+
+        File uploadDir = new File(uploadDirectory);
+        if (!uploadDir.exists()) {
+            uploadDir.mkdirs();
+        }
+
+        Vacation vacation = vacationMapper.toEntity(dto, employee);
+
+        Arrays.asList(files).forEach(file -> {
+            String fileFullName = UUID.randomUUID().toString()+"-"+file.getOriginalFilename();
+            String filePath = uploadDir+ "/"+ fileFullName;
+            File dest = new File(filePath);
+            try {
+                file.transferTo(dest);
+                CalendarAttachment calendarAttachment =
+                        calendarAttachmentMapper.toEntity(fileFullName, file.getOriginalFilename(), vacation);
+                calendarAttachmentRepository.save(calendarAttachment);
+
+            } catch (IOException e) {
+                log.error("파일 저장 중 오류 발생: {}", e.getMessage());
+                throw new RuntimeException("파일 저장 중 오류가 발생했습니다. 다시 시도해주세요.");
+            }
+        });
+
+        log.info("employee = {}",dto.getEmployeeId());
+        return vacationRepository.save(vacation).getCalendarId();
     }
 
 

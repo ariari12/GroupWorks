@@ -6,7 +6,8 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="sickLabel">@@@님의 병가 요청</h1>
+                    <h1 class="modal-title fs-5" id="sickLabel"
+                        th:text="|${session.employee.employeeName} 님의 병가 요청|">@@@님의 병가 요청</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -22,7 +23,7 @@
 
                     <br>
                     <h5>첨부 파일</h5>
-                    <td><input type="file" id="fileUpload" name="fileUpload" class="form-control" multiple></td>
+                    <td><input type="file" id="sickFileUpload" name="sickFileUpload" class="form-control" multiple></td>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
@@ -60,10 +61,10 @@
 
                 // FormData 객체를 생성하고 파일 추가
                 let formData = new FormData();
-                let fileUpload = document.getElementById("fileUpload").files;
+                let fileUpload = document.getElementById("sickFileUpload").files;
                 if (fileUpload && fileUpload.length > 0) {
                     for (let i = 0; i < fileUpload.length; i++) {
-                        formData.append("fileUpload", fileUpload[i]);
+                        formData.append("sickFileUpload", fileUpload[i]);
                     }
                 } else {
                     console.log("No files selected");
@@ -84,11 +85,15 @@
                         $('#sick').modal('hide');
                     },
                     error: function(xhr) {
+                        console.log(xhr.status);
                         if (xhr.status === 400) {
-                            let errors = xhr.responseJSON;
-                            let errorMessage = '';
-                            for (let field in errors) {
-                                errorMessage += field + ': ' + errors[field] + '\n';
+                            let errorResult = xhr.responseJSON;
+                            let errorMessage = errorResult.message + '\n';
+                            if (errorResult.fieldErrors) {
+                                errorMessage += "\n";
+                                for (let field in errorResult.fieldErrors) {
+                                    errorMessage += field + ': ' + errorResult.fieldErrors[field] + '\n';
+                                }
                             }
                             alert("Errors:\n" + errorMessage);
                         } else {

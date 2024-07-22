@@ -11,7 +11,7 @@ import java.util.List;
 
 @Entity
 @Getter
-@ToString
+@ToString(exclude = {"attachmentList"})
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
