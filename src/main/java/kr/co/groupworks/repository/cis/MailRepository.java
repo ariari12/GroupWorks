@@ -47,5 +47,4 @@ public interface MailRepository extends MongoRepository<Mail, String> {
     @Query(value = "{'mail_receiver' : ?0, 'mail_status' : 2}", sort = "{mail_sendtime : -1}")
     Page<Mail> findTrashByReceiver(String receiverEmail,  Pageable pageable);
 
-
 }
