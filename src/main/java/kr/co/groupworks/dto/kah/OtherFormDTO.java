@@ -4,10 +4,8 @@ import kr.co.groupworks.entity.kah.VacationType;
 import lombok.*;
 
 
-@Getter
-@Setter
+@Data
 @Builder
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 public class OtherFormDTO {

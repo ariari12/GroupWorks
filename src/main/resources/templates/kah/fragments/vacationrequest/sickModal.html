@@ -22,13 +22,81 @@
 
                     <br>
                     <h5>첨부 파일</h5>
-                    <td><input type="file" name="fileupload" class="form-control" multiple></td>
+                    <td><input type="file" id="fileUpload" name="fileUpload" class="form-control" multiple></td>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-                    <button type="button" class="btn btn-primary">신청</button>
+                    <button type="button" class="btn btn-primary" id="sickBtn">신청</button>
                 </div>
             </div>
         </div>
     </div>
+
+    <script>
+        $(document).ready(function() {
+            $("#sickBtn").on("click", function(e) {
+                e.preventDefault(); // 기본 submit 동작을 막음
+                console.log("클릭");
+
+                let sickStartDate;
+                let sickEndDate;
+
+                // 날짜 값을 분리
+                let split = $("#vSickDate").val().split("~");
+                if (split.length === 2) {
+                    sickStartDate = split[0].trim();
+                    sickEndDate = split[1].trim();
+                } else {
+                    sickStartDate = split[0].trim();
+                    sickEndDate = split[0].trim();
+                }
+
+                // JSON 데이터를 생성
+                let jsonData = JSON.stringify({
+                    sickStartDate: sickStartDate,
+                    sickEndDate: sickEndDate,
+                    sickContents: $("#sickContents").val()
+                });
+
+                // FormData 객체를 생성하고 파일 추가
+                let formData = new FormData();
+                let fileUpload = document.getElementById("fileUpload").files;
+                if (fileUpload && fileUpload.length > 0) {
+                    for (let i = 0; i < fileUpload.length; i++) {
+                        formData.append("fileUpload", fileUpload[i]);
+                    }
+                } else {
+                    console.log("No files selected");
+                }
+
+                // JSON 데이터를 Blob으로 추가
+                formData.append("jsonData", new Blob([jsonData], { type: "application/json" }));
+
+                // AJAX 요청
+                $.ajax({
+                    url: '/vacation/sick',
+                    type: 'POST',
+                    processData: false,
+                    contentType: false,
+                    data: formData,
+                    success: function(response) {
+                        alert("Success: " + response);
+                        $('#sick').modal('hide');
+                    },
+                    error: function(xhr) {
+                        if (xhr.status === 400) {
+                            let errors = xhr.responseJSON;
+                            let errorMessage = '';
+                            for (let field in errors) {
+                                errorMessage += field + ': ' + errors[field] + '\n';
+                            }
+                            alert("Errors:\n" + errorMessage);
+                        } else {
+                            alert("다시 시도해주세요");
+                        }
+                    }
+                });
+            });
+        });
+    </script>
 </th:block>

@@ -1,38 +1,55 @@
 package kr.co.groupworks.service.kah;
 
+import jakarta.persistence.EntityNotFoundException;
 import kr.co.groupworks.dto.kah.AnnualFormDTO;
 import kr.co.groupworks.dto.kah.HalfFormDTO;
+import kr.co.groupworks.dto.kah.SickFormDTO;
 import kr.co.groupworks.dto.kah.VacationMyHistoryDTO;
 import kr.co.groupworks.entity.cis.Employee;
+import kr.co.groupworks.entity.kah.CalendarAttachment;
 import kr.co.groupworks.entity.kah.Vacation;
 import kr.co.groupworks.entity.kah.VacationStatus;
 import kr.co.groupworks.repository.cis.EmployeeRepository;
 import kr.co.groupworks.repository.kah.CalendarAttachmentRepository;
 import kr.co.groupworks.repository.kah.VacationRepository;
+import kr.co.groupworks.util.mapper.CalendarAttachmentMapper;
 import kr.co.groupworks.util.mapper.VacationMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @Slf4j
 @Transactional
 @RequiredArgsConstructor
 public class VacationServiceImpl implements VacationService{
+    @Value("${file.upload-dir}")
+    private String uploadDirectory;
+    private final CalendarAttachmentRepository calendarAttachmentRepository;
+    private final CalendarAttachmentMapper calendarAttachmentMapper;
     private final VacationRepository vacationRepository;
     private final EmployeeRepository employeeRepository;
     private final VacationMapper vacationMapper;
-    private final CalendarAttachmentRepository calendarAttachmentRepository;
+
+
 
 
     // 연차 저장
     @Override
-    public Vacation save(AnnualFormDTO dto) {
+    public Long save(AnnualFormDTO dto) {
         // 사원 엔티티 반환
-        Employee employee = employeeRepository.findByEmployeeId(dto.getEmployeeId());
+        dto.setEmployeeId(1L);
+        Employee employee = employeeRepository.findById(dto.getEmployeeId())
+                .orElseThrow(() -> new EntityNotFoundException("사원을 찾을 수 없습니다. " + dto.getEmployeeId()));
         log.info("employee = {}",employee);
 
         // 기간이 겹치는 휴가가 있는지 확인
@@ -45,14 +62,15 @@ public class VacationServiceImpl implements VacationService{
 
         // 휴가 엔티티 변환
         Vacation vacation = vacationMapper.toEntity(dto,employee);
-        return vacationRepository.save(vacation);
+        return vacationRepository.save(vacation).getCalendarId();
     }
 
     // 반차 저장
     @Override
-    public Vacation save(HalfFormDTO dto) {
+    public Long save(HalfFormDTO dto) {
         // 사원 엔티티 반환
-        Employee employee = employeeRepository.findByEmployeeId(dto.getEmployeeId());
+        Employee employee = employeeRepository.findById(dto.getEmployeeId())
+                .orElseThrow(() -> new EntityNotFoundException("사원을 찾을 수 없습니다. " + dto.getEmployeeId()));
         log.info("employee = {}",employee);
 
         // 기간이 겹치는 휴가가 있는지 확인
@@ -65,7 +83,41 @@ public class VacationServiceImpl implements VacationService{
 
         // 휴가 엔티티 변환
         Vacation vacation = vacationMapper.toEntity(dto,employee);
-        return vacationRepository.save(vacation);
+        return vacationRepository.save(vacation).getCalendarId();
+    }
+
+    // 병가 저장
+    @Override
+    public Long save(SickFormDTO dto, MultipartFile[] files) {
+        Employee employee = employeeRepository.findById(dto.getEmployeeId())
+                .orElseThrow(() -> new EntityNotFoundException("사원을 찾을 수 없습니다. " + dto.getEmployeeId()));
+
+        File uploadDir = new File(uploadDirectory);
+        if (!uploadDir.exists()) {
+            uploadDir.mkdirs();
+        }
+
+        Vacation vacation = vacationMapper.toEntity(dto, employee);
+
+        Arrays.asList(files).forEach(file -> {
+            String fileFullName = UUID.randomUUID().toString()+"-"+file.getOriginalFilename();
+            String filePath = uploadDir+ "/"+ fileFullName;
+            File dest = new File(filePath);
+            try {
+                file.transferTo(dest);
+                CalendarAttachment calendarAttachment =
+                        calendarAttachmentMapper.toEntity(fileFullName, file.getOriginalFilename(), vacation);
+                calendarAttachmentRepository.save(calendarAttachment);
+
+            } catch (IOException e) {
+                log.error("파일 저장 중 오류 발생: {}", e.getMessage());
+                throw new RuntimeException("파일 저장 중 오류가 발생했습니다. 다시 시도해주세요.");
+            }
+        });
+
+        log.info("employee = {}",dto.getEmployeeId());
+        return vacationRepository.save(vacation).getCalendarId();
+
     }
 
 

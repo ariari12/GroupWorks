@@ -10,6 +10,7 @@ import kr.co.groupworks.entity.kah.VacationType;
 import kr.co.groupworks.entity.kah.Vacation;
 import kr.co.groupworks.repository.cis.EmployeeRepository;
 
+import kr.co.groupworks.repository.kah.VacationRepository;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 
@@ -22,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.List;
 
+import static kr.co.groupworks.entity.kah.QVacation.vacation;
 import static org.assertj.core.api.Assertions.*;
 
 
@@ -30,6 +32,8 @@ import static org.assertj.core.api.Assertions.*;
 class VacationServiceImplTest {
     @Autowired
     private VacationService vacationService;
+    @Autowired
+    private VacationRepository vacationRepository;
     @Autowired
     private EmployeeRepository employeeRepository;
 
@@ -43,6 +47,7 @@ class VacationServiceImplTest {
                 .startDate(LocalDate.of(2500,6,22))
                 .endDate(LocalDate.of(2500,8,22))
                 .contents("Family vacation to Hawaii")
+                .employeeId(1L)
                 .build();
 
         // annualFormDTO1과 기간을 일부러 겹치게 설정
@@ -50,12 +55,14 @@ class VacationServiceImplTest {
                 .startDate(LocalDate.of(2500,6,22))
                 .endDate(LocalDate.of(2500,12,22))
                 .contents("Family asdlkfjlsdakj")
+                .employeeId(1L)
                 .build();
 
         halfFormDTO1 = kr.co.groupworks.dto.kah.HalfFormDTO.builder()
                 .halfStartDate(LocalDate.of(2500,3,22))
                 .halfContents("Family asdlkfjlsdakj")
                 .amPm(AmPm.PM)
+                .employeeId(1L)
                 .build();
     }
 
@@ -70,10 +77,10 @@ class VacationServiceImplTest {
 
         //given
         Employee employee = employeeRepository.findByEmployeeId(1L);
-        annualFormDTO1.setEmployeeId(employee.getEmployeeId());
 
         //when
-        Vacation vacation = vacationService.save(annualFormDTO1);
+        Long id = vacationService.save(annualFormDTO1);
+        Vacation vacation = vacationRepository.findById(id).get();
 
         //then
         assertThat(vacation.getContents()).isEqualTo(annualFormDTO1.getContents());
@@ -88,7 +95,6 @@ class VacationServiceImplTest {
     @DisplayName("연차 신청 내역 테스트")
     void selectVacationRequest(){
         vacationService.save(annualFormDTO1);
-        vacationService.save(annualFormDTO2);
         vacationService.save(halfFormDTO1);
 
         List<VacationMyHistoryDTO> vacationRequestList = vacationService.findAllByEmployeeId(1L);
@@ -102,9 +108,9 @@ class VacationServiceImplTest {
     void save() {
         //given
         Employee employee = employeeRepository.findByEmployeeId(1L);
-        halfFormDTO1.setEmployeeId(employee.getEmployeeId());
         //when
-        Vacation vacation = vacationService.save(halfFormDTO1);
+        Long id = vacationService.save(halfFormDTO1);
+        Vacation vacation = vacationRepository.findById(id).get();
         //then
         assertThat(vacation.getContents()).isEqualTo(halfFormDTO1.getHalfContents());
         assertThat(vacation.getTitle()).isEqualTo("반차");
