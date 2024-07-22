@@ -4,8 +4,10 @@ import kr.co.groupworks.dto.cis.employee.EmployeeDTO;
 import kr.co.groupworks.entity.cis.Employee;
 import kr.co.groupworks.repository.cis.EmployeeRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.List;
 
@@ -14,6 +16,9 @@ import java.util.List;
 @Transactional
 public class EmployeeServiceImpl implements EmployeeService {
     private final EmployeeRepository employeeRepository;
+
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     public void saveEmployee(EmployeeDTO employeeDTO) {
         Employee employee = toEmployee(employeeDTO);
@@ -27,8 +32,11 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public Employee findByEmployeeId(Long employeeId) {
-        return employeeRepository.findByEmployeeId(employeeId);
+    public EmployeeDTO findByEmployeeId(Long employeeId) {
+        Employee employee = employeeRepository.findById(employeeId).get();
+        EmployeeDTO employeeDTO = toEmployeeDTO(employee);
+
+        return employeeDTO;
     }
 
     @Override
@@ -41,6 +49,18 @@ public class EmployeeServiceImpl implements EmployeeService {
         if(employeeRepository.findByEmployeeIdAndEmployeePWAndEmployeeName(emplyoeeId,pw,name) != null)
             return true;
         else return false;
+    }
+
+    @Override
+    public boolean isEqualPassword(String checkPW, String currentPW) {
+        if(bCryptPasswordEncoder.matches(checkPW, currentPW))
+        {
+            return true;
+        }else
+        {
+            return false;
+        }
+
     }
 
     public Employee toEmployee(EmployeeDTO dto) {
@@ -62,4 +82,22 @@ public class EmployeeServiceImpl implements EmployeeService {
                 .build();
     }
 
+    public EmployeeDTO toEmployeeDTO(Employee employee) {
+        return EmployeeDTO.builder()
+                .employeeId(employee.getEmployeeId())
+                .employeePW(employee.getEmployeePW())
+                .employeeName(employee.getEmployeeName())
+                .rankId(employee.getRankId())
+                .rankName(employee.getRankName())
+                .departmentId(employee.getDepartmentId())
+                .departmentName(employee.getDepartmentName())
+                .email(employee.getEmail())
+                .phoneNumber(employee.getPhoneNumber())
+                .address(employee.getAddress())
+                .gender(employee.getGender())
+                .joinDate(employee.getJoinDate())
+                .salary(employee.getSalary())
+                .supervisorId(employee.getSupervisorId())
+                .build();
+    }
 }

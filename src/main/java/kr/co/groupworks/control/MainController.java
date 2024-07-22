@@ -72,7 +72,7 @@ public class MainController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         CustomUserDetails user = (CustomUserDetails) authentication.getPrincipal();
 
-        Employee employee = employeeService.findByEmployeeId(Long.valueOf(user.getUsername()));
+        EmployeeDTO employee = employeeService.findByEmployeeId(Long.valueOf(user.getUsername()));
         System.out.println("로그인 employee : " + employee);
 
         SessionEmployeeDTO sessionEmployeeDTO = new SessionEmployeeDTO();
@@ -99,7 +99,11 @@ public class MainController {
 // 마이페이지
     @GetMapping("/mypage")
     public String myPage(Model model, HttpSession session) {
-        log.info("MainController - myPage");
+
+        SessionEmployeeDTO sessionEmployeeDTO = (SessionEmployeeDTO) session.getAttribute("employee");
+        EmployeeDTO employeeDTO = employeeService.findByEmployeeId(sessionEmployeeDTO.getEmployeeId());
+        log.info(employeeDTO.getEmployeeName() + "의 마이페이지");
+        model.addAttribute("employee", employeeDTO);
         return "cis/employee/myPage";
     }
 }
