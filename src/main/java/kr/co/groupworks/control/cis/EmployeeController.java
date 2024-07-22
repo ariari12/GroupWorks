@@ -61,18 +61,7 @@ public class EmployeeController {
         return ResponseEntity.ok().body(employeeDTO);
     }
 
-////    비밀번호 변경
-//    @PutMapping("/modify")
-//    public ResponseEntity<EmployeeDTO> modifyEmployee(@RequestBody String password, HttpSession session) {
-//        SessionEmployeeDTO sessionEmployeeDTO = (SessionEmployeeDTO) session.getAttribute("employee");
-//        log.info(sessionEmployeeDTO.getEmployeeName() + "비밀번호 변경 컨트롤러");
-//        EmployeeDTO employeeDTO = employeeService.findByEmployeeId(sessionEmployeeDTO.getEmployeeId());
-////        employeeDTO.setEmployeePW(newPassword);
-////        employeeService.saveEmployee(employeeDTO);
-//
-//        return ResponseEntity.ok().body(employeeDTO);
-//    }
-
+//    비밀번호 변경
     @PutMapping("/modify")
     public ResponseEntity<EmployeeDTO> modifyEmployee(@RequestBody Map<String, String> request, HttpSession session) {
         SessionEmployeeDTO sessionEmployeeDTO = (SessionEmployeeDTO) session.getAttribute("employee");

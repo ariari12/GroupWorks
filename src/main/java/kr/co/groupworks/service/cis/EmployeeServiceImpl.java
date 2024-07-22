@@ -20,17 +20,20 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
+//    사원 저장 서비스
     public void saveEmployee(EmployeeDTO employeeDTO) {
         Employee employee = toEmployee(employeeDTO);
 
         employeeRepository.save(employee);
     }
 
+//    사원 목록 불러오기
     @Override
     public List<Employee> findAll() {
         return employeeRepository.findAll();
     }
 
+//    아이디로 사원 찾기
     @Override
     public EmployeeDTO findByEmployeeId(Long employeeId) {
         Employee employee = employeeRepository.findById(employeeId).get();
@@ -39,11 +42,13 @@ public class EmployeeServiceImpl implements EmployeeService {
         return employeeDTO;
     }
 
+//    이메일로 사원 찾기
     @Override
     public Employee findByEmployeeEmail(String employeeEmail) {
         return employeeRepository.findByEmail(employeeEmail);
     }
 
+//    아이디와 비밀번호와 이름으로 사원찾기
     @Override
     public boolean findByEmployeeIdAndEmployeePWAndEmployeeName(Long emplyoeeId, String pw, String name) {
         if(employeeRepository.findByEmployeeIdAndEmployeePWAndEmployeeName(emplyoeeId,pw,name) != null)
@@ -51,6 +56,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         else return false;
     }
 
+//    비밀번호 변경 시 비밀번호가 일치하는지 확인하는 서비스 로직
     @Override
     public boolean isEqualPassword(String checkPW, String currentPW) {
         if(bCryptPasswordEncoder.matches(checkPW, currentPW))
@@ -63,6 +69,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     }
 
+//    Entity to DTO
     public Employee toEmployee(EmployeeDTO dto) {
         return Employee.builder()
                 .employeeId(dto.getEmployeeId())
@@ -82,6 +89,7 @@ public class EmployeeServiceImpl implements EmployeeService {
                 .build();
     }
 
+//    DTO to Entity
     public EmployeeDTO toEmployeeDTO(Employee employee) {
         return EmployeeDTO.builder()
                 .employeeId(employee.getEmployeeId())
