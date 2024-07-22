@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <th:block th:fragment="sickModal">
-    <div class="modal fade" id="sick" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="sickLabel" aria-hidden="true">
+    <div class="modal fade" id="sick" th:object="${sickForm}"
+         data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="sickLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -11,11 +12,13 @@
                 <div class="modal-body">
 
                     <h5>병가 일정</h5>
-                    <input type="text" name="" placeholder="Select Date.." class="form-control vacationDate">
+                    <input type="text" id="vSickDate" placeholder="Select Date.." class="form-control vacationDate">
+                    <input type="hidden" th:field="*{sickStartDate}">
+                    <input type="hidden" th:field="*{sickEndDate}">
                     <br>
 
                     <h5>상세 사유</h5>
-                    <textarea class="form-control" id="vacationText3" name="vacationText3" placeholder="병가 사유 입력"></textarea>
+                    <textarea class="form-control" th:field="*{sickContents}" placeholder="병가 사유 입력"></textarea>
 
                     <br>
                     <h5>첨부 파일</h5>

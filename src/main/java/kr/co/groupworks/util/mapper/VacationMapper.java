@@ -36,4 +36,25 @@ public interface VacationMapper {
     @Mapping(target = "title", expression = "java(kr.co.groupworks.entity.kah.VacationType.HALF.getDescription())")
     @Mapping(target = "employee", source = "employee")
     Vacation toEntity(HalfFormDTO dto, Employee employee);
+
+    @Mapping(target = "startDate", source = "dto.sickStartDate")
+    @Mapping(target = "endDate", source = "dto.sickEndDate")
+    @Mapping(target = "contents", source = "dto.sickContents")
+    @Mapping(target = "status", expression = "java(kr.co.groupworks.entity.kah.VacationStatus.PENDING)")
+    @Mapping(target = "vacationType", expression = "java(kr.co.groupworks.entity.kah.VacationType.SICK)")
+    @Mapping(target = "title", expression = "java(kr.co.groupworks.entity.kah.VacationType.SICK.getDescription())")
+    @Mapping(target = "employee", source = "employee")
+    Vacation toEntity(SickFormDTO dto, Employee employee);
+
+    @Mapping(target = "startDate", source = "dto.otherStartDate")
+    @Mapping(target = "endDate", source = "dto.otherEndDate")
+    @Mapping(target = "contents", source = "dto.otherContents")
+    @Mapping(target = "status", expression = "java(kr.co.groupworks.entity.kah.VacationStatus.PENDING)")
+    @Mapping(target = "vacationType", expression = "java(kr.co.groupworks.entity.kah.VacationType.OTHER)")
+    @Mapping(target = "title", expression = "java(kr.co.groupworks.entity.kah.VacationType.OTHER.getDescription())")
+    @Mapping(target = "employee", source = "employee")
+    Vacation toEntity(OtherFormDTO dto, Employee employee);
+
+
+
 }

@@ -1,5 +1,7 @@
 package kr.co.groupworks.dto.kah;
 
+import jakarta.validation.constraints.FutureOrPresent;
+import jakarta.validation.constraints.NotEmpty;
 import kr.co.groupworks.entity.kah.VacationType;
 import lombok.*;
 
@@ -13,11 +15,14 @@ import lombok.*;
 public class SickFormDTO {
     //남은 휴가, 휴일 일정, 상세 내용, 사원 번호,
     private Long employeeId;
-    private String startDate;
-    private String endDate;
-    private String contents;
-    private VacationType type = VacationType.SICK;
-    private String filePath;
-    private String fileName;
+    @FutureOrPresent
+    private String sickStartDate;
+    @FutureOrPresent
+    private String sickEndDate;
+    private String sickContents;
+    @NotEmpty
+    private String sickFilePath;
+    @NotEmpty
+    private String sickFileName;
 
 }

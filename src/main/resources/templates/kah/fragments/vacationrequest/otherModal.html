@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <th:block th:fragment="otherModal">
-    <div class="modal fade" id="other" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="otherLabel" aria-hidden="true">
+    <div class="modal fade" id="other" th:object="${otherForm}"
+         data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="otherLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -11,7 +12,7 @@
                 <div class="modal-body ">
 
                     <h5>휴가 일정</h5>
-                    <input type="text" name="" placeholder="Select Date.." class="form-control vacationDate">
+                    <input type="text" th placeholder="Select Date.." class="form-control vacationDate">
                     <br>
 
                     <h5>상세 사유</h5>
