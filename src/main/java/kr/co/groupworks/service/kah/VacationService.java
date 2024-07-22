@@ -1,9 +1,6 @@
 package kr.co.groupworks.service.kah;
 
-import kr.co.groupworks.dto.kah.AnnualFormDTO;
-import kr.co.groupworks.dto.kah.HalfFormDTO;
-import kr.co.groupworks.dto.kah.SickFormDTO;
-import kr.co.groupworks.dto.kah.VacationMyHistoryDTO;
+import kr.co.groupworks.dto.kah.*;
 import kr.co.groupworks.entity.kah.Vacation;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -18,4 +15,6 @@ public interface VacationService {
     Long save(HalfFormDTO dto);
 
     Long save(SickFormDTO dto, MultipartFile[] files);
+
+    Long save(OtherFormDTO dto, MultipartFile[] files);
 }

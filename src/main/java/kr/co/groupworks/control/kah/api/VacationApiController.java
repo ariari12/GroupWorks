@@ -3,10 +3,7 @@ package kr.co.groupworks.control.kah.api;
 
 import jakarta.validation.Valid;
 import kr.co.groupworks.dto.cis.employee.SessionEmployeeDTO;
-import kr.co.groupworks.dto.kah.AnnualFormDTO;
-import kr.co.groupworks.dto.kah.HalfFormDTO;
-import kr.co.groupworks.dto.kah.SickFormDTO;
-import kr.co.groupworks.dto.kah.VacationMyHistoryDTO;
+import kr.co.groupworks.dto.kah.*;
 import kr.co.groupworks.service.kah.VacationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -39,6 +36,7 @@ public class VacationApiController {
                                             Model model){
 
         log.info("AnnualFormDTO ={}",dto);
+        log.info("sessionEmployeeDTO ={}",sessionEmployeeDTO.getEmployeeId());
         dto.setEmployeeId(sessionEmployeeDTO.getEmployeeId());
         vacationService.save(dto);
         return ResponseEntity.status(HttpStatus.OK).body("연차 신청이 성공적으로 처리되었습니다.");
@@ -60,7 +58,7 @@ public class VacationApiController {
     @PostMapping("/sick")
     @ResponseBody
     public ResponseEntity<?> vacationSick(@Valid @RequestPart("jsonData") SickFormDTO dto,
-                                          @RequestPart("fileUpload") MultipartFile[] files,
+                                          @RequestPart("sickFileUpload") MultipartFile[] files,
                                           @SessionAttribute(name = "employee")SessionEmployeeDTO sessionEmployeeDTO,
                                           Model model){
 
@@ -69,6 +67,22 @@ public class VacationApiController {
 
         vacationService.save(dto,files);
         return ResponseEntity.status(HttpStatus.OK).body("병가 신청이 성공적으로 처리되었습니다.");
+    }
+
+
+    // 기타 휴가 신청
+    @PostMapping("/other")
+    @ResponseBody
+    public ResponseEntity<?> vacationOther(@Valid @RequestPart("jsonData") OtherFormDTO dto,
+                                          @RequestPart("otherFileUpload") MultipartFile[] files,
+                                          @SessionAttribute(name = "employee")SessionEmployeeDTO sessionEmployeeDTO,
+                                          Model model){
+
+        log.info("SickFormDTO ={}, fileUpload ={}",dto, files);
+        dto.setEmployeeId(sessionEmployeeDTO.getEmployeeId());
+
+        vacationService.save(dto,files);
+        return ResponseEntity.status(HttpStatus.OK).body("기타 휴가 신청이 성공적으로 처리되었습니다.");
     }
 
 
