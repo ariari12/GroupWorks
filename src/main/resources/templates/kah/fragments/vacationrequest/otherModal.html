@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <th:block th:fragment="otherModal">
-    <div class="modal fade" id="other" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="otherLabel" aria-hidden="true">
+    <div class="modal fade" id="other" th:object="${otherForm}"
+         data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="otherLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -18,7 +19,7 @@
                     <textarea class="form-control" id="vacationText4" name="vacationText4" placeholder="휴가 등록 메세지 입력"></textarea>
                     <br>
                     <h5>첨부 파일</h5>
-                    <td><input type="file" name="fileupload" class="form-control" multiple></td>
+                    <td><input type="file" name="fileUpload" class="form-control" multiple></td>
 
                 </div>
                 <div class="modal-footer">

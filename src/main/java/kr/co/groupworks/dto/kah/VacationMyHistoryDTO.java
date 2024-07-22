@@ -8,10 +8,8 @@ import lombok.*;
 import java.util.List;
 
 
-@Getter
-@Setter
+@Data
 @Builder
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 public class VacationMyHistoryDTO {

@@ -15,6 +15,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
 import java.util.List;
@@ -70,21 +71,7 @@ public class VacationController {
     }
 
 
-//    @PostMapping("/sick")
-//    @ResponseBody
-//    public ResponseEntity<?> vacationSick(@Validated @RequestBody SickFormDTO dto, BindingResult bindingResult,
-//                                            @SessionAttribute(name = "employee")SessionEmployeeDTO sessionEmployeeDTO,
-//                                            Model model){
-//
-//        log.info("AnnualFormDTO ={}",dto);
-//        Long employeeId = sessionEmployeeDTO.getEmployeeId();
-//        // 검증에 실패하면 다시 입력 폼으로
-//        ResponseEntity<Map<String, String>> BAD_REQUEST = errorResponseEntity(bindingResult, model, employeeId);
-//        if (BAD_REQUEST != null) return BAD_REQUEST;
-//        vacationService.save(dto, employeeId);
-//        return ResponseEntity.status(HttpStatus.OK).body("병가 신청이 성공적으로 처리되었습니다.");
-//    }
-//
+
 //    @PostMapping("/other")
 //    @ResponseBody
 //    public ResponseEntity<?> vacationOther(@Validated @RequestBody AnnualFormDTO dto, BindingResult bindingResult,

@@ -10,10 +10,8 @@ import lombok.*;
 import java.time.LocalDate;
 
 
-@Getter
-@Setter
+@Data
 @Builder
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 public class HalfFormDTO {
