@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <th:block th:fragment="otherModal">
-    <div class="modal fade" id="sick" th:object="${otherForm}"
-         data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="sickLabel" aria-hidden="true">
+    <div class="modal fade" id="other" th:object="${otherForm}"
+         data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="otherLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="sickLabel"
+                    <h1 class="modal-title fs-5" id="otherLabel"
                         th:text="|${session.employee.employeeName} 님의 기타 휴가 요청|">@@@님의 기타 휴가 요청</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
@@ -82,7 +82,7 @@
                     data: formData,
                     success: function(response) {
                         alert("Success: " + response);
-                        $('#sick').modal('hide');
+                        $('#other').modal('hide');
                     },
                     error: function(xhr) {
                         if (xhr.status === 400) {
