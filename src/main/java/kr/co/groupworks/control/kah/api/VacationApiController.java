@@ -39,6 +39,7 @@ public class VacationApiController {
                                             Model model){
 
         log.info("AnnualFormDTO ={}",dto);
+        log.info("sessionEmployeeDTO ={}",sessionEmployeeDTO.getEmployeeId());
         dto.setEmployeeId(sessionEmployeeDTO.getEmployeeId());
         vacationService.save(dto);
         return ResponseEntity.status(HttpStatus.OK).body("연차 신청이 성공적으로 처리되었습니다.");

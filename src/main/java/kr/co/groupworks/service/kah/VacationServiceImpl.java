@@ -47,7 +47,6 @@ public class VacationServiceImpl implements VacationService{
     @Override
     public Long save(AnnualFormDTO dto) {
         // 사원 엔티티 반환
-        dto.setEmployeeId(1L);
         Employee employee = employeeRepository.findById(dto.getEmployeeId())
                 .orElseThrow(() -> new EntityNotFoundException("사원을 찾을 수 없습니다. " + dto.getEmployeeId()));
         log.info("employee = {}",employee);
