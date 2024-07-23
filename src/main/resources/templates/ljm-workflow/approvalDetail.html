@@ -14,14 +14,23 @@
         .text-size {
             width: 120px;
         }
+        .approver-info-hover:hover {
+            background: #c1c1c1;
+        }
+        .font-danger {
+            color: #bb2d3b;
+            font-weight: bold;
+        }
 
         @media print {
             img {
                 width: 80px;
             }
+
             .text-size {
                 width: 120px;
             }
+
             @page {
                 size: A4;
                 margin: 10mm; /* 페이지의 상단, 하단, 좌측, 우측 여백을 모두 20mm로 설정 */
@@ -32,10 +41,10 @@
 
 <th:block layout:fragment="content">
     <!--/*@thymesVar id="workFlowDto" type="kr.co.groupworks.dto.ljm.dto.WorkFlowDTO"*/-->
-
     <div class="input-group mb-3">
         <button class="btn btn-secondary" onclick="printDiv();">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-printer" viewBox="0 0 16 16">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-printer"
+                 viewBox="0 0 16 16">
                 <path d="M2.5 8a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1"/>
                 <path d="M5 1a2 2 0 0 0-2 2v2H2a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h1v1a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-1h1a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1V3a2 2 0 0 0-2-2zM4 3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2H4zm1 5a2 2 0 0 0-2 2v1H2a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v-1a2 2 0 0 0-2-2zm7 2v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1"/>
             </svg>
@@ -45,51 +54,61 @@
 
     <div class="input-group mb-3">
         <span class="input-group-text">결재 구분</span>
-        <input class="form-control prevent-enter-submit" type="text"
-               th:field="${workFlowDto.workFlowType}" disabled readonly>
-
+        <label>
+            <input class="form-control prevent-enter-submit" type="text" th:value="${workFlowDto.workFlowType}" readonly>
+        </label>
+        <input type="hidden" th:field="${workFlowDto.id}">
         <span class="input-group-text">결재 번호</span>
         <label>
-            <input type="hidden" th:field="${workFlowDto.id}">
-            <input class="form-control prevent-enter-submit" type="text"
-                   th:field="${workFlowDto.code}" size="60" disabled readonly>
+            <input class="form-control prevent-enter-submit" type="text" th:value="${workFlowDto.code}" size="60" readonly>
         </label>
-
         <span class="input-group-text">기안날짜</span>
         <label>
-            <input class="form-control prevent-enter-submit" type="text"
-                   th:field="${workFlowDto.draftDate}" disabled readonly>
+            <input class="form-control prevent-enter-submit" type="text" th:value="${workFlowDto.draftDate}" readonly>
         </label>
+
     </div>
 
     <div class="input-group mb-3">
         <span class="input-group-text">결재 제목</span>
-        <input type="text" class="form-control prevent-enter-submit"
-               th:field="${workFlowDto.title}" disabled readonly>
-
+        <input type="text" class="form-control prevent-enter-submit" th:value="${workFlowDto.title}" readonly>
         <span class="input-group-text">기안자 이메일</span>
-        <input type="text" class="form-control prevent-enter-submit"
-               th:field="${workFlowDto.email}" disabled readonly>
+        <input type="text" class="form-control prevent-enter-submit" th:value="${workFlowDto.email}" readonly>
+        <span class="input-group-text">기안자 연락처</span>
+        <input type="text" class="form-control prevent-enter-submit" th:value="${workFlowDto.phone}" readonly>
     </div>
 
+    <!--/* 결재선 */-->
     <div class="input-group mb-3">
         <!--/* 결재선 */-->
         <div class="input-group mb-3 text-center">
             <!--/* 기안 */-->
-            <table style="font-family: 'Times New Roman', Times, serif; font-weight: 700; font-size: 22px;" >
-                <tr><td class="border" rowspan="5" style="width: 50px; font-size: 35px;" >
-                    기<br>안
-                </td></tr>
-                <tr><td class="border text-size" th:text="${workFlowDto.employeeRank}"></td></tr>
-                <tr><td class="border" th:text="${workFlowDto.department}"></td></tr>
-                <tr><td class="border"><img class="approval-img" src="/img/approve.png" alt=""></td></tr>
-                <tr><td class="border" th:text="${workFlowDto.employeeName}"></td></tr>
+            <table style="font-family: 'Times New Roman', Times, serif; font-weight: 700; font-size: 22px;">
+                <tr>
+                    <td class="border" rowspan="5" style="width: 50px; font-size: 35px;">
+                        기<br>안
+                    </td>
+                </tr>
+                <tr>
+                    <td class="border text-size" th:text="${workFlowDto.employeeRank}"></td>
+                </tr>
+                <tr>
+                    <td class="border" th:text="${workFlowDto.department}"></td>
+                </tr>
+                <tr>
+                    <td class="border"><img class="approval-img" src="/img/approve.png" alt=""></td>
+                </tr>
+                <tr>
+                    <td class="border" th:text="${workFlowDto.employeeName}"></td>
+                </tr>
             </table>
 
             <!--/* 결재 */-->
-            <table style="font-family: 'Times New Roman', Times, serif; font-weight: 700; font-size: 22px;" >
-                <tr><td class="border" rowspan="5" style="width: 50px; font-size: 35px;">
-                    결<br>재</td>
+            <table style="font-family: 'Times New Roman', Times, serif; font-weight: 700; font-size: 22px;">
+                <tr>
+                    <td class="border" rowspan="5" style="width: 50px; font-size: 35px;">
+                        결<br>재
+                    </td>
                 </tr>
                 <tr>
                     <th:block th:each="approve : ${approvers}">
@@ -104,8 +123,19 @@
                 <tr>
                     <th:block th:each="approve : ${approvers}">
                         <td class="border" style="width: 120px;">
-                            <img th:if="${approve.approvalStr.equals('승인')}" style="width: 80px;" src="/img/approve.png" alt="승인">
-                            <img th:if="${approve.approvalStr.equals('반려')}" style="width: 80px;" src="/img/reject.png" alt="반려">
+                            <div th:if="${approve.approval == 0}" style="text-align: center;">
+                                진행 중
+                            </div>
+                            <div th:if="${approve.approval == 1}">
+                                <img style="width: 80px;" src="/img/approve.png" alt="승인">
+                                <br/>
+                                <!--/*@thymesVar id="ApprovalMethod" type="kr.co.groupworks.dto.ljm.ApprovalMethod"*/-->
+                                <th:block th:text="${ approve.approvalDate + '(' + approve.getApprovalMethod() + ')' }"></th:block>
+                            </div>
+                            <div th:if="${approve.approval == 2}">
+                                <img style="width: 80px;" src="/img/reject.png" alt="반려"><br/>
+                                <span style="font-size: 14px;" th:text="${approve.approvalDate}"></span>
+                            </div>
                         </td>
                     </th:block>
                 </tr>
@@ -119,114 +149,311 @@
 
         <div class="input-group mb-3 text-center">
             <!--/* 협조자 */-->
-            <table style="font-family: 'Times New Roman', Times, serif; font-weight: 700; font-size: 22px;" >
-                <tr><td class="border" rowspan="5" style="width: 50px; font-size: 35px;" >
-                    협<br>조</td>
-                </tr>
-                <tr>
-                    <th:block th:each="collaver : ${collaborators}">
-                        <td class="border" style="width: 120px;" th:text="${collaver.approverRank}"></td>
-                    </th:block>
-                </tr>
-                <tr>
-                    <th:block th:each="collaver : ${collaborators}">
-                        <td class="border" style="width: 120px;" th:text="${collaver.department}"></td>
-                    </th:block>
-                </tr>
-                <tr>
-                    <th:block th:each="collaver : ${collaborators}">
-                        <td class="border" style="width: 120px;" th:text="${collaver.approverName}"></td>
-                    </th:block>
-                </tr>
-            </table>
+            <th:block th:if="${collaborators.size() > 0}">
+                <table style="font-family: 'Times New Roman', Times, serif; font-weight: 700; font-size: 22px;">
+                    <tr>
+                        <td class="border" rowspan="5" style="width: 50px; font-size: 35px;">
+                            협<br>조
+                        </td>
+                    </tr>
+                    <tr>
+                        <th:block th:each="collaver : ${collaborators}">
+                            <td class="border" style="width: 120px;" th:text="${collaver.approverRank}"></td>
+                        </th:block>
+                    </tr>
+                    <tr>
+                        <th:block th:each="collaver : ${collaborators}">
+                            <td class="border" style="width: 120px;" th:text="${collaver.department}"></td>
+                        </th:block>
+                    </tr>
+                    <tr>
+                        <th:block th:each="collaver : ${collaborators}">
+                            <td class="border" style="width: 120px;" th:text="${collaver.approverName}"></td>
+                        </th:block>
+                    </tr>
+                </table>
+            </th:block>
+
             <!--/* 참조자 */-->
-            <table style="font-family: 'Times New Roman', Times, serif; font-weight: 700; font-size: 22px;" >
-                <tr><td class="border" rowspan="5" style="width: 50px; font-size: 35px;" >
-                    참<br>조</td>
-                </tr>
-                <tr>
-                    <th:block th:each="referrer : ${referrers}">
-                        <td class="border" style="width: 120px;" th:text="${referrer.approverRank}"></td>
-                    </th:block>
-                </tr>
-                <tr>
-                    <th:block th:each="referrer : ${referrers}">
-                        <td class="border" style="width: 120px;" th:text="${referrer.department}"></td>
-                    </th:block>
-                </tr>
-                <tr>
-                    <th:block th:each="referrer : ${referrers}">
-                        <td class="border" style="width: 120px;" th:text="${referrer.approverName}"></td>
-                    </th:block>
-                </tr>
-            </table>
+            <th:block th:if="${referrers.size() > 0}">
+                <table style="font-family: 'Times New Roman', Times, serif; font-weight: 700; font-size: 22px;">
+                    <tr>
+                        <td class="border" rowspan="5" style="width: 50px; font-size: 35px;">
+                            참<br>조
+                        </td>
+                    </tr>
+                    <tr>
+                        <th:block th:each="referrer : ${referrers}">
+                            <td class="border" style="width: 120px;" th:text="${referrer.approverRank}"></td>
+                        </th:block>
+                    </tr>
+                    <tr>
+                        <th:block th:each="referrer : ${referrers}">
+                            <td class="border" style="width: 120px;" th:text="${referrer.department}"></td>
+                        </th:block>
+                    </tr>
+                    <tr>
+                        <th:block th:each="referrer : ${referrers}">
+                            <td class="border" style="width: 120px;" th:text="${referrer.approverName}"></td>
+                        </th:block>
+                    </tr>
+                </table>
+            </th:block>
         </div>
     </div>
 
-
     <div class="input-group mb-3">
         <span class="input-group-text">결재 내용</span>
-        <textarea class="form-control" id="description" name="description"
-            th:field="${workFlowDto.description}" rows="10" style="resize: none;" disabled readonly>
+        <label for="description"></label>
+        <textarea class="form-control" id="description" name="description" th:field="${workFlowDto.description}" rows="10" style="resize: none;" readonly>
         </textarea>
     </div>
 
     <div class="input-group mb-3">
         <div class="input-group">
             <span class="input-group-text">비용</span>
-            <input type="text" class="form-control prevent-enter-submit" id="cost" name="cost"
-                   th:field="${workFlowDto.cost}" aria-label="Amount (to the nearest dollar)" disabled readonly>
+            <input type="text" class="form-control prevent-enter-submit" id="cost" name="cost" th:field="${workFlowDto.cost}" aria-label="Amount (to the nearest dollar)" readonly>
             <span class="input-group-text">￦</span>
         </div>
     </div>
 
-    <div class="form-floating">
-        <a href="#" id="attachFile" class="form-control">
-           fileName: Test
-        </a>
-        <label>첨부 파일</label>
-    </div>
-    <br/>
+    <!--/* 첨부파일 목록 */-->
+    <th:block th:if="${workFlowDto.getAttachmentFiles().size() > 0}">
+        <div class="form-floating mb-5">
+            <p class="form-control h-100">
+                <th:block th:each="file : ${workFlowDto.getAttachmentFiles()}">
+                    <a class="mb-2 d-block" th:href="@{/work-flow/file-download/{fileId}(fileId = ${file.getId()})}"
+                       th:text="${file.getFileName()}">
+                    </a>
+                </th:block>
+            </p>
+            <label>첨부 파일</label>
+        </div>
+        <br/>
+    </th:block>
 
-    <div class="input-group mb-3">
-        <span>Comment</span>
-    </div>
-    <th:block th:each="collaver : ${collaborators}">
-        <th:block th:if="${!(collaver.comment == null || collaver.comment.isEmpty())}">
-            <div class="form-floating">
-                <textarea class="form-control" id="floatingTextarea2"
-                          th:text="${collaver.comment}" disabled style="resize: none"></textarea>
-                <label for="floatingTextarea2"
-                    th:text="${'작성자: ' + collaver.approverName + ' 작성일: ' + collaver.approvalDate}">
-                </label>
+    <!--/* Comment 목록 */-->
+    <th:block th:if="${commentLength > 0}">
+        <div class="input-group mb-3"><span>Comment</span></div>
+        <th:block th:each="collaver : ${collaborators}">
+            <div class="form-floating mb-2">
+                <th:block th:if="${collaver.comment != null}">
+                    <textarea class="form-control" th:text="${collaver.comment}" disabled style="resize: none"></textarea>
+                    <label th:text="${'작성자: ' + collaver.approverName + ' 작성일: ' + collaver.approvalDate}"></label>
+                </th:block>
             </div>
         </th:block>
     </th:block>
-    <br>
 
-    <!--/* 발송 취소 버튼 활성화 */-->
-    <th:block th:if="${changePossible}">
+    <!--/* 사용자가 협조자 */-->
+    <th:block th:if="${classifications == 2 && (workFlowDto.getStatus() == 0 || workFlowDto.getStatus() == 3)}">
+        <div class="form-floating mb-5">
+            <!--/* Comment 작성 */-->
+            <form id="collaborateCmtSend" th:action="@{/work-flow/approval}" th:method="PUT">
+                <input type="hidden" name="workFlowId" th:value="${workFlowDto.getId()}">
+                <input type="hidden" name="employeeId" th:value="${session.employee.getEmployeeId()}">
+                <div class="form-floating mb-3">
+                    <textarea class="form-control" id="cmtArea" name="comment" style="resize: none"></textarea>
+                    <label for="cmtArea">Comment&nbsp;<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-pen" viewBox="0 0 16 16">
+                        <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001m-.644.766a.5.5 0 0 0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708z"/>
+                    </svg></label>
+                </div>
+                <div class="col-12">
+                    <!--/* Button trigger modal */-->
+                    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#CommentWriteModal">
+                        작성 완료
+                    </button>
+
+                    <!--/* Modal */-->
+                    <div class="modal fade" id="CommentWriteModal" data-bs-backdrop="static" data-bs-keyboard="false"
+                            tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="CommentWriteLabel">발송 취소 알림</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body"><h5 class="text-center">
+                                    해당 결재에 <span style="color: #6ea8fe">Comment</span>를 추가 하시겠습니까?</h5>
+                                    <p class="text-center"><span style="color: #c83131;">※주의※ </span>작성하신 <span style="color: #6ea8fe">Comment</span>는 작성완료 후 변경하실 수 없습니다.</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button id="collSubBtn" type="button" class="btn btn-success">작성 완료</button>
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">작성 취소</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </th:block>
+
+    <!--/* 결재선 이메일 & 연락처 */-->
+    <div class="container text-center border" style="width: 1300px;">
+        <h4 style="text-align: left; font-size: 21px; font-family: cursive; font-weight: bolder">이메일 / 연락처</h4>
+        <div class="row">
+            <div class="col" th:if="${approvers.size() > 0}">
+                결재자
+                <div class="row">
+                    <th:block th:each="list : ${approvers}">
+                        <div class="approver-info-hover border">
+                            <div class="row">
+                                <div class="col"
+                                     th:text="${list.department + ' | ' + list.approverRank + ' | ' + list.approverName}"></div>
+                            </div>
+                            <div class="row">
+                                <div class="col" th:text="${list.approverEmail}"></div>
+                            </div>
+                            <div class="row">
+                                <div class="col" th:text="${list.approverPhone}"></div>
+                            </div>
+                        </div>
+                    </th:block>
+                </div>
+            </div>
+
+            <div class="col" th:if="${collaborators.size() > 0}">
+                협조자
+                <div class="row">
+                    <th:block th:each="list : ${collaborators}">
+                        <div class="approver-info-hover border">
+                            <div class="row">
+                                <div class="col"
+                                     th:text="${list.department + ' | ' + list.approverRank + ' | ' + list.approverName}"></div>
+                            </div>
+                            <div class="row">
+                                <div class="col" th:text="${list.approverEmail}"></div>
+                            </div>
+                            <div class="row">
+                                <div class="col" th:text="${list.approverPhone}"></div>
+                            </div>
+                        </div>
+                    </th:block>
+                </div>
+            </div>
+
+            <div class="col" th:if="${referrers.size() > 0}">
+                참조자
+                <div class="row">
+                    <th:block th:each="list : ${referrers}">
+                        <div class="approver-info-hover border">
+                            <div class="row">
+                                <div class="col"
+                                     th:text="${list.department + ' | ' + list.approverRank + ' | ' + list.approverName}"></div>
+                            </div>
+                            <div class="row">
+                                <div class="col" th:text="${list.approverEmail}"></div>
+                            </div>
+                            <div class="row">
+                                <div class="col" th:text="${list.approverPhone}"></div>
+                            </div>
+                        </div>
+                    </th:block>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--/* 사용자가 기안자 */-->
+    <th:block th:if="${classifications == 0}">
+        <!--/* 발송 취소 버튼 활성화 */-->
+        <th:block th:if="${workFlowDto.getStatus() == 0}">
+            <div class="col-12">
+                <!--/* Button trigger modal */-->
+                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#draftCanselModal">
+                    결재 발송 취소
+                </button>
+
+                <!--/* Modal */-->
+                <div class="modal fade" id="draftCanselModal" data-bs-backdrop="static" data-bs-keyboard="false"
+                        tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="draftCanselLabel">발송 취소 알림</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body"><h5 class="text-center">
+                                해당 결재를<br/>
+                                <span style="color: #c83131; font-weight: bolder">발송 취소</span> 하시겠습니까?</h5>
+                                <p class="text-center"><span style="color: #c83131;">※주의※</span> 결재 발송 취소 시 모든 기안내용이 삭제됩니다.
+                                    <br/><span style="color: #c83131;">(저장 X)</span></p>
+                            </div>
+                            <div class="modal-footer">
+                                <button id="approveCnsBtn" type="submit" class="btn btn-danger">발송 취소</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                            </div>
+                        </div>
+                    </div>zzz
+                </div>
+            </div>
+        </th:block>
+
+        <!--/* 발송 취소 버튼 비활성화 */-->
+        <th:block th:if="${workFlowDto.getStatus() > 0}">
+            <button type="button" class="btn btn-secondary" id="canselToastBtn">발송 취소</button>
+
+            <div class="toast-container position-fixed bottom-0 end-0 p-3">
+                <div id="canselToastTemplate" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div class="toast-header">
+                        <img src="" class="rounded me-2" alt="">
+                        <strong class="me-auto">발송 취소 알림</strong>
+                        <small class="text-body-secondary">1 sec ago</small>
+                        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                    <div class="toast-body"></div>
+                </div>
+            </div>
+        </th:block>
+        <br>
+    </th:block>
+
+    <!--/* 사용자가 현재 결재차례의 결재자 */-->
+    <th:block th:if="${classifications == 4}">
         <div class="col-12">
             <!--/* Button trigger modal */-->
-            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                결재 발송 취소
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ApprovalModal">
+                결재 하기
             </button>
 
             <!--/* Modal */-->
-            <div class="modal fade" id="exampleModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal fade" id="ApprovalModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h1 class="modal-title fs-5" id="exampleModalLabel">발송 취소 알림</h1>
+                            <h1 class="modal-title fs-5" id="ApprovalModalLabel">결재 승인 알림</h1>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <div class="modal-body"><h5 class="text-center">
-                            해당 결재를<br/>
-                            발송 취소 하시겠습니까?</h5>
+                        <div class="modal-body">
+                            <h5 class="text-center">해당 결재를 <span style="font-weight: bold; color: #0a53be">승인</span> 하시겠습니까?</h5>
+                            <p class="text-center"><span style="color: #c83131;">※주의※</span> 결재를 진행하면 이후 변경할 수 없습니다.</p>
+                            <br>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="approvalMethod" value="1">
+                                <label class="form-check-label">선결(일반 승인)</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="approvalMethod" value="2">
+                                <label class="form-check-label">후결</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="approvalMethod" value="3">
+                                <label class="form-check-label">대결</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="approvalMethod" value="4">
+                                <label class="form-check-label">전결</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="approvalMethod" value="5">
+                                <label class="form-check-label">반려</label>
+                            </div>
                         </div>
                         <div class="modal-footer">
-                            <a href="#" class="btn btn-danger">발송 취소</a>
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                            <button id="approveSubBtn" type="button" class="btn btn-primary">결재</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
                         </div>
                     </div>
                 </div>
@@ -234,47 +461,85 @@
         </div>
     </th:block>
 
-    <!--/* 발송 취소 버튼 비활성화 */-->
-    <th:block th:if="${!changePossible}">
-        <button type="button" class="btn btn-secondary" id="addToastBtn">발송 취소</button>
+    <!--/* 결재 차례가 아닌 결재자 */-->
+    <th:block th:if="${classifications == 1}">
+        <!--/* 발송 취소 버튼 비활성화 */-->
+        <button type="button" class="btn btn-secondary" id="approverToastBtn">결재 하기</button>
 
         <div class="toast-container position-fixed bottom-0 end-0 p-3">
-            <div id="toastTemplate" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div id="approverToastTemplate" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
                 <div class="toast-header">
                     <img src="" class="rounded me-2" alt="">
-                    <strong class="me-auto">발송 취소 알림</strong>
+                    <strong class="me-auto">결재 승인 알림</strong>
                     <small class="text-body-secondary">1 sec ago</small>
                     <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
                 </div>
-                <div class="toast-body">
-                </div>
+                <div class="toast-body"></div>
             </div>
         </div>
     </th:block>
-    <br>
 
 </th:block>
 
 <th:block layout:fragment="javascript">
-    <th:block th:if="${!changePossible}">
+
+    <!--/* 결재가 발송 중인 기안자인 경우 */-->
+    <th:block th:if="${classifications == 0 && workFlowDto.getStatus() == 0}">
+        <script>
+            document.addEventListener('DOMContentLoaded', (event) => {
+                document.getElementById("approveCnsBtn").addEventListener("click", ev => {
+                    $.ajax({
+                        url: '/work-flow/approval',
+                        type: 'DELETE',
+                        data: {
+                            workFlowId: '[[${workFlowDto.getId()}]]',
+                            status: '[[${workFlowDto.getStatus()}]]'
+                        },
+                        success: function(response) {
+                            console.log(response);
+                            if(response.status == "success") {
+                                alert("결재 발송이 취소되었습니다.");
+                                location.href = response.url;
+                            }
+                        },
+                        error: function(error) {
+                            console.error(error);
+                            alert("발송을 취소할 수 없습니다.");
+                        }
+                    });
+                });
+            });
+        </script>
+    </th:block>
+    <th:block th:if="${classifications == 0 && workFlowDto.getStatus() > 0}">
     <script>
         document.addEventListener('DOMContentLoaded', (event) => {
-            const addToastBtn = document.getElementById('addToastBtn');
-            const toastContainer = document.querySelector('.toast-container');
+            const addToastBtn = document.getElementById('canselToastBtn');
 
             if (addToastBtn) {
                 addToastBtn.addEventListener('click', () => {
                     // 템플릿 토스트 요소를 복제하여 새로운 토스트 생성
-                    const toastTemplate = document.getElementById('toastTemplate');
-                    const clonedToast = toastTemplate.cloneNode(true);
+                    const clonedToast = document.getElementById('canselToastTemplate').cloneNode(true);
+
+                    let status = parseInt(`[[${workFlowDto.getStatus()}]]`);
 
                     // 토스트 내용 업데이트
-                    clonedToast.querySelector('.toast-body').textContent = `
-                    결재가 진행 중인 경우 발송을 취소할 수 없습니다.
-                    결재자들에게 반려 요청을 보내세요.`;
+                    switch (status) {
+                        case 3:
+                            clonedToast.querySelector('.toast-body').innerHTML =
+                                `<span class="font-danger">결재가 진행 중인 경우 발송을 취소할 수 없습니다.<br/>
+                                결재자들에게 반려 요청을 보내세요.</span>`;
+                            break;
+                        case 1:
+                            clonedToast.querySelector('.toast-body').innerHTML = `<span class="font-danger">결재가 완료되어 발송을 취소할 수 없습니다.</span>`;
+                            break;
+                        case 2:
+                            clonedToast.querySelector('.toast-body').innerHTML = `<span class="font-danger">결재가 반려되어 있습니다.</span>`;
+                            break;
+                    }
 
                     // 복제된 토스트를 토스트 컨테이너에 추가
-                    toastContainer.appendChild(clonedToast);
+                    document.querySelector('.toast-container').appendChild(clonedToast);
 
                     // Initialize Bootstrap Toast for the new toast
                     const newToast = new bootstrap.Toast(clonedToast);
@@ -285,7 +550,105 @@
     </script>
     </th:block>
 
+    <!--/* 해당 결재요청의 결재자인 경우 */-->
+    <th:block th:if="${classifications == 1}">
     <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const addToastBtn = document.getElementById('approverToastBtn');
+
+            if (addToastBtn) {
+                addToastBtn.addEventListener('click', () => {
+                    // 템플릿 토스트 요소를 복제하여 새로운 토스트 생성
+                    const clonedToast = document.getElementById('approverToastTemplate').cloneNode(true);
+
+                    // 토스트 내용 업데이트
+                    clonedToast.querySelector('.toast-body').innerHTML = `<span style="color: #bb2d3b; font-size: 16px;">결재 차례가 아닙니다.</span>`;
+
+                    // 복제된 토스트를 토스트 컨테이너에 추가
+                    document.querySelector('.toast-container').appendChild(clonedToast);
+
+                    // Initialize Bootstrap Toast for the new toast
+                    const newToast = new bootstrap.Toast(clonedToast);
+                    newToast.show();
+                });
+            }
+        });
+    </script>
+    </th:block>
+
+    <!--/* 해당 결재요청의 결재차례의 결재자인 경우 */-->
+    <th:block th:if="${classifications == 4}">
+    <script>
+        $(function () {
+            $('#approveSubBtn').on('click', function(event) {
+
+                let id = '[[${workFlowDto.getId()}]]';
+                let employeeId = '[[${session.employee.getEmployeeId()}]]';
+
+                $.ajax({
+                    type: 'PUT',
+                    url: '/work-flow/approval/' + id + '/' + employeeId + '/1',
+                    data: {
+                        approvalMethod: document.querySelector('input[name="approvalMethod"]:checked').value,
+                    },
+                    success: function(response) {
+                        console.log('Success:', response);
+                        alert("결재가 완료 되었습니다.");
+                        window.location = response.url;
+                    },
+                    error: function(xhr, status, error) {
+                        console.log('xhr:', xhr);
+                        console.log('status:', status);
+                        console.log('Error:', error);
+                        alert("결재 처리 실패");
+                        window.location.replace("/work-flow/detail/" + `[[${workFlowDto.getId()}]]`);
+                    }
+                });
+            });
+        })
+    </script>
+    </th:block>
+
+    <!--/* 해당 결재요청의 협조자인 경우 */-->
+    <th:block th:if="${classifications == 2}">
+    <script>
+        $(function () {
+            $('#collSubBtn').on('click', function(event) {
+
+                let id = '[[${workFlowDto.getId()}]]';
+                let employeeId = '[[${session.employee.getEmployeeId()}]]';
+
+                $.ajax({
+                    type: 'PUT',
+                    url: '/work-flow/approval/' + id + '/' + employeeId + '/2',
+                    data: {
+                        comment: document.getElementById("cmtArea").value
+                    },
+                    success: function(response) {
+                        console.log('Success:', response);
+                        alert("협의 작성이 완료 되었습니다.");
+                        window.location = response.url;
+                    },
+                    error: function(xhr, status, error) {
+                        console.log('xhr:', xhr);
+                        console.log('status:', status);
+                        console.log('Error:', error);
+                        alert("협의 작성 실패");
+                        window.location.replace("/work-flow/detail/" + `[[${workFlowDto.getId()}]]`);
+                    }
+                });
+            });
+        })
+    </script>
+    </th:block>
+
+    <!--/* 공용 인쇄기능 */-->
+    <script>
+        window.onload = function () {
+            document.getElementById("description").style.height = '1px';
+            document.getElementById("description").style.height = (12 + document.getElementById("description").scrollHeight) + 'px';
+        }
+
         function printDiv() {
             var originalContents = document.body.innerHTML;
             var originalBody = document.body.style.transform;
@@ -298,3 +661,4 @@
         }
     </script>
 </th:block>
+</html>

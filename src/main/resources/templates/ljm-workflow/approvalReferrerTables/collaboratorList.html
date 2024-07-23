@@ -2,22 +2,22 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
 <!--/* Section: WorkFlow approval Wait Tables */-->
-<div class="card mb-4" th:fragment="approvalWait">
+<div class="card mb-4" th:fragment="collaboratorList">
 
     <div class="card-header">
         <i class="bi bi-folder-fill"></i>
-        결재 대기 목록
+        결재 협조 목록
     </div>
 
     <div class="card-body">
-        <table id="approvalWaitTable" class="table table-hover" style="width:100%">
+        <table id="collaboratorListTable" class="table table-hover" style="width:100%">
             <thead>
             <tr>
                 <th>결재 번호</th>
                 <th>결재 구분</th>
                 <th>결재 제목</th>
                 <th>
-                    <div style="font-weight: bolder">기안자 : </div>
+                    <div style="font-weight: bolder">기안자 </div>
                     소속</th>
                 <th>직급</th>
                 <th>기안자 명</th>
@@ -36,7 +36,7 @@
 
             <tbody>
             <!--/*@thymesVar id="approval" type="kr.co.groupworks.dto.ljm.dto.WorkFlowDTO"*/-->
-            <tr th:onclick="load([[${list.id}]])" th:each="list : ${progress}">
+            <tr th:onclick="load([[${list.id}]])" th:each="list : ${collaborators}">
                 <td>[[${list.id}]]</td>
                 <td>[[${list.workFlowType}]]</td>
                 <td>[[${list.title}]]</td>
