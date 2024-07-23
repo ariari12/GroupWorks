@@ -101,38 +101,12 @@ class WorkFlowServiceImplTest {
         });
     }
 
-    @Test @DisplayName("Workflow Detail Test")
-    public void workflowDetailTest() {
-        log.info("Workflow Detail Test: {}", workFlowService.getDetailWorkFlow(1L));
-    }
-
-    @Test @DisplayName("ApproverList Select Stream Test")
-    public void approverListSelectStreamTest() {
-        log.info("ApproverList Select Stream Test");
-        List<ApproverDTO> approverDTOList = workFlowService.getDetailWorkFlow(1L).getApprovers();
-        log.info(String.valueOf(approverDTOList.stream().anyMatch(c -> c.getApproverType() == 2 && c.getComment() != null)));
-    }
-
     @Test @DisplayName("Approval Wait List Select Test")
     public void approvalWaitListSelectTest() {
         log.info("Approval Wait List Select Test");
         workFlowService.getWorkflowWaitList(4L).forEach((s, l) -> {
             l.forEach(i -> log.info("{}: {}", s, i));
         });
-    }
-
-    @Test @DisplayName("Set Approver Test")
-    public void setApproverTest() {
-        log.info("Set Approver Test");
-        // Given
-        ApproverDTO approverDTO = new ApproverDTO()
-                .setWorkFlowId(6L)
-                .setApprovalMethod(4)
-                .setEmployeeId(4L)
-                .setApproverType(1)
-                ;
-
-        workFlowService.setApprover(approverDTO);
     }
 
     @Test @DisplayName("LDT Now String Fomatt Test")

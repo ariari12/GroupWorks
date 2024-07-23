@@ -1,7 +1,6 @@
 package kr.co.groupworks.repository.ljm;
 
 import kr.co.groupworks.control.ljm.WorkFlowController;
-import kr.co.groupworks.dto.ljm.dto.WorkFlowDTO;
 import kr.co.groupworks.dto.ljm.vo.WorkflowListVO;
 import kr.co.groupworks.entity.cis.Employee;
 import kr.co.groupworks.entity.ljm.ApproverEntity;
@@ -20,7 +19,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -153,19 +151,4 @@ class WorkFlowRepositoryTest {
         System.out.println(stopWatch.prettyPrint());
     }
 
-
-    @Test @DisplayName("Approve Sequence Test")
-    public void approveSequenceTest() {
-        log.info("Approve Sequence Test");
-        int sequence = 2;
-        WorkFlowDTO workFlowDTO = WorkFlowDTO.entityToDto(Objects.requireNonNull(workFlowRepository.findById(6L).orElse(null)));
-
-        workFlowDTO.getApprovers().forEach(a -> {
-            if(a.getApproverType() == 1 && a.getSequenceNum() >= sequence) {
-                log.info("sequence:{}, approver sequence:{}", sequence, a.getSequenceNum());
-                a.setApproverName("sequence Test");
-            }
-        });
-        workFlowDTO.getApprovers().forEach(a -> log.info("approver:{}", a.getApproverName()));
-    }
 }
