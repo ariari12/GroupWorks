@@ -256,11 +256,12 @@ public class MailController {
     @GetMapping("/download/{filename}")
     public ResponseEntity<Resource> fileDownload(@PathVariable String filename, @RequestParam("mailId") String mailId) throws UnsupportedEncodingException {
 
-        uploadDir +=  "/mail-files/" + mailId;
-        log.info("uploadDir : " + uploadDir );
+        String uploadDir2 = uploadDir;
+        uploadDir2 +=  "/mail-files/" + mailId;
+        log.info("uploadDir : " + uploadDir2 );
         log.info("mailId : " + mailId);
 
-        File file = new File(uploadDir +"/"+filename);
+        File file = new File(uploadDir2 +"/"+filename);
         // 파일이 존재하지 않는다면
         if(!file.exists()){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
