@@ -24,7 +24,6 @@ public class CalendarAttachment {
     // 실제 저장 파일 경로
     @Column(name = "file_path")
     private String filePath;
-
     @ManyToOne
     @JoinColumn(name = "calendar_id")
     private Calendar calendar;

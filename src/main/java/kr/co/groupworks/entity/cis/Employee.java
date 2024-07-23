@@ -54,4 +54,5 @@ public class Employee {
 
     @Column(name = "supervisor_id")
     private Integer supervisorId;
+
 }

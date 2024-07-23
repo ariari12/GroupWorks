@@ -1,16 +1,22 @@
 package kr.co.groupworks.control.cis;
 
+import jakarta.servlet.http.HttpSession;
 import kr.co.groupworks.dto.cis.employee.EmployeeDTO;
+import kr.co.groupworks.dto.cis.employee.SessionEmployeeDTO;
 import kr.co.groupworks.entity.cis.Employee;
 import kr.co.groupworks.service.cis.EmployeeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/employee")
@@ -23,6 +29,7 @@ public class EmployeeController {
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
+//    사원 저장
     @PostMapping("/save")
     public ResponseEntity<EmployeeDTO> addEmployee(@RequestBody EmployeeDTO employeeDTO) {
 
@@ -35,6 +42,7 @@ public class EmployeeController {
         return ResponseEntity.ok().body(employeeDTO);
     }
 
+//    사원 목록
     @GetMapping("/list")
     public ResponseEntity<List<Employee>> getEmployees() {
         List<Employee> list = employeeService.findAll();
@@ -45,10 +53,34 @@ public class EmployeeController {
 
     }
 
+//    사원 디테일
     @GetMapping("/list/{employeeId}")
-    public ResponseEntity<Employee> getEmployeeById(@PathVariable String employeeId) {
-        Employee employee = employeeService.findByEmployeeId(Long.valueOf(employeeId));
-        System.out.println(employee.getEmployeeName());
-        return ResponseEntity.ok().body(employee);
+    public ResponseEntity<EmployeeDTO> getEmployeeById(@PathVariable String employeeId) {
+        EmployeeDTO employeeDTO = employeeService.findByEmployeeId(Long.valueOf(employeeId));
+        System.out.println(employeeDTO.getEmployeeName());
+        return ResponseEntity.ok().body(employeeDTO);
+    }
+
+//    비밀번호 변경
+    @PutMapping("/modify")
+    public ResponseEntity<EmployeeDTO> modifyEmployee(@RequestBody Map<String, String> request, HttpSession session) {
+        SessionEmployeeDTO sessionEmployeeDTO = (SessionEmployeeDTO) session.getAttribute("employee");
+        log.info(sessionEmployeeDTO.getEmployeeName() + " 비밀번호 변경 컨트롤러");
+
+        EmployeeDTO employeeDTO = employeeService.findByEmployeeId(sessionEmployeeDTO.getEmployeeId());
+
+
+        // 현재 비밀번호 확인 로직
+        if(employeeService.isEqualPassword(request.get("employeePW"), employeeDTO.getEmployeePW())) {
+            // 새 비밀번호 설정 및 저장
+            employeeDTO.setEmployeePW(bCryptPasswordEncoder.encode(request.get("newEmployeePW")));
+            employeeService.saveEmployee(employeeDTO);
+            return ResponseEntity.ok().body(employeeDTO);
+        }else
+        {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
     }
 }
+
+
