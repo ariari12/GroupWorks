@@ -18,7 +18,6 @@ import java.time.format.DateTimeFormatter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ApproverDTO {
-
     // 1, 결재자 pk
     private long id;
 
@@ -53,14 +52,16 @@ public class ApproverDTO {
     private String comment;
     // 13, 결재 승인 일자
     private String approvalDate;
-    // 14, 승인 여부 0:진행, 1:승인, 2:반려
+    // 14, 승인 여부 0:진행, 1:승인, 2:반려, 3:전결
     private int approval;
+
+    public static final String STR_TO_LDT_PATTERN = "yyyy-MM-dd'T'HH:mm";
 
     public ApproverEntity dtoToEntity() {
         /* approvalDate: 2024-07-12T04:58 */
         String datePattern = "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}$";
-        LocalDateTime finalDate = (approvalDate == null || approvalDate.matches(datePattern)) ? null :
-                LocalDateTime.parse(approvalDate, DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm"));
+        LocalDateTime finalDate = (approvalDate == null || !approvalDate.matches(datePattern)) ? null :
+                LocalDateTime.parse(approvalDate, DateTimeFormatter.ofPattern(STR_TO_LDT_PATTERN));
 
         return ApproverEntity.builder()
                 /* 결재 문서 정보 */
@@ -84,9 +85,8 @@ public class ApproverDTO {
     }
 
     public static ApproverDTO entityToDto(ApproverEntity approverEntity) {
-        String datePattern = "yyyy-MM-dd'T'HH:mm";
         String approvalDate = approverEntity.getApprovalDate() == null ? null :
-                approverEntity.getApprovalDate().format(DateTimeFormatter.ofPattern(datePattern));
+                approverEntity.getApprovalDate().format(DateTimeFormatter.ofPattern(STR_TO_LDT_PATTERN));
 
         return new ApproverDTO()
                 .setId(approverEntity.getId())
