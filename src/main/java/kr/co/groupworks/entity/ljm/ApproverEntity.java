@@ -48,6 +48,6 @@ public class ApproverEntity {
     private String comment;
     // 13, 결재 승인 일자
     private LocalDateTime approvalDate;
-    // 14, 승인 여부 0:진행, 1:승인, 2:반려
+    // 14, 승인 여부 0:진행, 1:승인, 2:반려, 3:전결
     private int approval;
 }

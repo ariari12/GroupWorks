@@ -29,7 +29,7 @@ public class EmployeeTest {
 
     @BeforeEach @Test @DisplayName("사원정보 insertSetUp Test")
     void insertSetUp() {
-         employees = List.of(
+        employees = List.of(
                 Employee.builder().employeeId(1L).employeePW("$2a$10$Vg4CIc8WunwnKoV2.j9J.uPep8BgLAzb2VelL89I.hGiLBDNoybpO")
                         .employeeName("김철수").rankId(1).rankName("사원").departmentId(1).departmentName("기술부서")
                         .email("john.doe@example.com").phoneNumber("555-1234").address("123 Main St").gender("Male")

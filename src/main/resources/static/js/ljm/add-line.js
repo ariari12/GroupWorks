@@ -198,15 +198,17 @@ function approversSendList(fk) {
         let idx = $(approverEle).children().eq(1).val();
 
         // memberList에서 특정 id 값을 가진 객체 찾기
-        let member = memberList.find(i => i.id === parseInt(idx));
+        const member= memberList.find(i => i.id === parseInt(idx));
         approverList.push({
             'workFlowId': fk,
             'sequenceNum': cnt,
             'approverType': APPORVER,
             'employeeId': member.id,
+            'approverEmail': member.email,
+            'approverPhone': member.phone,
             'approverName': member.name,
             'approverRank': member.rank,
-            'department': member.departmentName
+            'department': member.departmentName,
         });
         cnt++;
     }
@@ -215,12 +217,14 @@ function approversSendList(fk) {
     for (var approverEle of $("#collaborator-line").children()) {
         let idx = $(approverEle).children().eq(1).val();
 
-        let member = memberList.find(i => i.id === parseInt(idx));
+        const member = memberList.find(i => i.id === parseInt(idx));
         approverList.push({
             'workFlowId': fk,
             'sequenceNum': cnt,
             'approverType': COLLABORATOR,
             'employeeId': member.id,
+            'approverEmail': member.email,
+            'approverPhone': member.phone,
             'approverName': member.name,
             'approverRank': member.rank,
             'department': member.departmentName
@@ -232,12 +236,14 @@ function approversSendList(fk) {
     for (var approverEle of $("#referrer-line").children()) {
         let idx = $(approverEle).children().eq(1).val();
 
-        let member = memberList.find(i => i.id === parseInt(idx));
+        const member = memberList.find(i => i.id === parseInt(idx));
         approverList.push({
             'workFlowId': fk,
             'sequenceNum': cnt,
             'approverType': REFERRER,
             'employeeId': member.id,
+            'approverEmail': member.email,
+            'approverPhone': member.phone,
             'approverName': member.name,
             'approverRank': member.rank,
             'department': member.departmentName

@@ -52,15 +52,14 @@
             </label>
             <span class="input-group-text">기안날짜</span>
             <label for="draft-date">
-                <input type="datetime-local" class="form-control" id="draft-date" th:field="*{draftDate}"
-                       placeholder="기안일" aria-label="기안일" aria-describedby="basic-addon2">
+                <input type="datetime-local" class="form-control" id="draft-date" th:field="*{draftDate}" placeholder="기안일" aria-label="기안일" aria-describedby="basic-addon2">
             </label>
         </div>
 
         <div class="input-group mb-3">
             <span class="input-group-text">사원번호</span>
             <label>
-                <input class="form-control prevent-enter-submit" type="text" th:field="*{employeeId}" size="15" readonly>
+                <input class="form-control prevent-enter-submit" type="text" th:field="*{employeeId}" size="7" readonly>
             </label>
             <span class="input-group-text">기안자 명</span>
             <label>
@@ -69,7 +68,7 @@
             <span class="input-group-text">소속부서</span>
             <label>
                 <input type="hidden" th:field="*{departmentId}">
-                <input class="form-control prevent-enter-submit" type="text" th:field="*{department}" size="15" readonly>
+                <input class="form-control prevent-enter-submit" type="text" th:field="*{department}" size="7" readonly>
             </label>
             <span class="input-group-text">직급</span>
             <label>
@@ -77,11 +76,11 @@
             </label>
             <span class="input-group-text">이메일</span>
             <label>
-                <input class="form-control prevent-enter-submit" type="text" th:field="*{email}" size="40" readonly>
+                <input class="form-control prevent-enter-submit" type="text" th:field="*{email}" size="30" readonly>
             </label>
             <span class="input-group-text">연락처</span>
             <label>
-                <input class="form-control prevent-enter-submit" type="text" th:field="*{phone}" size="20" readonly>
+                <input class="form-control prevent-enter-submit" type="text" th:field="*{phone}" size="15" readonlsy>
             </label>
         </div>
 
@@ -139,8 +138,7 @@
         <div class="input-group">
             <span class="input-group-text">결재 내용</span>
             <textarea class="form-control" id="description" name="description" th:field="*{description}"
-                rows="10" placeholder="결재 내용을 입력하세요." aria-label="결재 내용을 입력하세요."
-                style="resize: none;">
+                rows="10" placeholder="결재 내용을 입력하세요." aria-label="결재 내용을 입력하세요." style="resize: none;">
             </textarea>
         </div>
 

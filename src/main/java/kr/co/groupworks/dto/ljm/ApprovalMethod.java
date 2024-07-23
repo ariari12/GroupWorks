@@ -21,11 +21,12 @@ public enum ApprovalMethod {
     }
 
     public static String getMatch(int value) {
-        return ApprovalMethod.values()[value].getMethod();
+        if(value == 0) return "";
+        return ApprovalMethod.values()[value -1].getMethod();
     }
 
     public List<String> getMethodList() {
-        List<String> list = new ArrayList<String>();
+        List<String> list = new ArrayList<>();
         for (ApprovalMethod method : ApprovalMethod.values()) {
             list.add(method.getMethod());
         }

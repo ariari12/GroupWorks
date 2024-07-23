@@ -8,9 +8,8 @@
 
 <th:block layout:fragment="content">
     <!--/* approvalWait Table */-->
-    <div th:replace="~{/ljm-workflow/approvalwaittables/approvalWait.html :: approvalWait}"></div>
-    <div th:replace="~{/ljm-workflow/approvalwaittables/approvedList.html :: approvedList}"></div>
-    <div th:replace="~{/ljm-workflow/approvalwaittables/rejectionList.html :: rejectionList}"></div>
+    <div th:replace="~{/ljm-workflow/approvalReferrerTables/collaboratorList.html :: collaboratorList}"></div>
+    <div th:replace="~{/ljm-workflow/approvalReferrerTables/referrerList.html :: referrerList}"></div>
 </th:block>
 
 <th:block layout:fragment="javascript">
