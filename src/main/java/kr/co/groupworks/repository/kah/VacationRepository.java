@@ -12,12 +12,9 @@ public interface VacationRepository extends JpaRepository<Vacation, Long>, Vacat
     List<Vacation> findAllByEmployeeId(@Param("employeeId")Long employeeId);
 
     // 사원의 휴가기간이 겹치치 않는 휴가 조회
-    @Query("select v from Vacation v where v.employee.employeeId = :employeeId and " +
+    @Query("select v from Vacation v JOIN v.employee e where e.employeeId = :employeeId and " +
             "(v.startDate <= :endDate and v.endDate >= :startDate)")
     List<Vacation> findOverlappingVacations(@Param("employeeId") Long employeeId,
                                             @Param("startDate") String startDate,
                                             @Param("endDate") String endDate);
-
-
-
 }
