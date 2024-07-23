@@ -17,7 +17,7 @@ public class DepartmentDTO {
     // 2, 부서 명
     private String departmentName;
     // 3, 부서 공용 연락처
-    private String departmentContactNumber;
+    private String contactNumber;
     // 4, 부서 지역
-    private String departmentLocation;
+    private String location;
 }
