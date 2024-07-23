@@ -21,16 +21,29 @@
             color: #bb2d3b;
             font-weight: bold;
         }
+        .full-appl {
+            margin-top: -54px;
+            margin-left: 57px;
+            margin-bottom: -51px;
+            width: 2px;
+            height: 186px;
+            background-color: #dee2e6;
+            transform: rotate(39deg);
+        }
 
         @media print {
+            body {
+                zoom: 68%; /* 배율을 78%로 설정 */
+            }
+            .none-print {
+                display: none;
+            }
             img {
                 width: 80px;
             }
-
             .text-size {
                 width: 120px;
             }
-
             @page {
                 size: A4;
                 margin: 10mm; /* 페이지의 상단, 하단, 좌측, 우측 여백을 모두 20mm로 설정 */
@@ -40,8 +53,7 @@
 </th:block>
 
 <th:block layout:fragment="content">
-    <!--/*@thymesVar id="workFlowDto" type="kr.co.groupworks.dto.ljm.dto.WorkFlowDTO"*/-->
-    <div class="input-group mb-3">
+    <div class="input-group mb-3 none-print">
         <button class="btn btn-secondary" onclick="printDiv();">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-printer"
                  viewBox="0 0 16 16">
@@ -55,16 +67,19 @@
     <div class="input-group mb-3">
         <span class="input-group-text">결재 구분</span>
         <label>
-            <input class="form-control prevent-enter-submit" type="text" th:value="${workFlowDto.workFlowType}" readonly>
+            <!--/*@thymesVar id="workFlowDto" type="kr.co.groupworks.dto.ljm.vo.WorkFlowVO"*/-->
+            <input class="form-control prevent-enter-submit" type="text" th:value="${workFlowDto.getWorkFlowType()}" readonly>
         </label>
+        <!--/*@thymesVar id="workFlowDto" type="kr.co.groupworks.dto.ljm.vo.WorkFlowVO"*/-->
         <input type="hidden" th:field="${workFlowDto.id}">
         <span class="input-group-text">결재 번호</span>
         <label>
-            <input class="form-control prevent-enter-submit" type="text" th:value="${workFlowDto.code}" size="60" readonly>
+            <input class="form-control prevent-enter-submit" type="text" th:value="${workFlowDto.getCode()}" size="60" readonly>
         </label>
         <span class="input-group-text">기안날짜</span>
         <label>
-            <input class="form-control prevent-enter-submit" type="text" th:value="${workFlowDto.draftDate}" readonly>
+            <!--/*@thymesVar id="workFlowDto" type="kr.co.groupworks.dto.ljm.vo.WorkFlowVO"*/-->
+            <input class="form-control prevent-enter-submit" type="text" th:value="${workFlowDto.getDraftDate()}" readonly>
         </label>
 
     </div>
@@ -124,12 +139,19 @@
                     <th:block th:each="approve : ${approvers}">
                         <td class="border" style="width: 120px;">
                             <div th:if="${approve.approval == 0}" style="text-align: center;">
-                                진행 중
+                                <!--/*@thymesVar id="approve" type="kr.co.groupworks.dto.ljm.vo.ApproverVO"*/-->
+                                <!--/*@thymesVar id="ApprovalMethod" type="kr.co.groupworks.dto.ljm.ApprovalMethod"*/-->
+                                <th:block th:if="${!approve.getApprovalMethod().equals('전결') && approve.getApprovalMethod().equals('반려')}">
+                                <img style="width: 80px;" src="/img/none.png" alt="진행 중">
+                                <br/>
+                                <span style="font-size: 14px;">진행 중</span>
+                                </th:block>
+                                <div th:if="${approve.getApprovalMethod().equals('전결')}" class="full-appl"></div>
+                                <img th:if="${approve.getApprovalMethod().equals('반려')}" style="width: 80px;" src="/img/none.png" alt="반려">
                             </div>
                             <div th:if="${approve.approval == 1}">
                                 <img style="width: 80px;" src="/img/approve.png" alt="승인">
                                 <br/>
-                                <!--/*@thymesVar id="ApprovalMethod" type="kr.co.groupworks.dto.ljm.ApprovalMethod"*/-->
                                 <span style="font-size: 14px;" th:text="${approve.approvalDate}"></span>
                                 <th:block th:text="${'(' + approve.getApprovalMethod() + ')'}"></th:block>
                             </div>
@@ -239,13 +261,15 @@
         <th:block th:each="commentor : ${commentList}">
             <div class="form-floating mb-2">
                 <th:block th:if="${commentor.comment != null}">
-                    <textarea class="form-control" th:text="${commentor.comment}" disabled style="resize: none"></textarea>
-                    <label th:text="${'작성자: ' + commentor.approverName + ' 작성일: ' + commentor.approvalDate}"></label>
+                    <textarea class="form-control commentArea" th:text="${commentor.comment}" disabled style="resize: none"></textarea>
+                    <label th:text="${'작성자: ' + commentor.approverName + ' / 작성일: ' + commentor.approvalDate + ' / 구분: ' + (commentor.approverType == 1 ? '결재자' : '협조자')}"></label>
                 </th:block>
             </div>
         </th:block>
     </th:block>
 
+    <!--/* 인쇄 시 가리기 */-->
+    <div class="none-print">
     <!--/* 사용자가 협조자 */-->
     <th:block th:if="${classifications == 2 && (workFlowDto.getStatus() == 0 || workFlowDto.getStatus() == 3)}">
         <div class="form-floating mb-5">
@@ -290,6 +314,7 @@
             </form>
         </div>
     </th:block>
+    </div>
 
     <!--/* 결재선 이메일 & 연락처 */-->
     <div class="container text-center">
@@ -357,6 +382,8 @@
         </div>
     </div>
 
+    <!--/* 인쇄 시 가리기 */-->
+    <div class="none-print">
     <!--/* 사용자가 기안자 */-->
     <th:block th:if="${classifications == 0}">
         <!--/* 발송 취소 버튼 활성화 */-->
@@ -489,6 +516,8 @@
         </div>
     </th:block>
 
+    </div>
+
 </th:block>
 
 <th:block layout:fragment="javascript">
@@ -600,7 +629,7 @@
                     url: '/work-flow/approval/' + id + '/' + employeeId + '/1',
                     data: {
                         approvalMethod: document.querySelector('input[name="approvalMethod"]:checked').value,
-                        commet: document.getElementById("apvCmt").value
+                        comment: document.getElementById("apvCmt").value
                     },
                     success: function(response) {
                         console.log('Success:', response);
@@ -657,7 +686,13 @@
     <script>
         window.onload = function () {
             document.getElementById("description").style.height = '1px';
-            document.getElementById("description").style.height = (12 + document.getElementById("description").scrollHeight) + 'px';
+            document.getElementById("description").style.height = (2 + document.getElementById("description").scrollHeight) + 'px';
+
+            document.querySelectorAll('.commentArea').forEach(area => {
+                // 초기 높이 조정
+                area.style.height = '1px';
+                area.style.height = (2 + area.scrollHeight) + 'px';
+            });
         }
 
         function printDiv() {
@@ -665,7 +700,7 @@
             var originalBody = document.body.style.transform;
 
             // document.body.innerHTML = document.getElementById('layoutSidenav_content').innerHTML;
-            document.body.style.transform = 'scale(0.9)'; // 페이지 스케일 90% 설정
+            document.body.style.transform = 'scale(1)'; // 페이지 스케일 90% 설정
             window.print();
             document.body.innerHTML = originalContents;
             document.body.style.transform = originalBody; // 페이지 스케일 원래대로 복구

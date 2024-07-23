@@ -5,6 +5,7 @@ import kr.co.groupworks.dto.cis.employee.SessionEmployeeDTO;
 import kr.co.groupworks.dto.ljm.dto.ApproverDTO;
 import kr.co.groupworks.dto.ljm.dto.WorkFlowDTO;
 import kr.co.groupworks.dto.ljm.vo.ApproverVO;
+import kr.co.groupworks.dto.ljm.vo.WorkFlowVO;
 import kr.co.groupworks.dto.ljm.vo.WorkflowListVO;
 import kr.co.groupworks.service.ljm.WorkFlowService;
 import lombok.Getter;
@@ -107,6 +108,8 @@ public class WorkFlowController {
                 .forEach((k, v) -> {
                     if (k.equals("listMap")) {
                         ((Map<String, List<ApproverVO>>) v).forEach(model::addAttribute);
+                    } else if (k.equals(AttributeName.WORK_FLOW_DTO.getStatus())) {
+                        model.addAttribute(k, v);
                     } else {
                         model.addAttribute(k, v);
                     }
@@ -207,7 +210,7 @@ public class WorkFlowController {
         }
 
         Map<String, Object> result = new HashMap<>();
-        result.put(AttributeName.WORK_FLOW_DTO.getStatus(), workFlow);
+        result.put(AttributeName.WORK_FLOW_DTO.getStatus(), new WorkFlowVO(workFlow.dtoToEntity()));
         result.put(AttributeName.CLASSIFICATIONS.getStatus(), classifications);
         result.put("listMap", listMap);
         return result;

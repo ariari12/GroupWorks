@@ -40,6 +40,7 @@ public class WorkFlowEntity {
     private int workFlowType;
     // 11, 결재 명
     private String title;
+    @Column(length = 2000)
     // 12, 결재 내용
     private String description;
     // 13, 결재 요청 일

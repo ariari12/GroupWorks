@@ -30,9 +30,10 @@ function sideBar() {
     }
 }
 
-
+/* 이 함수를 복사하여 각자 SideMuen function 정의 */
 function workflowSideMenu() {
-    const collapseElement = document.getElementById('pagesCollapseActive');
+                                                                        // SideMenu Id
+    const collapseElement = document.getElementById('pagesCollapseActive');                  // SideMenu Id
     const triggerElement = document.querySelector('[data-bs-toggle="collapse"][data-bs-target="#pagesCollapseActive"]');
 
     // Local Storage 에서 축소 상태를 확인
