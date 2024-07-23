@@ -205,16 +205,14 @@
     <div class="input-group mb-3">
         <span class="input-group-text">결재 내용</span>
         <label for="description"></label>
-        <textarea class="form-control" id="description" name="description" th:field="${workFlowDto.description}"
-                  rows="10" style="resize: none;" readonly>
+        <textarea class="form-control" id="description" name="description" th:field="${workFlowDto.description}" rows="10" style="resize: none;" readonly>
         </textarea>
     </div>
 
     <div class="input-group mb-3">
         <div class="input-group">
             <span class="input-group-text">비용</span>
-            <input type="text" class="form-control prevent-enter-submit" id="cost" name="cost"
-                   th:field="${workFlowDto.cost}" aria-label="Amount (to the nearest dollar)" readonly>
+            <input type="text" class="form-control prevent-enter-submit" id="cost" name="cost" th:field="${workFlowDto.cost}" aria-label="Amount (to the nearest dollar)" readonly>
             <span class="input-group-text">￦</span>
         </div>
     </div>

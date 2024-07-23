@@ -74,7 +74,7 @@ public class ApproverVO {
         String datePattern = "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}$";
         this.approvalDate = approverDTO.getApprovalDate();
         if(approvalDate != null && approvalDate.matches(datePattern)) {
-            approvalDate = LocalDateTime.parse(approvalDate, DateTimeFormatter.ofPattern(ApproverDTO.strToLDTPattern))
+            approvalDate = LocalDateTime.parse(approvalDate, DateTimeFormatter.ofPattern(ApproverDTO.STR_TO_LDT_PATTERN))
                     .format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm"));
         }
 

@@ -55,13 +55,13 @@ public class ApproverDTO {
     // 14, 승인 여부 0:진행, 1:승인, 2:반려, 3:전결
     private int approval;
 
-    public static final String strToLDTPattern = "yyyy-MM-dd'T'HH:mm";
+    public static final String STR_TO_LDT_PATTERN = "yyyy-MM-dd'T'HH:mm";
 
     public ApproverEntity dtoToEntity() {
         /* approvalDate: 2024-07-12T04:58 */
         String datePattern = "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}$";
         LocalDateTime finalDate = (approvalDate == null || !approvalDate.matches(datePattern)) ? null :
-                LocalDateTime.parse(approvalDate, DateTimeFormatter.ofPattern(strToLDTPattern));
+                LocalDateTime.parse(approvalDate, DateTimeFormatter.ofPattern(STR_TO_LDT_PATTERN));
 
         return ApproverEntity.builder()
                 /* 결재 문서 정보 */
@@ -86,7 +86,7 @@ public class ApproverDTO {
 
     public static ApproverDTO entityToDto(ApproverEntity approverEntity) {
         String approvalDate = approverEntity.getApprovalDate() == null ? null :
-                approverEntity.getApprovalDate().format(DateTimeFormatter.ofPattern(strToLDTPattern));
+                approverEntity.getApprovalDate().format(DateTimeFormatter.ofPattern(STR_TO_LDT_PATTERN));
 
         return new ApproverDTO()
                 .setId(approverEntity.getId())
