@@ -51,9 +51,12 @@ public class Employee {
     private LocalDateTime joinDate;
 
     @Column(name = "salary")
-    private Integer salary;
+    private Long salary;
 
     @Column(name = "supervisor_id")
-    private Integer supervisorId;
+    private Long supervisorId;
+
+//    @Column(name = "representative_image")
+//    private String representativeImage;
 
 }

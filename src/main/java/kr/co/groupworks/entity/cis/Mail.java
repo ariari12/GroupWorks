@@ -10,6 +10,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Document(collection = "mail")
 @Getter
@@ -43,7 +44,9 @@ public class Mail {
     @Field(name = "mail_status")
     private Integer mailStatus;
 
-//    private List mailAttachment;
+//  첨부파일
+    @Field(name = "mail_attachmentfileList")
+    private List<MailAttachmentFile> mailAttachmentFiles;
 
 
 }
