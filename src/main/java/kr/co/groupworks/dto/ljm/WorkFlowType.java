@@ -13,12 +13,12 @@ public enum WorkFlowType {
     ;
     private final String value;
 
-    private WorkFlowType(String value) {
+    WorkFlowType(String value) {
         this.value = value;
     }
 
     public static String getMatch(int value) {
-        return WorkFlowType.values()[value].getValue();
+        return WorkFlowType.values()[value -1].getValue();
     }
 
 }

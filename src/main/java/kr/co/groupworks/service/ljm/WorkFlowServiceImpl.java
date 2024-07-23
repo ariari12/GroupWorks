@@ -178,11 +178,11 @@ public class WorkFlowServiceImpl implements WorkFlowService {
         ApproverDTO approverEntity = workFlow.getApprovers().stream().filter(e -> e.getEmployeeId() == approverDTO.getEmployeeId() && e.getApproverType() == approverDTO.getApproverType()).findFirst().orElse(null);
         if(approverEntity == null) return false;
 
-        /* 결재자 ApproveEntity: {approvalMethod, approvalDate, approval} UPDATE */
         String approvalNow = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm").format(LocalDateTime.now());
         approverEntity.setWorkFlowId(approverDTO.getWorkFlowId()).setApprovalMethod(approverDTO.getApprovalMethod()).setComment(approverDTO.getComment()).setApprovalDate(approvalNow);
 
         if(approverEntity.getApproverType() == 1) {
+            /* 결재자 ApproveEntity: {approvalMethod, approvalDate, approval} UPDATE */
             approverEntity.setApproval(approverDTO.getApprovalMethod() <= 4 ? 1 : 2);
             if(approverEntity.getApprovalMethod() == 4 || approverEntity.getApprovalMethod() == 5) {
                 workFlow.getApprovers().forEach(a -> {
@@ -201,6 +201,7 @@ public class WorkFlowServiceImpl implements WorkFlowService {
                 workFlow.setApprovalCount(workFlow.getApprovalCount() + 1); // 결재자 수 증가
             }
             workFlowRepository.save(workFlow.dtoToEntity());
+
 //            log.info("workFlowDTO: [approvalDate: {}, approverCnt: {}, approvalCnt: {}, status: {}]", workFlow.getApprovalDate(), workFlow.getApproverCount(), workFlow.getApprovalCount(), workFlow.getStatus());
 //            workFlow.getApprovers().forEach(a -> log.info("approval:{}, date:{}, method:{}, type:{}",
 //                    a.getApproval(), a.getApprovalDate(), a.getApprovalMethod(), a.getApproverType()));

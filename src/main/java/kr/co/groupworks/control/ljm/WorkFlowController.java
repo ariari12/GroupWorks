@@ -5,6 +5,7 @@ import kr.co.groupworks.dto.cis.employee.SessionEmployeeDTO;
 import kr.co.groupworks.dto.ljm.dto.ApproverDTO;
 import kr.co.groupworks.dto.ljm.dto.WorkFlowDTO;
 import kr.co.groupworks.dto.ljm.vo.ApproverVO;
+import kr.co.groupworks.dto.ljm.vo.WorkFlowVO;
 import kr.co.groupworks.dto.ljm.vo.WorkflowListVO;
 import kr.co.groupworks.service.ljm.WorkFlowService;
 import lombok.Getter;
@@ -53,7 +54,7 @@ public class WorkFlowController {
         REFERRESRS("referrers"),        // 참조자
         CLASSIFICATIONS("classifications"),  // 구분
         ATTACHE_FILES("attacheFiles"),  // 첨부파일
-        COMMENT_LENGTH("commentLength"),// 코멘트 갯수
+        COMMENT_LIST("commentList")
         ;
 
         private final String status;
@@ -107,6 +108,8 @@ public class WorkFlowController {
                 .forEach((k, v) -> {
                     if (k.equals("listMap")) {
                         ((Map<String, List<ApproverVO>>) v).forEach(model::addAttribute);
+                    } else if (k.equals(AttributeName.WORK_FLOW_DTO.getStatus())) {
+                        model.addAttribute(k, v);
                     } else {
                         model.addAttribute(k, v);
                     }
@@ -171,11 +174,12 @@ public class WorkFlowController {
     /* Workflow Detail View Use **WorkflowDTO -> Attribute Item Convert** */
     private Map<String, Object> getDetailAttribute(WorkFlowDTO workFlow, long employeeId) {
         enum approverClass{ DRAFTER, APPROVER, COLLABORATOR, REFERRER, CURRENT_APPROVER}
-        final String[] PARAM = { AttributeName.APPROVERS.getStatus(), AttributeName.COLLABORATORS.getStatus(), AttributeName.REFERRESRS.getStatus() };
+        final String[] PARAM = { AttributeName.APPROVERS.getStatus(), AttributeName.COLLABORATORS.getStatus(), AttributeName.REFERRESRS.getStatus(), AttributeName.COMMENT_LIST.getStatus() };
         Map<String, List<ApproverVO>> listMap = Map.of(
                 PARAM[0], new ArrayList<>(),
                 PARAM[1], new ArrayList<>(),
-                PARAM[2], new ArrayList<>()
+                PARAM[2], new ArrayList<>(),
+                PARAM[3], new ArrayList<>()
         );
 
         /* 사용자가(사원번호pk) 참조자 default:3 */
@@ -188,28 +192,26 @@ public class WorkFlowController {
         for (ApproverDTO a : workFlow.getApprovers()) {
             listMap.get(PARAM[a.getApproverType() -1]).add(new ApproverVO(a));
 
+            /* Comment 작성자 수 확인 */
+            if(a.getComment() != null && !a.getComment().trim().isEmpty()) {
+                listMap.get(PARAM[3]).add(new ApproverVO(a));
+            }
+
             /* 사용자가(사원번호pk) 현재결재 차례 결재자:4 결재자:1 */
             if (classifications == 3 && a.getApproverType() == 1 && a.getEmployeeId() == employeeId) {
                 classifications = a.getSequenceNum() - 1 == workFlow.getApprovalCount() ?
                         approverClass.CURRENT_APPROVER.ordinal() : approverClass.APPROVER.ordinal();
             }
-            /* 사용자가(사원번호pk) 협조자:2 */
-            else if (a.getApproverType() == 2) {
-                /* Comment 작성자 수 확인 */
-                if(a.getComment() != null && !a.getComment().trim().isEmpty()) {
-                    commentLength++;
-                }
-                /* 협조자가 코멘트를 작성하면 승인, 작성하지 않은 경우 진행, 진행단계일 때만 코멘트 작성가능 */
-                if((1 <= classifications && classifications <= 3) && a.getApproval() != 1 && a.getEmployeeId() == employeeId) {
-                    classifications = approverClass.COLLABORATOR.ordinal();
-                }
+            /* 사용자가(사원번호pk) 협조자:2
+             * 협조자가 코멘트를 작성하면 승인, 작성하지 않은 경우 진행, 진행단계일 때만 코멘트 작성가능 */
+            else if(a.getApproverType() == 2 &&(1 <= classifications && classifications <= 3) && a.getApproval() != 1 && a.getEmployeeId() == employeeId) {
+                classifications = approverClass.COLLABORATOR.ordinal();
             }
         }
 
         Map<String, Object> result = new HashMap<>();
-        result.put(AttributeName.WORK_FLOW_DTO.getStatus(), workFlow);
+        result.put(AttributeName.WORK_FLOW_DTO.getStatus(), new WorkFlowVO(workFlow.dtoToEntity()));
         result.put(AttributeName.CLASSIFICATIONS.getStatus(), classifications);
-        result.put(AttributeName.COMMENT_LENGTH.getStatus(), commentLength);
         result.put("listMap", listMap);
         return result;
     }

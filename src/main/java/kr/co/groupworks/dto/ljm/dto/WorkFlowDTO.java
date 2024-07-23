@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
+import org.hibernate.validator.constraints.Length;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -50,7 +51,7 @@ public class WorkFlowDTO {
     @NotEmpty @NotNull
     // 12, 결재 내용
     private String description;
-    @NotEmpty @NotNull
+    @NotEmpty @NotNull @Length(max = 2000)
     // 13, 결재 요청 일
     private String draftDate;
     // 14, 최종 결재 일
