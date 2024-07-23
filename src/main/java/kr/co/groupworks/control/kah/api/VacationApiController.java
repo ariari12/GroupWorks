@@ -86,4 +86,18 @@ public class VacationApiController {
     }
 
 
+    // 연차 수정 신청
+    @PutMapping("/annual")
+    public ResponseEntity<?> vacationAnnual(@Validated @RequestBody AnnualModifyFormDTO dto,
+                                            @SessionAttribute(name = "employee") SessionEmployeeDTO sessionEmployeeDTO,
+                                            Model model){
+
+        log.info("sessionEmployeeDTO ={}",sessionEmployeeDTO.getEmployeeId());
+        dto.setEmployeeId(sessionEmployeeDTO.getEmployeeId());
+        log.info("AnnualModifyFormDTO ={}",dto);
+        //vacationService.save(dto);
+        return ResponseEntity.status(HttpStatus.OK).body("연차 수정이 성공적으로 처리되었습니다.");
+    }
+
+
 }

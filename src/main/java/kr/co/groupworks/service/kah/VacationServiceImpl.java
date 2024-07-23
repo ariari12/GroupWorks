@@ -179,6 +179,7 @@ public class VacationServiceImpl implements VacationService{
                                 .endDate(vacation.getEndDate() != null ? vacation.getEndDate() : vacation.getStartDate())
                                 .vacationType(vacation.getVacationType())
                                 .fileList(vacation.getAttachmentList())
+                                .contents(vacation.getContents())
                                 .status(vacation.getStatus()).build())
                 .toList();
     }
