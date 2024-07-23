@@ -45,7 +45,7 @@ class VacationRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        Vacation entity = vacationMapper.toEntity(annualFormDTO1, employeeRepository.findByEmployeeId(1L));
+        Vacation entity = vacationMapper.toEntity(annualFormDTO1, employeeRepository.findById(1L).get());
         vacationRepository.save(entity);
 
     }

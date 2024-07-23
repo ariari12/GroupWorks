@@ -76,7 +76,7 @@ class VacationServiceImplTest {
     void saveVacationAnnual() {
 
         //given
-        Employee employee = employeeRepository.findByEmployeeId(1L);
+        Employee employee = employeeRepository.findById(1L).get();
 
         //when
         Long id = vacationService.save(annualFormDTO1);
@@ -107,7 +107,7 @@ class VacationServiceImplTest {
     @DisplayName("반차 저장 테스트")
     void save() {
         //given
-        Employee employee = employeeRepository.findByEmployeeId(1L);
+        Employee employee = employeeRepository.findById(1L).get();
         //when
         Long id = vacationService.save(halfFormDTO1);
         Vacation vacation = vacationRepository.findById(id).get();
