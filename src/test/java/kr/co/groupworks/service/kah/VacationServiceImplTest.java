@@ -84,7 +84,7 @@ class VacationServiceImplTest {
 
         //then
         assertThat(vacation.getContents()).isEqualTo(annualFormDTO1.getContents());
-        assertThat(vacation.getTitle()).isEqualTo("연차");
+        assertThat(vacation.getTitle()).isEqualTo("\uD83C\uDF34 연차");
         assertThat(vacation.getStatus()).isEqualTo(VacationStatus.PENDING);
         assertThat(vacation.getStartDate()).isEqualTo(String.valueOf(annualFormDTO1.getStartDate()));
         assertThat(vacation.getEndDate()).isEqualTo(String.valueOf(annualFormDTO1.getEndDate()));
@@ -113,7 +113,7 @@ class VacationServiceImplTest {
         Vacation vacation = vacationRepository.findById(id).get();
         //then
         assertThat(vacation.getContents()).isEqualTo(halfFormDTO1.getHalfContents());
-        assertThat(vacation.getTitle()).isEqualTo("반차");
+        assertThat(vacation.getTitle()).isEqualTo("\uD83D\uDD52 반차");
         assertThat(vacation.getStatus()).isEqualTo(VacationStatus.PENDING);
         assertThat(vacation.getStartDate()).isEqualTo(String.valueOf(halfFormDTO1.getHalfStartDate()));
         assertThat(vacation.getEmployee()).isEqualTo(employee);

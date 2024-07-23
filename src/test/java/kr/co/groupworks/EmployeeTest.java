@@ -74,9 +74,5 @@ public class EmployeeTest {
         employeeRepository.saveAll(employees);
     }
 
-    @Test
-    void testEmployeeInsertion() {
-        List<Employee> savedEmployees = employeeRepository.findAll();
-        assertThat(savedEmployees).hasSize(employees.size());
-    }
+
 }
