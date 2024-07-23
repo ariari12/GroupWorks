@@ -109,8 +109,7 @@
 
             <!--/* Sidebar footer */-->
             <div class="sb-sidenav-footer">
-                <div class="small">Logged in as:</div>
-                로그인된 계정 이름
+                <div class="small" >Logged in as : <span th:text="${session.employee.getEmployeeName()}"></span></div>
             </div>
         </nav>
     </div>
