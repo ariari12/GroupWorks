@@ -4,28 +4,39 @@ import jakarta.servlet.http.HttpSession;
 import kr.co.groupworks.dto.cis.employee.SessionEmployeeDTO;
 import kr.co.groupworks.dto.cis.mail.MailDTO;
 import kr.co.groupworks.entity.cis.Mail;
+import kr.co.groupworks.entity.cis.MailAttachmentFile;
 import kr.co.groupworks.service.cis.EmployeeService;
 import kr.co.groupworks.service.cis.MailService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.aspectj.weaver.tools.UnsupportedPointcutPrimitiveException;
 import org.codehaus.groovy.runtime.powerassert.SourceTextNotAvailableException;
 import org.hibernate.Session;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.net.URLEncoder;
+import java.util.*;
 
 
 @Controller
@@ -154,24 +165,26 @@ public class MailController {
 
     //    메일 쓰기 완료 후 받은 메일함으로 redirect
     @PostMapping("/write")
-    public String writePost(@ModelAttribute MailDTO mailDTO, HttpSession session) {
+    public String writePost(@ModelAttribute MailDTO mailDTO, MultipartHttpServletRequest request, HttpSession session) {
         SessionEmployeeDTO employeeDTO = (SessionEmployeeDTO) session.getAttribute("employee");
+
 
         mailDTO.setMailSender(employeeService.findByEmployeeId(employeeDTO.getEmployeeId()).getEmail());
         mailDTO.setMailSenderName(employeeService.findByEmployeeId(employeeDTO.getEmployeeId()).getEmployeeName());
 
 //        받는 사람 이메일에 해당하는 사람의 이름
         try {
-            mailDTO.setMailReceiverName(employeeService.findByEmployeeEmail((mailDTO.getMailReceiver())).getEmployeeName());
+            mailDTO.setMailReceiverName(employeeService.findByEmployeeEmail(mailDTO.getMailReceiver()).getEmployeeName());
         }catch(Exception e) {
+            e.printStackTrace();
             log.info("받는 사람 이메일 설정이 잘못되었습니다.");
         }
 
 //        참조되는 사람 이메일에 해당하는 사람의 이름
         try {
-            mailDTO.setMailReferrerName(employeeService.findByEmployeeEmail((mailDTO.getMailReferrer())).getEmployeeName());
-
+            mailDTO.setMailReferrerName(employeeService.findByEmployeeEmail(mailDTO.getMailReferrer()).getEmployeeName());
         }catch(Exception e) {
+            e.printStackTrace();
             log.info("참조되는 사람 이메일 설정이 잘못되었습니다.");
         }
 
@@ -182,9 +195,11 @@ public class MailController {
         mailDTO.setMailStatus(0);
         mailDTO.setMailIsRead(0);
 
+        List<MultipartFile> files = request.getFiles("files");
+        mailService.saveOne(mailDTO,files);
+
         log.info("메일 작성 : " + mailDTO.toString());
 
-        mailService.saveOne(mailDTO);
         return "redirect:/mail/send";
     }
 
@@ -232,5 +247,36 @@ public class MailController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("메일을 찾을 수 없습니다.");
         }
 
+    }
+
+    @Value("${file.upload-dir}")
+    private String uploadDir;
+
+//    첨부파일 다운로드
+    @GetMapping("/download/{filename}")
+    public ResponseEntity<Resource> fileDownload(@PathVariable String filename, @RequestParam("mailId") String mailId) throws UnsupportedEncodingException {
+
+        uploadDir +=  "/mail-files/" + mailId;
+        log.info("uploadDir : " + uploadDir );
+        log.info("mailId : " + mailId);
+
+        File file = new File(uploadDir +"/"+filename);
+        // 파일이 존재하지 않는다면
+        if(!file.exists()){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+        // 여기까지 오면 파일이 존재한다.
+        Resource resource = new FileSystemResource(file);
+        // 파일의 인코딩
+        String encodingFileName =
+                URLEncoder.encode(filename, "UTF-8").replaceAll("\\+","%20");
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.CONTENT_DISPOSITION,
+                "attachment; filename=\"" + encodingFileName + "\"");
+        headers.add(HttpHeaders.CONTENT_LENGTH, String.valueOf(file.length()));
+        System.out.println("resouce: " + resource);
+
+        return ResponseEntity.ok().headers(headers).body(resource);
     }
 }

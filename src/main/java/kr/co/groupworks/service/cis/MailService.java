@@ -4,11 +4,12 @@ import kr.co.groupworks.dto.cis.mail.MailDTO;
 import kr.co.groupworks.entity.cis.Mail;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
 public interface MailService {
-    void saveOne(MailDTO mail);
+    void saveOne(MailDTO mail, List<MultipartFile> files);
 
     Page<Mail> getEmailListByReceiverEmail(String receiverEmail, Pageable pageNumber);
 

@@ -10,13 +10,24 @@
 
 <th:block layout:fragment="javascript">
     <script src="/js/tables/datatables-demo.js"></script>
+    <script>
+        function resetFile() {
+            const fileList = $("#files");
+            // 기존 첨부 파일 초기화
+            fileList.html("");
+            // 스타일 제거
+            fileList.removeClass("files");
+            // 초기화
+            document.querySelector("input[type=file]").value = "";
+        }
 
+    </script>
 </th:block>
 
 <th:block layout:fragment="content">
     <div>
         <h3>메일 작성</h3>
-        <form action="/mail/write" method="post" style="width: 50%; margin-left: 20%">
+        <form action="/mail/write" method="post" style="width: 50%; margin-left: 20%" enctype="multipart/form-data">
             <div class="mb-3">
                 <label for="mailReceiver" class="form-label">받는사람</label>
                 <input type="email" class="form-control" id="mailReceiver" placeholder="name@example.com" name="mailReceiver">
@@ -29,9 +40,10 @@
                 <label for="mailTitle" class="form-label">제목</label>
                 <input type="text" class="form-control" id="mailTitle" placeholder="제목을 입력하세요" name="mailTitle">
             </div>
-            <div class="mb-3">
-                <label for="attachedFile" class="form-label">파일첨부</label>
-                <input type="text" class="form-control" id="attachedFile" placeholder="" name="attachedFile">
+            <label for="files" class="form-label">파일첨부</label>
+            <div class="input-group mb-3">
+                <input type="file" class="form-control" id="files" name="files" onchange="addFile(this);" multiple>
+                <button class="btn btn-outline-secondary" type="button" onclick="resetFile()">초기화</button>
             </div>
             <div class="mb-3" id="summernote">
                 <textarea class="form-control" id="mailContent" name="mailContent" rows="15" style="resize: none" placeholder="내용을 입력하세요"></textarea>
@@ -44,10 +56,7 @@
                 });
             </script>
             <input class="btn btn-success" type="submit" value="메일 발송하기">
-
         </form>
     </div>
 </th:block>
 </html>
-
-
