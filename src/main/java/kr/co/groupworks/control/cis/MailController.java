@@ -8,6 +8,7 @@ import kr.co.groupworks.service.cis.EmployeeService;
 import kr.co.groupworks.service.cis.MailService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.codehaus.groovy.runtime.powerassert.SourceTextNotAvailableException;
 import org.hibernate.Session;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -160,9 +161,19 @@ public class MailController {
         mailDTO.setMailSenderName(employeeService.findByEmployeeId(employeeDTO.getEmployeeId()).getEmployeeName());
 
 //        받는 사람 이메일에 해당하는 사람의 이름
-        mailDTO.setMailReceiverName(employeeService.findByEmployeeEmail((mailDTO.getMailReceiver())).getEmployeeName());
+        try {
+            mailDTO.setMailReceiverName(employeeService.findByEmployeeEmail((mailDTO.getMailReceiver())).getEmployeeName());
+        }catch(Exception e) {
+            log.info("받는 사람 이메일 설정이 잘못되었습니다.");
+        }
+
 //        참조되는 사람 이메일에 해당하는 사람의 이름
-        mailDTO.setMailReferrerName(employeeService.findByEmployeeEmail((mailDTO.getMailReferrer())).getEmployeeName());
+        try {
+            mailDTO.setMailReferrerName(employeeService.findByEmployeeEmail((mailDTO.getMailReferrer())).getEmployeeName());
+
+        }catch(Exception e) {
+            log.info("참조되는 사람 이메일 설정이 잘못되었습니다.");
+        }
 
         Date date = new Date();
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd hh:mm");
@@ -181,10 +192,21 @@ public class MailController {
     @PostMapping("/delete")
     public String delete(HttpSession session, @RequestParam("individualCheck") List<String> deleteMailList) {
         SessionEmployeeDTO employeeDTO = (SessionEmployeeDTO) session.getAttribute("employee");
-        log.info(employeeDTO.getEmployeeId() +"의 삭제 요청 이메일 리스트");
+        log.info(employeeDTO.getEmployeeName() +"의 삭제 요청 이메일 리스트");
         log.info(deleteMailList.toString());
 
         mailService.deleteMailById(deleteMailList);
+        return "redirect:/mail/trash";
+    }
+
+//    휴지통 메일 복구하기
+    @PostMapping("/restore")
+    public String restore(HttpSession session, @RequestParam("individualCheck") List<String> restoreMailList) {
+        SessionEmployeeDTO employeeDTO = (SessionEmployeeDTO) session.getAttribute("employee");
+        log.info(employeeDTO.getEmployeeName() + "의 복구 요청 이메일 리스트");
+        log.info(restoreMailList.toString());
+
+        mailService.restoreMailById(restoreMailList);
         return "redirect:/mail/trash";
     }
 

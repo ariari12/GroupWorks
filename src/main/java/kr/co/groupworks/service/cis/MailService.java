@@ -31,4 +31,6 @@ public interface MailService {
     Page<Mail> getEmailListBySenderEmailAndMailReceiverName(String senderEmail, String mailRecieverName, Pageable pageable);
 
     void deleteMailById(List<String> deleteMailList);
+
+    void restoreMailById(List<String> restoreMailList);
 }

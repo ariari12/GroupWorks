@@ -88,8 +88,27 @@
     <script src="../js/mail/offcanvas-navbar.js"></script>
     <script>
         $(document).ready(function(){
+            // 전체 선택, 전체 선택 해제
             $('input[name="allCheck"]').on('change', function(){
                 $('input[name="individualCheck"]').prop('checked', $(this).prop('checked'));
+            });
+
+            // 비우기와 복구하기 예외사항 처리
+            $('form').on('submit', function(event){
+                if ($('input[name="individualCheck"]:checked').length === 0) {
+                    alert('하나 이상의 메일을 체크해주세요.');
+                    event.preventDefault();
+                }
+            });
+
+            // 삭제 버튼 클릭시
+            $('#deleteButton').on('click', function() {
+                $('form').attr('action', '/mail/delete').attr('method', 'post');
+            });
+
+            // 복구하기 버튼 클릭시
+            $('#restoreButton').on('click', function() {
+                $('form').attr('action', '/mail/restore').attr('method', 'post');
             });
         });
     </script>
@@ -97,7 +116,7 @@
 
 <th:block layout:fragment="content">
     <h3>휴지통</h3>
-    <form action="/mail/delete" method="post">
+    <form method="post">
 
     <main class="container" >
         <div class="my-3 p-3 bg-body rounded shadow-sm">
@@ -138,7 +157,8 @@
 
             <div class="d-flex text-body-secondary pt-3" style="padding-top: 2rem !important;">
                 <div class="pb-3 mb-0 small lh-sm border-bottom w-100">
-                    <input type="submit" value="비우기" class="btn btn-secondary">
+                    <input type="submit" value="비우기" class="btn btn-secondary" id="deleteButton">
+                    <input type="submit" value="복구하기" class="btn btn-primary" id="restoreButton">
                     <nav aria-label="Page navigation">
                         <ul class="pagination justify-content-center">
                             <li class="page-item" th:classappend="${mailList.hasPrevious()} ? '' : 'disabled'">

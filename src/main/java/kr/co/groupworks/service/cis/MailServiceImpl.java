@@ -71,7 +71,7 @@ public class MailServiceImpl implements MailService{
         return mailRepository.findImportantByReceiver(receiverEmail, pageable);
     }
 
-//    중요 메일 및 휴지통 상태 변경
+//    메일 상태 변경
     @Override
     public boolean updateMailStatus(String id, Integer mailStatus) {
         Optional<Mail> optionalMail = mailRepository.findById(id);
@@ -117,6 +117,18 @@ public class MailServiceImpl implements MailService{
     public void deleteMailById(List<String> deleteMailList) {
         for(String mailId : deleteMailList){
             mailRepository.deleteById(mailId);
+        }
+    }
+
+//    메일 복구하기
+    @Override
+    public void restoreMailById(List<String> restoreMailList) {
+        for(String mailId : restoreMailList){
+            Mail mail = mailRepository.findById(mailId).get();
+            MailDTO mailDTO = toDTO(mail);
+            mailDTO.setMailStatus(0);
+            mail = toEntity(mailDTO);
+            mailRepository.save(mail);
         }
     }
 
