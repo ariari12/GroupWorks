@@ -22,14 +22,17 @@ public class WorkflowApproversRepositoryImpl extends QuerydslRepositorySupport i
     }
 
     @Override
-    public List<WorkFlowEntity> workflowListFindByApproverId(long approverEmployeeId) {
+    public List<WorkFlowEntity> workflowListFindByApproverId(long approverEmployeeId, int approverType) {
         QWorkFlowEntity workFlowEntity = QWorkFlowEntity.workFlowEntity;
         QApproverEntity approverEntity = QApproverEntity.approverEntity;
 
         return queryFactory
                 .selectFrom(workFlowEntity)
-                .innerJoin(workFlowEntity.approvers, approverEntity)
-                .where(approverEntity.employeeId.eq(approverEmployeeId))
+                .innerJoin(workFlowEntity.approvers, approverEntity) // .fetchJoin()
+                .where(approverEntity.employeeId.eq(approverEmployeeId)
+                        .and(approverEntity.approverType.eq(approverType)))
+                .orderBy(workFlowEntity.draftDate.desc())
                 .fetch();
     }
+
 }

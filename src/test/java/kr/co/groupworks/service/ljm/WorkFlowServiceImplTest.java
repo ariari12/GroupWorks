@@ -8,8 +8,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -17,6 +20,7 @@ import java.util.Map;
 
 @Slf4j
 @SpringBootTest
+@Transactional
 class WorkFlowServiceImplTest {
     @Autowired
     WorkFlowServiceImpl workFlowService;
@@ -52,7 +56,7 @@ class WorkFlowServiceImplTest {
         files[1] = new MockMultipartFile(fileName2, fileName2, "text/plain", content2);
 
         // 서비스 메서드 호출
-        workFlowService.setAttachmentFileList(files, 1L);
+        workFlowService.setAttachmentFileList(files, 1L, "testUser");
     }
 
     @Test @DisplayName("ApproverList Insert Test")
@@ -71,7 +75,6 @@ class WorkFlowServiceImplTest {
                             .setApproverType(1)
             );
         }
-
         for (int i = 0; i < approverMap.get("collaborate").length; i++) {
             approverDTOList.add(
                     workFlowService.getApproverDTO(approverMap.get("collaborate")[i])
@@ -80,7 +83,6 @@ class WorkFlowServiceImplTest {
                             .setApproverType(2)
             );
         }
-
         for (int i = 0; i < approverMap.get("refer").length; i++) {
             approverDTOList.add(
                     workFlowService.getApproverDTO(approverMap.get("refer")[i])
@@ -89,7 +91,6 @@ class WorkFlowServiceImplTest {
                             .setApproverType(3)
             );
         }
-
         workFlowService.setApproverDTOList(approverDTOList);
     }
 
@@ -98,6 +99,46 @@ class WorkFlowServiceImplTest {
         workFlowService.getMyWorkFlowDTOList(1L).forEach((s, i) -> {
             log.info("{} list length: {}", s, i.size());
         });
+    }
+
+    @Test @DisplayName("Workflow Detail Test")
+    public void workflowDetailTest() {
+        log.info("Workflow Detail Test: {}", workFlowService.getDetailWorkFlow(1L));
+    }
+
+    @Test @DisplayName("ApproverList Select Stream Test")
+    public void approverListSelectStreamTest() {
+        log.info("ApproverList Select Stream Test");
+        List<ApproverDTO> approverDTOList = workFlowService.getDetailWorkFlow(1L).getApprovers();
+        log.info(String.valueOf(approverDTOList.stream().anyMatch(c -> c.getApproverType() == 2 && c.getComment() != null)));
+    }
+
+    @Test @DisplayName("Approval Wait List Select Test")
+    public void approvalWaitListSelectTest() {
+        log.info("Approval Wait List Select Test");
+        workFlowService.getWorkflowWaitList(4L).forEach((s, l) -> {
+            l.forEach(i -> log.info("{}: {}", s, i));
+        });
+    }
+
+    @Test @DisplayName("Set Approver Test")
+    public void setApproverTest() {
+        log.info("Set Approver Test");
+        // Given
+        ApproverDTO approverDTO = new ApproverDTO()
+                .setWorkFlowId(6L)
+                .setApprovalMethod(4)
+                .setEmployeeId(4L)
+                .setApproverType(1)
+                ;
+
+        workFlowService.setApprover(approverDTO);
+    }
+
+    @Test @DisplayName("LDT Now String Fomatt Test")
+    public void ldtNowStringFomattTest() {
+        String approvalNow = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm").format(LocalDateTime.now());
+        log.info("LDT Now String Fomatt Test: {}", approvalNow);
     }
 
 }

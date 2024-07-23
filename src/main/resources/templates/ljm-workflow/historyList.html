@@ -4,7 +4,18 @@
       layout:decorate="~{layout/layout}"
 >
 
-<th:block layout:fragment="css"></th:block>
+<th:block layout:fragment="css">
+    <style>
+        #click {
+            width: 100px;
+            height: 100px;
+            background: white;
+            margin-top: -100px;
+            margin-left: 316px;
+            border: none;
+        }
+    </style>
+</th:block>
 
 <th:block layout:fragment="content">
     <!--/* approvalWait Table */-->

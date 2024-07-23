@@ -5,5 +5,5 @@ import kr.co.groupworks.entity.ljm.WorkFlowEntity;
 import java.util.List;
 
 public interface WorkflowApproversRepository {
-    List<WorkFlowEntity> workflowListFindByApproverId(long approverId);
+    List<WorkFlowEntity> workflowListFindByApproverId(long approverEmployeeId, int approverType);
 }
