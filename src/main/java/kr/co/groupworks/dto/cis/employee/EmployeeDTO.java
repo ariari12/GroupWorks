@@ -38,8 +38,8 @@ public class EmployeeDTO {
     //  입사일
     private LocalDateTime joinDate;
     //  급여
-    private int salary;
+    private Long salary;
     //  선임 사원번호
-    private int supervisorId;
+    private Long supervisorId;
 }
 
