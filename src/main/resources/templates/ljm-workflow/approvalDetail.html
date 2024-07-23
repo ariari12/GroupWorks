@@ -130,7 +130,8 @@
                                 <img style="width: 80px;" src="/img/approve.png" alt="승인">
                                 <br/>
                                 <!--/*@thymesVar id="ApprovalMethod" type="kr.co.groupworks.dto.ljm.ApprovalMethod"*/-->
-                                <th:block th:text="${ approve.approvalDate + '(' + approve.getApprovalMethod() + ')' }"></th:block>
+                                <span style="font-size: 14px;" th:text="${approve.approvalDate}"></span>
+                                <th:block th:text="${'(' + approve.getApprovalMethod() + ')'}"></th:block>
                             </div>
                             <div th:if="${approve.approval == 2}">
                                 <img style="width: 80px;" src="/img/reject.png" alt="반려"><br/>
@@ -233,13 +234,13 @@
     </th:block>
 
     <!--/* Comment 목록 */-->
-    <th:block th:if="${commentLength > 0}">
+    <th:block th:if="${commentList.size() > 0}">
         <div class="input-group mb-3"><span>Comment</span></div>
-        <th:block th:each="collaver : ${collaborators}">
+        <th:block th:each="commentor : ${commentList}">
             <div class="form-floating mb-2">
-                <th:block th:if="${collaver.comment != null}">
-                    <textarea class="form-control" th:text="${collaver.comment}" disabled style="resize: none"></textarea>
-                    <label th:text="${'작성자: ' + collaver.approverName + ' 작성일: ' + collaver.approvalDate}"></label>
+                <th:block th:if="${commentor.comment != null}">
+                    <textarea class="form-control" th:text="${commentor.comment}" disabled style="resize: none"></textarea>
+                    <label th:text="${'작성자: ' + commentor.approverName + ' 작성일: ' + commentor.approvalDate}"></label>
                 </th:block>
             </div>
         </th:block>
@@ -291,9 +292,9 @@
     </th:block>
 
     <!--/* 결재선 이메일 & 연락처 */-->
-    <div class="container text-center border" style="width: 1300px;">
-        <h4 style="text-align: left; font-size: 21px; font-family: cursive; font-weight: bolder">이메일 / 연락처</h4>
-        <div class="row">
+    <div class="container text-center">
+        <div class="row border">
+            <h4 style="text-align: left; font-size: 21px; font-family: cursive; font-weight: bolder">이메일 / 연락처</h4>
             <div class="col" th:if="${approvers.size() > 0}">
                 결재자
                 <div class="row">
@@ -430,26 +431,35 @@
                             <h5 class="text-center">해당 결재를 <span style="font-weight: bold; color: #0a53be">승인</span> 하시겠습니까?</h5>
                             <p class="text-center"><span style="color: #c83131;">※주의※</span> 결재를 진행하면 이후 변경할 수 없습니다.</p>
                             <br>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="approvalMethod" value="1">
-                                <label class="form-check-label">선결(일반 승인)</label>
+
+                            <div style="padding-left: 25px;">
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="approvalMethod" value="1">
+                                    <label class="form-check-label">선결(일반 승인)</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="approvalMethod" value="2">
+                                    <label class="form-check-label">후결</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="approvalMethod" value="3">
+                                    <label class="form-check-label">대결</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="approvalMethod" value="4">
+                                    <label class="form-check-label">전결</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="approvalMethod" value="5">
+                                    <label class="form-check-label">반려</label>
+                                </div>
                             </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="approvalMethod" value="2">
-                                <label class="form-check-label">후결</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="approvalMethod" value="3">
-                                <label class="form-check-label">대결</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="approvalMethod" value="4">
-                                <label class="form-check-label">전결</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="approvalMethod" value="5">
-                                <label class="form-check-label">반려</label>
-                            </div>
+                            <br/>
+                            <label for="apvCmt" style="color: #00000080;">결재 사유&nbsp;<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-pen" viewBox="0 0 16 16">
+                                <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001m-.644.766a.5.5 0 0 0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708z"/>
+                            </svg></label>
+                            <textarea id="apvCmt" class="form-control" name="comment" style="resize: none"></textarea>
+
                         </div>
                         <div class="modal-footer">
                             <button id="approveSubBtn" type="button" class="btn btn-primary">결재</button>
@@ -590,6 +600,7 @@
                     url: '/work-flow/approval/' + id + '/' + employeeId + '/1',
                     data: {
                         approvalMethod: document.querySelector('input[name="approvalMethod"]:checked').value,
+                        commet: document.getElementById("apvCmt").value
                     },
                     success: function(response) {
                         console.log('Success:', response);

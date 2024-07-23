@@ -2,16 +2,23 @@ package kr.co.groupworks.service.cis;
 
 import kr.co.groupworks.dto.cis.mail.MailDTO;
 import kr.co.groupworks.entity.cis.Mail;
+import kr.co.groupworks.entity.cis.MailAttachmentFile;
 import kr.co.groupworks.repository.cis.MailRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -21,12 +28,49 @@ public class MailServiceImpl implements MailService{
     private final MailRepository mailRepository;
     private final int PAGE_SIZE = 10;
 
+    @Value("${file.upload-dir}")
+    private String uploadDir;
 //    메일 저장
     @Override
-    public void saveOne(MailDTO mailDTO) {
+    public void saveOne(MailDTO mailDTO, List<MultipartFile> files) {
+
         Mail mail = toEntity(mailDTO);
-        log.info(mail.getId() + "번 메일 저장 중");
         mailRepository.save(mail);
+        mailDTO.setId(mail.getId());
+        String fileUploadDir = uploadDir + "/mail-files/" + mail.getId();
+
+        List<MailAttachmentFile> mailAttachmentFiles = new ArrayList<>();
+        File uploadDirFile = new File(fileUploadDir);
+        if (!uploadDirFile.exists() && uploadDirFile.mkdirs()) {
+            System.out.println("Directory created: " + fileUploadDir); // Log the directory creation
+        }
+
+        for (MultipartFile file : files) {
+            if (!file.isEmpty()) {
+                try {
+                    // 파일 저장 로직 (파일 저장 경로와 파일 이름 설정)
+
+                    String fileName = file.getOriginalFilename();
+                    String filePath = fileUploadDir + File.separator + fileName;
+                    file.transferTo(new File(filePath));
+
+                    // MailAttachmentFile 객체 생성
+                    MailAttachmentFile attachmentFile = new MailAttachmentFile();
+                    attachmentFile.setFileName(fileName);
+                    attachmentFile.setFilePath(filePath);
+                    // 리스트에 추가
+                    mailAttachmentFiles.add(attachmentFile);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        mailDTO.setMailAttachmentFiles(mailAttachmentFiles);
+
+        mail = toEntity(mailDTO);
+        mailRepository.save(mail);
+
     }
 
 //    수신 메일 목록 자겨오기
@@ -149,6 +193,7 @@ public class MailServiceImpl implements MailService{
                 .mailSendTime(mailDTO.getMailSendTime())
                 .mailIsRead(mailDTO.getMailIsRead())
                 .mailStatus(mailDTO.getMailStatus())
+                .mailAttachmentFiles(mailDTO.getMailAttachmentFiles())
                 .build();
     }
 
@@ -167,6 +212,7 @@ public class MailServiceImpl implements MailService{
                 .mailSendTime(mail.getMailSendTime())
                 .mailIsRead(mail.getMailIsRead())
                 .mailStatus(mail.getMailStatus())
+                .mailAttachmentFiles(mail.getMailAttachmentFiles())
                 .build();
     }
 }
