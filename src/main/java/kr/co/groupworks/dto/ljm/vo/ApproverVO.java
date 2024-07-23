@@ -1,21 +1,20 @@
 package kr.co.groupworks.dto.ljm.vo;
 
 import kr.co.groupworks.dto.ljm.ApprovalMethod;
+import kr.co.groupworks.dto.ljm.dto.ApproverDTO;
 import kr.co.groupworks.entity.ljm.ApproverEntity;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 @Getter @Setter
 @ToString
 @Accessors(chain = true)
 public class ApproverVO {
-    /* TODO: vo <- Entity 변환 static 메서드완성 */
-
-
     // 1, 결재자 pk
     private long id;
     // 2, 결재요청 fk
@@ -48,8 +47,6 @@ public class ApproverVO {
     private int approval;
 
     public ApproverVO(ApproverEntity approverEntity) {
-        int checkApproval = approverEntity.getApproval();
-
         this
                 .setId(approverEntity.getId())
                 .setWorkFlowId(approverEntity.getWorkFlowId())
@@ -71,5 +68,32 @@ public class ApproverVO {
                 ))
                 .setApproval(approverEntity.getApproval())
         ;
+    }
+
+    public ApproverVO(ApproverDTO approverDTO) {
+        String datePattern = "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}$";
+        this.approvalDate = approverDTO.getApprovalDate();
+        if(approvalDate != null && approvalDate.matches(datePattern)) {
+            approvalDate = LocalDateTime.parse(approvalDate, DateTimeFormatter.ofPattern(ApproverDTO.STR_TO_LDT_PATTERN))
+                    .format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm"));
+        }
+
+        this
+                .setId(approverDTO.getId())
+                .setWorkFlowId(approverDTO.getWorkFlowId())
+                .setSequenceNum(approverDTO.getSequenceNum())
+
+                .setApproverType(approverDTO.getApproverType())
+                .setEmployeeId(approverDTO.getEmployeeId())
+                .setApproverEmail(approverDTO.getApproverEmail())
+                .setApproverPhone(approverDTO.getApproverPhone())
+                .setApproverName(approverDTO.getApproverName())
+                .setApproverRank(approverDTO.getApproverRank())
+                .setDepartment(approverDTO.getDepartment())
+
+                .setApprovalMethod(ApprovalMethod.getMatch(approverDTO.getApprovalMethod()))
+                .setComment(approverDTO.getComment())
+                .setApproval(approverDTO.getApproval())
+                ;
     }
 }

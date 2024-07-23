@@ -56,21 +56,23 @@ public class WorkFlowDTO {
     // 14, 최종 결재 일
     private String approvalDate;
 
-    // 15, 최종 결재자 직급
+    // 15, 최종 결재자 사원번호
+    private long finalEmployeeId;
+    // 16, 최종 결재자 직급
     private String finalApprovalRank;
-    // 16, 최종 결재자 소속
+    // 17, 최종 결재자 소속
     private String finalApprovalDepartment;
-    // 17, 최종 결재자 명
+    // 18, 최종 결재자 명
     private String finalApprovalName;
 
     @NotNull @Min(value = 1)
-    // 18, 결재 인원
+    // 19, 결재 인원
     private int approverCount;
-    // 19, 승인된 수
+    // 20, 승인된 수
     private int approvalCount;
-    // 20, 비용 청구
+    // 21, 비용 청구
     private long cost;
-    // 21, 최종 승인여부 0:진행, 1:승인, 2:반려
+    // 22, 최종 승인여부 0:발송, 1:승인, 2:반려, 3:진행
     private int status;
 
     private List<ApproverDTO> approvers;

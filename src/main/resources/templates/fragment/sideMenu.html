@@ -12,7 +12,7 @@
             <div class="sb-sidenav-menu">
 
             <div class="nav">
-                <th:block th:replace="/yhj/fragments/commuteTime::commuteTime"></th:block>
+                <th:block th:replace="~{/yhj/fragments/commuteTime::commuteTime}"></th:block>
 
                 <!--/* 그룹 소 제목 */-->
                 <div class="sb-sidenav-menu-heading">Core</div>
@@ -81,15 +81,15 @@
                         </nav>
                     </div>
 
-                <th:block th:replace="ljm-workflow/workFlowSideMenu.html :: workFlowSideMenu"></th:block>
+                <th:block th:replace="~{ljm-workflow/workFlowSideMenu.html :: workFlowSideMenu}"></th:block>
 
-                <th:block th:replace="yhj/fragments/boardSideMenu :: boardSideMenu"></th:block>
+                <th:block th:replace="~{yhj/fragments/boardSideMenu :: boardSideMenu}"></th:block>
 
                 <th:block th:replace="~{kah/fragments/kahSideMenu :: kahSideMenu}"></th:block>
 
-                <th:block th:replace="yhj/fragments/commuteSideMenu :: commuteSideMenu"></th:block>
+                <th:block th:replace="~{yhj/fragments/commuteSideMenu :: commuteSideMenu}"></th:block>
 
-                <th:block th:replace="cis/fragments/cisSideMenu :: cisSideMenu"></th:block>
+                <th:block th:replace="~{cis/fragments/cisSideMenu :: cisSideMenu}"></th:block>
 
                     <!--/* Sidebar Menu 필요한 만큼 추가 */-->
                     <!--/* 그룹 소 제목 */-->
