@@ -17,7 +17,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -54,7 +53,7 @@ public class WorkFlowServiceImpl implements WorkFlowService {
     /* All EmployeeDTO */
     @Override
     public List<EmployeeDTO> getEmployeeAllDTOList() {
-        return employeeRepository.findAll(Sort.by(Sort.Direction.ASC, "departmentName")).stream().map(EmployeeDTO::entityToDto).toList();
+        return employeeRepository.findAll().stream().map(EmployeeDTO::entityToDto).sorted(Comparator.comparing(EmployeeDTO::getDepartmentId)).toList();
     }
 
     /* EmployeeId -> WorkFlowDTO */
