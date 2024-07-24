@@ -26,8 +26,9 @@ public class EmployeeDTO {
                 .setEmail(employee.getEmail())
                 .setPhone(employee.getPhoneNumber())
                 .setRank(employee.getRankName())
-                .setDepartmentId(employee.getDepartmentId())
-                .setDepartmentName(employee.getDepartmentName());
+//                .setDepartmentId(employee.getDepartmentId())
+//                .setDepartmentName(employee.getDepartmentName())
+        ;
     }
 
     public static WorkFlowDTO entityToWorkflowDTO(Employee employee) {
@@ -37,8 +38,8 @@ public class EmployeeDTO {
                 .setEmail(employee.getEmail())
                 .setPhone(employee.getPhoneNumber())
                 .setEmployeeRank(employee.getRankName())
-                .setDepartmentId(employee.getDepartmentId())
-                .setDepartment(employee.getDepartmentName())
+//                .setDepartmentId(employee.getDepartmentId())
+//                .setDepartment(employee.getDepartmentName())
                 ;
     }
 
@@ -49,7 +50,7 @@ public class EmployeeDTO {
                 .setApproverEmail(employee.getEmail())
                 .setApproverPhone(employee.getPhoneNumber())
                 .setApproverRank(employee.getRankName())
-                .setDepartment(employee.getDepartmentName())
+//                .setDepartment(employee.getDepartmentName())
                 ;
     }
 }
