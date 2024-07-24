@@ -15,7 +15,7 @@ public class CommuteController {
     @GetMapping("/list")
     public String commute(Model model) {
         model.addAttribute("msg", "test");
-        return "manage";
+        return "yhj/commute/correction";
     }
 
     @GetMapping("/manage")
