@@ -1,9 +1,12 @@
 package kr.co.groupworks.dto.cis.mail;
 
+import kr.co.groupworks.entity.cis.MailAttachmentFile;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Data @Builder
 @AllArgsConstructor
@@ -21,4 +24,5 @@ public class MailDTO {
     private String mailSendTime;
     private Integer mailIsRead;
     private Integer mailStatus;
+    private List<MailAttachmentFile> mailAttachmentFiles;
 }

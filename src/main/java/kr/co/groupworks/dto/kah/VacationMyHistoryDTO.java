@@ -20,6 +20,7 @@ public class VacationMyHistoryDTO {
     // 신청 휴가 기간
     private String startDate;
     private String endDate;
+    private String contents;
     // 휴가 종류
     private VacationType vacationType;
     // 첨부파일들

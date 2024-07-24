@@ -37,8 +37,9 @@ public class Calendar {
     private Employee employee;
 
     // 양방향 관계 (조회용)
+
     @OneToMany(mappedBy = "calendar")
-    private List<CalendarAttachment> attachmentList = new ArrayList<>();
+    private final List<CalendarAttachment> attachmentList = new ArrayList<>();
 
 
 
