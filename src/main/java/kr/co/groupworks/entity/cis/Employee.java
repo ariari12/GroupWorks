@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Entity
 @AllArgsConstructor @NoArgsConstructor
 @Table(name = "employee")
-@Builder @ToString
+@Builder @ToString(exclude = "employee")
 public class Employee {
     @Id
     @Column(name = "employee_id", nullable = false, unique = true)
@@ -29,11 +29,9 @@ public class Employee {
     @Column(name = "rank_name")
     private String rankName;
 
-    @Column(name = "department_name")
-    private String departmentName;
-
-    @Column(name = "department_id")
-    private Integer departmentId;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "department_id")
+    private Department department;
 
     @Column(name = "email", nullable = false, unique = true)
     private String email;
