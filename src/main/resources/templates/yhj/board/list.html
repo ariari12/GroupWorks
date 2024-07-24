@@ -17,7 +17,6 @@
 </th:block>
 
 <th:block layout:fragment="content">
-
     <div class="container" style="margin-top: 50px;">
         <h4>IT 부서 게시판</h4>
         <table class="table table-hover">
@@ -90,15 +89,15 @@
                 <td class="td-center">2</td>
             </tr>
 
-            <tr>
+            <tr th:onclick="|location.href='@{/board/detail}'|">
                 <td class="td-center">1</td>
                 <td>
                     <span class="badge bg-danger">오류</span>
-                    <span>글쓰기버튼 반응이 없습니다.</span>
+                    <span>글쓰기 버튼 반응 없음.</span>
                 </td>
-                <td class="td-center">TEST</td>
-                <td class="td-center">1일전</td>
-                <td class="td-center">24</td>
+                <td class="td-center">테스트 어드민</td>
+                <td class="td-center">50분전</td>
+                <td class="td-center">55</td>
             </tr>
             </tbody>
 
@@ -139,5 +138,4 @@
             </nav>
         </div>
     </div>
-
 </th:block>

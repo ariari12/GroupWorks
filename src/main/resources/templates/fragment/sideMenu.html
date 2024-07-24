@@ -91,14 +91,16 @@
 
                 <th:block th:replace="~{cis/fragments/cisSideMenu :: cisSideMenu}"></th:block>
 
-                    <!--/* Sidebar Menu 필요한 만큼 추가 */-->
-                    <!--/* 그룹 소 제목 */-->
-                    <div class="sb-sidenav-menu-heading">Addons</div>
-                    <!--/* 샘플:기능01 최상위 */-->
-                    <nav class="sb-sidenav-menu-nested nav">
-                        <a class="nav-link" href="#">
-                            <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
-                            기능01
+                <th:block th:replace="yhj/fragments/chatSideMenu :: chatSideMenu"></th:block>
+
+                <!--/* Sidebar Menu 필요한 만큼 추가 */-->
+                <!--/* 그룹 소 제목 */-->
+                <div class="sb-sidenav-menu-heading">Addons</div>
+                <!--/* 샘플:기능01 최상위 */-->
+                <nav class="sb-sidenav-menu-nested nav">
+                    <a class="nav-link" href="#">
+                        <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
+                        기능01
 
                             <!--/* 하위 그룹 및 드롭다운 추가 가능 */-->
                         </a>
