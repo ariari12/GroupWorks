@@ -205,4 +205,13 @@ class WorkFlowRepositoryTest {
         System.out.println(stopWatch.prettyPrint());
     }
 
+    @Test @DisplayName("workflowApprovalSatisticsByDepartment Test")
+    public void workflowApprovalSatisticsByDepartmentTest() {
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start();
+        workFlowRepository.workflowApprovalSatisticsByDepartment();
+        stopWatch.stop();
+        log.info("{}", stopWatch.prettyPrint());
+    }
+
 }

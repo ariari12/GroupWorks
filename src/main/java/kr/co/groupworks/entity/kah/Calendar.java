@@ -11,6 +11,7 @@ import java.util.List;
 
 @Entity
 @Getter
+@Table(name = "calendar")
 @ToString(exclude = {"attachmentList"})
 @SuperBuilder
 @AllArgsConstructor

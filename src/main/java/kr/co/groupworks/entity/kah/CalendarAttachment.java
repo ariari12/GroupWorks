@@ -8,6 +8,7 @@ import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 @Entity
+@Table(name = "calendar_attachment")
 @Getter
 @ToString(exclude = {"calendar"})
 @SuperBuilder

@@ -2,11 +2,10 @@ package kr.co.groupworks.service.kah;
 
 import kr.co.groupworks.dto.kah.AnnualFormDTO;
 import kr.co.groupworks.dto.kah.HalfFormDTO;
-import kr.co.groupworks.dto.kah.VacationMyHistoryDTO;
+import kr.co.groupworks.dto.kah.VacationMyRequestDTO;
 import kr.co.groupworks.entity.cis.Employee;
 import kr.co.groupworks.entity.kah.AmPm;
 import kr.co.groupworks.entity.kah.VacationStatus;
-import kr.co.groupworks.entity.kah.VacationType;
 import kr.co.groupworks.entity.kah.Vacation;
 import kr.co.groupworks.repository.cis.EmployeeRepository;
 
@@ -23,7 +22,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.List;
 
-import static kr.co.groupworks.entity.kah.QVacation.vacation;
 import static org.assertj.core.api.Assertions.*;
 
 
@@ -90,7 +88,7 @@ class VacationServiceImplTest {
         assertThat(vacation.getStartDate()).isEqualTo(String.valueOf(annualFormDTO1.getStartDate()));
         assertThat(vacation.getEndDate()).isEqualTo(String.valueOf(annualFormDTO1.getEndDate()));
         assertThat(vacation.getEmployee()).isEqualTo(employee);
-        assertThat(vacation.getEmployee().getAnnualDaysUsed()).isEqualTo(1);
+        assertThat(vacation.getEmployee().getAnnualDaysUsed()).isEqualTo(employee.getAnnualDaysUsed());
     }
 
     @Test
@@ -99,7 +97,7 @@ class VacationServiceImplTest {
         vacationService.save(annualFormDTO1);
         vacationService.save(halfFormDTO1);
 
-        List<VacationMyHistoryDTO> vacationRequestList = vacationService.findAllByEmployeeId(1L);
+        List<VacationMyRequestDTO> vacationRequestList = vacationService.findAllByEmployeeId(1L);
 
         assertThat(vacationRequestList).isNotNull();
 
@@ -119,7 +117,7 @@ class VacationServiceImplTest {
         assertThat(vacation.getStatus()).isEqualTo(VacationStatus.PENDING);
         assertThat(vacation.getStartDate()).isEqualTo(String.valueOf(halfFormDTO1.getHalfStartDate()));
         assertThat(vacation.getEmployee()).isEqualTo(employee);
-        assertThat(vacation.getEmployee().getAnnualDaysUsed()).isEqualTo(0.5);
+        assertThat(vacation.getEmployee().getAnnualDaysUsed()).isEqualTo(employee.getAnnualDaysUsed());
 
     }
 

@@ -9,6 +9,7 @@ import kr.co.groupworks.dto.workflow.vo.WorkflowListVO;
 import kr.co.groupworks.entity.workflow.ApproverEntity;
 import kr.co.groupworks.entity.workflow.AttachmentFileEntity;
 import kr.co.groupworks.entity.workflow.WorkFlowEntity;
+import kr.co.groupworks.repository.cis.DepartmentRepository;
 import kr.co.groupworks.repository.cis.EmployeeRepository;
 import kr.co.groupworks.repository.workflow.ApproversOnlyRepository;
 import kr.co.groupworks.repository.workflow.AttachmentFileRepository;
@@ -17,7 +18,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -35,9 +35,10 @@ import java.util.*;
 @Transactional
 @RequiredArgsConstructor
 public class WorkFlowServiceImpl implements WorkFlowService {
+    private final DepartmentRepository departmentRepository;
     private final EmployeeRepository employeeRepository;
-    private final WorkFlowRepository workFlowRepository;
 
+    private final WorkFlowRepository workFlowRepository;
     private final ApproversOnlyRepository approversOnlyRepository;
     private final AttachmentFileRepository attachmentFileRepository;
 
@@ -54,7 +55,7 @@ public class WorkFlowServiceImpl implements WorkFlowService {
     /* All EmployeeDTO */
     @Override
     public List<EmployeeDTO> getEmployeeAllDTOList() {
-        return employeeRepository.findAll(Sort.by(Sort.Direction.ASC, "departmentName")).stream().map(EmployeeDTO::entityToDto).toList();
+        return employeeRepository.findAll().stream().map(EmployeeDTO::entityToDto).sorted(Comparator.comparingLong(EmployeeDTO::getDepartmentId)).toList();
     }
 
     /* EmployeeId -> WorkFlowDTO */
@@ -276,8 +277,24 @@ public class WorkFlowServiceImpl implements WorkFlowService {
     }
 
     @Override
-    public Map<String, Object> getWorkflowStatus(long employeeId, long departmentId) {
-        enum satusLabel {  }
+    public Map<String, List<Object>> getWorkflowStatus(long employeeId, long departmentId) {
+        enum satusLabel {
+            DEPARTMENT_NAMES("department names"),
+            DEPARTMENT_DATA1("department data1"),
+            DEPARTMENT_DATA2("department data2"),
+            DEPARTMENT_DATA3("department data3"),
+
+
+            ;
+            String label;
+
+            satusLabel(String label) {
+                this.label = label;
+            }
+        }
+
+        Map<String, List<Object>> map = new HashMap<>();
+        map.put(satusLabel.DEPARTMENT_NAMES.label, Collections.singletonList(departmentRepository.getDepartments()));
 
         /*
          * 전체: 부서별 결재 발송/승인/반려 건 수

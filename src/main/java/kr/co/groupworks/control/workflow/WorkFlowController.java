@@ -54,7 +54,8 @@ public class WorkFlowController {
         REFERRESRS("referrers"),        // 참조자
         CLASSIFICATIONS("classifications"),  // 구분
         ATTACHE_FILES("attacheFiles"),  // 첨부파일
-        COMMENT_LIST("commentList")
+        COMMENT_LIST("commentList"),
+        REQUEST("request")
         ;
 
         private final String status;
@@ -130,7 +131,7 @@ public class WorkFlowController {
         model.addAttribute(AttributeName.TITLE.getStatus(), title);
         model.addAttribute(AttributeName.SUB_TITLE.getStatus(), title);
 
-        Map<String, Object> result = workFlowService.getWorkflowStatus(employeeId, departmentId);
+        Map<String, List<Object>> result = workFlowService.getWorkflowStatus(employeeId, departmentId);
         workFlowService.getWorkflowStatus(employeeId, departmentId).forEach(model::addAttribute);
 
         return DIRECTORY + "/workStatus";
