@@ -131,6 +131,8 @@ public class WorkFlowController {
         model.addAttribute(AttributeName.SUB_TITLE.getStatus(), title);
 
         Map<String, Object> result = workFlowService.getWorkflowStatus(employeeId, departmentId);
+        workFlowService.getWorkflowStatus(employeeId, departmentId).forEach(model::addAttribute);
+
         /*
          * 전체: 부서별 결재 발송/승인/반려 건 수
          * 전체: 올해 연도 전체 결재 발송 건 수
