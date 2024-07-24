@@ -39,6 +39,7 @@ public class VacationController {
 
         // 휴가 보유 사용현황 조회
         List<VacationMyHistoryDTO> vacationHistoryList = vacationService.findVacationHistory(employeeId);
+        log.info("휴가 보유 사용현황 조회 : {}",vacationHistoryList);
 
 
         // 검증 validation th:filed 속성 추가하기 위한 dto

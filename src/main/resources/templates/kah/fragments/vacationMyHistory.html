@@ -25,7 +25,7 @@
 
             <tbody>
             <!--/* 상세 보기 이동 시 onclick 이벤트 핸들러로 Javascript 함수 추가 */-->
-            <th:block th:if="${vacationRequestList == null} or ${vacationRequestList.size() == 0}">
+            <th:block th:if="${vacationHistoryList == null} or ${vacationHistoryList.size() == 0}">
                 <tr>
                     <td style="text-align: center">신청 내역 없음</td>
                     <td></td>
@@ -37,25 +37,16 @@
                 </tr>
             </th:block>
 
-            <th:block th:unless="${vacationRequestList == null} or ${vacationRequestList.size() == 0}">
+            <th:block th:unless="${vacationHistoryList == null} or ${vacationHistoryList.size() == 0}">
 
-                <tr onclick="openModal(this)" data-bs-toggle="modal" data-bs-target="#vacationRequestModify" th:each="dto : ${vacationRequestList}"
-                    th:data-employee-name="${session.employee.employeeName}"
-                    th:data-period="|${dto.startDate} ~ ${dto.endDate}|"
-                    th:data-type-name="${dto.vacationType.description}"
-                    th:data-type="${dto.vacationType}"
-                    th:data-attachment="${dto.fileList.size > 0 ? '첨부 파일 있음' : '첨부 파일 없음'}"
-                    th:data-status-name="${dto.status.description}"
-                    th:data-status="${dto.status}"
-                    th:data-contents="${dto.contents}">
-
-
-                    <td th:text="${session.employee.employeeName}">사원 이름</td>
-                    <td th:text="|${dto.startDate} ~ ${dto.endDate}|">사용 기간</td>
-                    <td th:text="${dto.vacationType.description}">종류</td>
-                    <td th:text="${dto.fileList.size>0}? '첨부 파일 있음' : '첨부 파일 없음'">증명자료</td>
-                    <td th:text="${dto.status.description}">승인</td>
-                    <td onclick="">삭제버튼</td>
+                <tr th:each="dto : ${vacationHistoryList}">
+                    <td th:text="${dto.name}">사원 이름</td>
+                    <td th:text="${dto.employeeId}">사번</td>
+                    <td th:text="${dto.departmentName}">부서</td>
+                    <td th:text="${dto.rankName}">직급</td>
+                    <td th:text="${dto.annualDaysUsed}">연차 사용 일수</td>
+                    <td th:text="${dto.sickDaysUsed}">병가 사용 일수</td>
+                    <td th:text="${dto.otherDaysUsed}">기타 사용 일수</td>
                 </tr>
             </th:block>
             </tbody>

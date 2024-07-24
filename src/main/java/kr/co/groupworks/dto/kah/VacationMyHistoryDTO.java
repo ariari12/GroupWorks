@@ -12,6 +12,7 @@ public class VacationMyHistoryDTO {
 
     private Long employeeId;
     private String name;
+    private String rankName;
     private String departmentName;
     private double annualDaysUsed;
     private int sickDaysUsed;
