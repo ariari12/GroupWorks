@@ -56,4 +56,24 @@ public class Employee {
     @Column(name = "supervisor_id")
     private Long supervisorId;
 
+    @Column(name = "annual_days_used")
+    private double annualDaysUsed;
+
+    @Column(name = "sick_days_used")
+    private int sickDaysUsed;
+
+    @Column(name = "other_days_used")
+    private int otherDaysUsed;
+
+    public void updateAnnualDaysUsed(double annualDaysUsed) {
+        this.annualDaysUsed += annualDaysUsed;
+    }
+
+    public void updateSickDaysUsed(int sickDaysUsed) {
+        this.sickDaysUsed += sickDaysUsed;
+    }
+
+    public void updateOtherDaysUsed(int otherDaysUsed) {
+        this.otherDaysUsed += otherDaysUsed;
+    }
 }
