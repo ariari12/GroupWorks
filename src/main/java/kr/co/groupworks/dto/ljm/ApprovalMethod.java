@@ -9,8 +9,8 @@ import java.util.List;
 public enum ApprovalMethod {
     PRE_APPROVAL("선결"),
     POST_APPROVAL("후결"),
-    JOINT_APPROVAL("대결"),
-    DELEGATED_APPROVAL("전결"),
+    DELEGATED_APPROVAL("대결"),
+    FULL_APPROVAL("전결"),
     REJECTION("반려")
     ;
 

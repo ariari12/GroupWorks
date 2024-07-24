@@ -60,12 +60,11 @@ public class ApproverVO {
                 .setApproverRank(approverEntity.getApproverRank())
                 .setDepartment(approverEntity.getDepartment())
 
-                .setApprovalMethod(ApprovalMethod.getMatch(
-                        approverEntity.getApprovalMethod()))
+                .setApprovalMethod(ApprovalMethod.getMatch(approverEntity.getApprovalMethod()))
                 .setComment(approverEntity.getComment())
-                .setApprovalDate(approverEntity.getApprovalDate().format(
-                        DateTimeFormatter.ofPattern("yyyy/MM/dd")
-                ))
+                .setApprovalDate(approverEntity.getApprovalDate() != null
+                        ? approverEntity.getApprovalDate().format(DateTimeFormatter.ofPattern("yyyy/MM/dd"))
+                        : null)
                 .setApproval(approverEntity.getApproval())
         ;
     }
