@@ -16,7 +16,7 @@ public class EmployeeDTO {
     private String email;
     private String phone;
     private String rank;
-    private long departmentId;
+    private Long departmentId;
     private String departmentName;
 
     public static EmployeeDTO entityToDto(Employee employee) {
