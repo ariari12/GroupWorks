@@ -1,0 +1,88 @@
+#editorjs {
+  margin: 0 auto;
+  width: 100%;
+  height: 400px; /* 원하는 높이로 설정 */
+  overflow-y: auto; /* 상하 스크롤 자동 활성화 */
+  overflow-x: hidden; /* 수평 스크롤 제거 */
+}
+.codex-editor__redactor {
+  padding-bottom: 50px !important;
+  overflow-y: auto;
+}
+.form-group {
+  display: flex;
+  align-items: center;
+  border: 1px solid #ebecef;
+  border-radius: 10px;
+  padding: 10px;
+}
+.form-group select {
+  width: 100px;
+  margin-right: 10px;
+}
+.form-group input {
+  flex-grow: 1;
+}
+.modal-custom {
+  max-width: 80%;
+}
+pre code {
+  display: block;
+  overflow-x: auto;
+  padding: 1em;
+  background: #f5f5f5;
+  border-radius: 3px;
+}
+ul, ol {
+  padding-left: 20px;
+  margin: 0;
+}
+ul li, ol li {
+  margin-bottom: 5px;
+}
+ul {
+  list-style: none; /* 불릿 스타일 제거 */
+  padding-left: 0; /* 왼쪽 패딩 제거 */
+}
+ul li input[type="checkbox"] {
+  margin-right: 10px;
+  vertical-align: middle; /* 체크박스 수직 정렬 */
+}
+blockquote {
+  border-left: 5px solid #ddd;
+  padding-left: 10px;
+  margin: 10px 0;
+}
+.modal-body {
+  height: 500px;
+  max-height: 500px; /* 원하는 높이로 설정 */
+  word-wrap: break-word; /* 긴 단어를 자동으로 줄바꿈 */
+  overflow-x: hidden; /* 좌우 스크롤 비활성화 */
+  overflow-y: auto; /* 상하 스크롤 자동 활성화 */
+  padding-left: 19.65%;
+  padding-right: 19.65%;
+}
+.boarder {
+  margin: 20px 0 20px 0;
+  border: 1px solid #ebecef;
+  border-radius: 10px;
+  padding: 10px;
+}
+.file-list {
+  margin-top: 10px;
+}
+.insert .file-list {
+  height: 200px;
+  overflow: auto;
+  border: 1px solid #989898;
+  padding: 10px;
+}
+.insert .file-list .filebox p {
+  font-size: 14px;
+  margin-top: 10px;
+  display: inline-block;
+}
+.insert .file-list .filebox .delete i{
+  color: #ff5353;
+  margin-left: 5px;
+}

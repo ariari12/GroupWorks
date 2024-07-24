@@ -2,8 +2,8 @@ package kr.co.groupworks.repository.workflow;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
-import kr.co.groupworks.entity.ljm.QApproverEntity;
-import kr.co.groupworks.entity.ljm.QWorkFlowEntity;
+import kr.co.groupworks.entity.workflow.QApproverEntity;
+import kr.co.groupworks.entity.workflow.QWorkFlowEntity;
 import kr.co.groupworks.entity.workflow.WorkFlowEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
@@ -28,7 +28,7 @@ public class WorkflowApproversRepositoryImpl extends QuerydslRepositorySupport i
 
         return queryFactory
                 .selectFrom(workFlowEntity)
-                .innerJoin(workFlowEntity.approvers, approverEntity) // .fetchJoin()
+                .innerJoin(workFlowEntity.approvers, approverEntity).fetchJoin()
                 .where(approverEntity.employeeId.eq(approverEmployeeId)
                         .and(approverEntity.approverType.eq(approverType)))
                 .orderBy(workFlowEntity.draftDate.desc())

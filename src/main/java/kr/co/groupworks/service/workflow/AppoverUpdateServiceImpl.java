@@ -31,7 +31,7 @@ public class AppoverUpdateServiceImpl implements AppoverUpdateService {
                         .setApproverEmail(employee.getEmail())
                         .setApproverPhone(employee.getPhoneNumber())
                         .setApproverRank(approver.getApproverRank() + " -> " + employee.getRankName())
-                        .setDepartment(approver.getDepartment() + " -> " + employee.getDepartmentName())
+//                        .setDepartment(approver.getDepartment() + " -> " + employee.getDepartmentName())
                         .dtoToEntity()
                 );
             });

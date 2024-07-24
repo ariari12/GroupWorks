@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+
+<th:block layout:fragment="css">
+    <style>
+        .chat-header { background-color: #212529; color: white; }
+        .chat-box { max-height: 400px; overflow-y: auto; }
+        .message { margin-bottom: 15px; }
+        .outgoing_msg { display: flex; justify-content: flex-end; }
+        .incoming_msg { display: flex; justify-content: flex-start; }
+        .sent_msg, .received_msg { max-width: 80%; min-width: 60px; word-wrap: break-word; display: inline-block; position: relative; }
+        #messageInput { resize: none; }
+        .sent_msg p, .received_msg p { padding: 10px 15px; border-radius: 10px; margin: 0; display: inline-block; }
+        .sent_msg p { background: #05728f; color: white; min-width: 1%; }
+        .received_msg p { background: #ebebeb; color: black; min-width: 1%; }
+        .sent_time_date { display: block; font-size: 12px; color: #747474; margin-top: 5px; text-align: right; }
+        .received_sent_time_date { display: block; font-size: 12px; color: #747474; margin-top: 5px; text-align: left; }
+        .list-group-item { cursor: pointer; }
+        .list-group-item.active { background-color: #007bff; border-color: #007bff; }
+        #chatList { max-height: 450px; overflow-y: auto; }
+        .modal-backdrop { z-index: 1040 !important; }
+        .role-text { font-size: 20px; color: #727272 }
+        .modal { z-index: 1050 !important; }
+        .member-list { display: flex; justify-content: space-between; align-items: center; margin: 0 15px 0 15px;}
+        .member-img {
+            border-radius: 10px;
+            margin-right: 10px;
+            width: 40px;
+            height: 40px;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -o-user-select: none;
+            user-select: none;
+            -webkit-user-drag: none;
+            -khtml-user-drag: none;
+            -moz-user-drag: none;
+            -o-user-drag: none;
+            user-drag: none;
+        }
+    </style>
+</th:block>
+
+<th:block layout:fragment="javascript">
+    <!-- 채팅.js -->
+    <script src="/js/yhj/chat/chat.js?v=<%=System.currentTimeMillis() %"></script>
+</th:block>
+
+<th:block layout:fragment="content">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header chat-header d-flex justify-content-between align-items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-list" viewBox="0 0 16 16" data-bs-toggle="collapse" data-bs-target="#chatListContainer" style="cursor: pointer;">
+                            <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5"/>
+                        </svg>
+                        채팅 목록
+                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-plus-square" viewBox="0 0 16 16" data-bs-toggle="modal" data-bs-target="#newChatModal">
+                            <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>
+                            <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
+                        </svg>
+                    </div>
+                    <div class="collapse show" id="chatListContainer">
+                        <ul class="list-group list-group-flush" id="chatList">
+                            <!-- 채팅 목록이 여기에 표시됩니다 -->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header chat-header" style="display: flex; justify-content: space-between; align-items: center;">
+                        채팅
+                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25"
+                             fill="currentColor" class="bi bi-list dropdown-toggle" viewBox="0 0 16 16"
+                             id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false"
+                             style="cursor: pointer; margin-left: auto;">
+                            <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5"/>
+                        </svg>
+
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                            <li>
+                                <button class="dropdown-item" type="button"
+                                        data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
+                                        aria-controls="offcanvasRight">
+                                    참여자
+                                </button>
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#">나가기</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- 오픈 캔버스-->
+                    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+                        <div class="offcanvas-header">
+                            <h5 id="offcanvasRightLabel"><b>참여자 (5)</b></h5>
+                            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                        </div>
+                        <hr>
+                        <div class="offcanvas-body">
+                            <button class="form-control" style="margin-bottom: 15px;">초대하기</button>
+                            <div>
+                                <p class="role-text"><b>관리자 (2)</b></p>
+                                <div class="member-list">
+                                    <img src="https://image.fmkorea.com/files/attach/new/20180303/33854530/659995903/964818286/fa8c9e743fe1fa1c31be23523b882465.jpg" alt="" class="member-img">
+                                    <div style="display: flex; flex-direction: column;">
+                                        <span><b>이은결</b> 매니저</span>
+                                        <span style="color: gray; font-size: 14px;">중앙 HTA 매니저</span>
+                                    </div>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                         fill="currentColor" class="bi bi-three-dots-vertical" viewBox="0 0 16 16"
+                                         id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false"
+                                         style="cursor: pointer; margin-left: auto;">
+                                        <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"/>
+                                    </svg>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
+                                        <li><a class="dropdown-item" href="#">내보내기</a></li>
+                                        <li><a class="dropdown-item" href="#">관리자 지정</a></li>
+                                        <li><a class="dropdown-item" href="#">관리자 해제</a></li>
+                                    </ul>
+                                </div>
+                                <hr style="color: #E5E5E5">
+                                <div class="member-list">
+                                    <img src="https://image.fmkorea.com/files/attach/new/20180303/33854530/659995903/964818286/fa8c9e743fe1fa1c31be23523b882465.jpg" alt="" class="member-img">
+                                    <div style="display: flex; flex-direction: column;">
+                                        <span><b>승진</b> 과장</span>
+                                        <span style="color: gray; font-size: 14px;">~~~ 팀</span>
+                                    </div>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                         fill="currentColor" class="bi bi-three-dots-vertical" viewBox="0 0 16 16"
+                                         id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false"
+                                         style="cursor: pointer; margin-left: auto;">
+                                        <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"/>
+                                    </svg>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
+                                        <li><a class="dropdown-item" href="#">내보내기</a></li>
+                                        <li><a class="dropdown-item" href="#">관리자 지정</a></li>
+                                        <li><a class="dropdown-item" href="#">관리자 해제</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <hr>
+                            <div>
+                                <p class="role-text"><b>사원 (2)</b></p>
+                                <div class="member-list">
+                                    <img src="https://image.fmkorea.com/files/attach/new/20180303/33854530/659995903/964818286/fa8c9e743fe1fa1c31be23523b882465.jpg" alt="" class="member-img">
+                                    <div style="display: flex; flex-direction: column;">
+                                        <span><b>김영희</b> 과장</span>
+                                        <span style="color: gray; font-size: 14px;">영업 1팀</span>
+                                    </div>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                         fill="currentColor" class="bi bi-three-dots-vertical" viewBox="0 0 16 16"
+                                         id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false"
+                                         style="cursor: pointer; margin-left: auto;">
+                                        <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"/>
+                                    </svg>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
+                                        <li><a class="dropdown-item" href="#">내보내기</a></li>
+                                        <li><a class="dropdown-item" href="#">관리자 지정</a></li>
+                                        <li><a class="dropdown-item" href="#">관리자 해제</a></li>
+                                    </ul>
+                                </div>
+                                <hr style="color: #E5E5E5">
+                                <div class="member-list">
+                                    <img src="https://image.fmkorea.com/files/attach/new/20180303/33854530/659995903/964818286/fa8c9e743fe1fa1c31be23523b882465.jpg" alt="" class="member-img">
+                                    <div style="display: flex; flex-direction: column;">
+                                        <span><b>김철수</b> 부장</span>
+                                        <span style="color: gray; font-size: 14px;">마케팅 3팀</span>
+                                    </div>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                         fill="currentColor" class="bi bi-three-dots-vertical" viewBox="0 0 16 16"
+                                         id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false"
+                                         style="cursor: pointer; margin-left: auto;">
+                                        <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"/>
+                                    </svg>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
+                                        <li><a class="dropdown-item" href="#">내보내기</a></li>
+                                        <li><a class="dropdown-item" href="#">관리자 지정</a></li>
+                                        <li><a class="dropdown-item" href="#">관리자 해제</a></li>
+                                    </ul>
+                                </div>
+                                <hr style="color: #E5E5E5">
+                                <div class="member-list">
+                                    <img src="https://image.fmkorea.com/files/attach/new/20180303/33854530/659995903/964818286/fa8c9e743fe1fa1c31be23523b882465.jpg" alt="" class="member-img">
+                                    <div style="display: flex; flex-direction: column;">
+                                        <span><b>이지훈</b> 대리</span>
+                                        <span style="color: gray; font-size: 14px;">개발 1팀</span>
+                                    </div>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                         fill="currentColor" class="bi bi-three-dots-vertical" viewBox="0 0 16 16"
+                                         id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false"
+                                         style="cursor: pointer; margin-left: auto;">
+                                        <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"/>
+                                    </svg>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
+                                        <li><a class="dropdown-item" href="#">내보내기</a></li>
+                                        <li><a class="dropdown-item" href="#">관리자 지정</a></li>
+                                        <li><a class="dropdown-item" href="#">관리자 해제</a></li>
+                                    </ul>
+                                </div>
+                                <hr>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-body chat-box" id="chatBox" style="height: 700px; overflow-y: auto;">
+                        <!-- 메시지들이 여기에 표시됩니다 -->
+                    </div>
+                    <div class="card-footer">
+                        <div class="input-group">
+                            <textarea class="form-control" id="messageInput" cols="30" rows="3" placeholder="메시지를 입력하세요..."></textarea>
+                            <button class="btn btn-dark" type="button" onclick="sendMessage()">보내기</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 새로운 채팅 모달 -->
+    <div class="modal fade" id="newChatModal" tabindex="-1" aria-labelledby="newChatModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="newChatModalLabel">새 채팅방 만들기</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="input-group" style="margin: 10px 0 10px 0;">
+                        <select class="form-select" id="inputGroupSelect">
+                            <option value="title" selected>전체</option>
+                            <option value="writer">부서</option>
+                            <option value="content">사원</option>
+                        </select>
+                        <input type="text" id="searchInput" class="form-control" style="width: 60%;" placeholder="부서 혹은 사원을 검색하세요..." oninput="searchPeople()">
+                    </div>
+                    <ul class="list-group" id="searchResults">
+                        <!-- 검색 결과가 여기에 표시됩니다 -->
+                    </ul>
+
+                    <div style="margin: 10px 0 10px 0;">
+                        <span class="badge bg-success">영업 <span style="font-size: 15px; font-weight: bold; cursor: pointer;">&times;</span></span>
+                        <span class="badge bg-success">개발 <span style="font-size: 15px; font-weight: bold; cursor: pointer;">&times;</span></span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" onclick="createChatRoom()">채팅방 생성</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</th:block>

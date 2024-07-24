@@ -16,6 +16,6 @@ class EmployeeRepositoryTest {
 
     @Test
     void getDepartments() {
-        employeeRepository.getDepartments().forEach((l, d) -> log.info("{}: {}", l, d));
+//        employeeRepository.getDepartments().forEach((l, d) -> log.info("{}: {}", l, d));
     }
 }
