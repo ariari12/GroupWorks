@@ -32,8 +32,9 @@ public class Employee {
     @Column(name = "department_name")
     private String departmentName;
 
-    @Column(name = "department_id")
-    private Integer departmentId;
+    @ManyToOne
+    @JoinColumn(name = "department_id")
+    private Department department;
 
     @Column(name = "email", nullable = false, unique = true)
     private String email;
