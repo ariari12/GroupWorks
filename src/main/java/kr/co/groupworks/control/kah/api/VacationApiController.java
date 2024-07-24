@@ -32,8 +32,7 @@ public class VacationApiController {
     // 연차 신청
     @PostMapping("/annual")
     public ResponseEntity<?> vacationAnnual(@Validated @RequestBody AnnualFormDTO dto,
-                                            @SessionAttribute(name = "employee") SessionEmployeeDTO sessionEmployeeDTO,
-                                            Model model){
+                                            @SessionAttribute(name = "employee") SessionEmployeeDTO sessionEmployeeDTO){
 
         log.info("AnnualFormDTO ={}",dto);
         log.info("sessionEmployeeDTO ={}",sessionEmployeeDTO.getEmployeeId());
@@ -45,8 +44,7 @@ public class VacationApiController {
     // 반차 신청
     @PostMapping("/half")
     public ResponseEntity<?> vacationHalf(@Validated @RequestBody HalfFormDTO dto,
-                                          @SessionAttribute(name = "employee")SessionEmployeeDTO sessionEmployeeDTO,
-                                          Model model){
+                                          @SessionAttribute(name = "employee")SessionEmployeeDTO sessionEmployeeDTO){
 
         log.info("HalfFormDTO ={}",dto);
         dto.setEmployeeId(sessionEmployeeDTO.getEmployeeId());
@@ -59,8 +57,7 @@ public class VacationApiController {
     @ResponseBody
     public ResponseEntity<?> vacationSick(@Valid @RequestPart("jsonData") SickFormDTO dto,
                                           @RequestPart("sickFileUpload") MultipartFile[] files,
-                                          @SessionAttribute(name = "employee")SessionEmployeeDTO sessionEmployeeDTO,
-                                          Model model){
+                                          @SessionAttribute(name = "employee")SessionEmployeeDTO sessionEmployeeDTO){
 
         log.info("SickFormDTO ={}, fileUpload ={}",dto, files);
         dto.setEmployeeId(sessionEmployeeDTO.getEmployeeId());
@@ -75,8 +72,7 @@ public class VacationApiController {
     @ResponseBody
     public ResponseEntity<?> vacationOther(@Valid @RequestPart("jsonData") OtherFormDTO dto,
                                           @RequestPart("otherFileUpload") MultipartFile[] files,
-                                          @SessionAttribute(name = "employee")SessionEmployeeDTO sessionEmployeeDTO,
-                                          Model model){
+                                          @SessionAttribute(name = "employee")SessionEmployeeDTO sessionEmployeeDTO){
 
         log.info("SickFormDTO ={}, fileUpload ={}",dto, files);
         dto.setEmployeeId(sessionEmployeeDTO.getEmployeeId());
@@ -89,8 +85,7 @@ public class VacationApiController {
     // 연차 수정 신청
     @PutMapping("/annual")
     public ResponseEntity<?> vacationAnnual(@Validated @RequestBody AnnualModifyFormDTO dto,
-                                            @SessionAttribute(name = "employee") SessionEmployeeDTO sessionEmployeeDTO,
-                                            Model model){
+                                            @SessionAttribute(name = "employee") SessionEmployeeDTO sessionEmployeeDTO){
 
         log.info("sessionEmployeeDTO ={}",sessionEmployeeDTO.getEmployeeId());
         dto.setEmployeeId(sessionEmployeeDTO.getEmployeeId());
