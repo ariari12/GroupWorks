@@ -5,7 +5,6 @@ import kr.co.groupworks.dto.kah.*;
 import kr.co.groupworks.entity.cis.Employee;
 import kr.co.groupworks.entity.kah.CalendarAttachment;
 import kr.co.groupworks.entity.kah.Vacation;
-import kr.co.groupworks.entity.kah.VacationStatus;
 import kr.co.groupworks.repository.cis.EmployeeRepository;
 import kr.co.groupworks.repository.kah.CalendarAttachmentRepository;
 import kr.co.groupworks.repository.kah.VacationRepository;
@@ -179,16 +178,23 @@ public class VacationServiceImpl implements VacationService{
         return vacationRepository.save(vacation).getCalendarId();
     }
 
+    @Override
+    public List<VacationMyHistoryDTO> findVacationHistory(Long employeeId) {
+        Employee employee = employeeRepository.findById(employeeId)
+                .orElseThrow(() -> new EntityNotFoundException("사원을 찾을 수 없습니다. " + employeeId));
+        return employeeRepository.findVacationMyHistoryDTO(employee.getEmployeeId());
+    }
+
 
     // 사원의 휴가신청 내역 모두 조회
     @Override
     @Transactional(readOnly = true)
-    public List<VacationMyHistoryDTO> findAllByEmployeeId(Long employeeId) {
+    public List<VacationMyRequestDTO> findAllByEmployeeId(Long employeeId) {
         List<Vacation> vacationList = vacationRepository.findAllByEmployeeId(employeeId);
         // 휴가 번호로 첨부파일 조회
         return vacationList.stream()
                 .map(vacation ->
-                        VacationMyHistoryDTO.builder()
+                        VacationMyRequestDTO.builder()
                                 .startDate(vacation.getStartDate())
                                 .endDate(vacation.getEndDate() != null ? vacation.getEndDate() : vacation.getStartDate())
                                 .vacationType(vacation.getVacationType())
