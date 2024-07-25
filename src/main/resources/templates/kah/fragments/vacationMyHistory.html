@@ -1,28 +1,31 @@
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
-<div class="card mb-4" th:fragment="vacationHistory">
+<!--/* Section: Tables */-->
+<div class="card mb-4" th:fragment="tables">
+
     <div class="card-header">
         <i class="fas fa-table me-1"></i>
-        휴가 신청 내역
+        휴가 보유/사용 현황
     </div>
 
     <div class="card-body">
-        <table id="vacationMyHistory" class="table table-hover" style="width:100%">
+        <table id="vacationStatus" class="table table-hover" style="width:100%">
             <thead>
             <tr>
                 <th>이름</th>
-                <th>사용 기간</th>
-                <th>종류</th>
-                <th>증명자료</th>
-                <th>승인</th>
-                <th></th>
+                <th>사번</th>
+                <th>부서</th>
+                <th>직급</th>
+                <th>잔여연차</th>
+                <th>병가 사용 일수</th>
+                <th>기타 사용 일수</th>
             </tr>
             </thead>
 
 
             <tbody>
             <!--/* 상세 보기 이동 시 onclick 이벤트 핸들러로 Javascript 함수 추가 */-->
-            <th:block th:if="${vacationRequestList == null} or ${vacationRequestList.size() == 0}">
+            <th:block th:if="${vacationHistoryList == null} or ${vacationHistoryList.size() == 0}">
                 <tr>
                     <td style="text-align: center">신청 내역 없음</td>
                     <td></td>
@@ -30,167 +33,24 @@
                     <td></td>
                     <td></td>
                     <td></td>
-
+                    <td></td>
                 </tr>
             </th:block>
 
-            <th:block th:unless="${vacationRequestList == null} or ${vacationRequestList.size() == 0}">
+            <th:block th:unless="${vacationHistoryList == null} or ${vacationHistoryList.size() == 0}">
 
-                <tr onclick="openModal(this)" data-bs-toggle="modal" data-bs-target="#vacationRequestModify" th:each="dto : ${vacationRequestList}"
-                    th:data-employee-name="${session.employee.employeeName}"
-                    th:data-period="|${dto.startDate} ~ ${dto.endDate}|"
-                    th:data-type-name="${dto.vacationType.description}"
-                    th:data-type="${dto.vacationType}"
-                    th:data-attachment="${dto.fileList.size > 0 ? '첨부 파일 있음' : '첨부 파일 없음'}"
-                    th:data-status-name="${dto.status.description}"
-                    th:data-status="${dto.status}"
-                    th:data-contents="${dto.contents}">
-
-
-                    <td th:text="${session.employee.employeeName}">사원 이름</td>
-                    <td th:text="|${dto.startDate} ~ ${dto.endDate}|">사용 기간</td>
-                    <td th:text="${dto.vacationType.description}">종류</td>
-                    <td th:text="${dto.fileList.size>0}? '첨부 파일 있음' : '첨부 파일 없음'">증명자료</td>
-                    <td th:text="${dto.status.description}">승인</td>
-                    <td onclick="">삭제버튼</td>
+                <tr th:each="dto : ${vacationHistoryList}">
+                    <td th:text="${dto.name}">사원 이름</td>
+                    <td th:text="${dto.employeeId}">사번</td>
+                    <td th:text="${dto.departmentName}">부서</td>
+                    <td th:text="${dto.rankName}">직급</td>
+                    <td th:text="${dto.annualDaysUsed}">연차 사용 일수</td>
+                    <td th:text="${dto.sickDaysUsed}">병가 사용 일수</td>
+                    <td th:text="${dto.otherDaysUsed}">기타 사용 일수</td>
                 </tr>
             </th:block>
             </tbody>
         </table>
     </div>
-
-    <!-- Modal -->
-    <div class="container modal fade" id="vacationRequestModify" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="staticBackdropLabel"
-                        th:text="|${session.employee.employeeName} 님의 병가 요청|">@@@님의 휴가 요청</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <h5>요청내역 인증완료(표시)</h5>
-                    <div class="container border">
-                        <table style="margin: 10px">
-                            <tr>
-                                <th>휴가 종류 : </th>
-                                <td><div id="modalType"></div></td>
-                            </tr>
-                            <tr>
-                                <th>휴가 기간 : </th>
-                                <td><input type="text" name=""
-                                           placeholder="Select Date.." class="form-control vacationDate" id="modalPeriod">
-                                    <input type="hidden" value="">
-                                    <input type="hidden" value="">
-                                </td>
-
-                            </tr>
-                            <tr>
-                                <th>승인 상태 : </th>
-                                <td><div id="modalStatus"></div></td>
-                            </tr>
-                            <tr>
-                                <th>휴가 내용 : </th>
-                                <td><textarea id="modalContents"></textarea></td>
-                            </tr>
-                            <tr>
-                                <th>첨부 파일 : </th>
-                                <td id="modalAttachment">asdf.png</td>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-                    <button type="button" class="btn btn-primary" id="annualModifyBtn">수정</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <script>
-        function openModal(element) {
-            // 데이터 속성 가져오기
-            const employeeName = element.getAttribute('data-employee-name');
-            const period = element.getAttribute('data-period');
-            const type = element.getAttribute('data-type');
-            const typeName = element.getAttribute('data-type-name');
-            const attachment = element.getAttribute('data-attachment');
-            const statusName = element.getAttribute('data-status-name');
-            const status = element.getAttribute('data-status');
-            const contents = element.getAttribute('data-contents');
-
-            // 모달에 데이터 설정하기
-            document.getElementById('staticBackdropLabel').value = employeeName + "님의 휴가 요청";
-            document.getElementById('modalPeriod').value = period;
-            document.getElementById('modalType').innerText = typeName;
-            document.getElementById('modalAttachment').value = attachment;
-            document.getElementById('modalStatus').innerText = statusName;
-            document.getElementById('modalContents').value = contents;
-
-            $("#annualModifyBtn").on("click", function (e) {
-                e.preventDefault(); // 기본 submit 동작을 막음
-
-                // 데이터 속성 가져오기
-                const attachment = $('#modalAttachment').val();
-                const contents = $('#modalContents').val();
-                let startDate;
-                let endDate;
-
-                // 날짜 값을 분리
-                let split = $('#modalPeriod').val().split('~');
-                console.log(split);
-
-                if (split.length === 2) {
-                    startDate = split[0].trim();
-                    endDate = split[1].trim();
-                } else {
-                    startDate = split[0].trim();
-                    endDate = split[0].trim();
-                }
-                // 분리된 값을 폼에 추가
-                $("#startDate").val(startDate);
-                $("#endDate").val(endDate);
-
-                // 결과 출력 (디버깅용)
-                console.log("startDate: ", startDate);
-                console.log("endDate: ", endDate);
-                console.log("contents: ",contents);
-                $.ajax({
-                    url: '/vacation/annual',
-                    type: 'PUT',
-                    contentType: 'application/json',
-                    data: JSON.stringify({
-                        startDate: startDate,
-                        endDate: endDate,
-                        vacationType :type,
-                        file : attachment,
-                        status : status,
-                        contents: contents
-                    }),
-                    success: function(response) {
-                        console.log("Success:", response);
-                        $('#annual').modal('hide');
-                        location.reload();
-                    },
-                    error: function(xhr) {
-                        if (xhr.status === 400) {
-                            let errorResult = xhr.responseJSON;
-                            let errorMessage = errorResult.message + '\n';
-                            if (errorResult.fieldErrors) {
-                                errorMessage += "\n";
-                                for (let field in errorResult.fieldErrors) {
-                                    errorMessage += field + ': ' + errorResult.fieldErrors[field] + '\n';
-                                }
-                            }
-                            alert("Errors:\n" + errorMessage);
-                        } else {
-                            alert("다시 시도해주세요");
-                        }
-                    }
-                });
-            });
-        }
-
-
-    </script>
 </div>
+

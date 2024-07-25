@@ -15,10 +15,10 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
     public Employee findByEmail(String email);
 
     @Query("SELECT new kr.co.groupworks.dto.kah.VacationMyHistoryDTO" +
-            "(e.employeeId, e.employeeName, d.departmentName, e.annualDaysUsed, e.sickDaysUsed, e.otherDaysUsed)" +
+            "(e.employeeId, e.employeeName, e.rankName, d.departmentName, e.annualDaysUsed, e.sickDaysUsed, e.otherDaysUsed)" +
             " FROM Employee e" +
             " JOIN e.department d"+
-            " WHERE e.employeeId = :employeeId AND e.employeeId = d.departmentId")
+            " WHERE e.employeeId = :employeeId")
     List<VacationMyHistoryDTO> findVacationMyHistoryDTO(@Param("employeeId") Long employeeId);
 
 
