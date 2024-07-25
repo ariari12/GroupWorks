@@ -82,8 +82,15 @@ public class VacationServiceImpl implements VacationService{
         Employee employee = employeeRepository.findById(dto.getEmployeeId())
                 .orElseThrow(() -> new EntityNotFoundException("사원을 찾을 수 없습니다. " + dto.getEmployeeId()));
         // 반차 일수 증가
-        //employee.updateAnnualDaysUsed(dto.getHalfStartDate(), dto.getHalfStartDate());
+        VacationHistory vacationHistory =
+                vacationHistoryRepository
+                        .findByEmployee(employee)
+                        .orElseThrow(() -> new EntityNotFoundException("휴가내역을 찾을 수 없습니다 "));
+
+        vacationHistory.updateHalfDaysUsed();
+        vacationHistory = vacationHistoryRepository.save(vacationHistory);
         log.info("employee = {}",employee);
+        log.info("vacationHistory = {}",vacationHistory);
 
 
         // 기간이 겹치는 휴가가 있는지 확인
@@ -107,8 +114,15 @@ public class VacationServiceImpl implements VacationService{
         Employee employee = employeeRepository.findById(dto.getEmployeeId())
                 .orElseThrow(() -> new EntityNotFoundException("사원을 찾을 수 없습니다. " + dto.getEmployeeId()));
         // 병가 일수 증가
-        //employee.updateSickDaysUsed(dto.getSickStartDate(), dto.getSickEndDate());
-        log.info("employee = {}",dto.getEmployeeId());
+        VacationHistory vacationHistory =
+                vacationHistoryRepository
+                        .findByEmployee(employee)
+                        .orElseThrow(() -> new EntityNotFoundException("휴가내역을 찾을 수 없습니다 "));
+
+        vacationHistory.updateSickDaysUsed(dto.getSickStartDate(), dto.getSickEndDate());
+        vacationHistory = vacationHistoryRepository.save(vacationHistory);
+        log.info("employee = {}",employee);
+        log.info("vacationHistory = {}",vacationHistory);
 
         // 기간이 겹치는 휴가가 있는지 확인
         List<Vacation> overlappingVacations = vacationRepository.findOverlappingVacations(
@@ -147,11 +161,23 @@ public class VacationServiceImpl implements VacationService{
 
     }
 
+    // 기타 휴가 신청
     @Override
     public Long save(OtherFormDTO dto, MultipartFile[] files) {
         Employee employee = employeeRepository.findById(dto.getEmployeeId())
                 .orElseThrow(() -> new EntityNotFoundException("사원을 찾을 수 없습니다. " + dto.getEmployeeId()));
-        //employee.updateOtherDaysUsed(dto.getOtherStartDate(), dto.getOtherEndDate());
+
+
+        // 기타 휴가 일수 증가
+        VacationHistory vacationHistory =
+                vacationHistoryRepository
+                        .findByEmployee(employee)
+                        .orElseThrow(() -> new EntityNotFoundException("휴가내역을 찾을 수 없습니다 "));
+
+        vacationHistory.updateSickDaysUsed(dto.getOtherStartDate(), dto.getOtherEndDate());
+        vacationHistory = vacationHistoryRepository.save(vacationHistory);
+        log.info("employee = {}",employee);
+        log.info("vacationHistory = {}",vacationHistory);
 
         // 기간이 겹치는 휴가가 있는지 확인
         List<Vacation> overlappingVacations = vacationRepository.findOverlappingVacations(
@@ -161,14 +187,16 @@ public class VacationServiceImpl implements VacationService{
             throw new IllegalArgumentException("겹치는 휴가기간이 있습니다.");
         }
 
-        File uploadDir = new File(uploadDirectory);
-        if (!uploadDir.exists()) {
-            uploadDir.mkdirs();
-        }
+
 
         // 사원 업데이트
         employee=employeeRepository.save(employee);
         Vacation vacation = vacationMapper.toEntity(dto, employee);
+
+        File uploadDir = new File(uploadDirectory);
+        if (!uploadDir.exists()) {
+            uploadDir.mkdirs();
+        }
 
         Arrays.asList(files).forEach(file -> {
             String fileFullName = UUID.randomUUID().toString()+"-"+file.getOriginalFilename();
