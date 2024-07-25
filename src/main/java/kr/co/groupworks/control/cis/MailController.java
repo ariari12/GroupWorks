@@ -53,7 +53,7 @@ public class MailController {
     Page<Mail> mailPage = null;
     Pageable pageable = null;
 
-    //    받은 메일함
+    //    받은 메일함(직접 받을때와 참조될 때 모두 포함)
     @GetMapping("/receive")
     public String receive(HttpSession session, Model model,
                           @RequestParam(value = "keytype", required = false) String keytype,
@@ -247,6 +247,14 @@ public class MailController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("메일을 찾을 수 없습니다.");
         }
 
+    }
+
+//    받는사람, 참조하는 이메일 쿼리로 찾기
+    @GetMapping("/email-suggestions")
+    @ResponseBody
+    public ResponseEntity<List<String>> getEmailSuggestions(@RequestParam("query") String query) {
+        List<String> suggestions = employeeService.getEmailsByQuery(query);
+        return ResponseEntity.ok(suggestions);
     }
 
     @Value("${file.upload-dir}")

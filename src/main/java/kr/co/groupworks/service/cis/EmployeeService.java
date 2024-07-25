@@ -17,4 +17,6 @@ public interface EmployeeService {
     boolean findByEmployeeIdAndEmployeePWAndEmployeeName(Long emplyoeeId, String pw, String name);
 
     boolean isEqualPassword(String checkPW, String currentPW);
+
+    List<String> getEmailsByQuery(String query);
 }

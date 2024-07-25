@@ -75,6 +75,11 @@ public class EmployeeServiceImpl implements EmployeeService {
         }
 
     }
+//    받는사람, 참조하는 이메일 쿼리로 찾기
+    @Override
+    public List<String> getEmailsByQuery(String query) {
+        return employeeRepository.findEmailsByQuery(query);
+    }
 
 //    DTO to Entity
     public Employee toEmployee(EmployeeDTO dto) {

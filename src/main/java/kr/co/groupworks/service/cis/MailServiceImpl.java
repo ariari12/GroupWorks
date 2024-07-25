@@ -3,6 +3,7 @@ package kr.co.groupworks.service.cis;
 import kr.co.groupworks.dto.cis.mail.MailDTO;
 import kr.co.groupworks.entity.cis.Mail;
 import kr.co.groupworks.entity.cis.MailAttachmentFile;
+import kr.co.groupworks.repository.cis.EmployeeRepository;
 import kr.co.groupworks.repository.cis.MailRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,10 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -26,7 +24,7 @@ import java.util.UUID;
 @Slf4j
 public class MailServiceImpl implements MailService{
     private final MailRepository mailRepository;
-    private final int PAGE_SIZE = 10;
+    private static final List<String> VALID_FILE_EXTENSIONS = Arrays.asList("jpg", "jpeg", "png", "pdf","zip","txt","csv","json","xml","docx","hwp","xls");
 
     @Value("${file.upload-dir}")
     private String uploadDir;
@@ -51,6 +49,12 @@ public class MailServiceImpl implements MailService{
                     // 파일 저장 로직 (파일 저장 경로와 파일 이름 설정)
 
                     String fileName = file.getOriginalFilename();
+                    String fileExtension = getFileExtension(fileName);
+
+                    if (!VALID_FILE_EXTENSIONS.contains(fileExtension.toLowerCase())) {
+                        System.out.println("Invalid file type: " + fileName);
+                        continue; // 유효하지 않은 파일 형식은 무시
+                    }
                     String filePath = fileUploadDir + File.separator + fileName;
                     file.transferTo(new File(filePath));
 
@@ -73,20 +77,27 @@ public class MailServiceImpl implements MailService{
 
     }
 
+    private String getFileExtension(String fileName) {
+        if (fileName == null || fileName.lastIndexOf('.') == -1) {
+            return "";
+        }
+        return fileName.substring(fileName.lastIndexOf('.') + 1);
+    }
+
 //    수신 메일 목록 자겨오기
     @Override
     public Page<Mail> getEmailListByReceiverEmail(String receiverEmail, Pageable pageable) {
-        return mailRepository.findAllByMailReceiver(receiverEmail, pageable);
+        return mailRepository.findAllByMailReceiverOrMailReferrer(receiverEmail, pageable);
     }
 //    수신 메일 제목으로 찾기
     @Override
     public Page<Mail> getEmailListByReceiverEmailAndMailTitle(String receiverEmail, String mailTitle, Pageable pageable) {
-        return mailRepository.findAllByMailReceiverAndMailTitle(receiverEmail, mailTitle, pageable);
+        return mailRepository.findAllByMailReceiverOrMailReferrerAndMailTitle(receiverEmail, mailTitle, pageable);
     }
 //    수신 메일 보낸사람으로 찾기
     @Override
     public Page<Mail> getEmailListByReceiverEmailAndMailSenderName(String receiverEmail, String mailSenderName, Pageable pageable) {
-        return mailRepository.findAllByMailReceiverAndMailSenderName(receiverEmail, mailSenderName, pageable);
+        return mailRepository.findAllByMailReceiverOrMailReferrerAndMailSenderName(receiverEmail, mailSenderName, pageable);
     }
 
 //    ========================================================================================================
@@ -175,6 +186,7 @@ public class MailServiceImpl implements MailService{
             mailRepository.save(mail);
         }
     }
+
 
 //    ========================================================================================================
 
