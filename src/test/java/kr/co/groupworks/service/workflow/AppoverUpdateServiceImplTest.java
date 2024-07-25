@@ -4,11 +4,10 @@ import kr.co.groupworks.entity.cis.Department;
 import kr.co.groupworks.dto.workflow.dto.ApproverDTO;
 import kr.co.groupworks.dto.workflow.dto.WorkFlowDTO;
 import kr.co.groupworks.dto.workflow.employee.EmployeeDTO;
-import kr.co.groupworks.entity.cis.Department;
 import kr.co.groupworks.entity.cis.Employee;
 import kr.co.groupworks.entity.workflow.WorkFlowEntity;
 import kr.co.groupworks.repository.cis.EmployeeRepository;
-import kr.co.groupworks.repository.workflow.ApproversOnlyRepository;
+import kr.co.groupworks.repository.workflow.ApproversRepository;
 import kr.co.groupworks.repository.workflow.WorkFlowRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
@@ -38,7 +37,7 @@ class AppoverUpdateServiceImplTest {
     @Autowired
     AppoverUpdateServiceImpl appoverUpdateService;
     @Autowired
-    ApproversOnlyRepository approverRepository;
+    ApproversRepository approverRepository;
 
     @BeforeEach
     @Test @DisplayName("사원정보 insertSetUp Test")

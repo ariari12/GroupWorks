@@ -21,7 +21,7 @@ public enum ApprovalMethod {
     }
 
     public static String getMatch(int value) {
-        if(value == 0) return "";
+        if(value == 0) return null;
         return ApprovalMethod.values()[value -1].getMethod();
     }
 

@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StopWatch;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
@@ -173,4 +174,13 @@ class WorkFlowServiceImplTest {
         log.info("LDT Now String Fomatt Test: {}", approvalNow);
     }
 
+    @Test @DisplayName("Statistics Test")
+    public void statisticsTest() {
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start();
+        Object res = workFlowService.getWorkflowStatistics(1L, 1L, 2);
+        stopWatch.stop();
+        log.info(stopWatch.prettyPrint());
+        log.info("res: {}", res.toString());
+    }
 }
