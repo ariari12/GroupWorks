@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -49,28 +50,25 @@ public class WorkFlowServiceImpl implements WorkFlowService {
     /* EmployeeId -> EmployeeDTO */
     @Override
     public EmployeeDTO getEmployeeDTO(long employeeId) {
-        return EmployeeDTO.entityToDto(employeeRepository.findById(employeeId).orElse(null));
+        return EmployeeDTO.entityToDto(Objects.requireNonNull(employeeRepository.findById(employeeId).orElse(null)));
     }
 
     /* All EmployeeDTO */
     @Override
     public List<EmployeeDTO> getEmployeeAllDTOList() {
-        return employeeRepository.findAll().stream()
-                .map(EmployeeDTO::entityToDto)
-                .sorted(Comparator.comparingLong(EmployeeDTO::getDepartmentId))
-                .toList();
+        return employeeRepository.findAll().stream().map(EmployeeDTO::entityToDto).sorted(Comparator.comparing(EmployeeDTO::getDepartmentId)).toList();
     }
 
     /* EmployeeId -> WorkFlowDTO */
     @Override
     public WorkFlowDTO getWorkflowDTO(long employeeId) {
-        return EmployeeDTO.entityToWorkflowDTO(employeeRepository.findById(employeeId).orElse(null));
+        return EmployeeDTO.entityToWorkflowDTO(Objects.requireNonNull(employeeRepository.findById(employeeId).orElse(null)));
     }
 
     /* EmployeeId -> ApproverDTO */
     @Override
     public ApproverDTO getApproverDTO(long employeeId) {
-        return EmployeeDTO.entityToApproverDto(employeeRepository.findById(employeeId).orElse(null));
+        return EmployeeDTO.entityToApproverDto(Objects.requireNonNull(employeeRepository.findById(employeeId).orElse(null)));
     }
 
     /* WorkFlowEntity Save */
