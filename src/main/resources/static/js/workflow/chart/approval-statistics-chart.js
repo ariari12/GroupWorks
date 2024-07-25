@@ -3,30 +3,27 @@ Chart.defaults.global.defaultFontFamily = '-apple-system,system-ui,BlinkMacSyste
 Chart.defaults.global.defaultFontColor = '#292b2c';
 
 document.addEventListener("DOMContentLoaded", function() {
-    $(document).ready(function() {
-        approvalStatsByDepartment(
-            ["재무팀", "회계팀", "전산팀", "개발팀", "설계팀", "영업팀"],
-            [4215, 8417, 6251, 5312, 9821, 14984],
-            [2154, 7841, 5162, 3125, 8219, 12984],
-            [1542, 4178, 2516, 1253, 2189, 9841]
-        );
-        MyApprovalStats(
-            ["1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월", "13월"],
-            [33259, 30162, 33259, 30274, 33451, 32651, 31274, 34984, 38451, 36162, 32651, 31984, 30451],
-            [28682, 25849, 24159, 21849, 24159, 24849, 23159, 26682, 28849, 27682, 25849, 24159, 24849],
-            [18394, 18682, 14000, 13394, 12287, 10000, 11591, 12394, 13940, 14839, 15394, 16394, 17394]
-        );
-        totalApproval(
-            [12, 19, 3, 5, 2, 3]
-        );
-        totalApproveByThisYear(
-            [330000, 1900000, 200000, 500000, 1000000, 300000]
-        );
-    });
+    approvalStatsByDepartment(
+        ["기술부서", "마케팅부서", "영업부서", "인사부서", "재무부서", "IT 지원부서",
+            "제품 관리부서", "고객 서비스부서", "법무부서", "연구개발부서"],
+        [4215, 8417, 6251, 5312, 9821, 14984, 2154, 7841, 5162, 3125,],
+        [2154, 7841, 5162, 3125, 8219, 12984, 2154, 7841, 5162, 3125,],
+        [1542, 4178, 2516, 1253, 2189, 9841, 2154, 7841, 5162, 3125,]
+    );
+    MyApprovalStats(
+        [33259, 30162, 33259, 30274, 33451, 32651, 31274, 34984, 38451, 36162, 32651, 31984],
+        [28682, 25849, 24159, 21849, 24159, 24849, 23159, 26682, 28849, 27682, 25849, 24159],
+        [18394, 18682, 14000, 13394, 12287, 10000, 11591, 12394, 13940, 14839, 15394, 16394]
+    );
+    totalApproval(
+        [12, 19, 3, 5, 2, 3]
+    );
+    totalApproveByThisYear(
+        [330000, 1900000, 200000, 500000, 1000000, 300000]
+    );
 });
 
 function totalApproval(data) {
-    const labels = ['업무 건', '재무 건', '예산 건', '구매 건', '보고 건', '특별 건'];
     // 캔버스 태그 추출
     var ctx = document.getElementById('totalApproval').getContext('2d');
     
@@ -43,7 +40,7 @@ function totalApproval(data) {
     return new Chart(ctx, {
         type: 'pie',
         data: {
-            labels: labels,
+            labels: ['업무 건', '재무 건', '예산 건', '구매 건', '보고 건', '특별 건'],
             datasets: [{
                 data: data,
                 backgroundColor: colors,
@@ -58,7 +55,6 @@ function totalApproval(data) {
 }
 
 function totalApproveByThisYear(data) {
-    const labels = ['업무 건', '재무 건', '예산 건', '구매 건', '보고 건', '특별 건'];
     var ctx2 = document.getElementById('totalApproveByThisYear').getContext('2d');
 
     // 색상
@@ -74,7 +70,7 @@ function totalApproveByThisYear(data) {
     var chart2 = new Chart(ctx2, {
         type: 'pie',
         data: {
-            labels: labels,
+            labels: ['업무 건', '재무 건', '예산 건', '구매 건', '보고 건', '특별 건'],
             datasets: [{
                 data: data,
                 backgroundColor: colors2,
@@ -88,14 +84,14 @@ function totalApproveByThisYear(data) {
     });
 }
 
-function MyApprovalStats(labels, data1, data2, data3) {
+function MyApprovalStats(data1, data2, data3) {
     // Area Chart Example
-    var ctx = document.getElementById("myAreaChart");
+    var ctx = document.getElementById("monthlyApprova");
     var myLineChart = new Chart(ctx, {
         type: 'line',
         data: {
             // 그래프 라벨
-            labels: labels,
+            labels: ["1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월"],
             datasets: [
                 {
                     label: "발송 건",
@@ -149,11 +145,11 @@ function MyApprovalStats(labels, data1, data2, data3) {
                 xAxes: [{
                     time: { unit: 'date' },
                     gridLines: { display: false },
-                    ticks: { maxTicksLimit: 7 }
+                    ticks: {  }
                 }],
                 yAxes: [{
                     ticks: {
-                        min: 0, max: 40000, maxTicksLimit: 5
+                        min: 0, maxTicksLimit: 100
                     },
                     gridLines: { color: "rgba(0, 0, 0, .125)", }
                 }],
@@ -168,7 +164,7 @@ function MyApprovalStats(labels, data1, data2, data3) {
 /* 부서별 결재 발송, 승인, 결재 건 */
 function approvalStatsByDepartment(labels, data1, data2, data3) {
     // Bar Chart Example
-    var ctx = document.getElementById("myBarChart");
+    var ctx = document.getElementById("approvalStatsByDepartment");
     var myLineChart = new Chart(ctx, {
         type: 'bar',
         data: {
@@ -203,11 +199,11 @@ function approvalStatsByDepartment(labels, data1, data2, data3) {
                 xAxes: [{
                     time: { unit: 'month' },
                     gridLines: { display: false },
-                    ticks: { maxTicksLimit: 6 }
+                    ticks: { maxTicksLimit: labels.length }
                 }],
                 yAxes: [{
                     ticks: {
-                        min: 0, max: 15000, maxTicksLimit: 5
+                        min: 0, maxTicksLimit: 15
                     },
                     gridLines: { display: true }
                 }],

@@ -1,6 +1,6 @@
 package kr.co.groupworks.repository.workflow;
 
-import kr.co.groupworks.repository.cis.EmployeeRepository;
+import kr.co.groupworks.repository.cis.DepartmentRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,10 +12,10 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 class EmployeeRepositoryTest {
     @Autowired
-    EmployeeRepository employeeRepository;
+    DepartmentRepository departmentRepository;
 
     @Test
     void getDepartments() {
-//        employeeRepository.getDepartments().forEach((l, d) -> log.info("{}: {}", l, d));
+        departmentRepository.getDepartments().forEach(o -> log.info("{}", o));
     }
 }
