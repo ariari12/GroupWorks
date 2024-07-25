@@ -199,6 +199,7 @@ public class VacationServiceImpl implements VacationService{
             uploadDir.mkdirs();
         }
 
+
         Arrays.asList(files).forEach(file -> {
             String fileFullName = UUID.randomUUID().toString()+"-"+file.getOriginalFilename();
             String filePath = uploadDir+ "/"+ fileFullName;
