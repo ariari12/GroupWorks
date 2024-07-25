@@ -45,6 +45,9 @@ public class VacationHistory {
     public void updateOtherDaysUsed(LocalDate startDate, LocalDate endDate) {
         otherDaysUsed += ChronoUnit.DAYS.between(startDate, endDate)+1;
     }
+    public void updateHalfDaysUsed() {
+        annualDaysUsed += 0.5;
+    }
 
     //캡슐화 오직 매퍼메서드를 제외하고 이곳을 통해서만 초기화시키고싶음
     public static VacationHistory createFromEmployee(Employee employee) {
@@ -53,4 +56,6 @@ public class VacationHistory {
         vacationHistory.totalAnnual = 25;
         return vacationHistory;
     }
+
+
 }
