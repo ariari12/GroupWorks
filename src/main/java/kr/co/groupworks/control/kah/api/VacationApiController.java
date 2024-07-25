@@ -56,7 +56,7 @@ public class VacationApiController {
     // 병가 신청
     @PostMapping("/sick")
     @ResponseBody
-    public ResponseEntity<?> vacationSick(@Valid @RequestPart("jsonData") SickFormDTO dto,
+    public ResponseEntity<?> vacationSick(@Validated @RequestPart("jsonData") SickFormDTO dto,
                                           @RequestPart("sickFileUpload") MultipartFile[] files,
                                           @SessionAttribute(name = "employee")SessionEmployeeDTO sessionEmployeeDTO){
 
@@ -71,8 +71,8 @@ public class VacationApiController {
     // 기타 휴가 신청
     @PostMapping("/other")
     @ResponseBody
-    public ResponseEntity<?> vacationOther(@Valid @RequestPart("jsonData") OtherFormDTO dto,
-                                          @RequestPart("otherFileUpload") MultipartFile[] files,
+    public ResponseEntity<?> vacationOther(@Validated @RequestPart("jsonData") OtherFormDTO dto,
+                                          @RequestPart(value = "otherFileUpload") MultipartFile[] files,
                                           @SessionAttribute(name = "employee")SessionEmployeeDTO sessionEmployeeDTO){
 
         log.info("SickFormDTO ={}, fileUpload ={}",dto, files);

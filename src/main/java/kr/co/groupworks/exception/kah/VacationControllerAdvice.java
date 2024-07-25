@@ -9,6 +9,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.multipart.support.MissingServletRequestPartException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -35,6 +36,12 @@ public class VacationControllerAdvice {
         log.error("[EntityNotFoundException] ex", ex);
         ErrorResult errorResult = new ErrorResult("ENTITY_NOT_FOUND", ex.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResult);
+    }
+    @ExceptionHandler(MissingServletRequestPartException.class)
+    public ResponseEntity<ErrorResult> handleEntityNotFoundException(MissingServletRequestPartException ex) {
+        log.error("[MissingServletRequestPartException] ex", ex);
+        ErrorResult errorResult = new ErrorResult(ex.getTitleMessageCode(), "파일 첨부는 필수 입니다.");
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResult);
     }
 
     // 필드 에러
