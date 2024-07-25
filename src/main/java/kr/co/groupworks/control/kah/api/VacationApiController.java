@@ -4,6 +4,7 @@ package kr.co.groupworks.control.kah.api;
 import jakarta.validation.Valid;
 import kr.co.groupworks.dto.cis.employee.SessionEmployeeDTO;
 import kr.co.groupworks.dto.kah.*;
+import kr.co.groupworks.entity.kah.VacationStatus;
 import kr.co.groupworks.service.kah.VacationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -90,7 +91,10 @@ public class VacationApiController {
         log.info("sessionEmployeeDTO ={}",sessionEmployeeDTO.getEmployeeId());
         dto.setEmployeeId(sessionEmployeeDTO.getEmployeeId());
         log.info("AnnualModifyFormDTO ={}",dto);
-        //vacationService.save(dto);
+        if(dto.getStatus() != VacationStatus.PENDING){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("승인 혹은 반려인 경우 수정 할 수 없습니다.");
+        }
+        vacationService.save(dto);
         return ResponseEntity.status(HttpStatus.OK).body("연차 수정이 성공적으로 처리되었습니다.");
     }
 

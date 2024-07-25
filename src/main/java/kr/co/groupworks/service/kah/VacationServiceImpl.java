@@ -185,6 +185,15 @@ public class VacationServiceImpl implements VacationService{
         return employeeRepository.findVacationMyHistoryDTO(employee.getEmployeeId());
     }
 
+    @Override
+    public Long save(AnnualModifyFormDTO dto) {
+        Employee employee = employeeRepository.findById(dto.getEmployeeId())
+                .orElseThrow(() -> new EntityNotFoundException("사원을 찾을 수 없습니다. " + dto.getEmployeeId()));
+        //Vacation vacation = vacationMapper.toEntity(dto, employee.getEmployeeId());
+
+        return null;
+    }
+
 
     // 사원의 휴가신청 내역 모두 조회
     @Override
