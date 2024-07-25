@@ -14,24 +14,37 @@ public class AttendanceModification {
     @Column(name = "modify_id")
     private Long modifyId;
 
-    @ManyToOne
-    @JoinColumn(name = "attendance_id")
-    private Attendance attendance;
+    @Column(name = "request_date")
+    private LocalDateTime requestDate;
+
+    @Column(name = "requested_clock_in")
+    private LocalDateTime requestedClockIn;
+
+    @Column(name = "requested_clock_out")
+    private LocalDateTime requestedClockOut;
+
+    @Column(nullable = false)
+    private String reason;
+
+    @Column(name = "work_hours")
+    private int workHours;
+
+    @Column(name = "overtime_hours")
+    private int overtimeHours;
+
+    private String status;
+
+    @Column(nullable = false)
+    private String approver;
+
+    @Column(name = "approval_date")
+    private LocalDateTime approvalDate;
 
     @ManyToOne
     @JoinColumn(name = "employee_id")
     private Employee employee;
 
     @ManyToOne
-    @JoinColumn(name = "manager_id")
-    private Employee manager;
-
-    @Column(name = "modification_date")
-    private LocalDateTime modificationDate;
-
-    @Column(name = "reason")
-    private String reason;
-
-    @Column(name = "status")
-    private String status;
+    @JoinColumn(name = "attendance_id")
+    private Attendance attendance;
 }
