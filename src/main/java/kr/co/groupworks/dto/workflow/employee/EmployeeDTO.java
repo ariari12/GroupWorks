@@ -26,7 +26,7 @@ public class EmployeeDTO {
                 .setEmail(employee.getEmail())
                 .setPhone(employee.getPhoneNumber())
                 .setRank(employee.getRankName())
-                .setDepartmentId(employee.getDepartment() == null ? null : employee.getDepartment().getDepartmentId())
+                .setDepartmentId(employee.getDepartment() == null ? 0 : employee.getDepartment().getDepartmentId())
                 .setDepartmentName(employee.getDepartment() == null ? null : employee.getDepartment().getDepartmentName())
         ;
     }
@@ -38,7 +38,7 @@ public class EmployeeDTO {
                 .setEmail(employee.getEmail())
                 .setPhone(employee.getPhoneNumber())
                 .setEmployeeRank(employee.getRankName())
-                .setDepartmentId(employee.getDepartment() == null ? null : employee.getDepartment().getDepartmentId())
+                .setDepartmentId(employee.getDepartment() == null ? 0 : employee.getDepartment().getDepartmentId())
                 .setDepartment(employee.getDepartment() == null ? null : employee.getDepartment().getDepartmentName())
                 ;
     }

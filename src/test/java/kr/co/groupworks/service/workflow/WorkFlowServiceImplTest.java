@@ -33,7 +33,7 @@ class WorkFlowServiceImplTest {
     WorkFlowServiceImpl workFlowService;
 
     @BeforeEach
-    @Test @DisplayName("Department, Employee Insert")
+    @DisplayName("Department, Employee Insert")
     public void insetTest() {
         // 샘플 부서 데이터
         List<Department> departments = List.of(
