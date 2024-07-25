@@ -16,6 +16,7 @@ import java.time.temporal.ChronoUnit;
 @Builder @ToString(exclude = "department")
 public class Employee {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "employee_id", nullable = false, unique = true)
     private Long employeeId;
 
@@ -56,24 +57,4 @@ public class Employee {
     @Column(name = "supervisor_id")
     private Long supervisorId;
 
-    @Column(name = "annual_days_used")
-    private double annualDaysUsed;
-
-    @Column(name = "sick_days_used")
-    private int sickDaysUsed;
-
-    @Column(name = "other_days_used")
-    private int otherDaysUsed;
-
-    public void updateAnnualDaysUsed(LocalDate startDate, LocalDate endDate) {
-        annualDaysUsed += ChronoUnit.DAYS.between(startDate, endDate)+1;
-    }
-
-    public void updateSickDaysUsed(LocalDate startDate, LocalDate endDate) {
-        sickDaysUsed += ChronoUnit.DAYS.between(startDate, endDate)+1;
-    }
-
-    public void updateOtherDaysUsed(LocalDate startDate, LocalDate endDate) {
-        otherDaysUsed += ChronoUnit.DAYS.between(startDate, endDate)+1;
-    }
 }

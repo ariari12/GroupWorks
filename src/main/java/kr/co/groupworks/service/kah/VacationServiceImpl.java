@@ -5,8 +5,10 @@ import kr.co.groupworks.dto.kah.*;
 import kr.co.groupworks.entity.cis.Employee;
 import kr.co.groupworks.entity.kah.CalendarAttachment;
 import kr.co.groupworks.entity.kah.Vacation;
+import kr.co.groupworks.entity.kah.VacationHistory;
 import kr.co.groupworks.repository.cis.EmployeeRepository;
 import kr.co.groupworks.repository.kah.CalendarAttachmentRepository;
+import kr.co.groupworks.repository.kah.VacationHistoryRepository;
 import kr.co.groupworks.repository.kah.VacationRepository;
 import kr.co.groupworks.util.mapper.CalendarAttachmentMapper;
 import kr.co.groupworks.util.mapper.VacationMapper;
@@ -35,6 +37,7 @@ public class VacationServiceImpl implements VacationService{
     private final CalendarAttachmentMapper calendarAttachmentMapper;
     private final VacationRepository vacationRepository;
     private final EmployeeRepository employeeRepository;
+    private final VacationHistoryRepository vacationHistoryRepository;
     private final VacationMapper vacationMapper;
 
 
@@ -46,9 +49,16 @@ public class VacationServiceImpl implements VacationService{
         // 사원 엔티티 반환
         Employee employee = employeeRepository.findById(dto.getEmployeeId())
                 .orElseThrow(() -> new EntityNotFoundException("사원을 찾을 수 없습니다. " + dto.getEmployeeId()));
+        VacationHistory vacationHistory =
+                vacationHistoryRepository
+                        .findByEmployee(employee)
+                        .orElseThrow(() -> new EntityNotFoundException("휴가내역을 찾을 수 없습니다 "));
         // 연차 일수 증가
-        employee.updateAnnualDaysUsed(dto.getStartDate(), dto.getEndDate());
+        vacationHistory.updateAnnualDaysUsed(dto.getStartDate(), dto.getEndDate());
+        vacationHistory = vacationHistoryRepository.save(vacationHistory);
+        //employee.updateAnnualDaysUsed(dto.getStartDate(), dto.getEndDate());
         log.info("employee = {}",employee);
+        log.info("vacationHistory = {}",vacationHistory);
 
         // 기간이 겹치는 휴가가 있는지 확인
         List<Vacation> overlappingVacations = vacationRepository.findOverlappingVacations(
@@ -72,7 +82,7 @@ public class VacationServiceImpl implements VacationService{
         Employee employee = employeeRepository.findById(dto.getEmployeeId())
                 .orElseThrow(() -> new EntityNotFoundException("사원을 찾을 수 없습니다. " + dto.getEmployeeId()));
         // 반차 일수 증가
-        employee.updateAnnualDaysUsed(dto.getHalfStartDate(), dto.getHalfStartDate());
+        //employee.updateAnnualDaysUsed(dto.getHalfStartDate(), dto.getHalfStartDate());
         log.info("employee = {}",employee);
 
 
@@ -97,7 +107,7 @@ public class VacationServiceImpl implements VacationService{
         Employee employee = employeeRepository.findById(dto.getEmployeeId())
                 .orElseThrow(() -> new EntityNotFoundException("사원을 찾을 수 없습니다. " + dto.getEmployeeId()));
         // 병가 일수 증가
-        employee.updateSickDaysUsed(dto.getSickStartDate(), dto.getSickEndDate());
+        //employee.updateSickDaysUsed(dto.getSickStartDate(), dto.getSickEndDate());
         log.info("employee = {}",dto.getEmployeeId());
 
         // 기간이 겹치는 휴가가 있는지 확인
@@ -141,7 +151,7 @@ public class VacationServiceImpl implements VacationService{
     public Long save(OtherFormDTO dto, MultipartFile[] files) {
         Employee employee = employeeRepository.findById(dto.getEmployeeId())
                 .orElseThrow(() -> new EntityNotFoundException("사원을 찾을 수 없습니다. " + dto.getEmployeeId()));
-        employee.updateOtherDaysUsed(dto.getOtherStartDate(), dto.getOtherEndDate());
+        //employee.updateOtherDaysUsed(dto.getOtherStartDate(), dto.getOtherEndDate());
 
         // 기간이 겹치는 휴가가 있는지 확인
         List<Vacation> overlappingVacations = vacationRepository.findOverlappingVacations(
@@ -183,7 +193,7 @@ public class VacationServiceImpl implements VacationService{
     public List<VacationMyHistoryDTO> findVacationHistory(Long employeeId) {
         Employee employee = employeeRepository.findById(employeeId)
                 .orElseThrow(() -> new EntityNotFoundException("사원을 찾을 수 없습니다. " + employeeId));
-        return employeeRepository.findVacationMyHistoryDTO(employee.getEmployeeId());
+        return vacationHistoryRepository.findVacationMyHistoryDTO(employee.getEmployeeId());
     }
 
 

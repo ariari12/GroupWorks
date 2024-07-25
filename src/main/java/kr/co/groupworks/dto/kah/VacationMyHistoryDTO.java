@@ -11,10 +11,11 @@ import lombok.NoArgsConstructor;
 public class VacationMyHistoryDTO {
 
     private Long employeeId;
-    private String name;
+    private String employeeName;
     private String rankName;
     private String departmentName;
     private double annualDaysUsed;
     private int sickDaysUsed;
     private int otherDaysUsed;
+    private int totalAnnual;
 }
