@@ -7,15 +7,15 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 
-@Data
+@Getter
 @Entity
 @AllArgsConstructor @NoArgsConstructor
 @Table(name = "employee")
-@Builder @ToString
+@Builder @ToString(exclude = "department")
 public class Employee {
     @Id
     @Column(name = "employee_id", nullable = false, unique = true)
-    private String employeeId;
+    private Long employeeId;
 
     @Column(name = "employee_pw", nullable = false)
     private String employeePW;
@@ -29,8 +29,9 @@ public class Employee {
     @Column(name = "rank_name")
     private String rankName;
 
-    @Column(name = "department_name")
-    private String departmentName;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "department_id")
+    private Department department;
 
     @Column(name = "email", nullable = false, unique = true)
     private String email;
@@ -48,8 +49,29 @@ public class Employee {
     private LocalDateTime joinDate;
 
     @Column(name = "salary")
-    private Integer salary;
+    private Long salary;
 
     @Column(name = "supervisor_id")
-    private Integer supervisorId;
+    private Long supervisorId;
+
+    @Column(name = "annual_days_used")
+    private double annualDaysUsed;
+
+    @Column(name = "sick_days_used")
+    private int sickDaysUsed;
+
+    @Column(name = "other_days_used")
+    private int otherDaysUsed;
+
+    public void updateAnnualDaysUsed(double annualDaysUsed) {
+        this.annualDaysUsed += annualDaysUsed;
+    }
+
+    public void updateSickDaysUsed(int sickDaysUsed) {
+        this.sickDaysUsed += sickDaysUsed;
+    }
+
+    public void updateOtherDaysUsed(int otherDaysUsed) {
+        this.otherDaysUsed += otherDaysUsed;
+    }
 }

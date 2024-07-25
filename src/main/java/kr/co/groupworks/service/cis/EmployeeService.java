@@ -1,17 +1,20 @@
 package kr.co.groupworks.service.cis;
 
+import kr.co.groupworks.dto.cis.employee.EmployeeDTO;
 import kr.co.groupworks.entity.cis.Employee;
 
 import java.util.List;
 
 public interface EmployeeService {
-    public void  saveEmployee(Employee employee);
+    public void  saveEmployee(EmployeeDTO employee);
 
     public List<Employee> findAll();
 
 
-    Employee findByEmployeeId(String employeeId);
+    EmployeeDTO findByEmployeeId(Long employeeId);
+    Employee findByEmployeeEmail(String employeeEmail);
 
-    boolean findByEmployeeIdAndEmployeePWAndEmployeeName(String emplyoeeId, String pw, String name);
+    boolean findByEmployeeIdAndEmployeePWAndEmployeeName(Long emplyoeeId, String pw, String name);
 
+    boolean isEqualPassword(String checkPW, String currentPW);
 }
