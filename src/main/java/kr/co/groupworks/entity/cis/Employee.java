@@ -29,9 +29,6 @@ public class Employee {
     @Column(name = "rank_name")
     private String rankName;
 
-    @Column(name = "department_name")
-    private String departmentName;
-
     @Column(name = "department_id")
     private Integer departmentId;
 
@@ -55,6 +52,7 @@ public class Employee {
 
     @Column(name = "supervisor_id")
     private Long supervisorId;
+
 
 //    @Column(name = "representative_image")
 //    private String representativeImage;

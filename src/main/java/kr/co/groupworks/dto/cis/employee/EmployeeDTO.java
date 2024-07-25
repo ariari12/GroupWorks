@@ -41,5 +41,8 @@ public class EmployeeDTO {
     private Long salary;
     //  선임 사원번호
     private Long supervisorId;
+    //  현재 재직중인가
+    private Integer isActive;
+
 }
 

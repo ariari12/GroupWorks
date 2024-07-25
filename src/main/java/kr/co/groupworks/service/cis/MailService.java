@@ -34,4 +34,5 @@ public interface MailService {
     void deleteMailById(List<String> deleteMailList);
 
     void restoreMailById(List<String> restoreMailList);
+
 }

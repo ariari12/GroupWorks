@@ -68,6 +68,11 @@ public class EmployeeServiceImpl implements EmployeeService {
         }
 
     }
+//    받는사람, 참조하는 이메일 쿼리로 찾기
+    @Override
+    public List<String> getEmailsByQuery(String query) {
+        return employeeRepository.findEmailsByQuery(query);
+    }
 
 //    Entity to DTO
     public Employee toEmployee(EmployeeDTO dto) {
@@ -78,7 +83,6 @@ public class EmployeeServiceImpl implements EmployeeService {
                 .rankId(dto.getRankId())
                 .rankName(dto.getRankName())
                 .departmentId(dto.getDepartmentId())
-                .departmentName(dto.getDepartmentName())
                 .email(dto.getEmail())
                 .phoneNumber(dto.getPhoneNumber())
                 .address(dto.getAddress())
@@ -98,7 +102,6 @@ public class EmployeeServiceImpl implements EmployeeService {
                 .rankId(employee.getRankId())
                 .rankName(employee.getRankName())
                 .departmentId(employee.getDepartmentId())
-                .departmentName(employee.getDepartmentName())
                 .email(employee.getEmail())
                 .phoneNumber(employee.getPhoneNumber())
                 .address(employee.getAddress())
