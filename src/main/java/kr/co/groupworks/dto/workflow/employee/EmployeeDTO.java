@@ -16,7 +16,7 @@ public class EmployeeDTO {
     private String email;
     private String phone;
     private String rank;
-    private long departmentId;
+    private Long departmentId;
     private String departmentName;
 
     public static EmployeeDTO entityToDto(Employee employee) {
@@ -26,8 +26,8 @@ public class EmployeeDTO {
                 .setEmail(employee.getEmail())
                 .setPhone(employee.getPhoneNumber())
                 .setRank(employee.getRankName())
-                .setDepartmentId(employee.getDepartment().getDepartmentId())
-                .setDepartmentName(employee.getDepartment().getDepartmentName())
+                .setDepartmentId(employee.getDepartment() == null ? 0 : employee.getDepartment().getDepartmentId())
+                .setDepartmentName(employee.getDepartment() == null ? null : employee.getDepartment().getDepartmentName())
         ;
     }
 
@@ -38,8 +38,8 @@ public class EmployeeDTO {
                 .setEmail(employee.getEmail())
                 .setPhone(employee.getPhoneNumber())
                 .setEmployeeRank(employee.getRankName())
-                .setDepartmentId(employee.getDepartment().getDepartmentId())
-                .setDepartment(employee.getDepartment().getDepartmentName())
+                .setDepartmentId(employee.getDepartment() == null ? 0 : employee.getDepartment().getDepartmentId())
+                .setDepartment(employee.getDepartment() == null ? null : employee.getDepartment().getDepartmentName())
                 ;
     }
 
@@ -50,7 +50,7 @@ public class EmployeeDTO {
                 .setApproverEmail(employee.getEmail())
                 .setApproverPhone(employee.getPhoneNumber())
                 .setApproverRank(employee.getRankName())
-                .setDepartment(employee.getDepartment().getDepartmentName())
+                .setDepartment(employee.getDepartment() == null ? null : employee.getDepartment().getDepartmentName())
                 ;
     }
 }
