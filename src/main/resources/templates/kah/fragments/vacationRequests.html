@@ -42,6 +42,7 @@
                     th:data-type-name="${dto.vacationType.description}"
                     th:data-type="${dto.vacationType}"
                     th:data-attachment="${dto.fileList.size > 0 ? '첨부 파일 있음' : '첨부 파일 없음'}"
+                    th:data-attachment-file="${dto.fileList}"
                     th:data-status-name="${dto.status.description}"
                     th:data-status="${dto.status}"
                     th:data-contents="${dto.contents}">
@@ -94,8 +95,20 @@
                                 <td><textarea id="modalContents"></textarea></td>
                             </tr>
                             <tr>
+                                <!-- 수정해야함 -->
                                 <th>첨부 파일 : </th>
-                                <td id="modalAttachment">asdf.png</td>
+                                <td id="modalAttachment">
+                                    <!-- 첨부파일이 있으면 첨부파일링크를 출력 -->
+                                    <th:block th:if="${board.getAttachedFiles().size() != 0}">
+                                        <tr th:each="file : ${board.getAttachedFiles()}">
+                                            <th>첨부파일</th>
+                                            <td colspan="3">
+                                                <a th:href="@{/board/detail/download/{no}(no=${file.getFilePath()})}"
+                                                   th:text="${file.getFileName()}"></a>
+                                            </td>
+                                        </tr>
+                                    </th:block>
+                                </td>
                             </tr>
                         </table>
                     </div>
@@ -114,7 +127,8 @@
             const period = element.getAttribute('data-period');
             const type = element.getAttribute('data-type');
             const typeName = element.getAttribute('data-type-name');
-            const attachment = element.getAttribute('data-attachment');
+
+            const attachmentFileList = element.getAttribute('data-attachment-file');
             const statusName = element.getAttribute('data-status-name');
             const status = element.getAttribute('data-status');
             const contents = element.getAttribute('data-contents');
@@ -123,7 +137,7 @@
             document.getElementById('staticBackdropLabel').value = employeeName + "님의 휴가 요청";
             document.getElementById('modalPeriod').value = period;
             document.getElementById('modalType').innerText = typeName;
-            document.getElementById('modalAttachment').value = attachment;
+            document.getElementById('modalAttachment').value = attachmentFileList;
             document.getElementById('modalStatus').innerText = statusName;
             document.getElementById('modalContents').value = contents;
 
