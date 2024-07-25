@@ -5,7 +5,9 @@ import jakarta.persistence.*;
 import lombok.*;
 
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 
 @Getter
 @Entity
@@ -63,15 +65,15 @@ public class Employee {
     @Column(name = "other_days_used")
     private int otherDaysUsed;
 
-    public void updateAnnualDaysUsed(double annualDaysUsed) {
-        this.annualDaysUsed += annualDaysUsed;
+    public void updateAnnualDaysUsed(LocalDate startDate, LocalDate endDate) {
+        annualDaysUsed += ChronoUnit.DAYS.between(startDate, endDate)+1;
     }
 
-    public void updateSickDaysUsed(int sickDaysUsed) {
-        this.sickDaysUsed += sickDaysUsed;
+    public void updateSickDaysUsed(LocalDate startDate, LocalDate endDate) {
+        sickDaysUsed += ChronoUnit.DAYS.between(startDate, endDate)+1;
     }
 
-    public void updateOtherDaysUsed(int otherDaysUsed) {
-        this.otherDaysUsed += otherDaysUsed;
+    public void updateOtherDaysUsed(LocalDate startDate, LocalDate endDate) {
+        otherDaysUsed += ChronoUnit.DAYS.between(startDate, endDate)+1;
     }
 }

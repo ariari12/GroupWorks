@@ -45,5 +45,5 @@ public interface VacationMapper {
     Vacation toEntity(OtherFormDTO dto, Employee employee);
 
 
-    Vacation toEntity(AnnualModifyFormDTO dto, Long employeeId);
+    Vacation toEntity(AnnualModifyFormDTO dto);
 }
