@@ -1,5 +1,6 @@
 package kr.co.groupworks.control.workflow;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import kr.co.groupworks.dto.cis.employee.SessionEmployeeDTO;
@@ -40,6 +41,7 @@ public class WorkFlowRestController {
     private static final String APPROVAL_PARAM = "/{workFlowId}/{employeeId}/{approverType}";
     private static final String APPROVER_SEND = "/approver-send";
     private static final String WORK_STATUS = "/stat";
+    private static final String STATUS_PARAMETER = "/{param}";
     private static final String SEPARATOR = "/";
 
     @Getter
@@ -197,6 +199,19 @@ public class WorkFlowRestController {
             headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + result.get("fileName") + "\"");
             headers.add(HttpHeaders.CONTENT_LENGTH, result.get("fileSize") + "");
             return ResponseEntity.ok().headers(headers).body(resource);
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+    }
+
+    @GetMapping(value = SEPARATOR + WORKFLOW_URL + WORK_STATUS + STATUS_PARAMETER)
+    public ResponseEntity<Object> workStatus(@PathVariable int param, HttpServletRequest request) {
+        log.info("WorkFlowRestController - workStatus ok, id: {}", param);
+
+        SessionEmployeeDTO employeeDTO = (SessionEmployeeDTO) request.getSession().getAttribute(AttributeName.EMPLOYEE.toString());
+        Object result = workFlowService.getWorkflowStatistics(employeeDTO.getEmployeeId(), employeeDTO.getDepartmentId(), param);
+        if (result != null) {
+            log.info("WorkFlowRestController - workStatus ok, result: {}", result);
+            return ResponseEntity.ok().body(result);
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
