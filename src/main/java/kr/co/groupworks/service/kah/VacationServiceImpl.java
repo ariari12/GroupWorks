@@ -43,6 +43,7 @@ public class VacationServiceImpl implements VacationService{
 
 
 
+
     // 연차 저장
     @Override
     public Long save(AnnualFormDTO dto) {
@@ -174,7 +175,7 @@ public class VacationServiceImpl implements VacationService{
                         .findByEmployee(employee)
                         .orElseThrow(() -> new EntityNotFoundException("휴가내역을 찾을 수 없습니다 "));
 
-        vacationHistory.updateSickDaysUsed(dto.getOtherStartDate(), dto.getOtherEndDate());
+        vacationHistory.updateOtherDaysUsed(dto.getOtherStartDate(), dto.getOtherEndDate());
         vacationHistory = vacationHistoryRepository.save(vacationHistory);
         log.info("employee = {}",employee);
         log.info("vacationHistory = {}",vacationHistory);
@@ -248,7 +249,8 @@ public class VacationServiceImpl implements VacationService{
                                 .startDate(vacation.getStartDate())
                                 .endDate(vacation.getEndDate() != null ? vacation.getEndDate() : vacation.getStartDate())
                                 .vacationType(vacation.getVacationType())
-                                .fileList(vacation.getAttachmentList())
+                                .fileList(vacation.getAttachmentList()
+                                        .stream().map(calendarAttachmentMapper::toDto).toList())
                                 .contents(vacation.getContents())
                                 .status(vacation.getStatus()).build())
                 .toList();
