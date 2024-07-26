@@ -1,5 +1,5 @@
+<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-
 <div class="card mb-4" th:fragment="vacationRequest">
     <div class="card-header">
         <i class="fas fa-table me-1"></i>
@@ -19,10 +19,8 @@
             </tr>
             </thead>
 
-
             <tbody>
-            <!--/* 상세 보기 이동 시 onclick 이벤트 핸들러로 Javascript 함수 추가 */-->
-            <th:block th:if="${vacationRequestList == null} or ${vacationRequestList.size() == 0}">
+            <th:block th:if="${#lists.isEmpty(vacationRequestList)}">
                 <tr>
                     <td style="text-align: center">신청 내역 없음</td>
                     <td></td>
@@ -30,28 +28,25 @@
                     <td></td>
                     <td></td>
                     <td></td>
-
                 </tr>
             </th:block>
 
-            <th:block th:unless="${vacationRequestList == null} or ${vacationRequestList.size() == 0}">
-
-                <tr onclick="openModal(this)" data-bs-toggle="modal" data-bs-target="#vacationRequestModify" th:each="dto : ${vacationRequestList}"
+            <th:block th:if="${!#lists.isEmpty(vacationRequestList)}">
+                <tr onclick="openModal(this)" data-bs-toggle="modal" data-bs-target="#vacationRequestModify"
+                    th:each="dto : ${vacationRequestList}"
                     th:data-employee-name="${session.employee.employeeName}"
                     th:data-period="|${dto.startDate} ~ ${dto.endDate}|"
                     th:data-type-name="${dto.vacationType.description}"
                     th:data-type="${dto.vacationType}"
-                    th:data-attachment="${dto.fileList.size > 0 ? '첨부 파일 있음' : '첨부 파일 없음'}"
-                    th:data-attachment-file="${dto.fileList}"
+                    th:data-attachment-file="${#strings.escapeJavaScript(dto.fileList)}"
                     th:data-status-name="${dto.status.description}"
                     th:data-status="${dto.status}"
                     th:data-contents="${dto.contents}">
 
-
                     <td th:text="${session.employee.employeeName}">사원 이름</td>
                     <td th:text="|${dto.startDate} ~ ${dto.endDate}|">사용 기간</td>
                     <td th:text="${dto.vacationType.description}">종류</td>
-                    <td th:text="${dto.fileList.size>0}? '첨부 파일 있음' : '첨부 파일 없음'">증명자료</td>
+                    <td th:text="${dto.fileList.size() > 0 ? '첨부 파일 있음' : '첨부 파일 없음'}">증명자료</td>
                     <td th:text="${dto.status.description}">승인</td>
                     <td onclick="">삭제버튼</td>
                 </tr>
@@ -84,7 +79,6 @@
                                     <input type="hidden" value="">
                                     <input type="hidden" value="">
                                 </td>
-
                             </tr>
                             <tr>
                                 <th>승인 상태 : </th>
@@ -94,21 +88,9 @@
                                 <th>휴가 내용 : </th>
                                 <td><textarea id="modalContents"></textarea></td>
                             </tr>
-                            <tr>
-                                <!-- 수정해야함 -->
+                            <tr id="modalAttachment">
                                 <th>첨부 파일 : </th>
-                                <td id="modalAttachment">
-                                    <!-- 첨부파일이 있으면 첨부파일링크를 출력 -->
-                                    <th:block th:if="${board.getAttachedFiles().size() != 0}">
-                                        <tr th:each="file : ${board.getAttachedFiles()}">
-                                            <th>첨부파일</th>
-                                            <td colspan="3">
-                                                <a th:href="@{/board/detail/download/{no}(no=${file.getFilePath()})}"
-                                                   th:text="${file.getFileName()}"></a>
-                                            </td>
-                                        </tr>
-                                    </th:block>
-                                </td>
+                                <!-- 첨부파일이 있으면 첨부파일 링크를 출력 -->
                             </tr>
                         </table>
                     </div>
@@ -127,19 +109,40 @@
             const period = element.getAttribute('data-period');
             const type = element.getAttribute('data-type');
             const typeName = element.getAttribute('data-type-name');
-
             const attachmentFileList = element.getAttribute('data-attachment-file');
             const statusName = element.getAttribute('data-status-name');
             const status = element.getAttribute('data-status');
             const contents = element.getAttribute('data-contents');
 
             // 모달에 데이터 설정하기
-            document.getElementById('staticBackdropLabel').value = employeeName + "님의 휴가 요청";
+            document.getElementById('staticBackdropLabel').innerText = employeeName + "님의 휴가 요청";
             document.getElementById('modalPeriod').value = period;
             document.getElementById('modalType').innerText = typeName;
-            document.getElementById('modalAttachment').value = attachmentFileList;
             document.getElementById('modalStatus').innerText = statusName;
             document.getElementById('modalContents').value = contents;
+
+            // 첨부파일 목록 설정하기
+            let modalAttachment = document.getElementById('modalAttachment');
+            modalAttachment.innerHTML = ''; // 기존 내용을 초기화
+            if (attachmentFileList && attachmentFileList !== '[]') {
+                try {
+                    const attachmentFiles = parseAttachmentFileList(attachmentFileList);
+                    attachmentFiles.forEach(file => {
+                        const link = document.createElement('a');
+                        link.href = `/board/detail/download/${file.filePath}`; // 실제 파일 URL로 교체
+                        link.textContent = file.fileName; // 파일 이름으로 교체
+                        modalAttachment.appendChild(link);
+                        modalAttachment.appendChild(document.createElement('br'));
+                    });
+                } catch (e) {
+                    modalAttachment.textContent = '첨부 파일을 불러오는 중 오류가 발생했습니다.';
+                    console.error("첨부 파일 파싱 오류:", e);
+                }
+            } else {
+                modalAttachment.textContent = '첨부 파일 없음';
+            }
+
+
 
             $("#annualModifyBtn").on("click", function (e) {
                 e.preventDefault(); // 기본 submit 동작을 막음
@@ -168,7 +171,7 @@
                 // 결과 출력 (디버깅용)
                 console.log("startDate: ", startDate);
                 console.log("endDate: ", endDate);
-                console.log("contents: ",contents);
+                console.log("contents: ", contents);
                 $.ajax({
                     url: '/vacation/annual',
                     type: 'PUT',
@@ -176,9 +179,9 @@
                     data: JSON.stringify({
                         startDate: startDate,
                         endDate: endDate,
-                        vacationType :type,
-                        file : attachment,
-                        status : status,
+                        vacationType: type,
+                        file: attachment,
+                        status: status,
                         contents: contents
                     }),
                     success: function(response) {
@@ -205,6 +208,25 @@
             });
         }
 
+        function parseAttachmentFileList(attachmentFileList) {
+            const fileList = [];
+            const regex = /VacationFileDTO\(fileName=([^,]+), filePath=([^\)]+)\)/g;
+            let match;
+            while ((match = regex.exec(attachmentFileList)) !== null) {
+                fileList.push({
+                    fileName: decodeUnicodeEscapeSequence(match[1].trim()), // 파일 이름을 디코딩하여 한글로 표시
+                    filePath: decodeUnicodeEscapeSequence(match[2].trim())
+                });
+            }
+            return fileList;
+        }
 
+        function decodeUnicodeEscapeSequence(str) {
+            return str.replace(/\\u[\dA-F]{4}/gi,
+                function (match) {
+                    return String.fromCharCode(parseInt(match.replace(/\\u/g, ''), 16));
+                });
+        }
     </script>
 </div>
+</html>
