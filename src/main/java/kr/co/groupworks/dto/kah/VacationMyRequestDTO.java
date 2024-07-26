@@ -24,7 +24,6 @@ public class VacationMyRequestDTO {
     // 휴가 종류
     private VacationType vacationType;
     // 첨부파일들
-    // 인티티가 노출되었음 수정해야함
     private List<VacationFileDTO> fileList;
     // 승인 상태
     private VacationStatus status;
