@@ -14,7 +14,7 @@ public interface CalendarAttachmentMapper {
 
 
     @Mapping(target = "calendar", source = "vacation")
-    CalendarAttachment toEntity(String fileFullName, String fileName, Vacation vacation);
+    CalendarAttachment toEntity(String filePath, String fileName, Vacation vacation);
 
     VacationFileDTO toDto(CalendarAttachment calendarAttachment);
 
