@@ -71,7 +71,7 @@ public class VacationServiceImpl implements VacationService{
         }
 
         // 사원 업데이트
-        employee = employeeRepository.save(employee);
+        //employee = employeeRepository.save(employee);
         // 휴가 엔티티 변환
         Vacation vacation = vacationMapper.toEntity(dto,employee);
         return vacationRepository.save(vacation).getCalendarId();
@@ -104,7 +104,7 @@ public class VacationServiceImpl implements VacationService{
         }
 
         //사원 업데이트
-        employee=employeeRepository.save(employee);
+        //employee=employeeRepository.save(employee);
         // 휴가 엔티티 변환
         Vacation vacation = vacationMapper.toEntity(dto,employee);
         return vacationRepository.save(vacation).getCalendarId();
@@ -139,7 +139,7 @@ public class VacationServiceImpl implements VacationService{
             uploadDir.mkdirs();
         }
         //사원 업데이트
-        employee=employeeRepository.save(employee);
+        //employee=employeeRepository.save(employee);
         Vacation vacation = vacationMapper.toEntity(dto, employee);
 
         Arrays.asList(files).forEach(file -> {
@@ -192,7 +192,7 @@ public class VacationServiceImpl implements VacationService{
 
 
         // 사원 업데이트
-        employee=employeeRepository.save(employee);
+        //employee=employeeRepository.save(employee);
         Vacation vacation = vacationMapper.toEntity(dto, employee);
 
         File uploadDir = new File(uploadDirectory);
