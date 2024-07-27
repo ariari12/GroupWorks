@@ -7,11 +7,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AnnualModifyFormDTO {
+public class VacationModifyFormDTO {
     private Long employeeId;
     private LocalDate startDate;
     private LocalDate endDate;

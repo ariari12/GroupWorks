@@ -44,6 +44,4 @@ public interface VacationMapper {
     @Mapping(target = "title", expression = "java(kr.co.groupworks.entity.kah.VacationType.OTHER.getDescription())")
     Vacation toEntity(OtherFormDTO dto, Employee employee);
 
-
-    Vacation toEntity(AnnualModifyFormDTO dto);
 }

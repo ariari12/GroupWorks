@@ -18,6 +18,14 @@ import java.util.Map;
 @RestControllerAdvice(basePackages = "kr.co.groupworks.control.kah.api")
 public class VacationControllerAdvice {
 
+
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<ErrorResult> handleIllegalStateException(IllegalStateException ex) {
+        log.error("[handleIllegalStateException] ex", ex);
+        ErrorResult errorResult = new ErrorResult("ILLEGAL_STATE_EXCEPTION", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResult);
+    }
+
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ErrorResult> handleIllegalArgumentException(IllegalArgumentException ex) {
         log.error("[handleIllegalArgumentException] ex", ex);

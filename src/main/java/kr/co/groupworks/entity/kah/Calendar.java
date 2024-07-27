@@ -20,7 +20,7 @@ import java.util.List;
 @DiscriminatorColumn(name = "dtype")
 public class Calendar {
     @Id
-    @Column(name = "caldendar_id")
+    @Column(name = "calendar_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long calendarId;
     // 제목
@@ -38,8 +38,7 @@ public class Calendar {
     private Employee employee;
 
     // 양방향 관계 (조회용)
-
-    @OneToMany(mappedBy = "calendar")
+    @OneToMany(mappedBy = "calendar",cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<CalendarAttachment> attachmentList = new ArrayList<>();
 
 

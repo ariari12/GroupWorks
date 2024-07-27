@@ -6,6 +6,7 @@ import kr.co.groupworks.entity.cis.Employee;
 import kr.co.groupworks.entity.kah.CalendarAttachment;
 import kr.co.groupworks.entity.kah.Vacation;
 import kr.co.groupworks.entity.kah.VacationHistory;
+import kr.co.groupworks.entity.kah.VacationStatus;
 import kr.co.groupworks.repository.cis.EmployeeRepository;
 import kr.co.groupworks.repository.kah.CalendarAttachmentRepository;
 import kr.co.groupworks.repository.kah.VacationHistoryRepository;
@@ -225,15 +226,19 @@ public class VacationServiceImpl implements VacationService{
         return vacationHistoryRepository.findVacationMyHistoryDTO(employee.getEmployeeId());
     }
 
-
-    // 연차 수정
+    // 휴가신청 삭제
     @Override
-    public Long save(AnnualModifyFormDTO dto) {
-        Employee employee = employeeRepository.findById(dto.getEmployeeId())
-                .orElseThrow(() -> new EntityNotFoundException("사원을 찾을 수 없습니다. " + dto.getEmployeeId()));
-        Vacation vacation = vacationMapper.toEntity(dto);
+    public void deleteRequest(Long calendarId, Long employeeId){
+        Vacation vacation = vacationRepository.findById(calendarId)
+                .orElseThrow(() -> new EntityNotFoundException("일정을 찾을 수 없습니다. " + calendarId));
+        // 휴가신청 상태가 검토중일 경우
+        if (vacation.getStatus() == VacationStatus.PENDING){
+            vacationRepository.deleteByCalendarId(vacation.getCalendarId());
+        }else{
+            throw new IllegalStateException("휴가 상태가 검토 단계일 경우만 삭제 가능합니다.");
+        }
 
-        return vacationRepository.save(vacation).getCalendarId();
+
     }
 
 
@@ -246,6 +251,7 @@ public class VacationServiceImpl implements VacationService{
         return vacationList.stream()
                 .map(vacation ->
                         VacationMyRequestDTO.builder()
+                                .calendarId(vacation.getCalendarId())
                                 .startDate(vacation.getStartDate())
                                 .endDate(vacation.getEndDate() != null ? vacation.getEndDate() : vacation.getStartDate())
                                 .vacationType(vacation.getVacationType())
