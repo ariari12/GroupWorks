@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 
 
 @RequiredArgsConstructor
-public class VacationRepositoryImpl implements VacationRepositoryCustom{
+public class VacationRepositoryImpl implements VacationRepositoryQueryDsl {
     private final JPAQueryFactory queryFactory;
 
 }
