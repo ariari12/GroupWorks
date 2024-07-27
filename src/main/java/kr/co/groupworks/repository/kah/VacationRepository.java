@@ -1,6 +1,5 @@
 package kr.co.groupworks.repository.kah;
 
-import kr.co.groupworks.entity.cis.Employee;
 import kr.co.groupworks.entity.kah.Vacation;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -9,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface VacationRepository extends JpaRepository<Vacation, Long>, VacationRepositoryCustom {
+public interface VacationRepository extends JpaRepository<Vacation, Long>, VacationRepositoryQueryDsl {
     @Query("SELECT v FROM Vacation v JOIN v.employee e WHERE e.employeeId = :employeeId")
     List<Vacation> findAllByEmployeeId(@Param("employeeId")Long employeeId);
 
