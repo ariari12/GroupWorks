@@ -1,5 +1,7 @@
 package kr.co.groupworks.control.kah.web;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.co.groupworks.dto.cis.employee.SessionEmployeeDTO;
 import kr.co.groupworks.dto.kah.*;
 import kr.co.groupworks.entity.kah.AmPm;
@@ -18,6 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class VacationController {
     private final VacationService vacationService;
+    private final ObjectMapper objectMapper;
 
     // enum 상수 값 지속적으로 넘겨주기 위함
     @ModelAttribute("amPms")
@@ -53,6 +56,16 @@ public class VacationController {
         model.addAttribute("title", "내 휴가");
         model.addAttribute("subtitle", "휴가 신청내역");
         return "kah/vacationMain";
+    }
+
+
+    // 휴가 신청 취소
+    @GetMapping("/delete/{calendarId}")
+    public String vacationDelete(@PathVariable Long calendarId,
+                                 @SessionAttribute(name = "employee")SessionEmployeeDTO sessionEmployeeDTO) {
+        log.info("VacationController - vacationDelete");
+        vacationService.deleteRequest(calendarId, sessionEmployeeDTO.getEmployeeId());
+        return "redirect:/vacation";
     }
 
     @GetMapping(value = "/team")

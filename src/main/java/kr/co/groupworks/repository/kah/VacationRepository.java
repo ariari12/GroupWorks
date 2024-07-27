@@ -1,7 +1,9 @@
 package kr.co.groupworks.repository.kah;
 
+import kr.co.groupworks.entity.cis.Employee;
 import kr.co.groupworks.entity.kah.Vacation;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -17,4 +19,7 @@ public interface VacationRepository extends JpaRepository<Vacation, Long>, Vacat
     List<Vacation> findOverlappingVacations(@Param("employeeId") Long employeeId,
                                             @Param("startDate") String startDate,
                                             @Param("endDate") String endDate);
+
+    @Modifying
+    void deleteByCalendarId(@Param("calendarId") Long calendarId);
 }
