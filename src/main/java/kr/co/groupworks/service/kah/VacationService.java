@@ -19,5 +19,5 @@ public interface VacationService {
 
     List<VacationMyHistoryDTO> findVacationHistory(Long employeeId);
 
-    Long save(AnnualModifyFormDTO dto);
+    void deleteRequest(Long calendarId, Long employeeId);
 }
