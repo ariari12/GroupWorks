@@ -1,6 +1,7 @@
 package kr.co.groupworks.service.cis;
 
 import kr.co.groupworks.dto.cis.employee.EmployeeDTO;
+import kr.co.groupworks.entity.cis.Department;
 import kr.co.groupworks.entity.cis.Employee;
 import kr.co.groupworks.repository.cis.EmployeeRepository;
 import lombok.RequiredArgsConstructor;
@@ -77,8 +78,10 @@ public class EmployeeServiceImpl implements EmployeeService {
                 .employeeName(dto.getEmployeeName())
                 .rankId(dto.getRankId())
                 .rankName(dto.getRankName())
-//                .departmentId(dto.getDepartmentId())
-//                .departmentName(dto.getDepartmentName())
+                .department(Department.builder()
+                        .departmentId(dto.getDepartmentId())
+                        .departmentName(dto.getDepartmentName())
+                        .build())
                 .email(dto.getEmail())
                 .phoneNumber(dto.getPhoneNumber())
                 .address(dto.getAddress())
@@ -97,8 +100,8 @@ public class EmployeeServiceImpl implements EmployeeService {
                 .employeeName(employee.getEmployeeName())
                 .rankId(employee.getRankId())
                 .rankName(employee.getRankName())
-//                .departmentId(employee.getDepartmentId())
-//                .departmentName(employee.getDepartmentName())
+                .departmentId(employee.getDepartment().getDepartmentId())
+                .departmentName(employee.getDepartment().getDepartmentName())
                 .email(employee.getEmail())
                 .phoneNumber(employee.getPhoneNumber())
                 .address(employee.getAddress())

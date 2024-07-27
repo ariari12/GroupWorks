@@ -83,7 +83,6 @@ class WorkFlowServiceImplTest {
         employeeRepository.saveAll(employees);
     }
 
-
     @Test @DisplayName("Employee Select Test")
     public void employeeSelectTest() {
         log.info("employeeSelectTest employee: {}", workFlowService.getEmployeeDTO(1));
@@ -178,7 +177,7 @@ class WorkFlowServiceImplTest {
     public void statisticsTest() {
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
-        Object res = workFlowService.getWorkflowStatistics(1L, 1L, 2);
+        Object res = workFlowService.getWorkflowStatistics(1L, 3L, 5);
         stopWatch.stop();
         log.info(stopWatch.prettyPrint());
         log.info("res: {}", res.toString());

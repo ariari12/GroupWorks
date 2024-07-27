@@ -69,7 +69,7 @@ public class WorkflowApproversRepositoryImpl extends QuerydslRepositorySupport i
                 .groupBy(department.departmentId)
                 .fetch();
 
-        String[] keys = {"departmentData1", "departmentData2", "departmentData3"};
+        String[] keys = {"request", "approve", "reject"};
         Map<String, List<Long>> map = Map.of( keys[0], new ArrayList<>(), keys[1], new ArrayList<>(), keys[2], new ArrayList<>() );
         list.forEach(t -> {
             for (int i = 0; i < 3; i++) {

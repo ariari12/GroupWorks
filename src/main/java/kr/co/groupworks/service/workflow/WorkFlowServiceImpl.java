@@ -298,6 +298,7 @@ public class WorkFlowServiceImpl implements WorkFlowService {
          */
         switch (choise) {
             case 1:
+                /* 부서 목록 */
                 return departmentRepository.getDepartments();
             case 2:
                 /* 부서별 결재 발송/승인/반려 건 수 */
@@ -306,8 +307,9 @@ public class WorkFlowServiceImpl implements WorkFlowService {
                 /* 올해 연도 전체 결재 발송 건 구분 */
                 return workFlowRepository.workflowTypeByThisYear();
             case 4:
+                if(departmentId < 1) return null;
                 /* 부서 결재 완료 목록 */
-                return workFlowRepository.findByDepartmentIdAndStatus(departmentId, 1);
+                return workFlowRepository.findByDepartmentIdAndStatus(departmentId, 1).stream().map(WorkflowListVO::new).toList();
             case 5:
                 /* 월 별 결재 발송/승인/반려 건 수 */
                 String[] keys = {"request", "approval", "rejection"};

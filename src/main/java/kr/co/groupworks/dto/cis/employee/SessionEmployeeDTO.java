@@ -19,5 +19,5 @@ public class SessionEmployeeDTO {
     //  이메일
     private String email;
     //  부서 번호 fk
-    private int departmentId;
+    private Long departmentId;
 }

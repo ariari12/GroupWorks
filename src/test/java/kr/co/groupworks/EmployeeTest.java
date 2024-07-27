@@ -29,7 +29,6 @@ public class EmployeeTest {
 
     private List<Employee> employees;
 
-    @BeforeEach
     @Test @DisplayName("Department, Employee Insert")
     public void insetTest() {
         // 샘플 부서 데이터

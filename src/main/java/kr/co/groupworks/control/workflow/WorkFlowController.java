@@ -123,8 +123,6 @@ public class WorkFlowController {
     /* 결재 현황 */
     @GetMapping(WORK_STATUS)
     public String workStat(Model model, HttpSession session) {
-        long employeeId = getEmployeeId(session);
-        long departmentId = getDepartmentId(session);
         title = "WorkFlow Status Board";
         log.info("WorkFlowController - stat title: {}", title);
 
