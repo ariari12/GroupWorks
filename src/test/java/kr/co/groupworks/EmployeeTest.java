@@ -94,12 +94,5 @@ public class EmployeeTest {
         vacationHistoryRepository.saveAll(vacationHistories);
     }
 
-    @Test @DisplayName("Join Test")
-    public void joinTest() {
-
-
-
-    }
-
 
 }
