@@ -11,20 +11,20 @@ import kr.co.groupworks.entity.workflow.AttachmentFileEntity;
 import kr.co.groupworks.entity.workflow.WorkFlowEntity;
 import kr.co.groupworks.repository.cis.DepartmentRepository;
 import kr.co.groupworks.repository.cis.EmployeeRepository;
-import kr.co.groupworks.repository.workflow.ApproversOnlyRepository;
+import kr.co.groupworks.repository.workflow.ApproversRepository;
 import kr.co.groupworks.repository.workflow.AttachmentFileRepository;
 import kr.co.groupworks.repository.workflow.WorkFlowRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
@@ -40,7 +40,7 @@ public class WorkFlowServiceImpl implements WorkFlowService {
     private final EmployeeRepository employeeRepository;
 
     private final WorkFlowRepository workFlowRepository;
-    private final ApproversOnlyRepository approversOnlyRepository;
+    private final ApproversRepository approversRepository;
     private final AttachmentFileRepository attachmentFileRepository;
 
     @Value("${file.upload-dir}")
@@ -213,7 +213,7 @@ public class WorkFlowServiceImpl implements WorkFlowService {
             /* 협조자는 코멘트 추가 / 코멘트를 작성한 작성자는 변경 불가
              * 코멘트를 작성 시, ApproverDTO: {approval = 1, approvalDate} UPDATE */
             approverEntity.setApproval(1);
-            approversOnlyRepository.save(approverEntity.dtoToEntity());
+            approversRepository.save(approverEntity.dtoToEntity());
 
             return true;
         }
@@ -278,14 +278,10 @@ public class WorkFlowServiceImpl implements WorkFlowService {
     }
 
     @Override
-    public Map<String, List<Object>> getWorkflowStatus(long employeeId, long departmentId) {
+    public Object getWorkflowStatistics(long employeeId, long departmentId, int choise) {
         enum satusLabel {
-            DEPARTMENT_NAMES("department names"),
-            DEPARTMENT_DATA1("department data1"),
-            DEPARTMENT_DATA2("department data2"),
-            DEPARTMENT_DATA3("department data3"),
-
-
+            DEPARTMENT_NAMES("departmentNames"),
+            THIS_YEAR_TYPE("thisYearType"),
             ;
             String label;
 
@@ -293,18 +289,47 @@ public class WorkFlowServiceImpl implements WorkFlowService {
                 this.label = label;
             }
         }
-
-        Map<String, List<Object>> map = new HashMap<>();
-        map.put(satusLabel.DEPARTMENT_NAMES.label, Collections.singletonList(departmentRepository.getDepartments()));
-
         /*
-         * 전체: 부서별 결재 발송/승인/반려 건 수
-         * 전체: 올해 연도 전체 결재 발송 건 수
-         * 부서Id: 부서 결재 완료 목록
-         * 사원Id: 월 별 결재 발송/승인/반려 건 수
-         * 사원Id: 누적 결재 발송 건 수
+         * 전체: 부서별 결재 발송/승인/반려 건 수 : 완료
+         * 전체: 올해 연도 전체 결재 발송 건 수 : 완료
+         * 부서Id: 부서 결재 완료 목록 : 완료
+         * 사원Id: 월 별 결재 발송/승인/반려 건 수 :
+         * 사원Id: 누적 결재 발송 건 수 :
          */
-        return Map.of();
+        switch (choise) {
+            case 1:
+                /* 부서 목록 */
+                return departmentRepository.getDepartments();
+            case 2:
+                /* 부서별 결재 발송/승인/반려 건 수 */
+                return workFlowRepository.workflowDepartmentStatistics();
+            case 3:
+                /* 올해 연도 전체 결재 발송 건 구분 */
+                return workFlowRepository.workflowTypeByThisYear();
+            case 4:
+                if(departmentId < 1) return null;
+                /* 부서 결재 완료 목록 */
+                return workFlowRepository.findByDepartmentIdAndStatus(departmentId, 1).stream().map(WorkflowListVO::new).toList();
+            case 5:
+                /* 월 별 결재 발송/승인/반려 건 수 */
+                String[] keys = {"request", "approval", "rejection"};
+                Map<String, List<Long>> resMap = Map.of(
+                        keys[0], new ArrayList<>(),
+                        keys[1], new ArrayList<>(),
+                        keys[2], new ArrayList<>()
+                );
+                workFlowRepository.monthlyWorkflowType(
+                        LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy")), 2L
+                ).forEach(o -> {
+                    resMap.get(keys[0]).add((Long) o.get("발송"));
+                    resMap.get(keys[1]).add(((BigDecimal) o.get("승인")).longValue());
+                    resMap.get(keys[2]).add(((BigDecimal) o.get("반려")).longValue());
+                });
+
+                return resMap;
+            default:
+                return null;
+        }
     }
 
 }

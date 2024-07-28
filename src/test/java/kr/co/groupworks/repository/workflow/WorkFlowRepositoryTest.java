@@ -17,10 +17,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StopWatch;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -33,7 +33,7 @@ class WorkFlowRepositoryTest {
     WorkFlowRepository workFlowRepository;
 
     @Autowired
-    ApproversOnlyRepository approversOnlyRepository;
+    ApproversRepository approversRepository;
 
     @Autowired
     EmployeeRepository employeeRepository;
@@ -149,8 +149,8 @@ class WorkFlowRepositoryTest {
                     .email(e.getEmail())
                     .phone(e.getPhoneNumber())
                     .employeeRank(e.getRankName())
-//                    .departmentId(e.getDepartmentId())
-//                    .department(e.getDepartmentName())
+                    .departmentId(e.getDepartment().getDepartmentId())
+                    .department(e.getDepartment().getDepartmentName())
                     .employeeName(e.getEmployeeName())
                     .code("CODE" + i)
                     .workFlowType(i % 4 + 1) // Just an example to set type
@@ -186,7 +186,7 @@ class WorkFlowRepositoryTest {
                         .approverPhone(e.getPhoneNumber())
                         .approverName(e.getEmployeeName())
                         .approverRank(e.getRankName())
-//                        .department(e.getDepartmentName())
+                        .department(e.getDepartment().getDepartmentName())
                         .approvalMethod((i % 5) + 1)
                         .comment((i % 3) + 1 == 3 ? ("Comment approver " + i) : null)
                         .approvalDate((i % 3) + 1 == 1 ? LocalDateTime.now().plusDays(i) : null)
@@ -194,7 +194,7 @@ class WorkFlowRepositoryTest {
                         .build();
                 approvers.add(approver);
             }
-            approversOnlyRepository.saveAll(approvers);
+            approversRepository.saveAll(approvers);
         }
         stopWatch.stop();
 
@@ -207,9 +207,57 @@ class WorkFlowRepositoryTest {
     public void workflowApprovalSatisticsByDepartmentTest() {
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
-        workFlowRepository.workflowApprovalSatisticsByDepartment();
+        workFlowRepository.workflowDepartmentStatistics();
         stopWatch.stop();
         log.info("{}", stopWatch.prettyPrint());
+    }
+
+    @Test @DisplayName("workflowTypeByThisYear Test")
+    public void workflowTypeByThisYearTest() {
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start();
+        List<Long> test = workFlowRepository.workflowTypeByThisYear();
+        log.info(test.toString());
+        stopWatch.stop();
+        log.info(stopWatch.prettyPrint());
+    }
+
+    @Test @DisplayName("monthlyWorkflowType Test")
+    public void monthlyWorkflowTypeTest() {
+        StopWatch stopWatch = new StopWatch();
+
+        List<String> months = new ArrayList<>();
+        List<Long> requests = new ArrayList<>();
+        List<Long> approvals = new ArrayList<>();
+        List<Long> rejections = new ArrayList<>();
+
+        stopWatch.start();
+
+        List<Map<String, Object>> mapList = workFlowRepository.monthlyWorkflowType(
+                LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy")), 2L );
+
+        mapList.forEach(o -> {
+            months.add((String) o.get("월"));
+            requests.add((Long) o.get("발송"));
+            approvals.add(((BigDecimal) o.get("승인")).longValue());
+            rejections.add(((BigDecimal) o.get("반려")).longValue());
+        });
+
+        String[] keys = {"month", "request", "approval", "rejection"};
+        Map<String, List<?>> resMap = new LinkedHashMap<>();
+        resMap.put(keys[0], Collections.singletonList(months));
+        resMap.put(keys[1], Collections.singletonList(requests));
+        resMap.put(keys[2], Collections.singletonList(approvals));
+        resMap.put(keys[3], Collections.singletonList(rejections));
+
+        stopWatch.stop();
+
+        mapList.forEach(o -> {
+                o.forEach((s, o1) -> log.info("{}: {}, t:{}", s, o1, o1.getClass().getTypeName()));
+                log.info("=====");
+        });
+        resMap.forEach((k, v) -> log.info("{}: {}", k, v));
+        log.info(stopWatch.prettyPrint());
     }
 
 }

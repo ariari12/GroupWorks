@@ -1,5 +1,6 @@
 package kr.co.groupworks.dto.workflow.dto;
 
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -42,7 +43,7 @@ public class WorkFlowDTO {
     @NotEmpty @NotNull
     // 9, 결재 기안 코드
     private String code;
-    @NotNull
+    @NotNull @Min(value = 1) @Max(value = 6)
     // 10, 결재 요청 분류
     private int workFlowType;
     @NotEmpty @NotNull

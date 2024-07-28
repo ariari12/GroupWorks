@@ -7,5 +7,9 @@ import java.util.Map;
 
 public interface WorkflowApproversRepository {
     List<WorkFlowEntity> workflowListFindByApproverId(long approverEmployeeId, int approverType);
-    Map<String, List<Long>> workflowApprovalSatisticsByDepartment();
+
+    Map<String, List<Long>> workflowDepartmentStatistics();
+
+    List<Long> workflowTypeByThisYear();
+
 }

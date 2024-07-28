@@ -3,7 +3,7 @@ package kr.co.groupworks.service.workflow;
 import kr.co.groupworks.dto.workflow.dto.ApproverDTO;
 import kr.co.groupworks.entity.cis.Employee;
 import kr.co.groupworks.entity.workflow.ApproverEntity;
-import kr.co.groupworks.repository.workflow.ApproversOnlyRepository;
+import kr.co.groupworks.repository.workflow.ApproversRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -17,7 +17,7 @@ import java.util.List;
 @Transactional
 @RequiredArgsConstructor
 public class AppoverUpdateServiceImpl implements AppoverUpdateService {
-    private final ApproversOnlyRepository approverRepository;
+    private final ApproversRepository approverRepository;
 
     public boolean setApproverUpdate(Employee employee) {
         List<ApproverEntity> approvalList = approverRepository.findByEmployeeIdAndApprovalMethodAndApproval(employee.getEmployeeId(), 0, 0);

@@ -8,7 +8,6 @@ import kr.co.groupworks.repository.cis.EmployeeRepository;
 import kr.co.groupworks.repository.kah.VacationHistoryRepository;
 import kr.co.groupworks.service.workflow.WorkFlowService;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +15,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.IntStream;
+import java.util.Optional;
 
 @Slf4j
 @SpringBootTest
@@ -34,8 +33,7 @@ public class EmployeeTest {
 
     private List<Employee> employees;
 
-    @BeforeEach
-    @DisplayName("Department, Employee Insert")
+    @Test @DisplayName("Department, Employee Insert")
     public void insetTest() {
         // 샘플 부서 데이터
         List<Department> departments = List.of(
@@ -76,6 +74,15 @@ public class EmployeeTest {
                 .supervisorId(i > 10 ? (long) ((i % 10) + 1) : 0) // supervisorId: 상사 ID (1부터 10까지 반복)
                 .build()
         ).toList();
+
+        // 출력 (테스트용)
+        employees.forEach(employee ->
+                System.out.println(employee.getEmployeeId() + ": " +
+                        employee.getEmployeeName() + ", " +
+                        employee.getEmail() + ", " +
+                        employee.getPhoneNumber() + ", " +
+                        employee.getDepartment().getDepartmentName())
+        );
 
         employeeRepository.saveAll(employees);
 

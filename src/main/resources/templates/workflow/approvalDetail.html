@@ -141,13 +141,15 @@
                             <div th:if="${approve.approval == 0}" style="text-align: center;">
                                 <!--/*@thymesVar id="approve" type="kr.co.groupworks.dto.workflow.vo.ApproverVO"*/-->
                                 <!--/*@thymesVar id="ApprovalMethod" type="kr.co.groupworks.dto.workflow.ApprovalMethod"*/-->
-                                <th:block th:if="${!approve.getApprovalMethod().equals('전결') && approve.getApprovalMethod().equals('반려')}">
+                                <th:block th:if="${approve.getApprovalMethod() == null}">
                                 <img style="width: 80px;" src="/img/none.png" alt="진행 중">
                                 <br/>
                                 <span style="font-size: 14px;">진행 중</span>
                                 </th:block>
+                                <th:block th:if="${approve.getApprovalMethod() != null}">
                                 <div th:if="${approve.getApprovalMethod().equals('전결')}" class="full-appl"></div>
                                 <img th:if="${approve.getApprovalMethod().equals('반려')}" style="width: 80px;" src="/img/none.png" alt="반려">
+                                </th:block>
                             </div>
                             <div th:if="${approve.approval == 1}">
                                 <img style="width: 80px;" src="/img/approve.png" alt="승인">

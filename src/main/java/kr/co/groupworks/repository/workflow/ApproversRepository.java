@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface ApproversOnlyRepository extends JpaRepository<ApproverEntity, Long> {
+public interface ApproversRepository extends JpaRepository<ApproverEntity, Long> {
     List<ApproverEntity> findByEmployeeIdAndApprovalMethodAndApproval(long employeeId, int approvalMethod, int approval);
 
     List<ApproverEntity> findByEmployeeId(Long employeeId);

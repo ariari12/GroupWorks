@@ -3,6 +3,11 @@ Chart.defaults.global.defaultFontFamily = '-apple-system,system-ui,BlinkMacSyste
 Chart.defaults.global.defaultFontColor = '#292b2c';
 
 document.addEventListener("DOMContentLoaded", function() {
+
+    getAjax("", function (data) {
+        console.dir(data);
+    });
+
     approvalStatsByDepartment(
         ["기술부서", "마케팅부서", "영업부서", "인사부서", "재무부서", "IT 지원부서",
             "제품 관리부서", "고객 서비스부서", "법무부서", "연구개발부서"],
@@ -23,10 +28,25 @@ document.addEventListener("DOMContentLoaded", function() {
     );
 });
 
+function getAjax(url, callback) {
+    $.ajax({
+        url: url,
+        type: 'get',
+        success: function (res) {
+            console.log(res);
+            callback(res);
+        }, error: function (x, e, s) {
+            console.error(x);
+            console.error(e);
+            console.error(s);
+        }
+    });
+}
+
 function totalApproval(data) {
     // 캔버스 태그 추출
     var ctx = document.getElementById('totalApproval').getContext('2d');
-    
+
     // 색상
     var colors = [
         'rgba(255, 99, 132, 0.6)',
@@ -40,7 +60,7 @@ function totalApproval(data) {
     return new Chart(ctx, {
         type: 'pie',
         data: {
-            labels: ['업무 건', '재무 건', '예산 건', '구매 건', '보고 건', '특별 건'],
+            labels: ['업무', '재무', '예산', '구매', '보고', '특별'],
             datasets: [{
                 data: data,
                 backgroundColor: colors,

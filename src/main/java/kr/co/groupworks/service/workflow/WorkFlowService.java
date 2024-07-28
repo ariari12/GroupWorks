@@ -50,5 +50,5 @@ public interface WorkFlowService {
 
     boolean removeWorkflow(long workFlowId);
 
-    Map<String, List<Object>> getWorkflowStatus(long employeeId, long departmentId);
+    Object getWorkflowStatistics(long employeeId, long departmentId, int choise);
 }
