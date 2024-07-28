@@ -66,8 +66,6 @@ class WorkFlowServiceImplTest {
                 .joinDate(LocalDateTime.now().minusDays(i)) // joinDate: 입사일 (현재 날짜에서 i일 전)
                 .salary((3000L + i) * 10L) // salary: 사원 급여 (3000부터 시작, i에 따라 증가)
                 .supervisorId(i > 10 ? (long) ((i % 10) + 1) : 0) // supervisorId: 상사 ID (1부터 10까지 반복)
-                .annualDaysUsed(i % 20) // annualDaysUsed: 연차 사용일 (0부터 19까지 반복)
-                .sickDaysUsed(i % 15) // sickDaysUsed: 병가 사용일 (0부터 14까지 반복)
                 .build()
         ).toList();
 

@@ -83,6 +83,7 @@
                     success: function(response) {
                         alert("Success: " + response);
                         $('#sick').modal('hide');
+                        location.reload();
                     },
                     error: function(xhr) {
                         console.log(xhr.status);

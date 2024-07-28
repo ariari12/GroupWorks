@@ -18,4 +18,6 @@ public interface VacationService {
     Long save(OtherFormDTO dto, MultipartFile[] files);
 
     List<VacationMyHistoryDTO> findVacationHistory(Long employeeId);
+
+    Long save(AnnualModifyFormDTO dto);
 }

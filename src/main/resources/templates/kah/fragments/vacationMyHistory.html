@@ -17,6 +17,7 @@
                 <th>부서</th>
                 <th>직급</th>
                 <th>잔여연차</th>
+                <th>연차 사용 일수</th>
                 <th>병가 사용 일수</th>
                 <th>기타 사용 일수</th>
             </tr>
@@ -40,10 +41,11 @@
             <th:block th:unless="${vacationHistoryList == null} or ${vacationHistoryList.size() == 0}">
 
                 <tr th:each="dto : ${vacationHistoryList}">
-                    <td th:text="${dto.name}">사원 이름</td>
+                    <td th:text="${dto.employeeName}">사원 이름</td>
                     <td th:text="${dto.employeeId}">사번</td>
                     <td th:text="${dto.departmentName}">부서</td>
                     <td th:text="${dto.rankName}">직급</td>
+                    <td th:text="${dto.totalAnnual}">잔여 연차</td>
                     <td th:text="${dto.annualDaysUsed}">연차 사용 일수</td>
                     <td th:text="${dto.sickDaysUsed}">병가 사용 일수</td>
                     <td th:text="${dto.otherDaysUsed}">기타 사용 일수</td>
