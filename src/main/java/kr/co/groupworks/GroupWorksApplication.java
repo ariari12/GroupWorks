@@ -10,7 +10,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 @SpringBootApplication
 @EnableJpaAuditing// spring data jpa Auditing 설정 필수
-@ComponentScan(basePackages = {"kr.co.groupworks.util.mapper", "kr.co.groupworks"})
+//@ComponentScan(basePackages = {"kr.co.groupworks.util.mapper", "kr.co.groupworks"})
 public class GroupWorksApplication {
 
     public static void main(String[] args) {
