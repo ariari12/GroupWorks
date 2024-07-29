@@ -57,6 +57,4 @@ public class VacationHistory extends BaseEntity {
         vacationHistory.totalAnnual = 25;
         return vacationHistory;
     }
-
-
 }
