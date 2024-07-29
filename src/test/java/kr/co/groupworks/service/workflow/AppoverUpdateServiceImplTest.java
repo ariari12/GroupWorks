@@ -4,11 +4,10 @@ import kr.co.groupworks.entity.cis.Department;
 import kr.co.groupworks.dto.workflow.dto.ApproverDTO;
 import kr.co.groupworks.dto.workflow.dto.WorkFlowDTO;
 import kr.co.groupworks.dto.workflow.employee.EmployeeDTO;
-import kr.co.groupworks.entity.cis.Department;
 import kr.co.groupworks.entity.cis.Employee;
 import kr.co.groupworks.entity.workflow.WorkFlowEntity;
 import kr.co.groupworks.repository.cis.EmployeeRepository;
-import kr.co.groupworks.repository.workflow.ApproversOnlyRepository;
+import kr.co.groupworks.repository.workflow.ApproversRepository;
 import kr.co.groupworks.repository.workflow.WorkFlowRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
@@ -38,7 +37,7 @@ class AppoverUpdateServiceImplTest {
     @Autowired
     AppoverUpdateServiceImpl appoverUpdateService;
     @Autowired
-    ApproversOnlyRepository approverRepository;
+    ApproversRepository approverRepository;
 
     @BeforeEach
     @Test @DisplayName("사원정보 insertSetUp Test")
@@ -73,8 +72,6 @@ class AppoverUpdateServiceImplTest {
                 .joinDate(LocalDateTime.now().minusDays(i)) // joinDate: 입사일 (현재 날짜에서 i일 전)
                 .salary((3000L + i) * 10L) // salary: 사원 급여 (3000부터 시작, i에 따라 증가)
                 .supervisorId(i > 10 ? (long) ((i % 10) + 1) : 0) // supervisorId: 상사 ID (1부터 10까지 반복)
-                .annualDaysUsed(i % 20) // annualDaysUsed: 연차 사용일 (0부터 19까지 반복)
-                .sickDaysUsed(i % 15) // sickDaysUsed: 병가 사용일 (0부터 14까지 반복)
                 .build()
         ).toList();
 

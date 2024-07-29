@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StopWatch;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
@@ -65,8 +66,6 @@ class WorkFlowServiceImplTest {
                 .joinDate(LocalDateTime.now().minusDays(i)) // joinDate: 입사일 (현재 날짜에서 i일 전)
                 .salary((3000L + i) * 10L) // salary: 사원 급여 (3000부터 시작, i에 따라 증가)
                 .supervisorId(i > 10 ? (long) ((i % 10) + 1) : 0) // supervisorId: 상사 ID (1부터 10까지 반복)
-                .annualDaysUsed(i % 20) // annualDaysUsed: 연차 사용일 (0부터 19까지 반복)
-                .sickDaysUsed(i % 15) // sickDaysUsed: 병가 사용일 (0부터 14까지 반복)
                 .build()
         ).toList();
 
@@ -81,7 +80,6 @@ class WorkFlowServiceImplTest {
 
         employeeRepository.saveAll(employees);
     }
-
 
     @Test @DisplayName("Employee Select Test")
     public void employeeSelectTest() {
@@ -173,4 +171,13 @@ class WorkFlowServiceImplTest {
         log.info("LDT Now String Fomatt Test: {}", approvalNow);
     }
 
+    @Test @DisplayName("Statistics Test")
+    public void statisticsTest() {
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start();
+        Object res = workFlowService.getWorkflowStatistics(1L, 3L, 5);
+        stopWatch.stop();
+        log.info(stopWatch.prettyPrint());
+        log.info("res: {}", res.toString());
+    }
 }

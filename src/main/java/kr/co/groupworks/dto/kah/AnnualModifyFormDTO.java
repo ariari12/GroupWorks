@@ -16,7 +16,6 @@ public class AnnualModifyFormDTO {
     private LocalDate startDate;
     private LocalDate endDate;
     private VacationType vacationType;
-    private String file;
     private VacationStatus status;
     private String contents;
 }
