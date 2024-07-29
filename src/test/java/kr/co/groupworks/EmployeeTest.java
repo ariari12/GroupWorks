@@ -15,8 +15,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.IntStream;
 import java.util.Optional;
+import java.util.stream.IntStream;
 
 @Slf4j
 @SpringBootTest
@@ -37,19 +37,20 @@ public class EmployeeTest {
     public void insetTest() {
         // 샘플 부서 데이터
         List<Department> departments = List.of(
-                new Department(0L,"기술부서", "010-1234-5678", "A동"),
-                new Department(0L,"마케팅부서", "010-1234-5679", "B동"),
-                new Department(0L,"영업부서", "010-1234-5680", "C동"),
-                new Department(0L,"인사부서", "010-1234-5681", "D동"),
-                new Department(0L,"재무부서", "010-1234-5682", "E동"),
-                new Department(0L,"IT 지원부서", "010-1234-5683", "F동"),
-                new Department(0L,"제품 관리부서", "010-1234-5684", "G동"),
-                new Department(0L,"고객 서비스부서", "010-1234-5685", "H동"),
-                new Department(0L,"법무부서", "010-1234-5686", "I동"),
-                new Department(0L,"연구개발부서", "010-1234-5687", "J동")
+                new Department(1L, "기술부서", "010-1234-5678", "A동"),
+                new Department(2L, "마케팅부서", "010-1234-5679", "B동"),
+                new Department(3L, "영업부서", "010-1234-5680", "C동"),
+                new Department(4L, "인사부서", "010-1234-5681", "D동"),
+                new Department(5L, "재무부서", "010-1234-5682", "E동"),
+                new Department(6L, "IT 지원부서", "010-1234-5683", "F동"),
+                new Department(7L, "제품 관리부서", "010-1234-5684", "G동"),
+                new Department(8L, "고객 서비스부서", "010-1234-5685", "H동"),
+                new Department(9L, "법무부서", "010-1234-5686", "I동"),
+                new Department(10L, "연구개발부서", "010-1234-5687", "J동")
         );
 
-        // 이미 존재하는 부서 데이터를 확인하고, 존재하지 않는 경우에만 저장
+
+        // 이미 존재하는 부서 데이터를 확인하고, 존재하지 않는 경우에만 저장 -> Id가 없어서(자동 생성) 데이터가 복사됨
         departments.forEach(department -> {
             Optional<Department> existingDepartment = departmentRepository.findById(department.getDepartmentId());
             if (existingDepartment.isEmpty()) {

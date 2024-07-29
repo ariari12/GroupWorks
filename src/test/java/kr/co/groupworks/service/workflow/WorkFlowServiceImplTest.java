@@ -69,6 +69,8 @@ class WorkFlowServiceImplTest {
                 .build()
         ).toList();
 
+        employees = employeeRepository.saveAll(employees);
+
         // 출력 (테스트용)
         employees.forEach(employee ->
                 System.out.println(employee.getEmployeeId() + ": " +
@@ -78,12 +80,11 @@ class WorkFlowServiceImplTest {
                         employee.getDepartment().getDepartmentName())
         );
 
-        employeeRepository.saveAll(employees);
     }
 
     @Test @DisplayName("Employee Select Test")
     public void employeeSelectTest() {
-        log.info("employeeSelectTest employee: {}", workFlowService.getEmployeeDTO(1));
+        log.info("employeeSelectTest employee: {}", workFlowService.getEmployeeDTO(1L));
     }
 
     @Test @DisplayName("Employee All Select Test")

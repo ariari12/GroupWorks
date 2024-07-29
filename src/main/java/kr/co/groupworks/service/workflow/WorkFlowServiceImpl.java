@@ -50,6 +50,7 @@ public class WorkFlowServiceImpl implements WorkFlowService {
     /* EmployeeId -> EmployeeDTO */
     @Override
     public EmployeeDTO getEmployeeDTO(long employeeId) {
+        log.info("getEmployeeDTO - employeeId: {}", employeeId);
         return EmployeeDTO.entityToDto(Objects.requireNonNull(employeeRepository.findById(employeeId).orElse(null)));
     }
 
