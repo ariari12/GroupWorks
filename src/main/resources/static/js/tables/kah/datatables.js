@@ -20,15 +20,13 @@ $(document).ready(function() {
         paging: true,
         scrollCollapse: true,
         scrollY: 450,
+        layout: {
+            bottomEnd: {
+                paging: {
+                    firstLast: false
+                }
+            }
+        }
     });
 
-    $('#vacationStatus').DataTable({
-        info: false,
-        ordering: true,
-        order: [[3, 'desc']],
-        scrollX: true,
-        paging: true,
-        scrollCollapse: true,
-        scrollY: 450,
-    });
 });
