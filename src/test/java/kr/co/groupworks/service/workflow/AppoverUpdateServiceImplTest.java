@@ -1,14 +1,14 @@
 package kr.co.groupworks.service.workflow;
 
-import kr.co.groupworks.entity.cis.Department;
 import kr.co.groupworks.dto.workflow.dto.ApproverDTO;
 import kr.co.groupworks.dto.workflow.dto.WorkFlowDTO;
 import kr.co.groupworks.dto.workflow.employee.EmployeeDTO;
 import kr.co.groupworks.entity.cis.Department;
 import kr.co.groupworks.entity.cis.Employee;
 import kr.co.groupworks.entity.workflow.WorkFlowEntity;
+import kr.co.groupworks.repository.cis.DepartmentRepository;
 import kr.co.groupworks.repository.cis.EmployeeRepository;
-import kr.co.groupworks.repository.workflow.ApproversOnlyRepository;
+import kr.co.groupworks.repository.workflow.ApproversRepository;
 import kr.co.groupworks.repository.workflow.WorkFlowRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,55 +30,54 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @SpringBootTest
 @Transactional
 class AppoverUpdateServiceImplTest {
-
     @Autowired
     EmployeeRepository employeeRepository;
+    @Autowired
+    DepartmentRepository departmentRepository;
     @Autowired
     WorkFlowRepository workFlowRepository;
     @Autowired
     AppoverUpdateServiceImpl appoverUpdateService;
     @Autowired
-    ApproversOnlyRepository approverRepository;
+    ApproversRepository approverRepository;
 
-    @BeforeEach
-    @Test @DisplayName("사원정보 insertSetUp Test")
+    private List<Employee> employees;
+
+    @BeforeEach @DisplayName("사원정보 insertSetUp Test")
     void insertSetUp() {
         // 샘플 부서 데이터
         List<Department> departments = List.of(
-                new Department(1L, "기술부서", "010-1234-5678", "A동"),
-                new Department(2L, "마케팅부서", "010-1234-5679", "B동"),
-                new Department(3L, "영업부서", "010-1234-5680", "C동"),
-                new Department(4L, "인사부서", "010-1234-5681", "D동"),
-                new Department(5L, "재무부서", "010-1234-5682", "E동"),
-                new Department(6L, "IT 지원부서", "010-1234-5683", "F동"),
-                new Department(7L, "제품 관리부서", "010-1234-5684", "G동"),
-                new Department(8L, "고객 서비스부서", "010-1234-5685", "H동"),
-                new Department(9L, "법무부서", "010-1234-5686", "I동"),
-                new Department(10L, "연구개발부서", "010-1234-5687", "J동")
+                new Department(0L, "기술부서", "010-1234-1111", "A동"),
+                new Department(0L, "마케팅부서", "010-1234-2222", "B동"),
+                new Department(0L, "영업부서", "010-1234-3333", "C동"),
+                new Department(0L, "인사부서", "010-1234-4444", "D동"),
+                new Department(0L, "재무부서", "010-1234-5555", "E동"),
+                new Department(0L, "IT 지원부서", "010-1234-6666", "F동"),
+                new Department(0L, "제품 관리부서", "010-1234-7777", "G동"),
+                new Department(0L, "고객 서비스부서", "010-1234-8888", "H동"),
+                new Department(0L, "법무부서", "010-1234-9999", "I동"),
+                new Department(0L, "연구개발부서", "010-1234-1010", "J동")
         );
-
         // 샘플 사원 데이터 생성
-        List<Employee> employees = IntStream.rangeClosed(1, 100).mapToObj(i -> Employee.builder()
-                .employeeId((long) i)
-                // PW : 1111
-                .employeePW("$2a$10$Vg4CIc8WunwnKoV2.j9J.uPep8BgLAzb2VelL89I.hGiLBDNoybpO") // employeePW: 사원 비밀번호 (pw1, pw2, ..., pw100)
+        List<Department> finalDepartments = departmentRepository.saveAll(departments);
+        employees = IntStream.rangeClosed(1, 10).mapToObj(i -> Employee.builder()
+                .employeePW("$2a$10$Vg4CIc8WunwnKoV2.j9J.uPep8BgLAzb2VelL89I.hGiLBDNoybpO") // employeePW: 1111
                 .employeeName("사원" + i) // employeeName: 사원 이름 (사원1, 사원2, ..., 사원100)
                 .rankId((i % 5) + 1)    // rankId: 사원 직급 ID (1부터 5까지 반복)
                 .rankName("직급" + (i % 5 + 1)) // rankName: 사원 직급 이름 (직급1, 직급2, ..., 직급5 반복)
-                .department(departments.get(i % departments.size())) // department: 부서 (부서 목록에서 순환 선택)
-                .email("employee" + i + "@example.com") // email: 사원 이메일 (employee1@example.com, employee2@example.com, ..., employee100@example.com)
+                .department(finalDepartments.get(i % finalDepartments.size())) // department: 부서 (부서 목록에서 순환 선택)
+                .email("apporverUdate" + i + "@test.com")
                 .phoneNumber("010-1111-111" + (i % 10)) // phoneNumber: 사원 전화번호 (010-1111-1110, 010-1111-1111, ..., 010-1111-1119 반복)
                 .address("주소 " + i) // address: 사원 주소 (주소 1, 주소 2, ..., 주소 100)
                 .gender((i % 2 == 0) ? "남" : "여") // gender: 사원 성별 (남 또는 여, 홀수는 여, 짝수는 남)
                 .joinDate(LocalDateTime.now().minusDays(i)) // joinDate: 입사일 (현재 날짜에서 i일 전)
                 .salary((3000L + i) * 10L) // salary: 사원 급여 (3000부터 시작, i에 따라 증가)
-                .supervisorId(i > 10 ? (long) ((i % 10) + 1) : 0) // supervisorId: 상사 ID (1부터 10까지 반복)
-                .annualDaysUsed(i % 20) // annualDaysUsed: 연차 사용일 (0부터 19까지 반복)
-                .sickDaysUsed(i % 15) // sickDaysUsed: 병가 사용일 (0부터 14까지 반복)
+                .supervisorId(0L) // supervisorId: 상사 ID (1부터 10까지 반복)
                 .build()
         ).toList();
+        employees = employeeRepository.saveAll(employees);
 
-        // 출력 (테스트용)
+        // 출력 (확인 용)
         employees.forEach(employee ->
                 System.out.println(employee.getEmployeeId() + ": " +
                         employee.getEmployeeName() + ", " +
@@ -86,13 +85,10 @@ class AppoverUpdateServiceImplTest {
                         employee.getPhoneNumber() + ", " +
                         employee.getDepartment().getDepartmentName())
         );
+        long employeeId01 = employees.get(0).getEmployeeId();
 
-        employeeRepository.saveAll(employees);
-
-        employees = employeeRepository.findAllById(List.of(2L, 3L, 4L, 5L, 6L));
         EmployeeDTO finalApprover01 = EmployeeDTO.entityToDto(employees.get(4));
-
-        WorkFlowEntity workFlow01 = EmployeeDTO.entityToWorkflowDTO(Objects.requireNonNull(employeeRepository.findById(1L).orElse(null)))
+        WorkFlowEntity workFlow01 = EmployeeDTO.entityToWorkflowDTO(Objects.requireNonNull(employeeRepository.findById(employeeId01).orElse(null)))
                 .setCode("01-t-010101")
                 .setWorkFlowType(2)
                 .setTitle("test01")
@@ -109,16 +105,17 @@ class AppoverUpdateServiceImplTest {
                 .setAttachmentFiles(null)
                 .dtoToEntity();
         WorkFlowDTO wd01 = WorkFlowDTO.entityToDto(workFlowRepository.save(workFlow01));
-        log.info("wd: {}", wd01);
+
+        log.info("wd01: {}", wd01);
         workFlowRepository.save(wd01
-                .setApprovers(employees.stream().map(e -> EmployeeDTO.entityToApproverDto(e)
-                                .setWorkFlowId(wd01.getId()))
+                .setApprovers(employees.stream()
+                        .map(e -> EmployeeDTO.entityToApproverDto(e).setWorkFlowId(wd01.getId()))
                         .toList())
                 .dtoToEntity()
         );
 
         EmployeeDTO finalApprover02 = EmployeeDTO.entityToDto(employees.get(4));
-        WorkFlowEntity workFlow02 = EmployeeDTO.entityToWorkflowDTO(Objects.requireNonNull(employeeRepository.findById(1L).orElse(null)))
+        WorkFlowEntity workFlow02 = EmployeeDTO.entityToWorkflowDTO(Objects.requireNonNull(employeeRepository.findById(employeeId01).orElse(null)))
                 .setCode("02-t-020202")
                 .setWorkFlowType(2)
                 .setTitle("test02")
@@ -135,10 +132,10 @@ class AppoverUpdateServiceImplTest {
                 .setAttachmentFiles(null)
                 .dtoToEntity();
         WorkFlowDTO wd = WorkFlowDTO.entityToDto(workFlowRepository.save(workFlow02));
-        log.info("wd: {}", wd);
+        log.info("wd02: {}", wd);
         workFlowRepository.save(wd
-                .setApprovers(employees.stream().map(e -> EmployeeDTO.entityToApproverDto(e)
-                                .setWorkFlowId(wd.getId()).setApproval(1))
+                .setApprovers(employees.stream()
+                        .map(e -> EmployeeDTO.entityToApproverDto(e).setWorkFlowId(wd.getId()).setApproval(1))
                         .toList())
                 .dtoToEntity()
         );
@@ -146,8 +143,9 @@ class AppoverUpdateServiceImplTest {
 
     @Test @DisplayName("Approver Update Test")
     public void approverUpdateTest() {
-        Employee employee = employeeRepository.findById(2L).orElse(null);
+        employees.forEach(e -> log.info("{}", e));
 
+        Employee employee = employees.get(0);
         Employee testEmployee = Employee.builder()
                 .employeeId(employee.getEmployeeId())
                 .email("test@test.test")

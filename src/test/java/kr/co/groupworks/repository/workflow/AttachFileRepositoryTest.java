@@ -23,6 +23,8 @@ class AttachFileRepositoryTest {
             File file = new File(e.getSavePath());
             if(file.exists()) {
                 log.info("file exists: {}", new AttachmentFileVO(e));
+            } else {
+                log.info("file not exists");
             }
         });
     }

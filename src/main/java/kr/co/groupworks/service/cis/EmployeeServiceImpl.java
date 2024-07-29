@@ -1,8 +1,11 @@
 package kr.co.groupworks.service.cis;
 
 import kr.co.groupworks.dto.cis.employee.EmployeeDTO;
+import kr.co.groupworks.entity.cis.Department;
 import kr.co.groupworks.entity.cis.Employee;
+import kr.co.groupworks.entity.kah.VacationHistory;
 import kr.co.groupworks.repository.cis.EmployeeRepository;
+import kr.co.groupworks.repository.kah.VacationHistoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,6 +19,7 @@ import java.util.List;
 @Transactional
 public class EmployeeServiceImpl implements EmployeeService {
     private final EmployeeRepository employeeRepository;
+    private final VacationHistoryRepository vacationHistoryRepository;
 
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -23,8 +27,10 @@ public class EmployeeServiceImpl implements EmployeeService {
 //    사원 저장 서비스
     public void saveEmployee(EmployeeDTO employeeDTO) {
         Employee employee = toEmployee(employeeDTO);
-
-        employeeRepository.save(employee);
+        employee=employeeRepository.save(employee);
+        //휴가 내역 초기화
+        VacationHistory vacationHistory = VacationHistory.createFromEmployee(employee);
+        vacationHistoryRepository.save(vacationHistory);
     }
 
 //    사원 목록 불러오기
@@ -77,8 +83,10 @@ public class EmployeeServiceImpl implements EmployeeService {
                 .employeeName(dto.getEmployeeName())
                 .rankId(dto.getRankId())
                 .rankName(dto.getRankName())
-//                .departmentId(dto.getDepartmentId())
-//                .departmentName(dto.getDepartmentName())
+                .department(Department.builder()
+                        .departmentId(dto.getDepartmentId())
+                        .departmentName(dto.getDepartmentName())
+                        .build())
                 .email(dto.getEmail())
                 .phoneNumber(dto.getPhoneNumber())
                 .address(dto.getAddress())
@@ -97,8 +105,8 @@ public class EmployeeServiceImpl implements EmployeeService {
                 .employeeName(employee.getEmployeeName())
                 .rankId(employee.getRankId())
                 .rankName(employee.getRankName())
-//                .departmentId(employee.getDepartmentId())
-//                .departmentName(employee.getDepartmentName())
+                .departmentId(employee.getDepartment().getDepartmentId())
+                .departmentName(employee.getDepartment().getDepartmentName())
                 .email(employee.getEmail())
                 .phoneNumber(employee.getPhoneNumber())
                 .address(employee.getAddress())

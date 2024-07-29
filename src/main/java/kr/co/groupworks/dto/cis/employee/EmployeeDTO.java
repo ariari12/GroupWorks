@@ -24,7 +24,7 @@ public class EmployeeDTO {
     //  직급 명
     private String rankName;
     //  부서 번호 fk
-    private int departmentId;
+    private Long departmentId;
     //  부서 명
     private String departmentName;
     //  이메일

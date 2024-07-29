@@ -11,5 +11,5 @@ import java.util.List;
 public interface DepartmentRepository extends JpaRepository<Department, Long> {
 
     @Query(value = "select d.departmentName from Department d order by 1 asc ")
-    List<String> getDepartments();
+    List<Object> getDepartments();
 }

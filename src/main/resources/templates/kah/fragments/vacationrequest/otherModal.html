@@ -83,6 +83,7 @@
                     success: function(response) {
                         alert("Success: " + response);
                         $('#other').modal('hide');
+                        location.reload();
                     },
                     error: function(xhr) {
                         if (xhr.status === 400) {

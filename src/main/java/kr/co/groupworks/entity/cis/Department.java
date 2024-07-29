@@ -1,9 +1,6 @@
 package kr.co.groupworks.entity.cis;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
@@ -14,8 +11,9 @@ import lombok.*;
 public class Department {
     // 1, 부서 pk
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "department_id", nullable = false, unique = true)
-    private long departmentId;
+    private Long departmentId;
     // 2, 부서 명
     @Column(name = "department_name", nullable = false)
     private String departmentName;
