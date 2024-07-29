@@ -1,0 +1,25 @@
+.approval {
+    border: 1px solid green;
+    border-radius: 15px;
+    padding: 4px 8px;
+    color: green;
+}
+.approval-hover {
+    background: green;
+    border-radius: 15px;
+    padding: 4px 8px;
+    color: white;
+}
+
+.rejection {
+    border: 1px solid red;
+    border-radius: 15px;
+    padding: 4px 8px;
+    color: red;
+}
+.rejection-hover {
+    background: red;
+    border-radius: 15px;
+    padding: 4px 8px;
+    color: white;
+}
