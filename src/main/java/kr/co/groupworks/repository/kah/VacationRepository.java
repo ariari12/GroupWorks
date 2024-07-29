@@ -8,9 +8,9 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface VacationRepository extends JpaRepository<Vacation, Long>, VacationRepositoryQueryDsl {
+public interface VacationRepository extends JpaRepository<Vacation, Long>{
     @Query("SELECT v FROM Vacation v JOIN v.employee e WHERE e.employeeId = :employeeId")
-    List<Vacation> findAllByEmployeeId(@Param("employeeId")Long employeeId);
+    List<Vacation> findAllByEmployeeId(@Param("employeeId") Long employeeId);
 
     // 사원의 휴가기간이 겹치치 않는 휴가 조회
     @Query("select v from Vacation v JOIN v.employee e where e.employeeId = :employeeId and " +

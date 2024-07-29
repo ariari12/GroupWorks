@@ -98,7 +98,6 @@ class VacationServiceImplTest {
         vacationService.save(halfFormDTO1);
 
         List<VacationMyRequestDTO> vacationRequestList = vacationService.findAllByEmployeeId(1L);
-
         assertThat(vacationRequestList).isNotNull();
 
     }
