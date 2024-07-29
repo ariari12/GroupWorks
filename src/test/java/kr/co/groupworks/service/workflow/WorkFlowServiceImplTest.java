@@ -4,9 +4,9 @@ import kr.co.groupworks.dto.workflow.dto.ApproverDTO;
 import kr.co.groupworks.dto.workflow.employee.EmployeeDTO;
 import kr.co.groupworks.entity.cis.Department;
 import kr.co.groupworks.entity.cis.Employee;
+import kr.co.groupworks.repository.cis.DepartmentRepository;
 import kr.co.groupworks.repository.cis.EmployeeRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +24,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.IntStream;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+
 @Slf4j
 @SpringBootTest
 @Transactional
@@ -31,60 +34,34 @@ class WorkFlowServiceImplTest {
     @Autowired
     EmployeeRepository employeeRepository;
     @Autowired
+    DepartmentRepository departmentRepository;
+    @Autowired
     WorkFlowServiceImpl workFlowService;
-
-    @BeforeEach
-    @DisplayName("Department, Employee Insert")
-    public void insetTest() {
-        // 샘플 부서 데이터
-        List<Department> departments = List.of(
-                new Department(1L, "기술부서", "010-1234-5678", "A동"),
-                new Department(2L, "마케팅부서", "010-1234-5679", "B동"),
-                new Department(3L, "영업부서", "010-1234-5680", "C동"),
-                new Department(4L, "인사부서", "010-1234-5681", "D동"),
-                new Department(5L, "재무부서", "010-1234-5682", "E동"),
-                new Department(6L, "IT 지원부서", "010-1234-5683", "F동"),
-                new Department(7L, "제품 관리부서", "010-1234-5684", "G동"),
-                new Department(8L, "고객 서비스부서", "010-1234-5685", "H동"),
-                new Department(9L, "법무부서", "010-1234-5686", "I동"),
-                new Department(10L, "연구개발부서", "010-1234-5687", "J동")
-        );
-
-        // 샘플 사원 데이터 생성
-        List<Employee> employees = IntStream.rangeClosed(1, 100).mapToObj(i -> Employee.builder()
-                .employeeId((long) i)
-                // PW : 1111
-                .employeePW("$2a$10$Vg4CIc8WunwnKoV2.j9J.uPep8BgLAzb2VelL89I.hGiLBDNoybpO") // employeePW: 사원 비밀번호 (pw1, pw2, ..., pw100)
-                .employeeName("사원" + i) // employeeName: 사원 이름 (사원1, 사원2, ..., 사원100)
-                .rankId((i % 5) + 1)    // rankId: 사원 직급 ID (1부터 5까지 반복)
-                .rankName("직급" + (i % 5 + 1)) // rankName: 사원 직급 이름 (직급1, 직급2, ..., 직급5 반복)
-                .department(departments.get(i % departments.size())) // department: 부서 (부서 목록에서 순환 선택)
-                .email("employee" + i + "@example.com") // email: 사원 이메일 (employee1@example.com, employee2@example.com, ..., employee100@example.com)
-                .phoneNumber("010-1111-111" + (i % 10)) // phoneNumber: 사원 전화번호 (010-1111-1110, 010-1111-1111, ..., 010-1111-1119 반복)
-                .address("주소 " + i) // address: 사원 주소 (주소 1, 주소 2, ..., 주소 100)
-                .gender((i % 2 == 0) ? "남" : "여") // gender: 사원 성별 (남 또는 여, 홀수는 여, 짝수는 남)
-                .joinDate(LocalDateTime.now().minusDays(i)) // joinDate: 입사일 (현재 날짜에서 i일 전)
-                .salary((3000L + i) * 10L) // salary: 사원 급여 (3000부터 시작, i에 따라 증가)
-                .supervisorId(i > 10 ? (long) ((i % 10) + 1) : 0) // supervisorId: 상사 ID (1부터 10까지 반복)
-                .build()
-        ).toList();
-
-        employees = employeeRepository.saveAll(employees);
-
-        // 출력 (테스트용)
-        employees.forEach(employee ->
-                System.out.println(employee.getEmployeeId() + ": " +
-                        employee.getEmployeeName() + ", " +
-                        employee.getEmail() + ", " +
-                        employee.getPhoneNumber() + ", " +
-                        employee.getDepartment().getDepartmentName())
-        );
-
-    }
 
     @Test @DisplayName("Employee Select Test")
     public void employeeSelectTest() {
-        log.info("employeeSelectTest employee: {}", workFlowService.getEmployeeDTO(1L));
+        Department department = departmentRepository.save(new Department(0L, "기술부서", "010-1234-5678", "A동"));
+        Employee employee = employeeRepository.save(Employee.builder()
+                // PW : 1111
+                .employeePW("$2a$10$Vg4CIc8WunwnKoV2.j9J.uPep8BgLAzb2VelL89I.hGiLBDNoybpO") // employeePW: 1111
+                .employeeName("사원")
+                .rankId(1)
+                .rankName("직급")
+                .department(department)
+                .email("employee@test.com")
+                .phoneNumber("010-1111-0000")
+                .address("주소")
+                .gender("남")
+                .joinDate(LocalDateTime.now())
+                .salary(300000L)
+                .supervisorId(0L)
+                .build()
+        );
+
+        EmployeeDTO assertDto = workFlowService.getEmployeeDTO(employee.getEmployeeId());
+        log.info("employeeSelectTest employee: {}", assertDto);
+
+        assertEquals(EmployeeDTO.entityToDto(employee), assertDto);
     }
 
     @Test @DisplayName("Employee All Select Test")
@@ -118,32 +95,79 @@ class WorkFlowServiceImplTest {
 
     @Test @DisplayName("ApproverList Insert Test")
     public void approverListInsertTest() {
+        // 샘플 부서 데이터
+        List<Department> departments = List.of(
+                new Department(0L, "기술부서", "010-1234-5678", "A동"),
+                new Department(0L, "마케팅부서", "010-1234-5679", "B동"),
+                new Department(0L, "영업부서", "010-1234-5680", "C동"),
+                new Department(0L, "인사부서", "010-1234-5681", "D동")
+        );
+        List<Department> finalDepartments = departmentRepository.saveAll(departments);
+
+        // 샘플 사원 데이터 생성
+        List<Employee> employees = employeeRepository.saveAll(IntStream.rangeClosed(1, 10).mapToObj(i -> Employee.builder()
+                .employeePW("$2a$10$Vg4CIc8WunwnKoV2.j9J.uPep8BgLAzb2VelL89I.hGiLBDNoybpO") // employeePW: 1111
+                .employeeName("사원" + i) // employeeName: 사원 이름 (사원1, 사원2, ..., 사원100)
+                .rankId((i % 5) + 1)    // rankId: 사원 직급 ID (1부터 5까지 반복)
+                .rankName("직급" + (i % 5 + 1)) // rankName: 사원 직급 이름 (직급1, 직급2, ..., 직급5 반복)
+                .department(finalDepartments.get(i %4)) // department: 부서 (부서 목록에서 순환 선택)
+                .email("approver" + i + "@test.com") // email: 사원 이메일 (employee1@example.com, employee2@example.com, ..., employee10@example.com)
+                .phoneNumber("010-1111-111" + (i % 10)) // phoneNumber: 사원 전화번호 (010-1111-1110, 010-1111-1111, ..., 010-1111-1119 반복)
+                .address("주소 " + i) // address: 사원 주소 (주소 1, 주소 2, ..., 주소 100)
+                .gender((i % 2 == 0) ? "남" : "여") // gender: 사원 성별 (남 또는 여, 홀수는 여, 짝수는 남)
+                .joinDate(LocalDateTime.now().minusDays(i)) // joinDate: 입사일 (현재 날짜에서 i일 전)
+                .salary((3000L + i) * 10L) // salary: 사원 급여 (3000부터 시작, i에 따라 증가)
+                .supervisorId(i > 10 ? (long) ((i % 10) + 1) : 0) // supervisorId: 상사 ID (1부터 10까지 반복)
+                .build()
+        ).toList());
+
+        // 생성된 사원데이터 확인
+        employees.forEach(employee ->
+                System.out.println(employee.getEmployeeId() + ": " +
+                        employee.getEmployeeName() + ", " +
+                        employee.getEmail() + ", " +
+                        employee.getPhoneNumber() + ", " +
+                        employee.getDepartment().getDepartmentName())
+        );
+
+        List<Long> employeeIds = employees.stream().map(Employee::getEmployeeId).toList();
+        log.info("employeeIds:{}", employeeIds);
+
         List<ApproverDTO> approverDTOList = new ArrayList<>();
         Map<String, Integer[]> approverMap = new HashMap<>();
-        approverMap.put("approve", new Integer[]{4, 7, 10});
-        approverMap.put("collaborate", new Integer[]{2, 5, 8});
-        approverMap.put("refer", new Integer[]{3, 6, 9});
+        approverMap.put("approve", new Integer[]{3, 6, 9});
+        approverMap.put("collaborate", new Integer[]{1, 4, 7});
+        approverMap.put("refer", new Integer[]{2, 5, 8});
 
-        for (int i = 1; i < approverMap.get("approve").length; i++) {
+        for (int i = 0; i < approverMap.get("approve").length; i++) {
+            int approver = approverMap.get("approve")[i];
+            long id = employeeIds.get(approver);
+            log.info("approver: {}, id: {}", approver, id);
             approverDTOList.add(
-                    workFlowService.getApproverDTO(approverMap.get("approve")[i -1])
-                            .setWorkFlowId(1L)
+                    workFlowService.getApproverDTO(id)
+                            .setWorkFlowId(employeeIds.get(0))
                             .setSequenceNum(i)
                             .setApproverType(1)
             );
         }
         for (int i = 0; i < approverMap.get("collaborate").length; i++) {
+            int collaborate = approverMap.get("collaborate")[i];
+            long id = employeeIds.get(collaborate);
+            log.info("collaborate: {}, id: {}", collaborate, id);
             approverDTOList.add(
-                    workFlowService.getApproverDTO(approverMap.get("collaborate")[i])
-                            .setWorkFlowId(1L)
+                    workFlowService.getApproverDTO(id)
+                            .setWorkFlowId(employeeIds.get(0))
                             .setSequenceNum(i)
                             .setApproverType(2)
             );
         }
         for (int i = 0; i < approverMap.get("refer").length; i++) {
+            int refer = approverMap.get("refer")[i];
+            long id = employeeIds.get(refer);
+            log.info("refer: {}, id:{}", refer, id);
             approverDTOList.add(
-                    workFlowService.getApproverDTO(approverMap.get("refer")[i])
-                            .setWorkFlowId(1L)
+                    workFlowService.getApproverDTO(id)
+                            .setWorkFlowId(employeeIds.get(0))
                             .setSequenceNum(i)
                             .setApproverType(3)
             );
