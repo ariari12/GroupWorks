@@ -35,7 +35,7 @@
             </thead>
 
             <tbody>
-            <!--/*@thymesVar id="approval" type="kr.co.groupworks.dto.workflow.dto.WorkFlowDTO"*/-->
+            <!--/*@thymesVar id="approval" type="kr.co.groupworks.workflow.dto.dto.WorkFlowDTO"*/-->
             <tr th:onclick="load([[${list.id}]])" th:each="list : ${approval}">
                 <td>[[${list.id}]]</td>
                 <td>[[${list.workFlowType}]]</td>
@@ -50,7 +50,9 @@
                 <td>[[${list.finalApprovalRank}]]</td>
                 <td>[[${list.finalApprovalDepartment}]]</td>
                 <td>[[${list.finalApprovalName}]]</td>
-                <td>[[${list.status}]]</td>
+                <td th:if="${list.status == 1}"><span class="approval">승인</span></td>
+                <td th:if="${list.status == 2}"><span class="rejection">반려</span></td>
+                <td th:if="${!(list.status == 1 || list.status == 2)}">진행</td>
                 <td>[[${list.approvalCount} + '/' + ${list.approverCount}]]</td>
                 <td>
                     <div class="progress" role="progressbar" aria-label="Success example" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
