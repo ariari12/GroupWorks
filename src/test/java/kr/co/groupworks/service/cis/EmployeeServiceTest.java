@@ -24,7 +24,7 @@ class EmployeeServiceTest {
                 .employeeName("최일성")
                 .rankId(2)
                 .rankName("사원")
-                .departmentId(10)
+                .departmentId(10L)
                 .departmentName("IT")
                 .email("dlftjd@gw.com")
                 .phoneNumber("010-1111-2222")

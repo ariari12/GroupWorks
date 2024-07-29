@@ -123,16 +123,11 @@ public class WorkFlowController {
     /* 결재 현황 */
     @GetMapping(WORK_STATUS)
     public String workStat(Model model, HttpSession session) {
-        long employeeId = getEmployeeId(session);
-        long departmentId = getDepartmentId(session);
         title = "WorkFlow Status Board";
         log.info("WorkFlowController - stat title: {}", title);
 
         model.addAttribute(AttributeName.TITLE.getStatus(), title);
         model.addAttribute(AttributeName.SUB_TITLE.getStatus(), title);
-
-        Map<String, List<Object>> result = workFlowService.getWorkflowStatus(employeeId, departmentId);
-        workFlowService.getWorkflowStatus(employeeId, departmentId).forEach(model::addAttribute);
 
         return DIRECTORY + "/workStatus";
     }
@@ -164,7 +159,6 @@ public class WorkFlowController {
 
         return DIRECTORY + "/approvalReferrerList";
     }
-
 
     /* Workflow Detail View Use **WorkflowDTO -> Attribute Item Convert** */
     private Map<String, Object> getDetailAttribute(WorkFlowDTO workFlow, long employeeId) {
@@ -210,7 +204,6 @@ public class WorkFlowController {
         result.put("listMap", listMap);
         return result;
     }
-
 
     /* HttpSession -> EmployeeId */
     private long getEmployeeId(HttpSession session) {

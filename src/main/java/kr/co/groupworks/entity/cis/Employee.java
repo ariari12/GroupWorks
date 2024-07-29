@@ -5,7 +5,9 @@ import jakarta.persistence.*;
 import lombok.*;
 
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 
 @Getter
 @Entity
@@ -14,6 +16,7 @@ import java.time.LocalDateTime;
 @Builder @ToString(exclude = "department")
 public class Employee {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "employee_id", nullable = false, unique = true)
     private Long employeeId;
 
@@ -54,24 +57,4 @@ public class Employee {
     @Column(name = "supervisor_id")
     private Long supervisorId;
 
-    @Column(name = "annual_days_used")
-    private double annualDaysUsed;
-
-    @Column(name = "sick_days_used")
-    private int sickDaysUsed;
-
-    @Column(name = "other_days_used")
-    private int otherDaysUsed;
-
-    public void updateAnnualDaysUsed(double annualDaysUsed) {
-        this.annualDaysUsed += annualDaysUsed;
-    }
-
-    public void updateSickDaysUsed(int sickDaysUsed) {
-        this.sickDaysUsed += sickDaysUsed;
-    }
-
-    public void updateOtherDaysUsed(int otherDaysUsed) {
-        this.otherDaysUsed += otherDaysUsed;
-    }
 }
