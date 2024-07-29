@@ -2,11 +2,13 @@ package kr.co.groupworks.exception.exhandler;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Map;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class ErrorResult {
     private String code;
     private String message;

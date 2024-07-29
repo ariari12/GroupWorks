@@ -1,14 +1,11 @@
 package kr.co.groupworks.service.cis;
 
 import kr.co.groupworks.dto.cis.employee.EmployeeDTO;
-import kr.co.groupworks.entity.cis.Employee;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDateTime;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class EmployeeServiceTest {
@@ -23,15 +20,15 @@ class EmployeeServiceTest {
                 .employeeName("최일성")
                 .rankId(2)
                 .rankName("사원")
-                .departmentId(10)
+                .departmentId(10L)
                 .departmentName("IT")
                 .email("dlftjd@gw.com")
                 .phoneNumber("010-1111-2222")
                 .address("서울시 노원구")
                 .gender("Male")
                 .joinDate(LocalDateTime.now())
-                .salary(65000)
-                .supervisorId(1033)
+                .salary(65000L)
+                .supervisorId(1033L)
                 .build();
 
         employeeService.saveEmployee(employee);

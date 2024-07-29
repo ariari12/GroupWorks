@@ -1,10 +1,13 @@
 package kr.co.groupworks;
 
+import kr.co.groupworks.entity.cis.Department;
 import kr.co.groupworks.entity.cis.Employee;
+import kr.co.groupworks.entity.kah.VacationHistory;
+import kr.co.groupworks.repository.cis.DepartmentRepository;
 import kr.co.groupworks.repository.cis.EmployeeRepository;
-import kr.co.groupworks.service.ljm.WorkFlowService;
+import kr.co.groupworks.repository.kah.VacationHistoryRepository;
+import kr.co.groupworks.service.workflow.WorkFlowService;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +15,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDateTime;
 import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import java.util.Optional;
+import java.util.stream.IntStream;
 
 @Slf4j
 @SpringBootTest
@@ -21,62 +24,83 @@ public class EmployeeTest {
     /* 필요한 객체 추가 */
     @Autowired
     private WorkFlowService workFlowService;
-
+    @Autowired
+    private DepartmentRepository departmentRepository;
     @Autowired
     private EmployeeRepository employeeRepository;
+    @Autowired
+    private VacationHistoryRepository vacationHistoryRepository;
 
     private List<Employee> employees;
 
-    @BeforeEach @Test @DisplayName("사원정보 insertSetUp Test")
-    void insertSetUp() {
-         employees = List.of(
-                Employee.builder().employeeId(1L).employeePW("$2a$10$Vg4CIc8WunwnKoV2.j9J.uPep8BgLAzb2VelL89I.hGiLBDNoybpO")
-                        .employeeName("김철수").rankId(1).rankName("사원").departmentId(1).departmentName("기술부서")
-                        .email("john.doe@example.com").phoneNumber("555-1234").address("123 Main St").gender("Male")
-                        .joinDate(LocalDateTime.of(2023, 1, 15, 9, 0)).salary(50000).supervisorId(null).build(),
-                Employee.builder().employeeId(2L).employeePW("$2a$10$Vg4CIc8WunwnKoV2.j9J.uPep8BgLAzb2VelL89I.hGiLBDNoybpO")
-                        .employeeName("이영희").rankId(2).rankName("주임").departmentId(2).departmentName("마케팅부서")
-                        .email("jane.smith@example.com").phoneNumber("555-5678").address("456 Elm St").gender("Female")
-                        .joinDate(LocalDateTime.of(2022, 3, 12, 9, 0)).salary(60000).supervisorId(1).build(),
-                Employee.builder().employeeId(3L).employeePW("$2a$10$Vg4CIc8WunwnKoV2.j9J.uPep8BgLAzb2VelL89I.hGiLBDNoybpO")
-                        .employeeName("박민수").rankId(3).rankName("책임").departmentId(3).departmentName("인사부서")
-                        .email("mike.jones@example.com").phoneNumber("555-9012").address("789 Oak St").gender("Male")
-                        .joinDate(LocalDateTime.of(2021, 6, 25, 9, 0)).salary(70000).supervisorId(2).build(),
-                Employee.builder().employeeId(4L).employeePW("$2a$10$Vg4CIc8WunwnKoV2.j9J.uPep8BgLAzb2VelL89I.hGiLBDNoybpO")
-                        .employeeName("최수연").rankId(2).rankName("대리").departmentId(1).departmentName("기술부서")
-                        .email("susan.brown@example.com").phoneNumber("555-3456").address("101 Pine St").gender("Female")
-                        .joinDate(LocalDateTime.of(2023, 2, 10, 9, 0)).salary(55000).supervisorId(3).build(),
-                Employee.builder().employeeId(5L).employeePW("$2a$10$Vg4CIc8WunwnKoV2.j9J.uPep8BgLAzb2VelL89I.hGiLBDNoybpO")
-                        .employeeName("정우성").rankId(1).rankName("과장").departmentId(2).departmentName("마케팅부서")
-                        .email("tom.wilson@example.com").phoneNumber("555-7890").address("202 Cedar St").gender("Male")
-                        .joinDate(LocalDateTime.of(2020, 11, 30, 9, 0)).salary(45000).supervisorId(4).build(),
-                Employee.builder().employeeId(6L).employeePW("$2a$10$Vg4CIc8WunwnKoV2.j9J.uPep8BgLAzb2VelL89I.hGiLBDNoybpO")
-                        .employeeName("신혜진").rankId(2).rankName("차장").departmentId(3).departmentName("인사부서")
-                        .email("lisa.white@example.com").phoneNumber("555-1235").address("303 Birch St").gender("Female")
-                        .joinDate(LocalDateTime.of(2019, 5, 20, 9, 0)).salary(65000).supervisorId(5).build(),
-                Employee.builder().employeeId(7L).employeePW("$2a$10$Vg4CIc8WunwnKoV2.j9J.uPep8BgLAzb2VelL89I.hGiLBDNoybpO")
-                        .employeeName("오준호").rankId(3).rankName("부장").departmentId(1).departmentName("기술부서")
-                        .email("daniel.green@example.com").phoneNumber("555-5679").address("404 Spruce St").gender("Male")
-                        .joinDate(LocalDateTime.of(2018, 4, 15, 9, 0)).salary(80000).supervisorId(6).build(),
-                Employee.builder().employeeId(8L).employeePW("$2a$10$Vg4CIc8WunwnKoV2.j9J.uPep8BgLAzb2VelL89I.hGiLBDNoybpO")
-                        .employeeName("강하늘").rankId(3).rankName("이사").departmentId(2).departmentName("마케팅부서")
-                        .email("nancy.black@example.com").phoneNumber("555-9013").address("505 Maple St").gender("Female")
-                        .joinDate(LocalDateTime.of(2017, 7, 19, 9, 0)).salary(75000).supervisorId(7).build(),
-                Employee.builder().employeeId(9L).employeePW("$2a$10$Vg4CIc8WunwnKoV2.j9J.uPep8BgLAzb2VelL89I.hGiLBDNoybpO")
-                        .employeeName("권민지").rankId(1).rankName("상무").departmentId(3).departmentName("인사부서")
-                        .email("peter.gray@example.com").phoneNumber("555-3457").address("606 Redwood St").gender("Male")
-                        .joinDate(LocalDateTime.of(2022, 8, 23, 9, 0)).salary(48000).supervisorId(8).build(),
-                Employee.builder().employeeId(10L).employeePW("$2a$10$Vg4CIc8WunwnKoV2.j9J.uPep8BgLAzb2VelL89I.hGiLBDNoybpO")
-                        .employeeName("백승훈").rankId(2).rankName("전무").departmentId(1).departmentName("기술부서")
-                        .email("emma.purple@example.com").phoneNumber("555-7891").address("707 Cherry St").gender("Female")
-                        .joinDate(LocalDateTime.of(2023, 3, 18, 9, 0)).salary(62000).supervisorId(9).build()
+    @Test @DisplayName("Department, Employee Insert")
+    public void insetTest() {
+        // 샘플 부서 데이터
+        List<Department> departments = List.of(
+                new Department(1L, "기술부서", "010-1234-5678", "A동"),
+                new Department(2L, "마케팅부서", "010-1234-5679", "B동"),
+                new Department(3L, "영업부서", "010-1234-5680", "C동"),
+                new Department(4L, "인사부서", "010-1234-5681", "D동"),
+                new Department(5L, "재무부서", "010-1234-5682", "E동"),
+                new Department(6L, "IT 지원부서", "010-1234-5683", "F동"),
+                new Department(7L, "제품 관리부서", "010-1234-5684", "G동"),
+                new Department(8L, "고객 서비스부서", "010-1234-5685", "H동"),
+                new Department(9L, "법무부서", "010-1234-5686", "I동"),
+                new Department(10L, "연구개발부서", "010-1234-5687", "J동")
         );
+
+
+        // 이미 존재하는 부서 데이터를 확인하고, 존재하지 않는 경우에만 저장 -> Id가 없어서(자동 생성) 데이터가 복사됨
+        departments.forEach(department -> {
+            Optional<Department> existingDepartment = departmentRepository.findById(department.getDepartmentId());
+            if (existingDepartment.isEmpty()) {
+                departmentRepository.save(department);
+            }
+        });
+
+        // 샘플 사원 데이터 생성
+        List<Employee> employees = IntStream.rangeClosed(1, 100).mapToObj(i -> Employee.builder()
+                .employeeId((long) i)
+                .employeePW("$2a$10$Vg4CIc8WunwnKoV2.j9J.uPep8BgLAzb2VelL89I.hGiLBDNoybpO") // employeePW: 사원 비밀번호 (pw1, pw2, ..., pw100)
+                .employeeName("사원" + i) // employeeName: 사원 이름 (사원1, 사원2, ..., 사원100)
+                .rankId((i % 5) + 1)    // rankId: 사원 직급 ID (1부터 5까지 반복)
+                .rankName("직급" + (i % 5 + 1)) // rankName: 사원 직급 이름 (직급1, 직급2, ..., 직급5 반복)
+                .department(departments.get(i % departments.size())) // department: 부서 (부서 목록에서 순환 선택)
+                .email("employee" + i + "@example.com") // email: 사원 이메일 (employee1@example.com, employee2@example.com, ..., employee100@example.com)
+                .phoneNumber("010-1111-111" + (i % 10)) // phoneNumber: 사원 전화번호 (010-1111-1110, 010-1111-1111, ..., 010-1111-1119 반복)
+                .address("주소 " + i) // address: 사원 주소 (주소 1, 주소 2, ..., 주소 100)
+                .gender((i % 2 == 0) ? "남" : "여") // gender: 사원 성별 (남 또는 여, 홀수는 여, 짝수는 남)
+                .joinDate(LocalDateTime.now().minusDays(i)) // joinDate: 입사일 (현재 날짜에서 i일 전)
+                .salary((3000L + i) * 10L) // salary: 사원 급여 (3000부터 시작, i에 따라 증가)
+                .supervisorId(i > 10 ? (long) ((i % 10) + 1) : 0) // supervisorId: 상사 ID (1부터 10까지 반복)
+                .build()
+        ).toList();
+
+        // 출력 (테스트용)
+        employees.forEach(employee ->
+                System.out.println(employee.getEmployeeId() + ": " +
+                        employee.getEmployeeName() + ", " +
+                        employee.getEmail() + ", " +
+                        employee.getPhoneNumber() + ", " +
+                        employee.getDepartment().getDepartmentName())
+        );
+
         employeeRepository.saveAll(employees);
+
+        // VacationHistory 데이터 생성 및 저장
+        List<VacationHistory> vacationHistories = employees.stream()
+                .map(VacationHistory::createFromEmployee)
+                .toList();
+
+        vacationHistoryRepository.saveAll(vacationHistories);
     }
 
-    @Test
-    void testEmployeeInsertion() {
-        List<Employee> savedEmployees = employeeRepository.findAll();
-        assertThat(savedEmployees).hasSize(employees.size());
+    @Test @DisplayName("Join Test")
+    public void joinTest() {
+
+
+
     }
+
+
 }

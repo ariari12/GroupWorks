@@ -4,15 +4,19 @@ package kr.co.groupworks.entity.cis;
 import jakarta.persistence.*;
 import lombok.*;
 
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 
 @Getter
 @Entity
 @AllArgsConstructor @NoArgsConstructor
 @Table(name = "employee")
-@Builder @ToString
+@Builder @ToString(exclude = "department")
 public class Employee {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "employee_id", nullable = false, unique = true)
     private Long employeeId;
 
@@ -28,11 +32,9 @@ public class Employee {
     @Column(name = "rank_name")
     private String rankName;
 
-    @Column(name = "department_name")
-    private String departmentName;
-
-    @Column(name = "department_id")
-    private Integer departmentId;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "department_id")
+    private Department department;
 
     @Column(name = "email", nullable = false, unique = true)
     private String email;
@@ -50,8 +52,9 @@ public class Employee {
     private LocalDateTime joinDate;
 
     @Column(name = "salary")
-    private Integer salary;
+    private Long salary;
 
     @Column(name = "supervisor_id")
-    private Integer supervisorId;
+    private Long supervisorId;
+
 }

@@ -12,7 +12,7 @@
             <div class="sb-sidenav-menu">
 
             <div class="nav">
-                <th:block th:replace="/yhj/fragments/commuteTime::commuteTime"></th:block>
+                <th:block th:replace="~{/yhj/fragments/commuteTime::commuteTime}"></th:block>
 
                 <!--/* 그룹 소 제목 */-->
                 <div class="sb-sidenav-menu-heading">Core</div>
@@ -57,9 +57,9 @@
                             <!--/* Authentication 하위 메뉴 */-->
                             <div class="collapse" id="pagesCollapseAuth" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
                                 <nav class="sb-sidenav-menu-nested nav">
-                                    <a class="nav-link" href="login.html">Login</a>
-                                    <a class="nav-link" href="register.html">Register</a>
-                                    <a class="nav-link" href="password.html">Forgot Password</a>
+                                    <a class="nav-link" href="/main">Login</a>
+                                    <a class="nav-link" href="/main">Register</a>
+                                    <a class="nav-link" href="/main">Forgot Password</a>
                                 </nav>
                             </div>
 
@@ -81,24 +81,26 @@
                         </nav>
                     </div>
 
-                <th:block th:replace="ljm-workflow/workFlowSideMenu.html :: workFlowSideMenu"></th:block>
+                <th:block th:replace="~{workflow/workFlowSideMenu.html :: workFlowSideMenu}"></th:block>
 
-                <th:block th:replace="yhj/fragments/boardSideMenu :: boardSideMenu"></th:block>
+                <th:block th:replace="~{yhj/fragments/boardSideMenu :: boardSideMenu}"></th:block>
 
-                <th:block th:replace="kah/fragments/kahSideMenu :: kahSideMenu"></th:block>
+                <th:block th:replace="~{kah/fragments/kahSideMenu :: kahSideMenu}"></th:block>
 
-                <th:block th:replace="yhj/fragments/commuteSideMenu :: commuteSideMenu"></th:block>
+                <th:block th:replace="~{yhj/fragments/commuteSideMenu :: commuteSideMenu}"></th:block>
 
-                <th:block th:replace="cis/fragments/cisSideMenu :: cisSideMenu"></th:block>
+                <th:block th:replace="~{cis/fragments/cisSideMenu :: cisSideMenu}"></th:block>
 
-                    <!--/* Sidebar Menu 필요한 만큼 추가 */-->
-                    <!--/* 그룹 소 제목 */-->
-                    <div class="sb-sidenav-menu-heading">Addons</div>
-                    <!--/* 샘플:기능01 최상위 */-->
-                    <nav class="sb-sidenav-menu-nested nav">
-                        <a class="nav-link" href="#">
-                            <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
-                            기능01
+                <th:block th:replace="yhj/fragments/chatSideMenu :: chatSideMenu"></th:block>
+
+                <!--/* Sidebar Menu 필요한 만큼 추가 */-->
+                <!--/* 그룹 소 제목 */-->
+                <div class="sb-sidenav-menu-heading">Addons</div>
+                <!--/* 샘플:기능01 최상위 */-->
+                <nav class="sb-sidenav-menu-nested nav">
+                    <a class="nav-link" href="#">
+                        <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
+                        기능01
 
                             <!--/* 하위 그룹 및 드롭다운 추가 가능 */-->
                         </a>
@@ -109,8 +111,7 @@
 
             <!--/* Sidebar footer */-->
             <div class="sb-sidenav-footer">
-                <div class="small">Logged in as:</div>
-                로그인된 계정 이름
+                <div class="small" >Logged in as : <span th:text="${session.employee.getEmployeeName()}"></span></div>
             </div>
         </nav>
     </div>

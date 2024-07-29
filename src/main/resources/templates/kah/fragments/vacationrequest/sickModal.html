@@ -1,31 +1,108 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <th:block th:fragment="sickModal">
-    <div class="modal fade" id="sick" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="sickLabel" aria-hidden="true">
+    <div class="modal fade" id="sick" th:object="${sickForm}"
+         data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="sickLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="sickLabel">@@@님의 병가 요청</h1>
+                    <h1 class="modal-title fs-5" id="sickLabel"
+                        th:text="|${session.employee.employeeName} 님의 병가 요청|">@@@님의 병가 요청</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
 
                     <h5>병가 일정</h5>
-                    <input type="text" name="" placeholder="Select Date.." class="form-control vacationDate">
+                    <input type="text" id="vSickDate" placeholder="Select Date.." class="form-control vacationDate">
+                    <input type="hidden" th:field="*{sickStartDate}">
+                    <input type="hidden" th:field="*{sickEndDate}">
                     <br>
 
                     <h5>상세 사유</h5>
-                    <textarea class="form-control" id="vacationText3" name="vacationText3" placeholder="병가 사유 입력"></textarea>
+                    <textarea class="form-control" th:field="*{sickContents}" placeholder="병가 사유 입력"></textarea>
 
                     <br>
                     <h5>첨부 파일</h5>
-                    <td><input type="file" name="fileupload" class="form-control" multiple></td>
+                    <td><input type="file" id="sickFileUpload" name="sickFileUpload" class="form-control" multiple></td>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-                    <button type="button" class="btn btn-primary">신청</button>
+                    <button type="button" class="btn btn-primary" id="sickBtn">신청</button>
                 </div>
             </div>
         </div>
     </div>
+
+    <script>
+        $(document).ready(function() {
+            $("#sickBtn").on("click", function(e) {
+                e.preventDefault(); // 기본 submit 동작을 막음
+                console.log("클릭");
+
+                let sickStartDate;
+                let sickEndDate;
+
+                // 날짜 값을 분리
+                let split = $("#vSickDate").val().split("~");
+                if (split.length === 2) {
+                    sickStartDate = split[0].trim();
+                    sickEndDate = split[1].trim();
+                } else {
+                    sickStartDate = split[0].trim();
+                    sickEndDate = split[0].trim();
+                }
+
+                // JSON 데이터를 생성
+                let jsonData = JSON.stringify({
+                    sickStartDate: sickStartDate,
+                    sickEndDate: sickEndDate,
+                    sickContents: $("#sickContents").val()
+                });
+
+                // FormData 객체를 생성하고 파일 추가
+                let formData = new FormData();
+                let fileUpload = document.getElementById("sickFileUpload").files;
+                if (fileUpload && fileUpload.length > 0) {
+                    for (let i = 0; i < fileUpload.length; i++) {
+                        formData.append("sickFileUpload", fileUpload[i]);
+                    }
+                } else {
+                    console.log("No files selected");
+                }
+
+                // JSON 데이터를 Blob으로 추가
+                formData.append("jsonData", new Blob([jsonData], { type: "application/json" }));
+
+                // AJAX 요청
+                $.ajax({
+                    url: '/vacation/sick',
+                    type: 'POST',
+                    processData: false,
+                    contentType: false,
+                    data: formData,
+                    success: function(response) {
+                        alert("Success: " + response);
+                        $('#sick').modal('hide');
+                        location.reload();
+                    },
+                    error: function(xhr) {
+                        console.log(xhr.status);
+                        if (xhr.status === 400) {
+                            let errorResult = xhr.responseJSON;
+                            let errorMessage = errorResult.message + '\n';
+                            if (errorResult.fieldErrors) {
+                                errorMessage += "\n";
+                                for (let field in errorResult.fieldErrors) {
+                                    errorMessage += field + ': ' + errorResult.fieldErrors[field] + '\n';
+                                }
+                            }
+                            alert("Errors:\n" + errorMessage);
+                        } else {
+                            alert("다시 시도해주세요");
+                        }
+                    }
+                });
+            });
+        });
+    </script>
 </th:block>

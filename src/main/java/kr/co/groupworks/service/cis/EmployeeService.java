@@ -11,9 +11,10 @@ public interface EmployeeService {
     public List<Employee> findAll();
 
 
-    Employee findByEmployeeId(Long employeeId);
+    EmployeeDTO findByEmployeeId(Long employeeId);
     Employee findByEmployeeEmail(String employeeEmail);
 
     boolean findByEmployeeIdAndEmployeePWAndEmployeeName(Long emplyoeeId, String pw, String name);
 
+    boolean isEqualPassword(String checkPW, String currentPW);
 }

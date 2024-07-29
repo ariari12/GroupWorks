@@ -24,7 +24,7 @@ public class EmployeeDTO {
     //  직급 명
     private String rankName;
     //  부서 번호 fk
-    private int departmentId;
+    private Long departmentId;
     //  부서 명
     private String departmentName;
     //  이메일
@@ -38,8 +38,8 @@ public class EmployeeDTO {
     //  입사일
     private LocalDateTime joinDate;
     //  급여
-    private int salary;
+    private Long salary;
     //  선임 사원번호
-    private int supervisorId;
+    private Long supervisorId;
 }
 

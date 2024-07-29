@@ -1,9 +1,10 @@
 package kr.co.groupworks.dto.kah;
 
-//@Getter
-//@Setter
-//@Builder
-//@ToString
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+//@Data
 //@NoArgsConstructor
 //@AllArgsConstructor
 public class VacationTeamHistoryDTO {
