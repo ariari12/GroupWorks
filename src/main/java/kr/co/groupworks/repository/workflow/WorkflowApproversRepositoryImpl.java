@@ -2,6 +2,8 @@ package kr.co.groupworks.repository.workflow;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
+import kr.co.groupworks.entity.workflow.QApproverEntity;
+import kr.co.groupworks.entity.workflow.QWorkFlowEntity;
 import kr.co.groupworks.entity.workflow.WorkFlowEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
