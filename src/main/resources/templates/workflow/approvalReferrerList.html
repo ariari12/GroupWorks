@@ -4,7 +4,9 @@
       layout:decorate="~{layout/layout}"
 >
 
-<th:block layout:fragment="css"></th:block>
+<th:block layout:fragment="css">
+    <link rel="stylesheet" href="/css/workflow/table-hover.css">
+</th:block>
 
 <th:block layout:fragment="content">
     <!--/* approvalWait Table */-->
@@ -13,11 +15,6 @@
 </th:block>
 
 <th:block layout:fragment="javascript">
-    <script>
-        function load() {
-            window.location = "request";
-        }
-    </script>
-    <!--/* Wait List Tables js */-->
-    <script src="/js/workflow/tables/approval-history-tables.js"></script>
+    <script src="/js/workflow/tables/approval-referrer-tables.js"></script>
+    <script src="/js/workflow/tables/table-hover.js"></script>
 </th:block>

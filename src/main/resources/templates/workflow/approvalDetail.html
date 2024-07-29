@@ -67,10 +67,10 @@
     <div class="input-group mb-3">
         <span class="input-group-text">결재 구분</span>
         <label>
-            <!--/*@thymesVar id="workFlowDto" type="kr.co.groupworks.dto.workflow.vo.WorkFlowVO"*/-->
+            <!--/*@thymesVar id="workFlowDto" type="kr.co.groupworks.workflow.dto.vo.WorkFlowVO"*/-->
             <input class="form-control prevent-enter-submit" type="text" th:value="${workFlowDto.getWorkFlowType()}" readonly>
         </label>
-        <!--/*@thymesVar id="workFlowDto" type="kr.co.groupworks.dto.workflow.vo.WorkFlowVO"*/-->
+        <!--/*@thymesVar id="workFlowDto" type="kr.co.groupworks.workflow.dto.vo.WorkFlowVO"*/-->
         <input type="hidden" th:field="${workFlowDto.id}">
         <span class="input-group-text">결재 번호</span>
         <label>
@@ -78,7 +78,7 @@
         </label>
         <span class="input-group-text">기안날짜</span>
         <label>
-            <!--/*@thymesVar id="workFlowDto" type="kr.co.groupworks.dto.workflow.vo.WorkFlowVO"*/-->
+            <!--/*@thymesVar id="workFlowDto" type="kr.co.groupworks.workflow.dto.vo.WorkFlowVO"*/-->
             <input class="form-control prevent-enter-submit" type="text" th:value="${workFlowDto.getDraftDate()}" readonly>
         </label>
 
@@ -139,8 +139,8 @@
                     <th:block th:each="approve : ${approvers}">
                         <td class="border" style="width: 120px;">
                             <div th:if="${approve.approval == 0}" style="text-align: center;">
-                                <!--/*@thymesVar id="approve" type="kr.co.groupworks.dto.workflow.vo.ApproverVO"*/-->
-                                <!--/*@thymesVar id="ApprovalMethod" type="kr.co.groupworks.dto.workflow.ApprovalMethod"*/-->
+                                <!--/*@thymesVar id="approve" type="kr.co.groupworks.workflow.dto.vo.ApproverVO"*/-->
+                                <!--/*@thymesVar id="ApprovalMethod" type="kr.co.groupworks.workflow.dto.ApprovalMethod"*/-->
                                 <th:block th:if="${approve.getApprovalMethod() == null}">
                                 <img style="width: 80px;" src="/img/none.png" alt="진행 중">
                                 <br/>

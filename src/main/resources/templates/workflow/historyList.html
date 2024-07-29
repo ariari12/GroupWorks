@@ -5,6 +5,7 @@
 >
 
 <th:block layout:fragment="css">
+    <link rel="stylesheet" href="/css/workflow/table-hover.css">
     <style>
         #click {
             width: 100px;
@@ -25,11 +26,6 @@
 </th:block>
 
 <th:block layout:fragment="javascript">
-    <script>
-        function load() {
-            window.location = "request";
-        }
-    </script>
-    <!--/* history tables js */-->
     <script src="/js/workflow/tables/approval-history-tables.js"></script>
+    <script src="/js/workflow/tables/table-hover.js"></script>
 </th:block>
