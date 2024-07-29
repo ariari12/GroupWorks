@@ -13,7 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "notification")
-public class Notification {
+public class Notification extends BaseEntity {
 
     @Id
     @Column(name = "notification_id")
@@ -25,8 +25,8 @@ public class Notification {
     // 내용
     private String contents;
     // 알람 생성일
-    @Column(name = "created_date")
-    private String createdDate;
+//    @Column(name = "created_date")
+//    private String createdDate;
     // 알람 종류
     private String type;
     // 알람 링크 눌렀을 경우 페이지 이동

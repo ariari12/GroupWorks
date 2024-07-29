@@ -1,20 +1,17 @@
 package kr.co.groupworks.entity.kah;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 @Entity
 @Table(name = "calendar_attachment")
 @Getter
 @ToString(exclude = {"calendar"})
-@SuperBuilder
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CalendarAttachment {
+public class CalendarAttachment extends BaseEntity {
     @Id
     @Column(name = "calendar_attachment_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
