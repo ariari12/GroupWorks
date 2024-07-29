@@ -1,15 +1,188 @@
 <!doctype html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout/layout}">
+      layout:decorate="~{layout/layout}"    data-bs-theme="white">
 <th:block layout:fragment="css">
+    <style>
+        .bd-placeholder-img {
+            font-size: 1.125rem;
+            text-anchor: middle;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            user-select: none;
+        }
+
+        @media (min-width: 768px) {
+            .bd-placeholder-img-lg {
+                font-size: 3.5rem;
+            }
+        }
+
+        .b-example-divider {
+            width: 100%;
+            height: 3rem;
+            background-color: rgba(0, 0, 0, .1);
+            border: solid rgba(0, 0, 0, .15);
+            border-width: 1px 0;
+            box-shadow: inset 0 .5em 1.5em rgba(0, 0, 0, .1), inset 0 .125em .5em rgba(0, 0, 0, .15);
+        }
+
+        .b-example-vr {
+            flex-shrink: 0;
+            width: 1.5rem;
+            height: 100vh;
+        }
+
+        .bi {
+            vertical-align: -.125em;
+            fill: currentColor;
+        }
+
+        .nav-scroller {
+            position: relative;
+            z-index: 2;
+            height: 2.75rem;
+            overflow-y: hidden;
+        }
+
+        .nav-scroller .nav {
+            display: flex;
+            flex-wrap: nowrap;
+            padding-bottom: 1rem;
+            margin-top: -1px;
+            overflow-x: auto;
+            text-align: center;
+            white-space: nowrap;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .btn-bd-primary {
+            --bd-violet-bg: #712cf9;
+            --bd-violet-rgb: 112.520718, 44.062154, 249.437846;
+
+            --bs-btn-font-weight: 600;
+            --bs-btn-color: var(--bs-white);
+            --bs-btn-bg: var(--bd-violet-bg);
+            --bs-btn-border-color: var(--bd-violet-bg);
+            --bs-btn-hover-color: var(--bs-white);
+            --bs-btn-hover-bg: #6528e0;
+            --bs-btn-hover-border-color: #6528e0;
+            --bs-btn-focus-shadow-rgb: var(--bd-violet-rgb);
+            --bs-btn-active-color: var(--bs-btn-hover-color);
+            --bs-btn-active-bg: #5a23c8;
+            --bs-btn-active-border-color: #5a23c8;
+        }
+
+        .bd-mode-toggle {
+            z-index: 1500;
+        }
+
+        .bd-mode-toggle .dropdown-menu .active .bi {
+            display: block !important;
+        }
+    </style>
+
 </th:block>
 <th:block layout:fragment="javascript">
     <script src="/js/tables/datatables-demo.js"></script>
+    <script src="../js/mail/offcanvas-navbar.js"></script>
+    <script>
+        $(document).ready(function(){
+            // 전체 선택, 전체 선택 해제
+            $('input[name="allCheck"]').on('change', function(){
+                $('input[name="individualCheck"]').prop('checked', $(this).prop('checked'));
+            });
+
+            // 비우기와 복구하기 예외사항 처리
+            $('form').on('submit', function(event){
+                if ($('input[name="individualCheck"]:checked').length === 0) {
+                    alert('하나 이상의 메일을 체크해주세요.');
+                    event.preventDefault();
+                }
+            });
+
+            // 삭제 버튼 클릭시
+            $('#deleteButton').on('click', function() {
+                $('form').attr('action', '/mail/delete').attr('method', 'post');
+            });
+
+            // 복구하기 버튼 클릭시
+            $('#restoreButton').on('click', function() {
+                $('form').attr('action', '/mail/restore').attr('method', 'post');
+            });
+        });
+    </script>
 </th:block>
 
 <th:block layout:fragment="content">
     <h3>휴지통</h3>
+    <form method="post">
+
+    <main class="container" >
+        <div class="my-3 p-3 bg-body rounded shadow-sm">
+            <h6 class="border-bottom pb-2 mb-0">
+                <input type="checkbox" name="allCheck" id="allCheck"> 휴지통 <span th:text="'(' + ${mailList.totalElements} + ')'" style="font-size: 16px"></span>
+
+            </h6>
+            <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start" style="position: relative; margin-top: 10px">
+            </div>
+            <th:block th:each="mail : ${mailList.content}">
+                <!--한개 시작-->
+
+                <div class="d-flex text-body-secondary pt-3" style="padding-top: 2rem !important;">
+                    <a th:href="@{/mail/detail/{mid}(mid=${mail.getId()})}" style="color: inherit; text-decoration-line: none">
+                        <div class="pb-3 mb-0 small lh-sm border-bottom w-100">
+                            <!--발송자 및 시간-->
+                            <input type="checkbox" name="individualCheck" class="individualCheck" th:value="${mail.getId()}">
+                            <div class="d-flex justify-content-between" style="margin: 0 0 10px 0">
+                                <strong class="text-gray-dark"
+                                        th:text="${mail.getMailReceiverName()}+'('+${mail.getMailReceiver()}+')'">
+                                </strong>
+                                <th:block th:text="${mail.getMailSendTime()}"></th:block>
+                            </div>
+
+                            <!--제목 및 쓰레기 통-->
+                            <div class="d-flex justify-content-between">
+                                <span class="text-gray-dark" th:text="${mail.getMailTitle()}"></span>
+                                <a href="" style="color: black" class="trashicon" th:data-id="${mail.getId()}">
+
+                                </a>
+                            </div>
+
+                        </div>
+                    </a>
+                </div>
+            </th:block>
+            <!--한개 끝-->
+
+            <div class="d-flex text-body-secondary pt-3" style="padding-top: 2rem !important;">
+                <div class="pb-3 mb-0 small lh-sm border-bottom w-100">
+                    <input type="submit" value="비우기" class="btn btn-secondary" id="deleteButton">
+                    <input type="submit" value="복구하기" class="btn btn-primary" id="restoreButton">
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination justify-content-center">
+                            <li class="page-item" th:classappend="${mailList.hasPrevious()} ? '' : 'disabled'">
+                                <a class="page-link" th:href="@{/mail/trash(pageNumber=${mailList.number - 1}, size=${mailList.size})}" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+                            <th:block th:each="i : ${#numbers.sequence(0, mailList.totalPages - 1)}">
+                                <li class="page-item" th:classappend="${mailList.number == i} ? 'active'">
+                                    <a class="page-link" th:href="@{/mail/trash(pageNumber=${i}, size=${mailList.size})}" th:text="${i + 1}">1</a>
+                                </li>
+                            </th:block>
+                            <li class="page-item" th:classappend="${mailList.hasNext()} ? '' : 'disabled'">
+                                <a class="page-link" th:href="@{/mail/trash(pageNumber=${mailList.number + 1}, size=${mailList.size})}" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </main>
+    </form>
 </th:block>
 
 

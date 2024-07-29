@@ -11,10 +11,10 @@
 <div layout:fragment="content">
       <!-- 조건문으로 하나만 나오게 할거임-->
       <th:block>
-            <div th:replace="kah/fragments/vacationRequests.html::tables" ></div>
+            <div th:replace="~{kah/fragments/vacationRequests.html::tables}" ></div>
       </th:block>
       <th:block>
-            <div th:replace="kah/fragments/vacationStatus.html::tables" ></div>
+            <div th:replace="~{kah/fragments/vacationStatus.html::tables}" ></div>
       </th:block>
 
       <!-- Modal -->
@@ -45,4 +45,4 @@
             </div>
       </div>
 </div>
-</div>
+</html>

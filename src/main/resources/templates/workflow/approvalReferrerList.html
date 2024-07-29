@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}"
+>
+
+<th:block layout:fragment="css"></th:block>
+
+<th:block layout:fragment="content">
+    <!--/* approvalWait Table */-->
+    <div th:replace="~{/workflow/approvalReferrerTables/collaboratorList.html :: collaboratorList}"></div>
+    <div th:replace="~{/workflow/approvalReferrerTables/referrerList.html :: referrerList}"></div>
+</th:block>
+
+<th:block layout:fragment="javascript">
+    <script>
+        function load() {
+            window.location = "request";
+        }
+    </script>
+    <!--/* Wait List Tables js */-->
+    <script src="/js/workflow/tables/approval-history-tables.js"></script>
+</th:block>
