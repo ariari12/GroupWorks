@@ -32,4 +32,6 @@ public interface WorkFlowRepository extends JpaRepository<WorkFlowEntity, Long>,
             "ORDER BY month_table.month", nativeQuery = true)
     List<Map<String, Object>> monthlyWorkflowType(@Param("year") String year, @Param("employeeId") long employeeId);
 
+    Long countByEmployeeIdAndWorkFlowType(long employeeId, int workflowType);
+
 }
