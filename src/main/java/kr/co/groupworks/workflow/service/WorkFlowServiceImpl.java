@@ -30,7 +30,6 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.stream.IntStream;
 
 @Slf4j
 @Service
@@ -277,25 +276,8 @@ public class WorkFlowServiceImpl implements WorkFlowService {
     }
 
     @Override
-    public Object getWorkflowStatistics(long employeeId, long departmentId, int choise) {
-        enum satusLabel {
-            DEPARTMENT_NAMES("departmentNames"),
-            THIS_YEAR_TYPE("thisYearType"),
-            ;
-            String label;
-
-            satusLabel(String label) {
-                this.label = label;
-            }
-        }
-        /*
-         * 전체: 부서별 결재 발송/승인/반려 건 수 : 완료
-         * 전체: 올해 연도 전체 결재 발송 건 수 : 완료
-         * 부서Id: 부서 결재 완료 목록 : 완료
-         * 사원Id: 월 별 결재 발송/승인/반려 건 수 :
-         * 사원Id: 누적 결재 발송 건 수 :
-         */
-        switch (choise) {
+    public Object getWorkflowStatistics(long employeeId, long departmentId, int choice) {
+        switch (choice) {
             case 1:
                 Map<String, Object> resultMap = new HashMap<>();
                 /* 부서 목록 */
@@ -318,17 +300,21 @@ public class WorkFlowServiceImpl implements WorkFlowService {
                         keys[1], new ArrayList<>(),
                         keys[2], new ArrayList<>()
                 );
-                workFlowRepository.monthlyWorkflowType(
-                        LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy")), employeeId
-                ).forEach(o -> {
-                    longListMap.get(keys[0]).add((Long) o.get("발송"));
-                    longListMap.get(keys[1]).add(((BigDecimal) o.get("승인")).longValue());
-                    longListMap.get(keys[2]).add(((BigDecimal) o.get("반려")).longValue());
+                workFlowRepository.monthlyWorkflowType(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy")), employeeId)
+                        .forEach(o -> {
+                            longListMap.get(keys[0]).add((Long) o.get("발송"));
+                            longListMap.get(keys[1]).add(((BigDecimal) o.get("승인")).longValue());
+                            longListMap.get(keys[2]).add(((BigDecimal) o.get("반려")).longValue());
                 });
                 return longListMap;
             case 5:
                 /* 누적 결재 발송 건 수 */
-                return IntStream.rangeClosed(1, 6).mapToObj(i -> workFlowRepository.countByEmployeeIdAndWorkFlowType(employeeId, i)).toList();
+                List<Long> workflowTypeCntList = new ArrayList<>(List.of(0L, 0L, 0L, 0L, 0L, 0L));
+                workFlowRepository.findByEmployeeId(employeeId).forEach(o -> {
+                    int i = o.getWorkFlowType() - 1;
+                    workflowTypeCntList.set(i, workflowTypeCntList.get(i) + 1);
+                });
+                return workflowTypeCntList;
             default:
                 return null;
         }
