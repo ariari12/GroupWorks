@@ -314,6 +314,7 @@ public class WorkFlowServiceImpl implements WorkFlowService {
                     int i = o.getWorkFlowType() - 1;
                     workflowTypeCntList.set(i, workflowTypeCntList.get(i) + 1);
                 });
+
                 return workflowTypeCntList;
             default:
                 return null;
