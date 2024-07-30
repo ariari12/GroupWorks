@@ -5,8 +5,10 @@ import kr.co.groupworks.entity.cis.Employee;
 import kr.co.groupworks.calendar.entity.VacationHistory;
 import kr.co.groupworks.repository.cis.DepartmentRepository;
 import kr.co.groupworks.repository.cis.EmployeeRepository;
+
 import kr.co.groupworks.calendar.repository.VacationHistoryRepository;
 import kr.co.groupworks.service.workflow.WorkFlowService;
+
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -29,8 +31,6 @@ public class EmployeeTest {
     private EmployeeRepository employeeRepository;
     @Autowired
     private VacationHistoryRepository vacationHistoryRepository;
-
-    private List<Employee> employees;
 
     @Test @DisplayName("Department, Employee Insert")
     public void insetTest() {
