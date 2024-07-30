@@ -2,6 +2,8 @@ package kr.co.groupworks.calendar.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.co.groupworks.calendar.dto.*;
+import kr.co.groupworks.calendar.entity.VacationStatus;
+import kr.co.groupworks.calendar.entity.VacationType;
 import kr.co.groupworks.dto.cis.employee.SessionEmployeeDTO;
 import kr.co.groupworks.calendar.entity.AmPm;
 import kr.co.groupworks.calendar.service.VacationService;
@@ -10,7 +12,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -24,6 +28,15 @@ public class VacationController {
     @ModelAttribute("amPms")
     public AmPm[] amPms(){
         return AmPm.values();
+    }
+
+    public static List<VacationType> vacationStatusList(){
+        ArrayList<VacationType> list = new ArrayList<>();
+        list.add(VacationType.ANNUAL);
+        list.add(VacationType.HALF);
+        list.add(VacationType.OTHER);
+        list.add(VacationType.SICK);
+        return list;
     }
 
     @GetMapping("")
@@ -55,15 +68,36 @@ public class VacationController {
         model.addAttribute("subtitle", "휴가 신청내역");
         return "calendar/vacationMain";
     }
-    // 휴가 신청 수정
+    // 휴가 신청 수정 폼
     @GetMapping("/modify/{calendarId}")
-    public String modifyForm(@PathVariable("calendarId") Long calendarId,
-                             SessionEmployeeDTO sessionEmployeeDTO, Model model,
-                             @ModelAttribute VacationModifyFormDTO dto){
+    public String modifyForm(@PathVariable("calendarId") Long calendarId, Model model,
+                             @SessionAttribute(name = "employee") SessionEmployeeDTO sessionEmployeeDTO){
         log.info("VacationController - modifyForm");
+        VacationModifyFormDTO modifyFormDTO =vacationService.findCalendarByIdAndEmployee(calendarId, sessionEmployeeDTO.getEmployeeId());
+        log.info("{}",modifyFormDTO);
         model.addAttribute("title", "휴가 신청 수정");
+        model.addAttribute("modifyForm",modifyFormDTO);
+        model.addAttribute("vacationStatusList",vacationStatusList());
+
 
         return "calendar/vacationModifyForm";
+    }
+
+    // 휴가 수정
+    @PostMapping("/modify/{calendarId}")
+    public String modifyVacation(@PathVariable("calendarId") Long calendarId,
+                                 @SessionAttribute(name = "employee") SessionEmployeeDTO sessionEmployeeDTO,
+                                 @ModelAttribute VacationModifyFormDTO dto,
+                                 @RequestParam("fileUpload") MultipartFile[] files,
+                                 Model model){
+        log.info("VacationController - modifyVacation");
+        log.info("{}",dto);
+        log.info("{}", (Object) files);
+        vacationService.modifyVacation(calendarId,dto,sessionEmployeeDTO.getEmployeeId(), files);
+        model.addAttribute("title", "휴가 신청 수정");
+        model.addAttribute("vacationStatusList",vacationStatusList());
+
+        return "redirect:/vacation";
     }
 
 

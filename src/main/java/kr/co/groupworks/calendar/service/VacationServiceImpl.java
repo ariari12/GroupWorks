@@ -2,11 +2,8 @@ package kr.co.groupworks.calendar.service;
 
 import jakarta.persistence.EntityNotFoundException;
 import kr.co.groupworks.calendar.dto.*;
+import kr.co.groupworks.calendar.entity.*;
 import kr.co.groupworks.entity.cis.Employee;
-import kr.co.groupworks.calendar.entity.CalendarAttachment;
-import kr.co.groupworks.calendar.entity.Vacation;
-import kr.co.groupworks.calendar.entity.VacationHistory;
-import kr.co.groupworks.calendar.entity.VacationStatus;
 import kr.co.groupworks.repository.cis.EmployeeRepository;
 import kr.co.groupworks.calendar.repository.CalendarAttachmentRepository;
 import kr.co.groupworks.calendar.repository.VacationHistoryRepository;
@@ -22,10 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.time.temporal.ChronoUnit;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -237,6 +231,77 @@ public class VacationServiceImpl implements VacationService{
             throw new IllegalStateException("휴가 상태가 검토 단계일 경우만 삭제 가능합니다.");
         }
 
+
+    }
+
+    // 휴가 일정 검색
+    @Override
+    public VacationModifyFormDTO findCalendarByIdAndEmployee(Long calendarId, Long employeeId) {
+        log.info("service {}",employeeId);
+        Employee employee = employeeRepository.findById(employeeId)
+                .orElseThrow(() -> new EntityNotFoundException("사원을 찾을 수 없습니다. " + employeeId));
+        Vacation vacation = vacationRepository.findByCalendarIdAndEmployee(calendarId, employee)
+                .orElseThrow(() -> new EntityNotFoundException("휴가 일정이 존재하지 않습니다."));
+        VacationModifyFormDTO modifyFormDto = vacationMapper.toModifyFormDto(vacation);
+        if(!vacation.getAttachmentList().isEmpty()){
+            modifyFormDto.setFileList(vacation.getAttachmentList()
+                    .stream()
+                    .map(calendarAttachmentMapper::toDto).toList());
+        }
+        return modifyFormDto;
+    }
+
+    // 휴가 수정
+    @Override
+    public void modifyVacation(Long calendarId, VacationModifyFormDTO dto, Long employeeId, MultipartFile[] files) {
+        Employee employee = employeeRepository.findById(employeeId)
+                .orElseThrow(() -> new EntityNotFoundException("사원을 찾을 수 없습니다. " + employeeId));
+        Vacation vacation = vacationRepository.findByCalendarIdAndEmployee(calendarId, employee)
+                .orElseThrow(() -> new EntityNotFoundException("휴가 일정이 존재하지 않습니다."));
+
+        if(vacation.getStatus() != VacationStatus.PENDING){
+            throw new IllegalStateException("휴가 상태가 PENDING이 아닙니다.");
+            // 뷰를 반환해야할지 모름
+        }
+
+
+        File uploadDir = new File(uploadDirectory);
+        if (!uploadDir.exists()) {
+            uploadDir.mkdirs();
+        }
+        // 기존 첨부 파일 삭제
+        calendarAttachmentRepository.deleteByCalendar(vacation);
+
+        Arrays.asList(files).forEach(file -> {
+            String fileFullName = UUID.randomUUID().toString()+"-"+file.getOriginalFilename();
+            String filePath = uploadDir+ "/"+ fileFullName;
+            File dest = new File(filePath);
+            try {
+                file.transferTo(dest);
+                CalendarAttachment calendarAttachment =
+                        calendarAttachmentMapper.toEntity(fileFullName, file.getOriginalFilename(), vacation);
+                calendarAttachmentRepository.save(calendarAttachment);
+
+            } catch (IOException e) {
+                log.error("파일 저장 중 오류 발생: {}", e.getMessage());
+                throw new RuntimeException("파일 저장 중 오류가 발생했습니다. 다시 시도해주세요.");
+            }
+        });
+
+
+        String[] date = Arrays.stream( dto.getDate().split("~"))
+                .map(String::trim)
+                .toArray(String[]::new);
+        // 배열의 길이가 1인 경우, 배열의 0번째 값을 1번째 값으로 복사하여 새로운 배열 생성
+        if (date.length == 1) {
+            date = new String[] { date[0], date[0] };
+        }
+        log.info("date {}", Arrays.toString(date));
+
+        // 업데이트 메서드 호출
+        vacation.updateVacation(dto.getVacationType(),
+                dto.getContents(), dto.getVacationType().getName(),
+                date[0], date[1]);
 
     }
 
