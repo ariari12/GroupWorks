@@ -151,7 +151,7 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 
                     return true;
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    throw new RuntimeException(e);
                 }
             }
         }

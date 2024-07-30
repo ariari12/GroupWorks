@@ -33,7 +33,7 @@
 
         @media print {
             body {
-                zoom: 68%; /* 배율을 78%로 설정 */
+                zoom: 68%; /* 배율 설정 */
             }
             .none-print {
                 display: none;
@@ -46,7 +46,7 @@
             }
             @page {
                 size: A4;
-                margin: 10mm; /* 페이지의 상단, 하단, 좌측, 우측 여백을 모두 20mm로 설정 */
+                margin: 10mm; /* 페이지의 상단, 하단, 좌측, 우측 여백을 모두 10mm로 설정 */
             }
         }
     </style>
@@ -416,7 +416,7 @@
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
                             </div>
                         </div>
-                    </div>zzz
+                    </div>
                 </div>
             </div>
         </th:block>
@@ -701,7 +701,6 @@
             var originalContents = document.body.innerHTML;
             var originalBody = document.body.style.transform;
 
-            // document.body.innerHTML = document.getElementById('layoutSidenav_content').innerHTML;
             document.body.style.transform = 'scale(1)'; // 페이지 스케일 90% 설정
             window.print();
             document.body.innerHTML = originalContents;
