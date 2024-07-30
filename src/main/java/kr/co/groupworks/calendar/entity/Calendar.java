@@ -27,33 +27,33 @@ public class Calendar {
     @Id
     @Column(name = "calendar_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long calendarId;
+    protected Long calendarId;
     // 제목
-    private String title;
+    protected String title;
     // 내용
-    private String contents;
+    protected String contents;
     // 일정 시작일
     @Column(name = "start_date")
-    private String startDate;
+    protected String startDate;
     // 일정 종료일
     @Column(name = "end_date")
-    private String endDate;
+    protected String endDate;
     @CreatedDate
     @Column(updatable = false, name = "created_date")
-    private LocalDateTime createdDate;
+    protected LocalDateTime createdDate;
 
     @LastModifiedDate
     @Column(name = "last_modified_date")
-    private LocalDateTime lastModifiedDate;
+    protected LocalDateTime lastModifiedDate;
 
     // 사원 외래키
     @ManyToOne
     @JoinColumn(name = "employee_id")
-    private Employee employee;
+    protected Employee employee;
 
     // 양방향 관계 (조회용)
     @OneToMany(mappedBy = "calendar",cascade = CascadeType.ALL, orphanRemoval = true)
-    private final List<CalendarAttachment> attachmentList = new ArrayList<>();
+    protected final List<CalendarAttachment> attachmentList = new ArrayList<>();
 
 
 

@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
+import java.util.List;
+
 @Entity
 @Table(name="vacation")
 @Getter
@@ -26,4 +28,15 @@ public class Vacation extends Calendar{
     @Column(name = "am_pm")
     private AmPm amPm;
 
+    public Vacation updateVacation(
+            VacationType vacationType, String contents, String title, String startDate, String endDate) {
+
+        this.vacationType = vacationType;
+        this.contents = contents;
+        this.title = title;
+        this.startDate = startDate;
+        this.endDate = endDate;
+
+        return this;
+    }
 }

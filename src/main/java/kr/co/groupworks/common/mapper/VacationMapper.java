@@ -1,8 +1,5 @@
 package kr.co.groupworks.common.mapper;
-import kr.co.groupworks.calendar.dto.AnnualFormDTO;
-import kr.co.groupworks.calendar.dto.HalfFormDTO;
-import kr.co.groupworks.calendar.dto.OtherFormDTO;
-import kr.co.groupworks.calendar.dto.SickFormDTO;
+import kr.co.groupworks.calendar.dto.*;
 import kr.co.groupworks.entity.cis.Employee;
 import kr.co.groupworks.calendar.entity.Vacation;
 import org.mapstruct.Mapper;
@@ -21,8 +18,7 @@ public interface VacationMapper {
     @Mapping(target = "title", expression = "java(kr.co.groupworks.calendar.entity.VacationType.ANNUAL.getDescription())")
     Vacation toEntity(AnnualFormDTO dto, Employee employee);
 
-    @Mapping(target = "employeeId", source = "employee.employeeId")
-    AnnualFormDTO toDto(Vacation vacation);
+    VacationModifyFormDTO toModifyFormDto(Vacation vacation);
 
     @Mapping(target = "startDate", source = "dto.halfStartDate")
     @Mapping(target = "contents", source = "dto.halfContents")
@@ -46,5 +42,8 @@ public interface VacationMapper {
     @Mapping(target = "vacationType", expression = "java(kr.co.groupworks.calendar.entity.VacationType.OTHER)")
     @Mapping(target = "title", expression = "java(kr.co.groupworks.calendar.entity.VacationType.OTHER.getDescription())")
     Vacation toEntity(OtherFormDTO dto, Employee employee);
+
+
+
 
 }
