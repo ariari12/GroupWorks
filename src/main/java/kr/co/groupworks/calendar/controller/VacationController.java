@@ -19,7 +19,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class VacationController {
     private final VacationService vacationService;
-    private final ObjectMapper objectMapper;
 
     // enum 상수 값 지속적으로 넘겨주기 위함
     @ModelAttribute("amPms")
@@ -55,6 +54,16 @@ public class VacationController {
         model.addAttribute("title", "내 휴가");
         model.addAttribute("subtitle", "휴가 신청내역");
         return "calendar/vacationMain";
+    }
+    // 휴가 신청 수정
+    @GetMapping("/modify/{calendarId}")
+    public String modifyForm(@PathVariable("calendarId") Long calendarId,
+                             SessionEmployeeDTO sessionEmployeeDTO, Model model,
+                             @ModelAttribute VacationModifyFormDTO dto){
+        log.info("VacationController - modifyForm");
+        model.addAttribute("title", "휴가 신청 수정");
+
+        return "calendar/vacationModifyForm";
     }
 
 

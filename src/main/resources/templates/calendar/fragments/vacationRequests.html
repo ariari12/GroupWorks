@@ -32,13 +32,14 @@
             </th:block>
 
             <th:block th:if="${!#lists.isEmpty(vacationRequestList)}">
-                <tr th:each="dto : ${vacationRequestList}">
+                <tr th:each="dto : ${vacationRequestList}"                 >
                     <td th:text="${session.employee.employeeName}">사원 이름</td>
                     <td th:text="|${dto.startDate} ~ ${dto.endDate}|">사용 기간</td>
                     <td th:text="${dto.vacationType.description}">종류</td>
                     <td th:text="${dto.fileList.size() > 0 ? '첨부 파일 있음' : '첨부 파일 없음'}">증명자료</td>
                     <td th:text="${dto.status.description}">승인</td>
                     <td>
+                        <a th:href="@{|vacation/modify/${dto.calendarId}|}" class="btn btn-primary btn-sm">신청 수정</a>
                         <button class="btn btn-danger btn-sm" th:onclick="@{|showConfirmModal(${dto.calendarId})|}">신청 취소</button>
                     </td>
                 </tr>
@@ -66,7 +67,10 @@
         </div>
     </div>
 
+
+
     <script>
+
         function showConfirmModal(calendarId) {
             $('#confirmDelete').off('click').on('click', function() {
                 window.location.href = '/vacation/delete/' + calendarId;
