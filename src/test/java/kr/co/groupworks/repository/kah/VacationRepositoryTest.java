@@ -1,12 +1,10 @@
 package kr.co.groupworks.repository.kah;
 
-import kr.co.groupworks.dto.kah.AnnualFormDTO;
-import kr.co.groupworks.entity.kah.Vacation;
-import kr.co.groupworks.entity.kah.VacationType;
+import kr.co.groupworks.calendar.repository.VacationRepository;
+import kr.co.groupworks.calendar.dto.AnnualFormDTO;
+import kr.co.groupworks.calendar.entity.Vacation;
 import kr.co.groupworks.repository.cis.EmployeeRepository;
-import kr.co.groupworks.util.mapper.VacationMapper;
-import lombok.RequiredArgsConstructor;
-import org.assertj.core.api.Assertions;
+import kr.co.groupworks.common.mapper.VacationMapper;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -19,7 +17,6 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
@@ -35,7 +32,7 @@ class VacationRepositoryTest {
 
     @BeforeAll
     static void beforeAll() {
-        annualFormDTO1 = kr.co.groupworks.dto.kah.AnnualFormDTO.builder()
+        annualFormDTO1 = AnnualFormDTO.builder()
                 .startDate(LocalDate.of(2500,6,22))
                 .endDate(LocalDate.of(2500,8,22))
                 .contents("Family vacation to Hawaii")

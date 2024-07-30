@@ -1,15 +1,16 @@
 package kr.co.groupworks.service.kah;
 
-import kr.co.groupworks.dto.kah.AnnualFormDTO;
-import kr.co.groupworks.dto.kah.HalfFormDTO;
-import kr.co.groupworks.dto.kah.VacationMyRequestDTO;
+import kr.co.groupworks.calendar.dto.AnnualFormDTO;
+import kr.co.groupworks.calendar.service.VacationService;
+import kr.co.groupworks.calendar.dto.HalfFormDTO;
+import kr.co.groupworks.calendar.dto.VacationMyRequestDTO;
 import kr.co.groupworks.entity.cis.Employee;
-import kr.co.groupworks.entity.kah.AmPm;
-import kr.co.groupworks.entity.kah.VacationStatus;
-import kr.co.groupworks.entity.kah.Vacation;
+import kr.co.groupworks.calendar.entity.AmPm;
+import kr.co.groupworks.calendar.entity.VacationStatus;
+import kr.co.groupworks.calendar.entity.Vacation;
 import kr.co.groupworks.repository.cis.EmployeeRepository;
 
-import kr.co.groupworks.repository.kah.VacationRepository;
+import kr.co.groupworks.calendar.repository.VacationRepository;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 
@@ -41,7 +42,7 @@ class VacationServiceImplTest {
 
     @BeforeAll
     static void beforeAll() {
-        annualFormDTO1 = kr.co.groupworks.dto.kah.AnnualFormDTO.builder()
+        annualFormDTO1 = AnnualFormDTO.builder()
                 .startDate(LocalDate.of(2500,6,22))
                 .endDate(LocalDate.of(2500,8,22))
                 .contents("Family vacation to Hawaii")
@@ -49,14 +50,14 @@ class VacationServiceImplTest {
                 .build();
 
         // annualFormDTO1과 기간을 일부러 겹치게 설정
-        annualFormDTO2 = kr.co.groupworks.dto.kah.AnnualFormDTO.builder()
+        annualFormDTO2 = AnnualFormDTO.builder()
                 .startDate(LocalDate.of(2500,6,22))
                 .endDate(LocalDate.of(2500,12,22))
                 .contents("Family asdlkfjlsdakj")
                 .employeeId(1L)
                 .build();
 
-        halfFormDTO1 = kr.co.groupworks.dto.kah.HalfFormDTO.builder()
+        halfFormDTO1 = HalfFormDTO.builder()
                 .halfStartDate(LocalDate.of(2500,3,22))
                 .halfContents("Family asdlkfjlsdakj")
                 .amPm(AmPm.PM)
@@ -98,7 +99,6 @@ class VacationServiceImplTest {
         vacationService.save(halfFormDTO1);
 
         List<VacationMyRequestDTO> vacationRequestList = vacationService.findAllByEmployeeId(1L);
-
         assertThat(vacationRequestList).isNotNull();
 
     }
