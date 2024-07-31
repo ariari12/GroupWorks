@@ -2,6 +2,7 @@ package kr.co.groupworks.employee.entity;
 
 
 import jakarta.persistence.*;
+import kr.co.groupworks.BaseEntity;
 import kr.co.groupworks.department.entity.Department;
 import lombok.*;
 
@@ -13,7 +14,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor @NoArgsConstructor
 @Table(name = "employee")
 @Builder @ToString(exclude = "department")
-public class Employee {
+public class Employee extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "employee_id", nullable = false, unique = true)

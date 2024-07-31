@@ -8,8 +8,9 @@ import lombok.RequiredArgsConstructor;
 import java.util.List;
 
 import static kr.co.groupworks.calendar.entity.QVacationHistory.*;
-import static kr.co.groupworks.entity.cis.QDepartment.department;
-import static kr.co.groupworks.entity.cis.QEmployee.employee;
+import static kr.co.groupworks.department.entity.QDepartment.department;
+import static kr.co.groupworks.employee.entity.QEmployee.employee;
+
 
 @RequiredArgsConstructor
 public class VacationHistoryRepositoryImpl implements VacationHistoryQueryDsl {

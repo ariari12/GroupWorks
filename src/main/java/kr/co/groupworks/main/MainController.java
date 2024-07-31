@@ -3,7 +3,7 @@ package kr.co.groupworks.main;
 import jakarta.servlet.http.HttpSession;
 import kr.co.groupworks.employee.dto.EmployeeDTO;
 import kr.co.groupworks.employee.dto.SessionEmployeeDTO;
-import kr.co.groupworks.security.CustomUserDetails;
+import kr.co.groupworks.common.security.CustomUserDetails;
 import kr.co.groupworks.employee.service.EmployeeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -1,4 +1,4 @@
-package kr.co.groupworks.security;
+package kr.co.groupworks.common.security;
 
 import kr.co.groupworks.employee.entity.Employee;
 import lombok.Getter;

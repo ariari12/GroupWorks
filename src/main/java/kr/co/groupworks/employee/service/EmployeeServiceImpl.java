@@ -1,5 +1,7 @@
 package kr.co.groupworks.employee.service;
 
+import kr.co.groupworks.calendar.entity.VacationHistory;
+import kr.co.groupworks.calendar.repository.VacationHistoryRepository;
 import kr.co.groupworks.department.dto.DepartmentDTO;
 import kr.co.groupworks.department.entity.Department;
 import kr.co.groupworks.employee.dto.EmployeeDTO;
@@ -7,9 +9,9 @@ import kr.co.groupworks.employee.entity.Employee;
 import kr.co.groupworks.employee.repository.EmployeeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.List;
 

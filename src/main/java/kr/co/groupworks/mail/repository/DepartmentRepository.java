@@ -1,6 +1,6 @@
 package kr.co.groupworks.repository.cis;
 
-import kr.co.groupworks.entity.cis.Department;
+import kr.co.groupworks.department.entity.Department;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;

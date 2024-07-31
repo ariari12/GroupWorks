@@ -1,4 +1,4 @@
-package kr.co.groupworks.security;
+package kr.co.groupworks.common.security;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

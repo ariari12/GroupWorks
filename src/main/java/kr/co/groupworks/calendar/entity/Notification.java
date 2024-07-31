@@ -2,7 +2,7 @@ package kr.co.groupworks.calendar.entity;
 
 import jakarta.persistence.*;
 import kr.co.groupworks.BaseEntity;
-import kr.co.groupworks.entity.cis.Employee;
+import kr.co.groupworks.employee.entity.Employee;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
