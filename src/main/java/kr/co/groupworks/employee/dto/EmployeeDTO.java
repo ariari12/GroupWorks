@@ -1,5 +1,6 @@
 package kr.co.groupworks.employee.dto;
 
+import kr.co.groupworks.department.dto.DepartmentDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

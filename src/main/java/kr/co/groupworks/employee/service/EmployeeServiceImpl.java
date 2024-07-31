@@ -1,5 +1,7 @@
 package kr.co.groupworks.employee.service;
 
+import kr.co.groupworks.department.dto.DepartmentDTO;
+import kr.co.groupworks.department.entity.Department;
 import kr.co.groupworks.employee.dto.EmployeeDTO;
 import kr.co.groupworks.employee.entity.Employee;
 import kr.co.groupworks.employee.repository.EmployeeRepository;

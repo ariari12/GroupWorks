@@ -2,6 +2,7 @@ package kr.co.groupworks.employee.entity;
 
 
 import jakarta.persistence.*;
+import kr.co.groupworks.department.entity.Department;
 import lombok.*;
 
 
