@@ -28,8 +28,8 @@ class EmployeeServiceTest {
                 .address("서울시 노원구")
                 .gender("Male")
                 .joinDate(LocalDateTime.now())
-                .salary(65000)
-                .supervisorId(1033)
+                .salary(65000L)
+                .supervisorId(1033L)
                 .build();
 
         employeeService.saveEmployee(employee);
