@@ -5,12 +5,14 @@
 <!--/* Sidebar */-->
 <th:block th:fragment="side">
 
+
     <div id="layoutSidenav_nav">
         <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
-            <div class="sb-sidenav-menu">
-                <div class="nav">
 
-                    <th:block th:replace="~{/attendance/fragments/attendanceTime::commuteTime}"></th:block>
+            <div class="sb-sidenav-menu">
+
+            <div class="nav">
+                <th:block th:replace="~{attendance/fragments/attendanceTime :: commuteTime}"></th:block>
 
                     <!--/* 그룹 소 제목 */-->
                     <div class="sb-sidenav-menu-heading">Main</div>
