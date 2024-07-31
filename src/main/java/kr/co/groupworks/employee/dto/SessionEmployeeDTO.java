@@ -1,5 +1,6 @@
 package kr.co.groupworks.employee.dto;
 
+import kr.co.groupworks.department.dto.DepartmentDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,6 +19,6 @@ public class SessionEmployeeDTO {
     private String employeeName;
     //  이메일
     private String email;
-    //  부서 번호 fk
-    private int departmentId;
+    //  부서
+    private DepartmentDTO department;
 }

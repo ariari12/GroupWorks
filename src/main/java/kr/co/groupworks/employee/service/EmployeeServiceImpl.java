@@ -1,5 +1,7 @@
 package kr.co.groupworks.employee.service;
 
+import kr.co.groupworks.department.dto.DepartmentDTO;
+import kr.co.groupworks.department.entity.Department;
 import kr.co.groupworks.employee.dto.EmployeeDTO;
 import kr.co.groupworks.employee.entity.Employee;
 import kr.co.groupworks.employee.repository.EmployeeRepository;
@@ -82,7 +84,12 @@ public class EmployeeServiceImpl implements EmployeeService {
                 .employeeName(dto.getEmployeeName())
                 .rankId(dto.getRankId())
                 .rankName(dto.getRankName())
-                .departmentId(dto.getDepartmentId())
+                .department(Department.builder()
+                        .departmentId(dto.getDepartment().getDepartmentId())
+                        .departmentName(dto.getDepartment().getDepartmentName())
+                        .contactNumber(dto.getDepartment().getContactNumber())
+                        .location(dto.getDepartment().getLocation())
+                        .build())
                 .email(dto.getEmail())
                 .phoneNumber(dto.getPhoneNumber())
                 .address(dto.getAddress())
@@ -101,7 +108,12 @@ public class EmployeeServiceImpl implements EmployeeService {
                 .employeeName(employee.getEmployeeName())
                 .rankId(employee.getRankId())
                 .rankName(employee.getRankName())
-                .departmentId(employee.getDepartmentId())
+                .department(DepartmentDTO.builder()
+                        .departmentId(employee.getDepartment().getDepartmentId())
+                        .departmentName(employee.getDepartment().getDepartmentName())
+                        .contactNumber(employee.getDepartment().getContactNumber())
+                        .location(employee.getDepartment().getLocation())
+                        .build())
                 .email(employee.getEmail())
                 .phoneNumber(employee.getPhoneNumber())
                 .address(employee.getAddress())

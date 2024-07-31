@@ -2,6 +2,7 @@ package kr.co.groupworks.employee.entity;
 
 
 import jakarta.persistence.*;
+import kr.co.groupworks.department.entity.Department;
 import lombok.*;
 
 
@@ -29,8 +30,9 @@ public class Employee {
     @Column(name = "rank_name")
     private String rankName;
 
-    @Column(name = "department_id")
-    private Integer departmentId;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "department_id")
+    private Department department;
 
     @Column(name = "email", nullable = false, unique = true)
     private String email;
@@ -53,8 +55,7 @@ public class Employee {
     @Column(name = "supervisor_id")
     private Long supervisorId;
 
-
-//    @Column(name = "representative_image")
-//    private String representativeImage;
+    @Column(name = "is_active")
+    private Integer isActive;
 
 }

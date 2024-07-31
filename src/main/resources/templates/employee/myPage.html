@@ -6,7 +6,7 @@
 <th:block layout:fragment="css">
     <link rel="canonical" href="https://getbootstrap.com/docs/5.3/examples/checkout/">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@docsearch/css@3">
-    <link href="../assets/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         .bd-placeholder-img {
             font-size: 1.125rem;
@@ -164,8 +164,8 @@
                         </div>
 
                         <div class="col-sm-6">
-                            <label for="departmentName" class="form-label">부서번호</label>
-                            <input type="text" class="form-control" id="departmentName" placeholder="" th:value="${employee.getDepartmentId()}" required>
+                            <label for="departmentName" class="form-label">부서이름</label>
+                            <input type="text" class="form-control" id="departmentName" placeholder="" th:value="${employee.getDepartment().getDepartmentName()}" required>
                             <div class="invalid-feedback">
                                 Valid first name is required.
                             </div>
@@ -236,7 +236,7 @@
             </div>
         </div>
     </div>
-    <script src="../js/bootstrap/bootstrap.bundle.min.js"></script>
-    <script src="../js/mail/offcanvas-navbar.js"></script>
+    <script src="/js/bootstrap/bootstrap.bundle.min.js"></script>
+    <script src="/js/mail/offcanvas-navbar.js"></script>
 </th:block>
 </html>

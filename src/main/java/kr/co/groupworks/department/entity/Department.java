@@ -15,7 +15,7 @@ public class Department {
     // 1, 부서 pk
     @Id
     @Column(name = "department_id", nullable = false, unique = true)
-    private int departmentId;
+    private Long departmentId;
     // 2, 부서 명
     @Column(name = "department_name", nullable = false)
     private String departmentName;
