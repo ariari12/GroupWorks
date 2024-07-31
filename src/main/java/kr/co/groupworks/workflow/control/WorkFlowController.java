@@ -1,7 +1,7 @@
 package kr.co.groupworks.workflow.control;
 
 import jakarta.servlet.http.HttpSession;
-import kr.co.groupworks.dto.cis.employee.SessionEmployeeDTO;
+import kr.co.groupworks.employee.dto.SessionEmployeeDTO;
 import kr.co.groupworks.workflow.dto.dto.ApproverDTO;
 import kr.co.groupworks.workflow.dto.dto.WorkFlowDTO;
 import kr.co.groupworks.workflow.dto.vo.ApproverVO;
@@ -205,6 +205,6 @@ public class WorkFlowController {
     }
 
     private long getDepartmentId(HttpSession session) {
-        return ((SessionEmployeeDTO) session.getAttribute(AttributeName.EMPLOYEE.getStatus())).getDepartmentId();
+        return ((SessionEmployeeDTO) session.getAttribute(AttributeName.EMPLOYEE.getStatus())).getDepartment().getDepartmentId();
     }
 }

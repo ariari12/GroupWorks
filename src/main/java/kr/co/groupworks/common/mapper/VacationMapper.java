@@ -1,7 +1,8 @@
 package kr.co.groupworks.common.mapper;
+
 import kr.co.groupworks.calendar.dto.*;
-import kr.co.groupworks.entity.cis.Employee;
 import kr.co.groupworks.calendar.entity.Vacation;
+import kr.co.groupworks.employee.entity.Employee;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

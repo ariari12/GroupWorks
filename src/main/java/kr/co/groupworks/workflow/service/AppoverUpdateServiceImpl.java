@@ -1,7 +1,7 @@
 package kr.co.groupworks.workflow.service;
 
+import kr.co.groupworks.employee.entity.Employee;
 import kr.co.groupworks.workflow.dto.dto.ApproverDTO;
-import kr.co.groupworks.entity.cis.Employee;
 import kr.co.groupworks.workflow.entity.ApproverEntity;
 import kr.co.groupworks.workflow.repository.ApproversRepository;
 import lombok.RequiredArgsConstructor;

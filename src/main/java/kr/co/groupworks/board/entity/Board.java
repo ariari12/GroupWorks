@@ -1,8 +1,8 @@
 package kr.co.groupworks.board.entity;
 
 import jakarta.persistence.*;
-import kr.co.groupworks.entity.cis.Department;
-import kr.co.groupworks.entity.cis.Employee;
+import kr.co.groupworks.department.entity.Department;
+import kr.co.groupworks.employee.entity.Employee;
 
 import java.time.LocalDateTime;
 

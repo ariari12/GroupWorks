@@ -1,8 +1,8 @@
 package kr.co.groupworks.workflow.dto.employee;
 
+import kr.co.groupworks.employee.entity.Employee;
 import kr.co.groupworks.workflow.dto.dto.ApproverDTO;
 import kr.co.groupworks.workflow.dto.dto.WorkFlowDTO;
-import kr.co.groupworks.entity.cis.Employee;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
