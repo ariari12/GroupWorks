@@ -218,6 +218,7 @@ public class WorkFlowRestController {
                     " 3: 부서 결재 완료 목록, 4: 월 별 결재 발송/승인/반려 건, 5: 누적 결재 발송 건 수 }",
             required = true,
             example = "1~6(Code 번호)"
+
     )
     @ApiResponse(responseCode = "200",
             description = "요청 code에 따른 세션 사원정보에 해당하는 데이터 목록 데이터 반환",
