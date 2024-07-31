@@ -14,6 +14,6 @@ public class ChatController {
 
     @GetMapping("/list")
     public String chat(Model model) {
-        return "yhj/chat/list";
+        return "chat/list";
     }
 }
