@@ -144,10 +144,6 @@
             // 캘린더를 그려준다.
             calendar.render();
         });
-
-
-
-
     </script>
     <!-- modal 추가 -->
     <div class="modal fade" id="calendarModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
@@ -159,11 +155,11 @@
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        <label for="taskId" class="col-form-label">일정 내용</label>
+                        <label for="calendar_content" class="col-form-label">일정 내용</label>
                         <input type="text" class="form-control" id="calendar_content" name="calendar_content">
-                        <label for="taskId" class="col-form-label">시작 날짜</label>
+                        <label for="calendar_start_date" class="col-form-label">시작 날짜</label>
                         <input type="date" class="form-control" id="calendar_start_date" name="calendar_start_date">
-                        <label for="taskId" class="col-form-label">종료 날짜</label>
+                        <label for="calendar_end_date" class="col-form-label">종료 날짜</label>
                         <input type="date" class="form-control" id="calendar_end_date" name="calendar_end_date">
                     </div>
                 </div>
