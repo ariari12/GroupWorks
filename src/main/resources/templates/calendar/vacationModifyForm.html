@@ -59,15 +59,15 @@
                             <th:block th:if="${!#lists.isEmpty(modifyForm.getFileList())}">
                                 <th:block th:each="file : *{fileList}">
                                     <div>
-                                        <a th:href="@{asd}"
-                                           th:text="${file.fileName}">asd</a>
+                                        <a th:href="@{|/calendar/fileDownload/${file.filePath}|}"
+                                           th:text="${file.fileName}">파일이름</a>
                                     </div>
                                 </th:block>
                             </th:block>
                         </div>
                     </div>
                     <div class="modal-footer m-2">
-                        <button type="button" class="btn btn-secondary m-lg-2" data-bs-dismiss="modal">취소</button>
+                        <a href="/vacation" class="btn btn-secondary m-lg-2" >취소</a>
                         <button type="submit" class="btn btn-primary">수정</button>
                     </div>
                 </form>
