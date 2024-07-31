@@ -93,6 +93,4 @@ public class EmployeeTest {
                 .toList();
         vacationHistoryRepository.saveAll(vacationHistories);
     }
-
-
 }
