@@ -1,14 +1,12 @@
 package kr.co.groupworks.service.cis;
 
-import kr.co.groupworks.dto.cis.employee.EmployeeDTO;
-import kr.co.groupworks.entity.cis.Employee;
+import kr.co.groupworks.employee.dto.EmployeeDTO;
+import kr.co.groupworks.employee.service.EmployeeService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDateTime;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class EmployeeServiceTest {

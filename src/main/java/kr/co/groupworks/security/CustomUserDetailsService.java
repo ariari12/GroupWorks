@@ -1,10 +1,9 @@
 package kr.co.groupworks.security;
 
-import kr.co.groupworks.entity.cis.Employee;
-import kr.co.groupworks.repository.cis.EmployeeRepository;
+import kr.co.groupworks.employee.entity.Employee;
+import kr.co.groupworks.employee.repository.EmployeeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
