@@ -1,30 +1,27 @@
 package kr.co.groupworks;
 
-import kr.co.groupworks.entity.cis.Department;
-import kr.co.groupworks.entity.cis.Employee;
-import kr.co.groupworks.calendar.entity.VacationHistory;
-import kr.co.groupworks.repository.cis.DepartmentRepository;
-import kr.co.groupworks.repository.cis.EmployeeRepository;
-
 import kr.co.groupworks.calendar.repository.VacationHistoryRepository;
-import kr.co.groupworks.service.workflow.WorkFlowService;
-
+import kr.co.groupworks.department.entity.Department;
+import kr.co.groupworks.department.repository.DepartmentRepository;
+import kr.co.groupworks.employee.entity.Employee;
+import kr.co.groupworks.employee.repository.EmployeeRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Rollback;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.IntStream;
 
 @Slf4j
+@Transactional
 @SpringBootTest
 public class EmployeeTest {
     /* 필요한 객체 추가 */
-    @Autowired
-    private WorkFlowService workFlowService;
     @Autowired
     private DepartmentRepository departmentRepository;
     @Autowired
@@ -32,36 +29,30 @@ public class EmployeeTest {
     @Autowired
     private VacationHistoryRepository vacationHistoryRepository;
 
-    @Test @DisplayName("Department, Employee Insert")
-    public void insetTest() {
+    @Test @Rollback(false)
+    @DisplayName("Employee Insert")
+    public void insertDepartment() {
         // 샘플 부서 데이터
         List<Department> departments = List.of(
-                new Department(1L, "기술부서", "010-1234-5678", "A동"),
-                new Department(2L, "마케팅부서", "010-1234-5679", "B동"),
-                new Department(3L, "영업부서", "010-1234-5680", "C동"),
-                new Department(4L, "인사부서", "010-1234-5681", "D동"),
-                new Department(5L, "재무부서", "010-1234-5682", "E동"),
-                new Department(6L, "IT 지원부서", "010-1234-5683", "F동"),
-                new Department(7L, "제품 관리부서", "010-1234-5684", "G동"),
-                new Department(8L, "고객 서비스부서", "010-1234-5685", "H동"),
-                new Department(9L, "법무부서", "010-1234-5686", "I동"),
-                new Department(10L, "연구개발부서", "010-1234-5687", "J동")
+                new Department(null, "기술부서", "010-1234-5678", "A동"),
+                new Department(null, "마케팅부서", "010-1234-5679", "B동"),
+                new Department(null, "영업부서", "010-1234-5680", "C동"),
+                new Department(null, "인사부서", "010-1234-5681", "D동"),
+                new Department(null, "재무부서", "010-1234-5682", "E동"),
+                new Department(null, "IT 지원부서", "010-1234-5683", "F동"),
+                new Department(null, "제품 관리부서", "010-1234-5684", "G동"),
+                new Department(null, "고객 서비스부서", "010-1234-5685", "H동"),
+                new Department(null, "법무부서", "010-1234-5686", "I동"),
+                new Department(null, "연구개발부서", "010-1234-5687", "J동")
         );
+        // 부서 데이터 생성 및 저장
+        departmentRepository.saveAll(departments);
 
-        // 이미 존재하는 부서 데이터를 확인하고, 존재하지 않는 경우에만 저장
-        // └> Id 자동생성으로 확인 불가(id 겹치면 데이터 중복 생성됨)
-//        departments.forEach(department -> {
-//            Optional<Department> existingDepartment = departmentRepository.findById(department.getDepartmentId());
-//            if (existingDepartment.isEmpty()) {
-//                departmentRepository.save(department);
-//            }
-//        });
+        // 영속성 컨텍스트에서 부서 데이터를 재조회
+        List<Department> finalDepartments = departmentRepository.findAll();
 
-        // 부서 데이터 생성 및 사원 데이터 생성 시 사용
-        List<Department> finalDepartments = departmentRepository.saveAll(departments);
         // 샘플 사원 데이터 생성
-        List<Employee> employees = IntStream.rangeClosed(1, 100).mapToObj(i -> Employee.builder()
-                .employeeId((long) i)
+        List<Employee> employeeList = IntStream.rangeClosed(1, 100).mapToObj(i -> Employee.builder()
                 .employeePW("$2a$10$Vg4CIc8WunwnKoV2.j9J.uPep8BgLAzb2VelL89I.hGiLBDNoybpO") // employeePW: 사원 비밀번호 1111
                 .employeeName("사원" + i) // employeeName: 사원 이름 (사원1, 사원2, ..., 사원100)
                 .rankId((i % 5) + 1)    // rankId: 사원 직급 ID (1부터 5까지 반복)
@@ -76,22 +67,17 @@ public class EmployeeTest {
                 .supervisorId(i > 10 ? (long) ((i % 10) + 1) : 0) // supervisorId: 상사 ID (1부터 10까지 반복)
                 .build()
         ).toList();
-        employees = employeeRepository.saveAll(employees);
+        // 사원 데이터 저장
+        employeeRepository.saveAll(employeeList);
+
         // 저장된 데이터 출력 (확인 용)
-        employees.forEach(employee ->
+        employeeRepository.findAll().forEach(employee ->
                 System.out.println(employee.getEmployeeId() + ": " +
                         employee.getEmployeeName() + ", " +
                         employee.getEmail() + ", " +
                         employee.getPhoneNumber() + ", " +
                         employee.getDepartment().getDepartmentName())
         );
-
-        // VacationHistory 데이터 생성 및 저장
-        List<VacationHistory> vacationHistories = employees.stream()
-                .map(VacationHistory::createFromEmployee)
-                .toList();
-        vacationHistoryRepository.saveAll(vacationHistories);
     }
-
 
 }

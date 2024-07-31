@@ -1,4 +1,4 @@
-package kr.co.groupworks.workflow.control;
+package kr.co.groupworks.materialflow.control;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
@@ -27,7 +27,7 @@ public class QRTestContoller {
 
     @GetMapping("/test/{no}")
 //    public ResponseEntity<byte[]> qrToTistory(@PathVariable int no, Model model) throws WriterException, IOException {
-    public String qrToTistory(@PathVariable int no, Model model) throws WriterException, IOException {
+    public String qrToMove(@PathVariable int no, Model model) throws WriterException, IOException {
         // QR 정보
         int width = 460;
         int height = 460;
@@ -47,7 +47,7 @@ public class QRTestContoller {
             MatrixToImageWriter.writeToStream(encode, "PNG", out, custom);
 
             model.addAttribute("qrCode", Base64.getEncoder().encodeToString(out.toByteArray()));
-            return "qr/code";
+            return "materialflow/qrCodePage";
 //            return ResponseEntity.ok().contentType(MediaType.IMAGE_PNG).body(out.toByteArray());
         }catch (Exception e){
             throw new RuntimeException(e);
@@ -59,6 +59,6 @@ public class QRTestContoller {
         log.info("/qr/Move no: {}", no);
         model.addAttribute("no", no);
 
-        return "qr/move";
+        return "materialflow/qrPageMove";
     }
 }

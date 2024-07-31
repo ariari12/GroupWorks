@@ -1,4 +1,4 @@
-package kr.co.groupworks.repository.cis;
+package kr.co.groupworks.department.repository;
 
 import kr.co.groupworks.department.entity.Department;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -1,21 +1,16 @@
 package kr.co.groupworks.service.kah;
 
 import kr.co.groupworks.calendar.dto.AnnualFormDTO;
-import kr.co.groupworks.calendar.service.VacationService;
 import kr.co.groupworks.calendar.dto.HalfFormDTO;
 import kr.co.groupworks.calendar.dto.VacationMyRequestDTO;
-import kr.co.groupworks.entity.cis.Employee;
 import kr.co.groupworks.calendar.entity.AmPm;
-import kr.co.groupworks.calendar.entity.VacationStatus;
 import kr.co.groupworks.calendar.entity.Vacation;
-import kr.co.groupworks.repository.cis.EmployeeRepository;
-
+import kr.co.groupworks.calendar.entity.VacationStatus;
 import kr.co.groupworks.calendar.repository.VacationRepository;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import kr.co.groupworks.calendar.service.VacationService;
+import kr.co.groupworks.employee.entity.Employee;
+import kr.co.groupworks.employee.repository.EmployeeRepository;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 
 @SpringBootTest
@@ -122,12 +117,12 @@ class VacationServiceImplTest {
     }
 
 
-//    @AfterEach
-//    void tearDown() {
-//        employeeRepository.deleteById(1L);
-//        employeeRepository.deleteById(2L);
-//        employeeRepository.deleteById(3L);
-//        employeeRepository.deleteById(4L);
-//        employeeRepository.deleteById(5L);
-//    }
+    @AfterEach
+    void tearDown() {
+        employeeRepository.deleteById(1L);
+        employeeRepository.deleteById(2L);
+        employeeRepository.deleteById(3L);
+        employeeRepository.deleteById(4L);
+        employeeRepository.deleteById(5L);
+    }
 }

@@ -1,7 +1,7 @@
 package kr.co.groupworks.workflow.service;
 
+import kr.co.groupworks.department.repository.DepartmentRepository;
 import kr.co.groupworks.employee.repository.EmployeeRepository;
-import kr.co.groupworks.repository.cis.DepartmentRepository;
 import kr.co.groupworks.workflow.control.WorkFlowController;
 import kr.co.groupworks.workflow.dto.dto.ApproverDTO;
 import kr.co.groupworks.workflow.dto.dto.AttachmentFileDTO;

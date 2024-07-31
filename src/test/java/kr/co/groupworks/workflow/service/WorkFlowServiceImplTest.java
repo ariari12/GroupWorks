@@ -1,11 +1,11 @@
 package kr.co.groupworks.workflow.service;
 
+import kr.co.groupworks.department.entity.Department;
+import kr.co.groupworks.department.repository.DepartmentRepository;
+import kr.co.groupworks.employee.entity.Employee;
+import kr.co.groupworks.employee.repository.EmployeeRepository;
 import kr.co.groupworks.workflow.dto.dto.ApproverDTO;
 import kr.co.groupworks.workflow.dto.employee.EmployeeDTO;
-import kr.co.groupworks.entity.cis.Department;
-import kr.co.groupworks.entity.cis.Employee;
-import kr.co.groupworks.repository.cis.DepartmentRepository;
-import kr.co.groupworks.repository.cis.EmployeeRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

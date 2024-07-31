@@ -12,7 +12,7 @@
             <div class="sb-sidenav-menu">
 
             <div class="nav">
-                <th:block th:replace="~{/yhj/fragments/attendanceTime::commuteTime}"></th:block>
+                <th:block th:replace="~{/attendance/fragments/attendanceTime::commuteTime}"></th:block>
 
                 <!--/* 그룹 소 제목 */-->
                 <div class="sb-sidenav-menu-heading">Core</div>
@@ -83,30 +83,19 @@
 
                 <th:block th:replace="~{workflow/workFlowSideMenu.html :: workFlowSideMenu}"></th:block>
 
-                <th:block th:replace="~{yhj/fragments/boardSideMenu :: boardSideMenu}"></th:block>
+                <th:block th:replace="~{board/fragments/boardSideMenu :: boardSideMenu}"></th:block>
 
                 <th:block th:replace="~{calendar/fragments/kahSideMenu :: kahSideMenu}"></th:block>
 
-                <th:block th:replace="~{yhj/fragments/attendanceSideMenu :: commuteSideMenu}"></th:block>
+                <th:block th:replace="~{attendance/fragments/attendanceSideMenu :: commuteSideMenu}"></th:block>
 
-                    <th:block th:replace="mail/mailSideMenu.html :: mailSideMenu"></th:block>
+                <th:block th:replace="~{mail/mailSideMenu.html :: mailSideMenu}"></th:block>
 
-                    <th:block th:replace="videoConference/videoConferenceSideMenu.html :: videoConferenceSideMenu"></th:block>
+                <th:block th:replace="~{videoConference/videoConferenceSideMenu.html :: videoConferenceSideMenu}"></th:block>
 
-                <!--/* Sidebar Menu 필요한 만큼 추가 */-->
-                <!--/* 그룹 소 제목 */-->
-                <div class="sb-sidenav-menu-heading">Addons</div>
-                <!--/* 샘플:기능01 최상위 */-->
-                <nav class="sb-sidenav-menu-nested nav">
-                    <a class="nav-link" href="#">
-                        <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
-                        기능01
+                <th:block th:replace="~{materialflow/materialflowSideMenu.html :: materialFlowSideMenu}"></th:block>
 
-                            <!--/* 하위 그룹 및 드롭다운 추가 가능 */-->
-                        </a>
-                    </nav>
 
-                </div>
             </div>
 
             <!--/* Sidebar footer */-->
