@@ -1,18 +1,12 @@
 package kr.co.groupworks.security;
 
-import jakarta.servlet.http.HttpSession;
-import kr.co.groupworks.entity.cis.Employee;
-import lombok.Data;
+import kr.co.groupworks.employee.entity.Employee;
 import lombok.Getter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.net.http.HttpRequest;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 @Getter
 public class CustomUserDetails implements UserDetails {
