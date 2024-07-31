@@ -1,4 +1,4 @@
-package kr.co.groupworks.entity.yhj.chat;
+package kr.co.groupworks.chat.entity;
 
 import jakarta.persistence.*;
 import kr.co.groupworks.entity.cis.Department;

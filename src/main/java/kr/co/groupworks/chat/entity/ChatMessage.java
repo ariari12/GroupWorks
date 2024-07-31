@@ -1,17 +1,22 @@
-package kr.co.groupworks.entity.yhj.chat;
+package kr.co.groupworks.chat.entity;
 
 import jakarta.persistence.*;
 import kr.co.groupworks.entity.cis.Employee;
 
+import java.time.LocalDateTime;
+
 @Entity
-@Table(name = "chat_room_alias")
-public class ChatRoomAlias {
+@Table(name = "chat_message")
+public class ChatMessage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "alias_id")
-    private Long aliasId;
+    @Column(name = "message_id")
+    private Long messageId;
 
-    private String alias;
+    private String content;
+
+    @Column(name = "send_at")
+    private LocalDateTime sentAt;
 
     // @ManyToOne(fetch = FetchType.LAZY)
     @ManyToOne()
@@ -21,5 +26,5 @@ public class ChatRoomAlias {
     // @ManyToOne(fetch = FetchType.LAZY)
     @ManyToOne()
     @JoinColumn(name = "employee_id")
-    private Employee employee;
+    private Employee sender;
 }

@@ -1,4 +1,4 @@
-package kr.co.groupworks.entity.yhj.attendance;
+package kr.co.groupworks.attendance.entity;
 
 import jakarta.persistence.*;
 import kr.co.groupworks.entity.cis.Employee;

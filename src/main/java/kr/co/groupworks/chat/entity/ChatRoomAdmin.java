@@ -1,20 +1,15 @@
-package kr.co.groupworks.entity.yhj.chat;
+package kr.co.groupworks.chat.entity;
 
 import jakarta.persistence.*;
 import kr.co.groupworks.entity.cis.Employee;
 
-import java.time.LocalDateTime;
-
 @Entity
-@Table(name = "chat_room_member")
-public class ChatRoomMember {
+@Table(name = "chat_room_admin")
+public class ChatRoomAdmin {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "member_id")
-    private Long memberId;
-
-    @Column(name = "join_at")
-    private LocalDateTime joinedAt;
+    @Column(name = "admin_id")
+    private Long adminId;
 
     // @ManyToOne(fetch = FetchType.LAZY)
     @ManyToOne()

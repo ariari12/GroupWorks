@@ -1,4 +1,4 @@
-package kr.co.groupworks.entity.yhj.board;
+package kr.co.groupworks.board.entity;
 
 import jakarta.persistence.*;
 import kr.co.groupworks.entity.cis.Department;

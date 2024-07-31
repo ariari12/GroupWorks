@@ -1,4 +1,4 @@
-package kr.co.groupworks.control.yhj;
+package kr.co.groupworks.chat.controller;
 
 
 import lombok.extern.slf4j.Slf4j;

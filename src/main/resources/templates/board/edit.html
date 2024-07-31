@@ -34,11 +34,11 @@
     <script src="https://cdn.jsdelivr.net/npm/@editorjs/editorjs@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/@editorjs/paragraph@latest"></script>
     <!--/* 미리보기 시간 js */-->
-    <script src="/js/yhj/board/preview-time.js?v=<%=System.currentTimeMillis() %>"></script>
+    <script src="/js/board/preview-time.js?v=<%=System.currentTimeMillis() %>"></script>
     <!--/* editor 설정 및 미리보기 */-->
-    <script src="/js/yhj/board/preview-editor.js?v=<%=System.currentTimeMillis() %>"></script>
+    <script src="/js/board/preview-editor.js?v=<%=System.currentTimeMillis() %>"></script>
     <!-- 파일 업로드 -->
-    <script src="/js/yhj/board/fileupload.js?v=<%=System.currentTimeMillis() %"></script>
+    <script src="/js/board/fileupload.js?v=<%=System.currentTimeMillis() %"></script>
     <script>
     </script>
 </th:block>
@@ -46,7 +46,7 @@
 <th:block layout:fragment="content">
     <form action="/board/write" method="post">
         <div class="container" style="margin: 50px; width: 90%">
-            <h3>부서 게시판 글쓰기</h3>
+            <h3>글수정</h3>
             <div class="form-group">
                 <select class="form-control" aria-label="말머리" name="subject" id="subject">
                     <option value="general" selected>일반</option>
@@ -96,7 +96,7 @@
                     <div id="datePreview"></div><hr>
                     <div style="text-align: right;" id="attachFileList">
                         <div class="collapse" id="collapseExample"
-                             style="margin: 10px; position: absolute; right: 25%; transform: translateX( 5% );">
+                             style="margin: 10px; position: fixed; right: 25%; transform: translateX( 5% );">
                             <div class="card card-body" id="preview-file">
                             </div>
                         </div>
@@ -110,5 +110,7 @@
         </div>
     </div>
 </th:block>
+
 </body>
+
 </html>

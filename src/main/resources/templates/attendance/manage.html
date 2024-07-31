@@ -10,7 +10,7 @@
 </th:block>
 
 <th:block layout:fragment="javascript">
-    <script src="/js/yhj/datatables.js?v=<%=System.currentTimeMillis() %>"></script>
+    <script src="/js/attendance/datatables.js?v=<%=System.currentTimeMillis() %>"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             flatpickr("#monthYearPicker", {
@@ -57,7 +57,7 @@
         <hr>
     </div>
 
-    <th:block th:replace="yhj/fragments/commuteTables.html::tables">
+    <th:block th:replace="yhj/fragments/attendanceTables.html::tables">
     </th:block>
 
 </th:block>
