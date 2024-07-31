@@ -1,7 +1,7 @@
 package kr.co.groupworks.calendar.repository;
 
 import kr.co.groupworks.calendar.entity.Vacation;
-import kr.co.groupworks.entity.cis.Employee;
+import kr.co.groupworks.employee.entity.Employee;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

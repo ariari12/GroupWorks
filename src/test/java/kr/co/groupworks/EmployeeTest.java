@@ -5,8 +5,10 @@ import kr.co.groupworks.entity.cis.Employee;
 import kr.co.groupworks.calendar.entity.VacationHistory;
 import kr.co.groupworks.repository.cis.DepartmentRepository;
 import kr.co.groupworks.repository.cis.EmployeeRepository;
-import kr.co.groupworks.workflow.service.WorkFlowService;
+
 import kr.co.groupworks.calendar.repository.VacationHistoryRepository;
+import kr.co.groupworks.service.workflow.WorkFlowService;
+
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

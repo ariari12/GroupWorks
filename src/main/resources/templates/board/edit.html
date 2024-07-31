@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<head>
+</head>
+
+<body>
+<th:block layout:fragment="css">
+    <!-- 글쓰기 CSS -->
+    <link href="/css/yhj/board-write.css" rel="stylesheet" type="text/css"/>
+    <style>
+        .text-bg-custom {
+            background: #343a40;
+        }
+    </style>
+</th:block>
+
+<th:block layout:fragment="javascript">
+    <!--/* editor.js CDN */-->
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/header@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/simple-image@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/delimiter@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/list@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/checklist@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/quote@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/code@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/embed@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/table@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/warning@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/marker@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/inline-code@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/table@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/editorjs@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/paragraph@latest"></script>
+    <!--/* 미리보기 시간 js */-->
+    <script src="/js/board/preview-time.js?v=<%=System.currentTimeMillis() %>"></script>
+    <!--/* editor 설정 및 미리보기 */-->
+    <script src="/js/board/preview-editor.js?v=<%=System.currentTimeMillis() %>"></script>
+    <!-- 파일 업로드 -->
+    <script src="/js/board/fileupload.js?v=<%=System.currentTimeMillis() %"></script>
+    <script>
+    </script>
+</th:block>
+
+<th:block layout:fragment="content">
+    <form action="/board/write" method="post">
+        <div class="container" style="margin: 50px; width: 90%">
+            <h3>글수정</h3>
+            <div class="form-group">
+                <select class="form-control" aria-label="말머리" name="subject" id="subject">
+                    <option value="general" selected>일반</option>
+                    <option value="suggestion">제안</option>
+                    <option value="error">오류</option>
+                    <option value="inquiry">문의</option>
+                    <option value="announcement">공지</option>
+                    <option value="mandatory">필독</option>
+                </select>
+                <input type="text" class="form-control" name="title" id="title" placeholder="제목을 입력하세요">
+            </div>
+
+            <!-- 에디터 -->
+            <div class="boarder">
+                <div id="editorjs"></div>
+            </div>
+
+            <!-- 파일업로드 -->
+            <div class="insert boarder">
+                <form method="POST" onsubmit="return false;" enctype="multipart/form-data">
+                    <input type="file" class="form-control" onchange="addFile(this);" multiple />
+                    <div class="file-list" id="file-list"></div>
+                </form>
+            </div>
+
+            <div>
+                <input type="button" class="btn btn-success" value="등록하기" onclick="test()">
+                <button type="button" class="btn btn-primary" data-bs-target="#exampleModal"
+                        onclick="preview()" th:text="미리보기">
+                </button>
+            </div>
+        </div>
+    </form>
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-custom">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">미리보기</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="titlePreview">
+                    </div>
+                    <div id="writerPreview"><b>작성자</b> : 개미 인턴(세션에서 꺼내온 데이터로 나중에 변경)</div>
+                    <div id="datePreview"></div><hr>
+                    <div style="text-align: right;" id="attachFileList">
+                        <div class="collapse" id="collapseExample"
+                             style="margin: 10px; position: fixed; right: 25%; transform: translateX( 5% );">
+                            <div class="card card-body" id="preview-file">
+                            </div>
+                        </div>
+                    </div>
+                    <div id="contentPreview"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</th:block>
+
+</body>
+
+</html>
