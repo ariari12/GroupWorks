@@ -1,5 +1,6 @@
 package kr.co.groupworks.service.cis;
 
+import kr.co.groupworks.dto.cis.employee.DepartmentDTO;
 import kr.co.groupworks.dto.cis.employee.EmployeeDTO;
 import kr.co.groupworks.entity.cis.Department;
 import kr.co.groupworks.entity.cis.Employee;
@@ -75,7 +76,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     }
 
-//    Entity to DTO
+//    DTO to Entity
     public Employee toEmployee(EmployeeDTO dto) {
         return Employee.builder()
                 .employeeId(dto.getEmployeeId())
@@ -84,8 +85,10 @@ public class EmployeeServiceImpl implements EmployeeService {
                 .rankId(dto.getRankId())
                 .rankName(dto.getRankName())
                 .department(Department.builder()
-                        .departmentId(dto.getDepartmentId())
-                        .departmentName(dto.getDepartmentName())
+                        .departmentId(dto.getDepartment().getDepartmentId())
+                        .departmentName(dto.getDepartment().getDepartmentName())
+                        .contactNumber(dto.getDepartment().getContactNumber())
+                        .location(dto.getDepartment().getLocation())
                         .build())
                 .email(dto.getEmail())
                 .phoneNumber(dto.getPhoneNumber())
@@ -97,7 +100,7 @@ public class EmployeeServiceImpl implements EmployeeService {
                 .build();
     }
 
-//    DTO to Entity
+//    Entity to DTO
     public EmployeeDTO toEmployeeDTO(Employee employee) {
         return EmployeeDTO.builder()
                 .employeeId(employee.getEmployeeId())
@@ -105,8 +108,12 @@ public class EmployeeServiceImpl implements EmployeeService {
                 .employeeName(employee.getEmployeeName())
                 .rankId(employee.getRankId())
                 .rankName(employee.getRankName())
-                .departmentId(employee.getDepartment().getDepartmentId())
-                .departmentName(employee.getDepartment().getDepartmentName())
+                .department(DepartmentDTO.builder()
+                        .departmentId(employee.getDepartment().getDepartmentId())
+                        .departmentName(employee.getDepartment().getDepartmentName())
+                        .contactNumber(employee.getDepartment().getContactNumber())
+                        .location(employee.getDepartment().getLocation())
+                        .build())
                 .email(employee.getEmail())
                 .phoneNumber(employee.getPhoneNumber())
                 .address(employee.getAddress())

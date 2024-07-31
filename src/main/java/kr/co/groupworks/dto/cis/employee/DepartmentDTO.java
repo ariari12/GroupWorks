@@ -13,7 +13,7 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 public class DepartmentDTO {
     // 1, 부서 pk
-    private int departmentId;
+    private Long departmentId;
     // 2, 부서 명
     private String departmentName;
     // 3, 부서 공용 연락처

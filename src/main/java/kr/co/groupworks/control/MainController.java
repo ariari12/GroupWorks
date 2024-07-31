@@ -45,7 +45,7 @@ public class MainController {
         sessionEmployeeDTO.setEmployeeId(employee.getEmployeeId());
         sessionEmployeeDTO.setEmployeeName(employee.getEmployeeName());
         sessionEmployeeDTO.setEmail(employee.getEmail());
-        sessionEmployeeDTO.setDepartmentId(employee.getDepartmentId());
+        sessionEmployeeDTO.setDepartment(employee.getDepartment());
 
         session.setAttribute("employee", sessionEmployeeDTO);
         log.info("employee" + sessionEmployeeDTO);

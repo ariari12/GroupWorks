@@ -1,13 +1,9 @@
 package kr.co.groupworks.entity.cis;
 
-
 import jakarta.persistence.*;
 import lombok.*;
 
-
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 
 @Getter
 @Entity
@@ -57,4 +53,6 @@ public class Employee {
     @Column(name = "supervisor_id")
     private Long supervisorId;
 
+    @Column(name = "is_active")
+    private Integer isActive;
 }
