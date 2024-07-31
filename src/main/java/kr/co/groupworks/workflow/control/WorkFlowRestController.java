@@ -7,7 +7,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
-import kr.co.groupworks.dto.cis.employee.SessionEmployeeDTO;
+import kr.co.groupworks.employee.dto.SessionEmployeeDTO;
 import kr.co.groupworks.workflow.dto.dto.ApproverDTO;
 import kr.co.groupworks.workflow.dto.dto.ExampleStatusDTO;
 import kr.co.groupworks.workflow.dto.dto.WorkFlowDTO;
@@ -232,7 +232,7 @@ public class WorkFlowRestController {
         SessionEmployeeDTO sessionDTO = (SessionEmployeeDTO) session.getAttribute(AttributeName.EMPLOYEE.getStatus());
         log.info("WorkFlowRestController - workStatus ok, sessionDTO: {}", sessionDTO);
 
-        Object result = workFlowService.getWorkflowStatistics(sessionDTO.getEmployeeId(), sessionDTO.getDepartmentId(), param);
+        Object result = workFlowService.getWorkflowStatistics(sessionDTO.getEmployeeId(), sessionDTO.getDepartment().getDepartmentId(), param);
         if (result != null) {
             log.info("WorkFlowRestController - workStatus ok, result: {}", result);
             return ResponseEntity.ok().body(result);

@@ -3,7 +3,7 @@ package kr.co.groupworks.workflow.repository;
 import com.querydsl.core.Tuple;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
-import kr.co.groupworks.entity.cis.QDepartment;
+import kr.co.groupworks.department.entity.QDepartment;
 import kr.co.groupworks.workflow.entity.QApproverEntity;
 import kr.co.groupworks.workflow.entity.QWorkFlowEntity;
 import kr.co.groupworks.workflow.entity.WorkFlowEntity;

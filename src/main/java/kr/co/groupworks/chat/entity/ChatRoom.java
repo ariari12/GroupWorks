@@ -1,7 +1,8 @@
 package kr.co.groupworks.chat.entity;
 
 import jakarta.persistence.*;
-import kr.co.groupworks.entity.cis.Department;
+import kr.co.groupworks.department.entity.Department;
+
 import java.time.LocalDateTime;
 import java.util.Set;
 

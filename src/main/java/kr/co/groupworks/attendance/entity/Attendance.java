@@ -1,7 +1,7 @@
 package kr.co.groupworks.attendance.entity;
 
 import jakarta.persistence.*;
-import kr.co.groupworks.entity.cis.Employee;
+import kr.co.groupworks.employee.entity.Employee;
 
 import java.time.LocalDateTime;
 
