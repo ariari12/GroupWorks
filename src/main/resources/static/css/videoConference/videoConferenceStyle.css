@@ -1,0 +1,6 @@
+#localStream.black-screen {
+    display: block;
+    background-color: black;
+    width: 640px;  /* 적절한 크기로 설정 */
+    height: 480px; /* 적절한 크기로 설정 */
+}
