@@ -13,7 +13,7 @@
 <th:block layout:fragment="javascript">
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.14/index.global.min.js'></script>
     <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/google-calendar@6.1.14/index.global.min.js'></script>
-    <script>
+    <script th:inline="javascript">
 
         // 당일 설정 가능하게
         function addOneDay(date) {
@@ -24,16 +24,19 @@
         document.addEventListener('DOMContentLoaded', function() {
 
             var calendarEl = document.getElementById('calendar');
+
+            // 서버에서 전달된 데이터를 JavaScript 변수로 전달
+            var calendarData = /*[[${calendarFormDTO}]]*/ [];
+
             var calendar = new FullCalendar.Calendar(calendarEl, {
             googleCalendarApiKey: 'AIzaSyCyTApWr2NijbtvLNwUGFu3wCe_lYSSB5U',
             initialView: 'dayGridMonth',
-            events:[ // 일정 데이터 추가 , DB의 event를 가져오려면 JSON 형식으로 변환해 events에 넣어주면된다.
-                {
-                    title:'일정',
-                    start:'2024-07-26',
-                    end:addOneDay('2024-07-30')
-                }
-            ],customButtons: {
+                events: calendarData.map(event => ({
+                    title: event.contents,
+                    start: event.startDate,
+                    end: addOneDay(event.endDate)
+                })),
+                customButtons: {
                         customPrevY: { // 이전 연도로 이동
                             icon: 'fc-icon-chevrons-left',
                             click: function() {
