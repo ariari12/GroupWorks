@@ -14,6 +14,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.SessionAttribute;
 
 @Slf4j
 @Controller
@@ -45,6 +49,7 @@ public class DeptBoardController {
         if (!BoardUtils.hasAccessToDepartment(sessionEmployeeDTO, departmentId)) {
             return "redirect:/main?alert=invalid_department";
         }
+
         BoardUtils.setTitleAndType(model, BoardUtils.DEPARTMENT_BOARD, "글쓰기");
         return "board/write";
     }
@@ -67,8 +72,7 @@ public class DeptBoardController {
     }
 
     @GetMapping("{departmentId}/detail/{no}")
-    public String deptDetail(@PathVariable("departmentId") Long departmentId,
-                             @PathVariable("no") Long no, Model model,
+    public String deptDetail(@PathVariable("departmentId") Long departmentId, Model model,
                          @SessionAttribute("employee") SessionEmployeeDTO sessionEmployeeDTO) {
         if (!BoardUtils.hasAccessToDepartment(sessionEmployeeDTO, departmentId)) {
             return "redirect:/main?alert=invalid_department";
@@ -87,6 +91,7 @@ public class DeptBoardController {
         if (!BoardUtils.hasAccessToDepartment(sessionEmployeeDTO, departmentId)) {
             return "redirect:/main?alert=invalid_department";
         }
+
         BoardUtils.setTitleAndType(model, BoardUtils.DEPARTMENT_BOARD, "글수정");
         return "board/edit";
     }
