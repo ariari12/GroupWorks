@@ -10,4 +10,6 @@ import org.mapstruct.Mapping;
 public interface CalendarMapper {
     @Mapping(target = "employee", source = "employee")
     Calendar toEntity(CalendarFormDTO calendarFormDTO, Employee employee);
+
+    CalendarFormDTO toDto(Calendar calendar);
 }

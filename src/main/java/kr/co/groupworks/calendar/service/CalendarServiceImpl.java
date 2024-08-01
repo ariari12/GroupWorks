@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -26,5 +28,12 @@ public class CalendarServiceImpl implements CalendarService {
         Calendar calendar = calendarMapper.toEntity(calendarFormDTO, employee);
         return calendarRepository.save(calendar).getCalendarId();
 
+    }
+
+    @Override
+    public List<CalendarFormDTO> findAllCalendar() {
+        return calendarRepository.findAll().
+                stream()
+                .map(calendarMapper::toDto).toList();
     }
 }
