@@ -11,7 +11,6 @@ import lombok.*;
 public class Department {
     // 1, 부서 pk
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "department_id", nullable = false, unique = true)
     private Long departmentId;
     // 2, 부서 명

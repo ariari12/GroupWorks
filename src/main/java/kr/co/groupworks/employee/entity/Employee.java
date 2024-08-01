@@ -51,9 +51,6 @@ public class Employee extends BaseEntity {
     @Column(name = "gender")
     private String gender;
 
-    @Column(name = "join_date")
-    private LocalDateTime joinDate;
-
     @Column(name = "salary")
     private Long salary;
 
@@ -62,5 +59,6 @@ public class Employee extends BaseEntity {
 
     @Column(name = "is_active")
     private Integer isActive;
+
 
 }
