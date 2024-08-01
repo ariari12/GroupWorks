@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CalendarFormDTO {
+    private String title;
     // 내용
     private String contents;
     // 일정 시작일
