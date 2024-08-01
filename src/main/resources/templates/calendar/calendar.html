@@ -17,10 +17,11 @@
         /*<![CDATA[*/
         var calendarData = /*[[${calendarFormDTO}]]*/ [];
 
+        // 당일 설정 가능하게
         function addOneDay(date) {
             var newDate = new Date(date);
             newDate.setDate(newDate.getDate() + 1);
-            return newDate.toISOString().split('T')[0];
+            return newDate.toISOString().split('T')[0];  // 'YYYY-MM-DD' 형식으로 반환
         }
 
         document.addEventListener('DOMContentLoaded', function() {
@@ -69,21 +70,26 @@
                 headerToolbar: {
                     left: 'customPrevY,customPrev,customToday,customNext,customNextY',
                     center: 'title',
+                    //오른쪽 툴바 설정
                     right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
                 },
                 allDaySlot: true,
-                dayMaxEvents: true,
-                displayEventTime: false,
-                eventSources: [{
-                    googleCalendarId: 'ko.south_korea#holiday@group.v.calendar.google.com',
-                    backgroundColor: "transparent",
-                    borderColor: "transparent",
-                    className: "kr-holiday",
-                    textColor: "red"
-                }],
-                editable: true,
+                dayMaxEvents: true, // 최대 이벤트 개수
+                displayEventTime: false, // 이벤트에 시간 표시 여부
+
+                //공휴일 데이터 추가
+                eventSources: [{ // 구글 캘린더 ID입력
+                googleCalendarId: 'ko.south_korea#holiday@group.v.calendar.google.com',
+                backgroundColor: "transparent",
+                borderColor: "transparent",
+                className: "kr-holiday",
+                textColor: "red"
+                }],editable: true,
+
+                //droppable을 사용할때 droppable true 드롭이벤트
                 droppable: true,
                 dateClick: function(info) {
+                //날짜 클릭 시 발생할 이벤트
                     $("#calendar_start_date").val(info.dateStr);
                     $("#calendarModal").modal("show");
                     $("#closeCalendar").on("click",function (){
@@ -98,9 +104,9 @@
                             alert("내용을 입력하세요.");
                         } else if (start_date == "" || end_date == "") {
                             alert("날짜를 입력하세요.");
-                        } else if (new Date(end_date) - new Date(start_date) < 0) {
+                        } else if (new Date(end_date) - new Date(start_date) < 0) { // date 타입으로 변경 후 확인
                             alert("종료일이 시작일보다 먼저입니다.");
-                        } else {
+                        } else { // 정상적인 입력 시
                             var obj = {
                                 title: title,
                                 startDate: start_date,
@@ -143,12 +149,15 @@
                     console.log(info);
                 },
                 drop: function(info) {
+                //드래그 드롭 후 이벤트
                 },
                 eventDrop: function(info) {
                 },
                 eventResize: function(info) {
+                //일정 크기를 변경했을떄 이벤트
                 }
             });
+            // 캘린더를 그려준다.
             calendar.render();
         });
         /*]]>*/
