@@ -5,15 +5,18 @@ import jakarta.persistence.*;
 import kr.co.groupworks.common.BaseEntity;
 import kr.co.groupworks.department.entity.Department;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 
 import java.time.LocalDateTime;
 
 @Getter
 @Entity
-@AllArgsConstructor @NoArgsConstructor
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "employee")
-@Builder @ToString(exclude = "department")
+@SuperBuilder
+@ToString(exclude = "department")
 public class Employee extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -59,4 +62,5 @@ public class Employee extends BaseEntity {
 
     @Column(name = "is_active")
     private Integer isActive;
+
 }

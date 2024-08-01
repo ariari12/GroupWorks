@@ -17,6 +17,7 @@ public interface VacationMapper {
     @Mapping(target = "status", expression = "java(kr.co.groupworks.calendar.entity.VacationStatus.PENDING)")
     @Mapping(target = "vacationType", expression = "java(kr.co.groupworks.calendar.entity.VacationType.ANNUAL)")
     @Mapping(target = "title", expression = "java(kr.co.groupworks.calendar.entity.VacationType.ANNUAL.getDescription())")
+    @Mapping(target = "employee", source = "employee") // Employee 객체를 명시적 매핑
     Vacation toEntity(AnnualFormDTO dto, Employee employee);
 
     VacationModifyFormDTO toModifyFormDto(Vacation vacation);
@@ -26,6 +27,7 @@ public interface VacationMapper {
     @Mapping(target = "status", expression = "java(kr.co.groupworks.calendar.entity.VacationStatus.PENDING)")
     @Mapping(target = "vacationType", expression = "java(kr.co.groupworks.calendar.entity.VacationType.HALF)")
     @Mapping(target = "title", expression = "java(kr.co.groupworks.calendar.entity.VacationType.HALF.getDescription())")
+    @Mapping(target = "employee", source = "employee") // Employee 객체를 명시적 매핑
     Vacation toEntity(HalfFormDTO dto, Employee employee);
 
     @Mapping(target = "startDate", source = "dto.sickStartDate")
@@ -34,6 +36,7 @@ public interface VacationMapper {
     @Mapping(target = "status", expression = "java(kr.co.groupworks.calendar.entity.VacationStatus.PENDING)")
     @Mapping(target = "vacationType", expression = "java(kr.co.groupworks.calendar.entity.VacationType.SICK)")
     @Mapping(target = "title", expression = "java(kr.co.groupworks.calendar.entity.VacationType.SICK.getDescription())")
+    @Mapping(target = "employee", source = "employee") // Employee 객체를 명시적 매핑
     Vacation toEntity(SickFormDTO dto, Employee employee);
 
     @Mapping(target = "startDate", source = "dto.otherStartDate")
@@ -42,6 +45,7 @@ public interface VacationMapper {
     @Mapping(target = "status", expression = "java(kr.co.groupworks.calendar.entity.VacationStatus.PENDING)")
     @Mapping(target = "vacationType", expression = "java(kr.co.groupworks.calendar.entity.VacationType.OTHER)")
     @Mapping(target = "title", expression = "java(kr.co.groupworks.calendar.entity.VacationType.OTHER.getDescription())")
+    @Mapping(target = "employee", source = "employee") // Employee 객체를 명시적 매핑
     Vacation toEntity(OtherFormDTO dto, Employee employee);
 
 

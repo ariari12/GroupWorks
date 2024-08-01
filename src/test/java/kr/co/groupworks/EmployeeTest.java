@@ -1,5 +1,6 @@
 package kr.co.groupworks;
 
+import kr.co.groupworks.calendar.entity.VacationHistory;
 import kr.co.groupworks.calendar.repository.VacationHistoryRepository;
 import kr.co.groupworks.department.entity.Department;
 import kr.co.groupworks.department.repository.DepartmentRepository;
@@ -15,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @Slf4j
@@ -66,7 +68,7 @@ public class EmployeeTest {
                 .salary((3000L + i) * 10L) // salary: 사원 급여 (3000부터 시작, i에 따라 증가)
                 .supervisorId(i > 10 ? (long) ((i % 10) + 1) : 0) // supervisorId: 상사 ID (1부터 10까지 반복)
                 .build()
-        ).toList();
+        ).collect(Collectors.toList());
         // 사원 데이터 저장
         employeeRepository.saveAll(employeeList);
 
@@ -78,6 +80,10 @@ public class EmployeeTest {
                         employee.getPhoneNumber() + ", " +
                         employee.getDepartment().getDepartmentName())
         );
+        // VacationHistory 데이터 생성 및 저장
+        List<VacationHistory> vacationHistories = employeeList.stream()
+                .map(VacationHistory::createFromEmployee)
+                .toList();
+        vacationHistoryRepository.saveAll(vacationHistories);
     }
-
 }

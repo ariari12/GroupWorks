@@ -72,6 +72,7 @@ public class VacationServiceImpl implements VacationService{
         //employee = employeeRepository.save(employee);
         // 휴가 엔티티 변환
         Vacation vacation = vacationMapper.toEntity(dto,employee);
+        System.out.println("vacation.getEmployee() = " + vacation.getEmployee());
         return vacationRepository.save(vacation).getCalendarId();
     }
 

@@ -22,6 +22,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -73,7 +74,7 @@ class WorkFlowRepositoryTest {
                 .salary((3000L + i) * 10L) // salary: 사원 급여 (3000부터 시작, i에 따라 증가)
                 .supervisorId(i > 10 ? (long) ((i % 10) + 1) : 0) // supervisorId: 상사 ID (1부터 10까지 반복)
                 .build()
-        ).toList();
+        ).collect(Collectors.toList());
         // 출력 (테스트용)
         employeeRepository.saveAll(employees).forEach(employee ->
                 log.info("{}: {}, {}, {}, {}",

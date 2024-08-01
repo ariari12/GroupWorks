@@ -22,6 +22,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -74,7 +75,7 @@ class AppoverUpdateServiceImplTest {
                 .salary((3000L + i) * 10L) // salary: 사원 급여 (3000부터 시작, i에 따라 증가)
                 .supervisorId(0L) // supervisorId: 상사 ID (1부터 10까지 반복)
                 .build()
-        ).toList();
+        ).collect(Collectors.toList());
         employees = employeeRepository.saveAll(employees);
 
         // 출력 (확인 용)
