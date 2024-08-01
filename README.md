@@ -46,6 +46,7 @@
 <div>
   <img src="https://img.shields.io/badge/springboot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white">
   <img src="https://img.shields.io/badge/springsecurity-6DB33F?style=for-the-badge&logo=springsecurity&logoColor=white">
+  <img src="https://img.shields.io/badge/docker-2496ED?style=for-the-badge&logo=docker&logoColor=white">
 </div>
 
 ### DataBase
@@ -59,13 +60,17 @@
 <div>
   <img src="https://img.shields.io/badge/github-181717?style=for-the-badge&logo=github&logoColor=white">
   <img src="https://img.shields.io/badge/notion-000000?style=for-the-badge&logo=notion&logoColor=white">
-  <img src="https://img.shields.io/badge/docker-2496ED?style=for-the-badge&logo=docker&logoColor=white">
+  <img src="https://img.shields.io/badge/Discord-7289DA?style=for-the-badge&logo=discord&logoColor=white">
 </div>
 
 <br/>
 <br/>
 
-![Anurag's github stats](https://github-readme-stats.vercel.app/api?username=HJ)
-![Anurag's github stats](https://github-readme-stats.vercel.app/api?username=ILSEONG)
-![Anurag's github stats](https://github-readme-stats.vercel.app/api?username=sczzsccs)
-![Anurag's github stats](https://github-readme-stats.vercel.app/api?username=ariari12)
+![Anurag's github stats](https://github-readme-stats.vercel.app/api?username=HJ&theme=blue-green)
+![Anurag's github stats](https://github-readme-stats.vercel.app/api/top-langs/?username=HJ&theme=blue-green)
+![Anurag's github stats](https://github-readme-stats.vercel.app/api?username=ILSEONG&theme=blue-green)
+![Anurag's github stats](https://github-readme-stats.vercel.app/api/top-langs/?username=ILSEONG&theme=blue-green)
+![Anurag's github stats](https://github-readme-stats.vercel.app/api?username=sczzsccs&theme=blue-green)
+![Anurag's github stats](https://github-readme-stats.vercel.app/api/top-langs/?username=sczzsccs&theme=blue-green)
+![Anurag's github stats](https://github-readme-stats.vercel.app/api?username=ariari12&theme=blue-green)
+![Anurag's github stats](https://github-readme-stats.vercel.app/api/top-langs/?username=ariari12&theme=blue-green)
