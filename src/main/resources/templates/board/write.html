@@ -8,7 +8,7 @@
 <body>
 <th:block layout:fragment="css">
     <!-- 글쓰기 CSS -->
-    <link href="/css/yhj/board-write.css" rel="stylesheet" type="text/css"/>
+    <link href="/css/board/board-write.css" rel="stylesheet" type="text/css"/>
     <style>
         .text-bg-custom {
             background: #343a40;
@@ -43,10 +43,9 @@
     </script>
 </th:block>
 
-<th:block layout:fragment="content">
-    <form action="/board/write" method="post">
+<th:block layout:fragment="content" th:with="boardType=${title == '공지 게시판'} ? 'notice' : ${session.employee.departmentId}">
+    <form th:action="@{|/board/${boardType}/write|}" method="post">
         <div class="container" style="margin: 50px; width: 90%">
-            <h3>부서 게시판 글쓰기</h3>
             <div class="form-group">
                 <select class="form-control" aria-label="말머리" name="subject" id="subject">
                     <option value="general" selected>일반</option>
@@ -73,7 +72,7 @@
             </div>
 
             <div>
-                <input type="button" class="btn btn-success" value="등록하기" onclick="test()">
+                <input type="submit" class="btn btn-success" value="등록하기">
                 <button type="button" class="btn btn-primary" data-bs-target="#exampleModal"
                         onclick="preview()" th:text="미리보기">
                 </button>

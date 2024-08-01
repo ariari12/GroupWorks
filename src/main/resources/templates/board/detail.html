@@ -8,7 +8,7 @@
 <body>
 <th:block layout:fragment="css">
     <!-- 글쓰기 CSS -->
-    <link href="/css/yhj/board-write.css" rel="stylesheet" type="text/css"/>
+    <link href="/css/board/board-write.css" rel="stylesheet" type="text/css"/>
 
     <style>
         .custom-btn {
@@ -85,7 +85,7 @@
     </script>
 </th:block>
 
-<th:block layout:fragment="content">
+<th:block layout:fragment="content" th:with="boardType=${title == '공지 게시판'} ? 'notice' : ${session.employee.departmentId}">
     <div class="container" style="margin: 0 auto; width: 70%">
         <div id="titlePreview">
             <h5><span class="badge text-bg-danger">오류</span> <span>오류발생했어요.</span></h5>
@@ -264,8 +264,8 @@
             <div style="margin: 10px 0 10px 0; display: flex; justify-content: space-between;">
                 <input type="button" class="btn custom-btn" value="댓글등록">
                 <div style="display: flex; gap: 5px;">
-                    <a href="/board/edit" class="btn custom-btn">글수정</a>
-                    <input type="button" class="btn custom-btn" value="글삭제">
+                    <a th:href="@{|/board/${boardType}/edit|}" class="btn custom-btn">글수정</a>
+                    <a th:href="@{|/board/${boardType}/delete|}" class="btn custom-btn">글삭제</a>
                 </div>
             </div>
         </div>
