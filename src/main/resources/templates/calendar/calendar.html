@@ -13,7 +13,9 @@
 <th:block layout:fragment="javascript">
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.14/index.global.min.js'></script>
     <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/google-calendar@6.1.14/index.global.min.js'></script>
-    <script>
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        var calendarData = /*[[${calendarFormDTO}]]*/ [];
 
         // 당일 설정 가능하게
         function addOneDay(date) {
@@ -21,51 +23,51 @@
             newDate.setDate(newDate.getDate() + 1);
             return newDate.toISOString().split('T')[0];  // 'YYYY-MM-DD' 형식으로 반환
         }
-        document.addEventListener('DOMContentLoaded', function() {
 
+        document.addEventListener('DOMContentLoaded', function() {
             var calendarEl = document.getElementById('calendar');
+
             var calendar = new FullCalendar.Calendar(calendarEl, {
-            googleCalendarApiKey: 'AIzaSyCyTApWr2NijbtvLNwUGFu3wCe_lYSSB5U',
-            initialView: 'dayGridMonth',
-            events:[ // 일정 데이터 추가 , DB의 event를 가져오려면 JSON 형식으로 변환해 events에 넣어주면된다.
-                {
-                    title:'일정',
-                    start:'2024-07-26',
-                    end:addOneDay('2024-07-30')
-                }
-            ],customButtons: {
-                        customPrevY: { // 이전 연도로 이동
-                            icon: 'fc-icon-chevrons-left',
-                            click: function() {
-                                calendar.prevYear();
-                            }
-                        },
-                        customPrev: { // 이전 달로 이동
-                            icon: 'fc-icon-chevron-left',
-                            click: function() {
-                                calendar.prev();
-                            }
-                        },
-                        customToday: { // 오늘 날짜로 이동
-                            text: 'Today',
-                            click: function() {
-                                calendar.today();
-                            }
-                        },
-                        customNext: { // 다음 월로 이동
-                            icon: 'fc-icon-chevron-right',
-                            click: function() {
-                                calendar.next();
-                            }
-                        },
-                        customNextY: { // 다음 연도로 이동
-                            icon: 'fc-icon-chevrons-right',
-                            click: function() {
-                                calendar.nextYear();
-                            }
-                        },
-                    }, headerToolbar: {
-                    //왼쪽툴바 설정
+                googleCalendarApiKey: 'AIzaSyCyTApWr2NijbtvLNwUGFu3wCe_lYSSB5U',
+                initialView: 'dayGridMonth',
+                events: calendarData.map(event => ({
+                    title: event.contents,
+                    start: event.startDate,
+                    end: addOneDay(event.endDate),
+                })),
+                customButtons: {
+                    customPrevY: {
+                        icon: 'fc-icon-chevrons-left',
+                        click: function() {
+                            calendar.prevYear();
+                        }
+                    },
+                    customPrev: {
+                        icon: 'fc-icon-chevron-left',
+                        click: function() {
+                            calendar.prev();
+                        }
+                    },
+                    customToday: {
+                        text: 'Today',
+                        click: function() {
+                            calendar.today();
+                        }
+                    },
+                    customNext: {
+                        icon: 'fc-icon-chevron-right',
+                        click: function() {
+                            calendar.next();
+                        }
+                    },
+                    customNextY: {
+                        icon: 'fc-icon-chevrons-right',
+                        click: function() {
+                            calendar.nextYear();
+                        }
+                    },
+                },
+                headerToolbar: {
                     left: 'customPrevY,customPrev,customToday,customNext,customNextY',
                     center: 'title',
                     //오른쪽 툴바 설정
@@ -92,14 +94,13 @@
                     $("#calendarModal").modal("show");
                     $("#closeCalendar").on("click",function (){
                         $("#calendarModal").modal("hide");
-                    })
-                    $("#addCalendar").off("click").on("click",function() {  // modal의 추가 버튼 클릭 시
-                        var content = $("#calendar_content").val();
+                    });
+                    $("#addCalendar").off("click").on("click", function() {
+                        var title = $("#calendar_title").val();
                         var start_date = $("#calendar_start_date").val();
-                        var end_date = addOneDay($("#calendar_end_date").val());
+                        var end_date = $("#calendar_end_date").val();
 
-                        //내용 입력 여부 확인
-                        if (content == null || content == "") {
+                        if (title == null || title == "") {
                             alert("내용을 입력하세요.");
                         } else if (start_date == "" || end_date == "") {
                             alert("날짜를 입력하세요.");
@@ -107,49 +108,61 @@
                             alert("종료일이 시작일보다 먼저입니다.");
                         } else { // 정상적인 입력 시
                             var obj = {
-                                "title": content,
-                                "start": start_date,
-                                "end": end_date
-                            }//전송할 객체 생성
-                            console.log(obj);
-                            // 일정 추가
-                            calendar.addEvent(obj);
-
-                            // 모달 닫기
-                            $("#calendarModal").modal("hide");
+                                title: title,
+                                startDate: start_date,
+                                endDate: end_date,
+                                location: 'Some location'
+                            };
+                            $.ajax({
+                                url: '/calendar/save',
+                                type: 'POST',
+                                contentType: 'application/json',
+                                data: JSON.stringify(obj),
+                                success: function(response) {
+                                    console.log("Success:", response);
+                                    calendar.addEvent({
+                                        title: title,
+                                        start: start_date,
+                                        end: addOneDay(end_date),
+                                        location: 'Some location'
+                                    });
+                                    $("#calendarModal").modal("hide");
+                                },
+                                error: function(xhr) {
+                                    console.error("Error:", xhr);
+                                    alert("일정 추가에 실패했습니다.");
+                                }
+                            });
                         }
                     });
-
-
-                            console.log(info);
-                //info에서 console 찍어보면 편함
                 },
                 eventClick: function(info) {
+                    // 이벤트 클릭 시 발생할 동작
+                    var event = info.event;
+                    $("#calendar_title").val(event.title);
+                    $("#calendar_start_date").val(event.startStr);
+                    $("#calendar_end_date").val(event.endStr ? event.endStr : event.startStr);
 
-                // 일정 클릭 시 발생할 이벤트
-                //클릭한 일정 Id
+                    // 모달 열기
+                    $("#calendarModal").modal("show");
+
                     console.log(info);
                 },
                 drop: function(info) {
                 //드래그 드롭 후 이벤트
                 },
                 eventDrop: function(info) {
-
                 },
                 eventResize: function(info) {
                 //일정 크기를 변경했을떄 이벤트
                 }
-
             });
             // 캘린더를 그려준다.
             calendar.render();
         });
-
-
-
-
+        /*]]>*/
     </script>
-    <!-- modal 추가 -->
+    <!--개인 일정 입력 모달-->
     <div class="modal fade" id="calendarModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
          aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -159,24 +172,49 @@
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        <label for="taskId" class="col-form-label">일정 내용</label>
-                        <input type="text" class="form-control" id="calendar_content" name="calendar_content">
-                        <label for="taskId" class="col-form-label">시작 날짜</label>
+                        <label for="calendar_title" class="col-form-label">일정 제목</label>
+                        <input type="text" class="form-control" id="calendar_title" name="calendar_title">
+                        <label for="calendar_start_date" class="col-form-label">시작 날짜</label>
                         <input type="date" class="form-control" id="calendar_start_date" name="calendar_start_date">
-                        <label for="taskId" class="col-form-label">종료 날짜</label>
+                        <label for="calendar_end_date" class="col-form-label">종료 날짜</label>
                         <input type="date" class="form-control" id="calendar_end_date" name="calendar_end_date">
+                        <label for="calendar_location" class="col-form-label">위치</label>
+                        <input type="text" class="form-control" id="calendar_location" name="calendar_location">
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary" id="addCalendar">추가</button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal" id="closeCalendar">취소</button>
                 </div>
-
             </div>
         </div>
     </div>
 
-
+    <!--개인 일정 수정 모달-->
+    <div class="modal fade" id="calendarModifyModal" tabindex="-1" role="dialog" aria-labelledby="calendarModifyModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="calendarModifyModalLabel">일정을 입력하세요.</h5>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="calendar_title" class="col-form-label">일정 제목</label>
+                        <input type="text" class="form-control" id="calendarModifyTitle" name="calendarModifyTitle">
+                        <label for="calendar_start_date" class="col-form-label">시작 날짜</label>
+                        <input type="date" class="form-control" id="calendarModifyStartDate" name="calendarModifyStartDate">
+                        <label for="calendar_end_date" class="col-form-label">종료 날짜</label>
+                        <input type="date" class="form-control" id="calendarModifyEndDate" name="calendarModifyEndDate">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="addCalendar">추가</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" id="closeCalendar">취소</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </th:block>
 <th:block layout:fragment="content">
     <div id='calendar'></div>
