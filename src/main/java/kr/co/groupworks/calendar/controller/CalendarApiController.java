@@ -2,7 +2,7 @@ package kr.co.groupworks.calendar.controller;
 
 import kr.co.groupworks.calendar.dto.CalendarFormDTO;
 import kr.co.groupworks.calendar.service.CalendarService;
-import kr.co.groupworks.dto.cis.employee.SessionEmployeeDTO;
+import kr.co.groupworks.employee.dto.SessionEmployeeDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
