@@ -66,8 +66,8 @@
 <br/>
 <br/>
 
-![Anurag's github stats](https://github-readme-stats.vercel.app/api?username=HJ&theme=blue-green)
-![Anurag's github stats](https://github-readme-stats.vercel.app/api/top-langs/?username=HJ&theme=blue-green)
+![Anurag's github stats](https://github-readme-stats.vercel.app/api?username=appapixie&theme=blue-green)
+![Anurag's github stats](https://github-readme-stats.vercel.app/api/top-langs/?username=appapixie&theme=blue-green)
 ![Anurag's github stats](https://github-readme-stats.vercel.app/api?username=ILSEONG&theme=blue-green)
 ![Anurag's github stats](https://github-readme-stats.vercel.app/api/top-langs/?username=ILSEONG&theme=blue-green)
 ![Anurag's github stats](https://github-readme-stats.vercel.app/api?username=sczzsccs&theme=blue-green)
