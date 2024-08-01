@@ -107,22 +107,35 @@
                             alert("종료일이 시작일보다 먼저입니다.");
                         } else { // 정상적인 입력 시
                             var obj = {
-                                "title": content,
-                                "start": start_date,
-                                "end": end_date
-                            }//전송할 객체 생성
-                            console.log(obj);
-                            // 일정 추가
-                            calendar.addEvent(obj);
-
-                            // 모달 닫기
-                            $("#calendarModal").modal("hide");
+                                contents: content,
+                                startDate: start_date,
+                                endDate: end_date
+                            };//전송할 객체 생성
+                            $.ajax({
+                                url: '/calendar/save',  // 서버에 전송할 엔드포인트
+                                type: 'POST',
+                                contentType: 'application/json',
+                                data: JSON.stringify(obj),
+                                success: function(response) {
+                                    console.log("Success:", response);
+                                    // 서버에서 성공 응답을 받은 경우, 캘린더에 이벤트 추가
+                                    calendar.addEvent({
+                                        title: content,
+                                        start: start_date,
+                                        end: end_date
+                                    });
+                                    // 모달 닫기
+                                    $("#calendarModal").modal("hide");
+                                },
+                                error: function(xhr) {
+                                    console.error("Error:", xhr);
+                                    alert("일정 추가에 실패했습니다.");
+                                }
+                            });
                         }
                     });
-
-
                             console.log(info);
-                //info에서 console 찍어보면 편함
+                            //info에서 console 찍어보면 편함
                 },
                 eventClick: function(info) {
 
