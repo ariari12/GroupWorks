@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-@Table(name = "order")
+@Table(name = "materialflow_order")
 @Builder
 @Getter @ToString
 @NoArgsConstructor

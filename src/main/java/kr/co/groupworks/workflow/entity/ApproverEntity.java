@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 @Entity
 @Builder
 @Getter @ToString
-@Table(name = "approver")
+@Table(name = "workflow_approver")
 @AllArgsConstructor
 @NoArgsConstructor
 public class ApproverEntity {

@@ -6,7 +6,7 @@ import lombok.*;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "mes")
+@Table(name = "materialflow_mes")
 @Builder
 @Getter
 @ToString
