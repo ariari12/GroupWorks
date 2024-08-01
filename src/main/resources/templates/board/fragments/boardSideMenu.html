@@ -12,11 +12,11 @@
 
     <div class="collapse" id="boardPages" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
         <nav class="sb-sidenav-menu-nested nav accordion">
-            <a class="nav-link collapsed" href="/board/list">
+            <a class="nav-link collapsed" href="/board/notice/list">
                 공지사항
             </a>
 
-            <a class="nav-link collapsed" href="/board/list">
+            <a class="nav-link collapsed" th:href="@{|/board/${session.employee.departmentId}/list|}">
                 부서게시판
             </a>
         </nav>
