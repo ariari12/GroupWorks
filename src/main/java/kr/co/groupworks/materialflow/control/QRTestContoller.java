@@ -47,7 +47,7 @@ public class QRTestContoller {
             MatrixToImageWriter.writeToStream(encode, "PNG", out, custom);
 
             model.addAttribute("qrCode", Base64.getEncoder().encodeToString(out.toByteArray()));
-            return "materialflow/qrCodePage";
+            return "materialflow/qrcode/qrCodePage";
 //            return ResponseEntity.ok().contentType(MediaType.IMAGE_PNG).body(out.toByteArray());
         }catch (Exception e){
             throw new RuntimeException(e);
@@ -59,6 +59,6 @@ public class QRTestContoller {
         log.info("/qr/Move no: {}", no);
         model.addAttribute("no", no);
 
-        return "materialflow/qrPageMove";
+        return "materialflow/qrcode/qrPageMove";
     }
 }

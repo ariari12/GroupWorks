@@ -9,12 +9,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Slf4j
 @Controller
-@RequestMapping(value = "/material-flow")
+@RequestMapping(value = "/materialflow")
 @RequiredArgsConstructor
 public class MaterialFlowManagerController {
     MaterialService materialService;
 
-    /* MaterialFlowManagement API */
+    /* Material Flow Management API */
 
     /* 발주 기록 */
     @GetMapping(value = "/order-record")
@@ -34,12 +34,20 @@ public class MaterialFlowManagerController {
 
     /* BOM 자재 현황 */
     @GetMapping(value = "/bom")
-    public String status() {
-        log.info("status");
+    public String bom() {
+        log.info("bom");
         
-        return "materialflow/status";
+        return "materialflow/bom";
     }
     
+    /* BOM 작성 */
+    @GetMapping(value = "/bom/request")
+    public String createBom() {
+        log.info("bom/request");
+
+        return "materialflow/bomForm";
+    }
+
     /* MES 생산 현황 */
     @GetMapping(value = "/mes")
     public String mes() {
