@@ -5,6 +5,7 @@ import kr.co.groupworks.employee.repository.EmployeeRepository;
 import kr.co.groupworks.workflow.control.WorkFlowController;
 import kr.co.groupworks.workflow.dto.dto.ApproverDTO;
 import kr.co.groupworks.workflow.dto.dto.AttachmentFileDTO;
+import kr.co.groupworks.workflow.dto.dto.OpenWorkflowVO;
 import kr.co.groupworks.workflow.dto.dto.WorkFlowDTO;
 import kr.co.groupworks.workflow.dto.employee.EmployeeDTO;
 import kr.co.groupworks.workflow.dto.vo.WorkflowListVO;
@@ -318,6 +319,16 @@ public class WorkFlowServiceImpl implements WorkFlowService {
             default:
                 return null;
         }
+    }
+
+    @Override
+    public List<OpenWorkflowVO> getEmployeeWorkflowStat(Integer code, Long employeeId) {
+        return workFlowRepository.employeeWorkflowStat(code, employeeId).stream().map(OpenWorkflowVO::new).toList();
+    }
+
+    @Override
+    public OpenWorkflowVO getOpenWorkflow(Long workflowId) {
+        return new OpenWorkflowVO(Objects.requireNonNull(workFlowRepository.findById(workflowId).orElse(null)));
     }
 
 }

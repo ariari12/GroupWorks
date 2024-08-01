@@ -5,6 +5,7 @@ import kr.co.groupworks.department.repository.DepartmentRepository;
 import kr.co.groupworks.employee.entity.Employee;
 import kr.co.groupworks.employee.repository.EmployeeRepository;
 import kr.co.groupworks.workflow.dto.dto.ApproverDTO;
+import kr.co.groupworks.workflow.dto.dto.OpenWorkflowVO;
 import kr.co.groupworks.workflow.dto.employee.EmployeeDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
@@ -207,4 +208,25 @@ class WorkFlowServiceImplTest {
         log.info(stopWatch.prettyPrint());
         log.info("res: {}", res.toString());
     }
+
+    @Test @DisplayName("GetEmployeeWorkflowStat Test")
+    public void getEmployeeWorkflowStatTest() {
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start();
+        Object results = workFlowService.getEmployeeWorkflowStat(3, 3L);
+        stopWatch.stop();
+        log.info(stopWatch.prettyPrint());
+        log.info("length: {}", ((List<OpenWorkflowVO>) results).size());
+    }
+
+    @Test @DisplayName("GetOpenWorkflowId Test")
+    public void getOpenWorkflowId() {
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start();
+        OpenWorkflowVO vo = workFlowService.getOpenWorkflow(1L);
+        stopWatch.stop();
+        log.info(stopWatch.prettyPrint());
+        log.info(vo.toString());
+    }
+
 }

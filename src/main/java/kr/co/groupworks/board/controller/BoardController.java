@@ -15,22 +15,22 @@ public class BoardController {
     @GetMapping("/list")
     public String board(Model model) {
         model.addAttribute("msg", "test");
-        return "yhj/board/list";
+        return "board/list";
     }
 
     @GetMapping("/write")
     public String write() {
-        return "yhj/board/write";
+        return "board/write";
     }
 
     @GetMapping("/detail")
     public String detail() {
-        return "yhj/board/detail";
+        return "board/detail";
     }
 
     @GetMapping("/edit")
     public String edit() {
-        return "yhj/board/edit";
+        return "board/edit";
     }
 
 }

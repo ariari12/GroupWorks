@@ -5,7 +5,7 @@ import lombok.*;
 
 @Entity
 @Table(name = "attachment_file")
-@Getter
+@Getter @ToString
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
