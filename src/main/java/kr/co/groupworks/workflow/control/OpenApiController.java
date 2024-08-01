@@ -18,7 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.HashMap;
 import java.util.List;
@@ -80,14 +80,14 @@ public class OpenApiController {
     }
 
     @Operation(summary = "사원의 결재정보 데이터", description = "사원의 발송한 결재정보 데이터와 결재한 데이터를 제공하는 API", tags = "Workflow-OpenAPI")
-    @Parameter(name = "code", example = "0~5",
+    @Parameter(name = "code", example = "0~5", required = false,
             description = "0 또는 생략: 사원에 모든 결재목록, 1: 사원이 발송한 결재 중 승인된 결재목록, 2: 사원이 발송한 결재 중 반려된 결재목록," +
             " 3: 사원이 발송한 결재 중 진행 증인 결재목록, 4: 사원이 승인한 결재목록, 5: 사원이 반려한 결재목록")
     @Parameter(name = "employeeId", example = "사원번호", required = true)
     @ApiResponse(responseCode = "200", description = "결재 목록 데이터",
             content = @Content(schema = @Schema(implementation = OpenWorkflowVO.class)))
     @GetMapping(value = "/work-flow/employee-stat/{employeeId}")
-    public ResponseEntity<Object> workflowEmployeeStat(@RequestBody(required = false) Integer code, @PathVariable Long employeeId) {
+    public ResponseEntity<Object> workflowEmployeeStat(@RequestParam(required = false) Integer code, @PathVariable Long employeeId) {
         return ResponseEntity.ok().body(workFlowService.getEmployeeWorkflowStat(code, employeeId));
     }
 
