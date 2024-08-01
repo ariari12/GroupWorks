@@ -172,7 +172,6 @@ public class WorkFlowController {
         /* 사용자가(사원번호pk) 기안자:0 */
         if(workFlow.getEmployeeId() == employeeId) classifications = approverClass.DRAFTER.ordinal();
 
-        int commentLength = 0;
         /* 결재자 / 협조자 / 참조자 정보 */
         for (ApproverDTO a : workFlow.getApprovers()) {
             listMap.get(PARAM[a.getApproverType() -1]).add(new ApproverVO(a));

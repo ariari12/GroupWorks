@@ -259,4 +259,15 @@ class WorkFlowRepositoryTest {
         log.info(stopWatch.prettyPrint());
     }
 
+    @Test @DisplayName("EmployeeWorkflowStat")
+    public void employeeWorkflowStatTest() {
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start();
+        List<WorkFlowEntity> workFlowEntityList =
+                workFlowRepository.employeeWorkflowStat(3, 3L);
+        stopWatch.stop();
+        log.info(stopWatch.prettyPrint());
+        log.info("length: {}", workFlowEntityList.size());
+    }
+
 }

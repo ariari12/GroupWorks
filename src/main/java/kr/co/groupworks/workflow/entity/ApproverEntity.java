@@ -1,16 +1,13 @@
 package kr.co.groupworks.workflow.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Builder
-@Getter
+@Getter @ToString
 @Table(name = "approver")
 @AllArgsConstructor
 @NoArgsConstructor

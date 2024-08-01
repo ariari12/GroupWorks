@@ -51,4 +51,8 @@ public interface WorkFlowService {
     boolean removeWorkflow(long workFlowId);
 
     Object getWorkflowStatistics(long employeeId, long departmentId, int choise);
+
+    Object getEmployeeWorkflowStat(Integer code, Long employeeId);
+
+    Object getOpenWorkflow(Long workflowId);
 }
