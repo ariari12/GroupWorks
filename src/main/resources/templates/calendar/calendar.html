@@ -17,12 +17,6 @@
         /*<![CDATA[*/
         var calendarData = /*[[${calendarFormDTO}]]*/ [];
 
-        // 당일 설정 가능하게
-        function addOneDay(date) {
-            var newDate = new Date(date);
-            newDate.setDate(newDate.getDate() + 1);
-            return newDate.toISOString().split('T')[0];  // 'YYYY-MM-DD' 형식으로 반환
-        }
 
         document.addEventListener('DOMContentLoaded', function() {
             var calendarEl = document.getElementById('calendar');
@@ -31,9 +25,11 @@
                 googleCalendarApiKey: 'AIzaSyCyTApWr2NijbtvLNwUGFu3wCe_lYSSB5U',
                 initialView: 'dayGridMonth',
                 events: calendarData.map(event => ({
-                    title: event.contents,
+                    id: event.calendarId,
+                    title: event.title,
+                    contents: event.contents,
                     start: event.startDate,
-                    end: addOneDay(event.endDate),
+                    end: event.endDate,
                 })),
                 customButtons: {
                     customPrevY: {
@@ -89,14 +85,19 @@
                 //droppable을 사용할때 droppable true 드롭이벤트
                 droppable: true,
                 dateClick: function(info) {
+                    console.log("asdfdsafsda",info);
                 //날짜 클릭 시 발생할 이벤트
+                    $("#calendarId").val("");  // 새 이벤트를 추가할 때 ID는 비워 둡니다.
                     $("#calendar_start_date").val(info.dateStr);
+                    $("#calendar_end_date").val(info.dateStr);  // 기본적으로 시작 날짜와 같은 날짜로 설정합니다.
                     $("#calendarModal").modal("show");
                     $("#closeCalendar").on("click",function (){
                         $("#calendarModal").modal("hide");
                     });
                     $("#addCalendar").off("click").on("click", function() {
+                        var id = $("#calendarId").val();
                         var title = $("#calendar_title").val();
+                        var contents = $("#calendar_contents").val();
                         var start_date = $("#calendar_start_date").val();
                         var end_date = $("#calendar_end_date").val();
 
@@ -108,7 +109,9 @@
                             alert("종료일이 시작일보다 먼저입니다.");
                         } else { // 정상적인 입력 시
                             var obj = {
+                                id: id,
                                 title: title,
+                                contents: contents,
                                 startDate: start_date,
                                 endDate: end_date,
                                 location: 'Some location'
@@ -119,11 +122,13 @@
                                 contentType: 'application/json',
                                 data: JSON.stringify(obj),
                                 success: function(response) {
-                                    console.log("Success:", response);
+                                    obj.calendarId = response.calendarId;
                                     calendar.addEvent({
+                                        id: obj.calendarId,
                                         title: title,
+                                        contents: contents,
                                         start: start_date,
-                                        end: addOneDay(end_date),
+                                        end: end_date,
                                         location: 'Some location'
                                     });
                                     $("#calendarModal").modal("hide");
@@ -139,12 +144,15 @@
                 eventClick: function(info) {
                     // 이벤트 클릭 시 발생할 동작
                     var event = info.event;
-                    $("#calendar_title").val(event.title);
-                    $("#calendar_start_date").val(event.startStr);
-                    $("#calendar_end_date").val(event.endStr ? event.endStr : event.startStr);
+                    $("#calendarModifyId").val(event.id);
+                    $("#deleteCalendar").val(event.id);
+                    $("#calendarModifyTitle").val(event.title);
+                    $("#calendarModifyContents").val(event.contents);
+                    $("#calendarModifyStartDate").val(event.startStr);
+                    $("#calendarModifyEndDate").val(event.endStr ? event.endStr : event.startStr);
 
                     // 모달 열기
-                    $("#calendarModal").modal("show");
+                    $("#calendarModifyModal").modal("show");
 
                     console.log(info);
                 },
@@ -169,11 +177,14 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">일정을 입력하세요.</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
                         <label for="calendar_title" class="col-form-label">일정 제목</label>
                         <input type="text" class="form-control" id="calendar_title" name="calendar_title">
+                        <label for="calendar_contents" class="col-form-label">일정 내용</label>
+                        <textarea class="form-control" name="calendar_contents" id="calendar_contents" cols="30" rows="10"></textarea>
                         <label for="calendar_start_date" class="col-form-label">시작 날짜</label>
                         <input type="date" class="form-control" id="calendar_start_date" name="calendar_start_date">
                         <label for="calendar_end_date" class="col-form-label">종료 날짜</label>
@@ -196,21 +207,50 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="calendarModifyModalLabel">일정을 입력하세요.</h5>
+
+                    <h5 class="modal-title" id="calendarModifyModalLabel">개인 일정 사항</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        <label for="calendar_title" class="col-form-label">일정 제목</label>
-                        <input type="text" class="form-control" id="calendarModifyTitle" name="calendarModifyTitle">
-                        <label for="calendar_start_date" class="col-form-label">시작 날짜</label>
-                        <input type="date" class="form-control" id="calendarModifyStartDate" name="calendarModifyStartDate">
-                        <label for="calendar_end_date" class="col-form-label">종료 날짜</label>
-                        <input type="date" class="form-control" id="calendarModifyEndDate" name="calendarModifyEndDate">
+                        <form>
+                            <input type="hidden" id="calendarModifyId">
+                            <label for="calendarModifyTitle" class="col-form-label">일정 제목</label>
+                            <input type="text" class="form-control" id="calendarModifyTitle" name="calendarModifyTitle">
+                            <label for="calendarModifyContents" class="col-form-label">일정 내용</label>
+                            <textarea class="form-control" name="calendarModifyContents" id="calendarModifyContents" cols="30" rows="10"></textarea>
+                            <label for="calendarModifyStartDate" class="col-form-label">시작 날짜</label>
+                            <input type="date" class="form-control" id="calendarModifyStartDate" name="calendarModifyStartDate">
+                            <label for="calendarModifyEndDate" class="col-form-label">종료 날짜</label>
+                            <input type="date" class="form-control" id="calendarModifyEndDate" name="calendarModifyEndDate">
+                        </form>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" id="addCalendar">추가</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal" id="closeCalendar">취소</button>
+                    <button type="submit" class="btn btn-primary" id="modifyCalendar">수정</button>
+                    <button type="button" class="btn btn-secondary" data-bs-target="#deleteModalToggle" data-bs-toggle="modal" >삭제</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="deleteModalToggle" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h6 id="calendarDeleteId"></h6>
+                    <h1 class="modal-title fs-5" id="exampleModalToggleLabel">개인 일정 삭제</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    정말 삭제하시겠습니까?
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-target="#calendarModifyModal" data-bs-toggle="modal">취소</button>
+                    <form action="/calendar/delete" method="post">
+                        <input type="hidden" name="calendarId" id="deleteCalendar">
+                        <button type="submit" class="btn btn-danger" data-dismiss="modal">삭제</button>
+                    </form>
                 </div>
             </div>
         </div>
