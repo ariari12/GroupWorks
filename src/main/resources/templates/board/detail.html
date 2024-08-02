@@ -29,12 +29,64 @@
         .text-bg-custom {
             background: #343a40;
         }
+
+        #editorjs {
+            border: none;
+            overflow: hidden;
+            height: auto;
+            width: 100%;
+        }
+
+        .ce-toolbar {
+            display: none;
+        }
+
+        .ce-block {
+            border: none;
+        }
+
     </style>
 </th:block>
 
 <th:block layout:fragment="javascript">
-    <script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/header@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/simple-image@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/delimiter@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/list@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/checklist@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/quote@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/code@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/embed@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/table@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/warning@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/marker@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/inline-code@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/table@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/editorjs@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/paragraph@latest"></script>
+
+    <script th:inline="javascript">
         $(document).ready(function () {
+
+            let data = [[${board.content}]];
+
+            // Editor.js 초기화
+            const editor = new EditorJS({
+                holder: 'editorjs',
+                readOnly: true, // 읽기 전용 모드 활성화
+                tools: {
+                    header: {
+                        class: Header,
+                        inlineToolbar: true
+                    },
+                    paragraph: {
+                        class: Paragraph,
+                        inlineToolbar: true
+                    }
+                },
+                data: JSON.parse(data)
+            });
+
             /* 댓글이동 */
             $('#comment-count').on('click', function () {
                 let offset=$("#comment-list").offset();
@@ -88,24 +140,35 @@
 <th:block layout:fragment="content" th:with="boardType=${title == '공지 게시판'} ? 'notice' : ${session.employee.departmentId}">
     <div class="container" style="margin: 0 auto; width: 70%">
         <div id="titlePreview">
-            <h5><span class="badge text-bg-danger">오류</span> <span>오류발생했어요.</span></h5>
+            <h5>
+                <div th:switch="${board.subject}">
+                    <span th:case="'suggestion'" class="badge bg-primary" th:text="제안"></span>
+                    <span th:case="'general'" class="badge bg-secondary" th:text="일반"></span>
+                    <span th:case="'inquiry'" class="badge bg-success" th:text="문의"></span>
+                    <span th:case="'error'" class="badge bg-danger" th:text="오류"></span>
+                    <span th:case="'mandatory'" class="badge bg-danger" th:text="필독"></span>
+                    <span th:case="'announcement'" class="badge bg-danger" th:text="공지"></span>
+                    <span th:text="${board.title}"></span>
+                </div>
+            </h5>
         </div>
         <div id="writerPreview">
             <div>
-                <b>작성자</b> : 인턴 개미(세션에서 꺼내온 데이터로 나중에 변경)
+                <b>작성자</b> : <span th:text="${board.employee.getRankName() + ' ' + board.employee.getEmployeeName()} "></span>
             </div>
         </div>
         <div id="datePreview" style="display: flex; align-items: center; justify-content: space-between;">
             <div>
-                <b>작성일</b> : 2024-07-17 오후 4:14:33
+                <b>작성일</b> : <span th:text="${board.createDate}"></span>
+                <!--2024-07-17 오후 4:14:33-->
             </div>
             <div>
-                <span class="badge rounded-pill text-bg-custom">조회수 214,489</span>
+                <span class="badge rounded-pill text-bg-custom" th:text="'조회수 ' + ${board.hits}"></span>
                 <span class="badge rounded-pill text-bg-custom" id="comment-count" style="cursor: pointer;">댓글 120</span>
             </div>
         </div>
         <hr>
-        <div id="contentPreview" style="margin: 10px 0 150px 0;">
+        <div id="contentPreview" style="margin: 10px 0 0 0;">
             <!-- 첨부파일 -->
             <div style="text-align: right;" id="attachFileList">
                 <span data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
@@ -127,8 +190,10 @@
                 </div>
             </div>
 
-            <!-- 게시판내용 -->
-            <span>게시판 오류발생했습니다.</span>
+            <!-- 게시판내용 에디터 -->
+            <div>
+                <span id="editorjs"></span>
+            </div>
         </div>
         <hr>
         <div>

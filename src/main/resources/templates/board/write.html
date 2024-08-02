@@ -17,7 +17,6 @@
 </th:block>
 
 <th:block layout:fragment="javascript">
-    <!--/* editor.js CDN */-->
     <script src="https://cdn.jsdelivr.net/npm/@editorjs/header@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/@editorjs/simple-image@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/@editorjs/delimiter@latest"></script>
@@ -39,12 +38,13 @@
     <script src="/js/board/preview-editor.js?v=<%=System.currentTimeMillis() %>"></script>
     <!-- 파일 업로드 -->
     <script src="/js/board/fileupload.js?v=<%=System.currentTimeMillis() %"></script>
+
     <script>
     </script>
 </th:block>
 
 <th:block layout:fragment="content" th:with="boardType=${title == '공지 게시판'} ? 'notice' : ${session.employee.departmentId}">
-    <form th:action="@{|/board/${boardType}/write|}" method="post">
+    <form id="writeForm" th:action="@{|/board/${boardType}/write|}" method="post">
         <div class="container" style="margin: 50px; width: 90%">
             <div class="form-group">
                 <select class="form-control" aria-label="말머리" name="subject" id="subject">
@@ -56,6 +56,8 @@
                     <option value="mandatory">필독</option>
                 </select>
                 <input type="text" class="form-control" name="title" id="title" placeholder="제목을 입력하세요">
+                <input type="hidden" name="content" id="contentField">
+                <input type="hidden" name="boardType" th:value="${boardType == 'notice' ? 'NOTICE' : 'DEPARTMENT'}">
             </div>
 
             <!-- 에디터 -->
@@ -72,7 +74,7 @@
             </div>
 
             <div>
-                <input type="submit" class="btn btn-success" value="등록하기">
+                <input type="submit" class="btn btn-success" id="submitButton" value="등록하기">
                 <button type="button" class="btn btn-primary" data-bs-target="#exampleModal"
                         onclick="preview()" th:text="미리보기">
                 </button>
@@ -91,7 +93,8 @@
                 <div class="modal-body">
                     <div id="titlePreview">
                     </div>
-                    <div id="writerPreview"><b>작성자</b> : 개미 인턴(세션에서 꺼내온 데이터로 나중에 변경)</div>
+                    <div id="writerPreview"><b>작성자</b> : 대리
+                        <span th:text="${session.employee.getEmployeeName()}"></span></div>
                     <div id="datePreview"></div><hr>
                     <div style="text-align: right;" id="attachFileList">
                         <div class="collapse" id="collapseExample"
