@@ -93,7 +93,7 @@
 
                         <div class="col-sm-6">
                             <label for="employeeId" class="form-label">사원번호</label>
-                            <input type="text" class="form-control" id="employeeId" placeholder="" th:value="${employee.employeeId}" required>
+                            <input type="text" class="form-control" id="employeeId" placeholder="" th:value="${employee.getEmployeeId()}" required>
                             <div class="invalid-feedback">
                                 Valid first name is required.
                             </div>
@@ -101,7 +101,7 @@
 
                         <div class="col-sm-6">
                             <label for="employeeName" class="form-label">사원이름</label>
-                            <input type="text" class="form-control" id="employeeName" placeholder="" th:value="${employee.employeeName}" required>
+                            <input type="text" class="form-control" id="employeeName" placeholder="" th:value="${employee.getEmployeeName()}" required>
                             <div class="invalid-feedback">
                                 Valid last name is required.
                             </div>
@@ -109,7 +109,7 @@
 
                         <div class="col-sm-6">
                             <label for="departmentName" class="form-label">부서이름</label>
-                            <input type="text" class="form-control" id="departmentName" placeholder="" th:value="${employee.department.departmentName}" required>
+                            <input type="text" class="form-control" id="departmentName" placeholder="" th:value="${employee.getDepartment().getDepartmentName()}" required>
                             <div class="invalid-feedback">
                                 Valid first name is required.
                             </div>
@@ -117,7 +117,7 @@
 
                         <div class="col-sm-6">
                             <label for="rankName" class="form-label">직급</label>
-                            <input type="text" class="form-control" id="rankName" placeholder="" th:value="${employee.rankName}" required>
+                            <input type="text" class="form-control" id="rankName" placeholder="" th:value="${employee.getRankName()}" required>
                             <div class="invalid-feedback">
                                 Valid last name is required.
                             </div>
@@ -125,7 +125,7 @@
 
                         <div class="col-12">
                             <label for="email" class="form-label">이메일</label>
-                            <input type="email" class="form-control" id="email" th:value="${employee.email}">
+                            <input type="email" class="form-control" id="email" th:value="${employee.getEmail()}">
                             <div class="invalid-feedback">
                                 Please enter a valid email address for shipping updates.
                             </div>
@@ -133,7 +133,7 @@
 
                         <div class="col-12">
                             <label for="address" class="form-label">주소</label>
-                            <input type="text" class="form-control" id="address" placeholder="1234 Main St" required th:value="${employee.address}">
+                            <input type="text" class="form-control" id="address" placeholder="1234 Main St" required th:value="${employee.getAddress()}">
                             <div class="invalid-feedback">
                                 Please enter your shipping address.
                             </div>
@@ -141,7 +141,7 @@
 
                         <div class="col-12">
                             <label for="address2" class="form-label">입사일</label>
-                            <input type="text" class="form-control" id="address2" placeholder="Apartment or suite" th:value="${employee.joinDate}">
+                            <input type="text" class="form-control" id="address2" placeholder="Apartment or suite" th:value="${employee.getJoinDate()}">
                         </div>
 
                     </div>
