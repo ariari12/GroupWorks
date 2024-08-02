@@ -18,23 +18,26 @@
 <th:block layout:fragment="content">
     <div>
         <h3>화상회의 방만들기</h3>
-        <div>
+        <div class="btn-container">
             <!-- 룸 아이디 번호를 입력하는 input -->
             <input type="text" class="roomIdInput" id="createRoomIdInput" />
             <!-- 룸 아이디를 입력후 클릭하는 button -->
-            <button type="button" class="enterRoomBtn" id="createEnterRoomBtn">enter Room</button>
+            <button type="button" class="enterRoomBtn" id="createEnterRoomBtn">채팅방 만들기</button>
             <!-- enterRoomBtn 클릭시 나타남, Streams 정보를 담은 Peer 를 웹소켓 ( 시그널링 )   -->
-            <button type="button" class="startStreamsBtn" id="createStartStreamsBtn" style="display: none;">start Streams</button>
+            <button type="button" class="startStreamsBtn" id="createStartStreamsBtn" style="display: none;">시작하기</button>
         </div>
+
+        <h3 style="margin-top: 50px">화상회의 참여하기</h3>
+        <div class="btn-container">
+            <input type="text" class="roomIdInput" id="joinRoomIdInput"/>
+            <button type="button" class="enterRoomBtn" id="joinEnterRoomBtn">채팅방 참여하기</button>
+            <!-- enterRoomBtn 클릭시 나타남, Streams 정보를 담은 Peer 를 웹소켓 ( 시그널링 )   -->
+            <button type="button" class="startStreamsBtn" id="joinStartStreamsBtn" style="display: none; ;">시작하기</button>
+        </div>
+
     </div>
 
-    <div style="margin-top: 50px">
-        <h3>화상회의 참여하기</h3>
-        <input type="text" class="roomIdInput" id="joinRoomIdInput"/>
-        <button type="button" class="enterRoomBtn" id="joinEnterRoomBtn">enter Room</button>
-        <!-- enterRoomBtn 클릭시 나타남, Streams 정보를 담은 Peer 를 웹소켓 ( 시그널링 )   -->
-        <button type="button" class="startStreamsBtn" id="joinStartStreamsBtn" style="display: none;">start Streams</button>
-    </div>
+
 
     <!-- 내 웹캠 화면을 보여주는 video html -->
     <div class="video-container">

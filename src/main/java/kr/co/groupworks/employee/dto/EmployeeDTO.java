@@ -43,5 +43,6 @@ public class EmployeeDTO {
     //  활동중인지
     private Integer isActive;
 
+
 }
 
