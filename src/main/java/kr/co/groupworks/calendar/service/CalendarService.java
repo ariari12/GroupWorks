@@ -8,5 +8,9 @@ public interface CalendarService {
 
     Long saveCalendar(CalendarFormDTO calendarFormDTO, Long employeeId);
 
-    List<CalendarFormDTO> findAllCalendar();
+    List<CalendarFormDTO> findAllPersonalCalendar(Long employeeId);
+
+    Long deleteCalendar(Long calendarId, Long employeeId);
+
+    Long modifyCalendar(CalendarFormDTO calendarFormDTO, Long employeeId);
 }
