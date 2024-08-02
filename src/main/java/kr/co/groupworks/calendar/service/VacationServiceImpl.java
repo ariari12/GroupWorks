@@ -311,6 +311,14 @@ public class VacationServiceImpl implements VacationService{
 
     }
 
+    // 사원의 휴가신청 내역 모두 조회 DTO 다름
+    @Override
+    public List<CalendarFormDTO> findAllVacation(Long employeeId) {
+        Employee employee = employeeRepository.findById(employeeId)
+                .orElseThrow(() -> new EntityNotFoundException("사원을 찾을 수 없습니다. " + employeeId));
+        return vacationRepository.findCalendarFormByEmployee(employee);
+    }
+
 
     // 사원의 휴가신청 내역 모두 조회
     @Override
