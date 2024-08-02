@@ -19,14 +19,20 @@ public class Business {
 
     @Schema(name = "사업자 번호", defaultValue = "12345-12346-1325")
     private String businessNumber;
-    @Schema(name = "상호명", defaultValue = "명일제약")
+    @Schema(name = "상호명", defaultValue = "◎◎제약™")
     private String businessName;
     @Schema(name = "대표자 명", defaultValue = "홍길동")
     private String ceo;
+    @Schema(name = "대표 연락처", defaultValue = "010-1234-1325")
+    private String ceoTel;
+
+    @Schema(name = "업태", defaultValue = "제조업")
+    private String type;
+    @Schema(name = "종목", defaultValue = "유제품")
+    private String item;
+
     @Schema(name = "사업장 주소", defaultValue = "경기도 이천시 이천동 2000번지 2000-1")
-    private String businessAddress;
-    @Schema(name = "거래처 연락처", defaultValue = "010-1234-1325")
-    private String businessTel;
-    @Schema(name = "거래처 FAX 번호", defaultValue = "123-1234-1325")
-    private String businessFax;
+    private String address;
+    @Schema(name = "FAX 번호", defaultValue = "123-1234-1325")
+    private String fax;
 }
