@@ -19,7 +19,6 @@ import lombok.experimental.SuperBuilder;
 @ToString(exclude = "department")
 public class Employee extends BaseEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "employee_id", nullable = false, unique = true)
     private Long employeeId;
 
