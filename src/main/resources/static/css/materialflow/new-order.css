@@ -1,0 +1,13 @@
+form> .title-header {
+    text-align: center;
+    font-size: 62px;
+    font-weight: bolder;
+}
+
+form> * {
+    margin: 30px;
+}
+
+.table-margin {
+    margin-right: 500px;
+}

@@ -1,14 +1,57 @@
-<html lang="kr" xmlns:th="http://www.thymeleaf.org"
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/layout}"
 >
+
 <th:block layout:fragment="css">
+    <link rel="stylesheet" href="/css/materialflow/new-order.css">
 </th:block>
 
 <th:block layout:fragment="content">
+    <form id="approveForm" class="row g-3 needs-validation frm-content" action="/materialflow/" method="post" novalidate>
+        <h3 class="title-header">[[${title}]]</h3>
 
+        <div class="input-group mb-3">
+            <button class="btn btn-danger" id="registerBusiness" type="button">거래처 등록</button>
+            <button class="btn btn-success" id="chooseBusiness" type="button">거래처 선택</button>
+        </div>
+
+        <div class="input-group mb-3">
+            <!--/* 수주자 란 */-->
+            <table class="border table-margin">
+                <tr>
+                    <td th:if="${division == 1}">수주일자</td>
+                    <td th:if="${division == 2}">발주일자</td>
+                    <td><label><input type="text"></label></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </table>
+
+            <!--/* 발주자 란 */-->
+            <table class="border table-margin">
+                <tr>
+                    <td>사업자 등록 번호</td>
+                    <td><label><input type="text"></label></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </table>
+        </div>
+    </form>
 </th:block>
 
 <th:block layout:fragment="javascript">
+    <script>
+        const userNum = "[";
+        const deptNum = "$";
+        const tabNames = ["#category", "#draft-date"];
+    </script>
+    <script src="/js/materialflow/new-order.js"></script>
 </th:block>
-</html>

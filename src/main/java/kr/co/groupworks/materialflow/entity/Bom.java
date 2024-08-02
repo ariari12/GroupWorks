@@ -1,5 +1,6 @@
 package kr.co.groupworks.materialflow.entity;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -13,22 +14,29 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Bom {
+    @Schema(name = "자재 등록 번호", defaultValue = "1")
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "bom_id")
     private Long id;
 
+    @Schema(name = "품목 코드", defaultValue = "02132454")
     private String itemCode;
+    @Schema(name = "품목 명", defaultValue = "우유")
     private String itemName;
-    @Convert(converter = ItemStatusConverter.class)
-    private ItemStatus itemStatus;
-    private String targetNum;
-    private String currentNum;
+    @Schema(name = "수량", defaultValue = "100")
+    private Long quantity;
+    @Schema(name = "단가", defaultValue = "1")
     private String unitPrice;
+    @Schema(name = "입고장소", defaultValue = "우리집")
     private String storageLocation;
+    @Schema(name = "입고일자", defaultValue = "1111.11.11 17:01")
     private LocalDateTime storageTime;
+    @Schema(name = "출고장소", defaultValue = "너희집")
     private String deliveryLocation;
+    @Schema(name = "출고일자", defaultValue = "9999.99.99 97:91")
     private LocalDateTime deliveryTime;
+    @Schema(name = "납품 우편번호", defaultValue = "1")
     private String zipCode;
 
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})

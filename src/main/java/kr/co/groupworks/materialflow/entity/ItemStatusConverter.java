@@ -5,7 +5,7 @@ import jakarta.persistence.AttributeConverter;
 public class ItemStatusConverter implements AttributeConverter<ItemStatus, String> {
     @Override
     public String convertToDatabaseColumn(ItemStatus i) {
-        return i == null ? "" : i.getValue();
+        return i == null ? null : i.getValue();
     }
 
     @Override
