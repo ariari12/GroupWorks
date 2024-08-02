@@ -24,4 +24,6 @@ public interface VacationService {
     VacationModifyFormDTO findCalendarByIdAndEmployee(Long calendarId, Long employeeId);
 
     void modifyVacation(Long calendarId, VacationModifyFormDTO dto, Long employeeId, MultipartFile[] files);
+
+    List<CalendarFormDTO> findAllVacation(Long employeeId);
 }
