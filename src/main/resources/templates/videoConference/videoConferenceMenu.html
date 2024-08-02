@@ -3,16 +3,6 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/layout}">
 <th:block layout:fragment="css">
-    <style>
-        #remoteStreamDiv {
-            display: flex;
-            flex-direction: row;
-            gap: 10px;
-            justify-content: center;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-    </style>
     <link rel="stylesheet" href="/css/videoConference/videoConferenceStyle.css">
 </th:block>
 
@@ -47,8 +37,10 @@
     </div>
 
     <!-- 내 웹캠 화면을 보여주는 video html -->
-    <video id="localStream" autoplay playsinline controls style="display: none;"></video>
-    <div id="remoteStreamDiv"></div>
+    <div class="video-container">
+        <video id="localStream" autoplay playsinline controls style="display: none;"></video>
+        <div id="remoteStreamDiv"></div>
+    </div>
     <!-- webRTC 연결을 위한 js  -->
     <script src="/js/videoConference/peerConfig.js"></script>
 </th:block>
