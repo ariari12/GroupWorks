@@ -10,26 +10,28 @@ import java.time.LocalDateTime;
 
 @SpringBootTest
 class EmployeeServiceTest {
-//    @Autowired
-//    private EmployeeService employeeService;
-//
-//    @Test
-//    void saveEmployee() {
-//        EmployeeDTO employee = EmployeeDTO.builder()
-//                .employeeId(2106L)
-//                .employeePW("971120")
-//                .employeeName("최일성")
-//                .rankId(2)
-//                .rankName("사원")
-//                .email("dlftjd@gw.com")
-//                .phoneNumber("010-1111-2222")
-//                .address("서울시 노원구")
-//                .gender("Male")
-//                .joinDate(LocalDateTime.now())
-//                .salary(65000L)
-//                .supervisorId(1033L)
-//                .build();
-//
-//        employeeService.saveEmployee(employee);
-//    } Null포인터 에런 남
+    @Autowired
+    private EmployeeService employeeService;
+
+    @Test
+    void saveEmployee() {
+        EmployeeDTO employee = EmployeeDTO.builder()
+                .employeeId(2106L)
+                .employeePW("971120")
+                .employeeName("최일성")
+                .rankId(2)
+                .rankName("사원")
+//                .department.(10L)
+//                .departmentName("IT")
+                .email("dlftjd@gw.com")
+                .phoneNumber("010-1111-2222")
+                .address("서울시 노원구")
+                .gender("Male")
+                .joinDate(LocalDateTime.now())
+                .salary(65000L)
+                .supervisorId(1033L)
+                .build();
+
+        employeeService.saveEmployee(employee);
+    }
 }

@@ -28,7 +28,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 //    사원 저장 서비스
     public void saveEmployee(EmployeeDTO employeeDTO) {
         Employee employee = toEmployee(employeeDTO);
-        employee=employeeRepository.save(employee);
+
+        employee = employeeRepository.save(employee);
         //휴가 내역 초기화
         VacationHistory vacationHistory = VacationHistory.createFromEmployee(employee);
         vacationHistoryRepository.save(vacationHistory);
@@ -96,10 +97,10 @@ public class EmployeeServiceImpl implements EmployeeService {
                         .location(dto.getDepartment().getLocation())
                         .build())
                 .email(dto.getEmail())
+                .joinDate(dto.getJoinDate())
                 .phoneNumber(dto.getPhoneNumber())
                 .address(dto.getAddress())
                 .gender(dto.getGender())
-                .joinDate(dto.getJoinDate())
                 .salary(dto.getSalary())
                 .supervisorId(dto.getSupervisorId())
                 .build();
@@ -120,10 +121,10 @@ public class EmployeeServiceImpl implements EmployeeService {
                         .location(employee.getDepartment().getLocation())
                         .build())
                 .email(employee.getEmail())
+                .joinDate(employee.getJoinDate())
                 .phoneNumber(employee.getPhoneNumber())
                 .address(employee.getAddress())
                 .gender(employee.getGender())
-                .joinDate(employee.getJoinDate())
                 .salary(employee.getSalary())
                 .supervisorId(employee.getSupervisorId())
                 .build();
