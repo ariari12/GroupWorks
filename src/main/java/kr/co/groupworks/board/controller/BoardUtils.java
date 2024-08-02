@@ -1,7 +1,11 @@
 package kr.co.groupworks.board.controller;
 
 import kr.co.groupworks.dto.cis.employee.SessionEmployeeDTO;
+import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
+
+import java.time.Duration;
+import java.time.LocalDateTime;
 
 public class BoardUtils {
 
@@ -19,4 +23,25 @@ public class BoardUtils {
         Long empDepartmentId = sessionEmployeeDTO.getDepartmentId();
         return empDepartmentId.equals(departmentId);
     }
+
+    public static String formatRelativeTime(LocalDateTime dateTime) {
+        LocalDateTime now = LocalDateTime.now();
+        Duration duration = Duration.between(dateTime, now);
+
+        long minutes = duration.toMinutes();
+        if (minutes < 1) {
+            return "방금 전";
+        } else if (minutes < 60) {
+            return minutes + "분 전";
+        } else if (minutes < 1440) { // 1440 minutes in a day
+            long hours = duration.toHours();
+            return hours + "시간 전";
+        } else if (minutes < 10080) { // 10080 minutes in a week
+            long days = duration.toDays();
+            return days + "일 전";
+        } else {
+            return dateTime.toLocalDate().toString(); // or return a formatted string
+        }
+    }
+
 }
