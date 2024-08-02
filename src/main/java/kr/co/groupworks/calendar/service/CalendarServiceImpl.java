@@ -13,6 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static kr.co.groupworks.calendar.entity.QCalendar.calendar;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -35,5 +37,15 @@ public class CalendarServiceImpl implements CalendarService {
         return calendarRepository.findAll().
                 stream()
                 .map(calendarMapper::toDto).toList();
+    }
+
+    @Override
+    public Long deleteCalendar(Long calendarId, Long employeeId) {
+        Employee employee = employeeRepository.findById(employeeId)
+                .orElseThrow(() -> new EntityNotFoundException("사원을 찾을 수 없습니다. " + employeeId));
+        Calendar calendar = calendarRepository.findById(calendarId)
+                .orElseThrow(() -> new EntityNotFoundException("일정을 찾을 수 없습니다. " + calendarId));
+        calendarRepository.deleteByCalendarIdAndEmployee(calendar.getCalendarId(), employee);
+        return calendar.getCalendarId();
     }
 }
