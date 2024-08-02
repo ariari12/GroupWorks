@@ -1,10 +1,8 @@
 let editor;
 document.addEventListener('DOMContentLoaded', function() {
-    const initialData = {"time":1721196893552,"blocks":[{"id":"4n_vPBS0yd","type":"header","data":{"text":"안녕하세요!","level":1}},{"id":"xvRUXpjrQk","type":"paragraph","data":{"text":"반갑습니다."}},{"id":"oD_L4RkfbP","type":"paragraph","data":{"text":"ㄴㅁㄴㅇㄴㅁㅇ!"}}],"version":"2.30.2"};
 
     editor = new EditorJS({
         readOnly: false,
-        data: initialData,
         holder: 'editorjs',
         tools: {
             header: {
@@ -164,11 +162,19 @@ function subject() {
     }
 }
 
-// JSON 으로 저장
-function test() {
-    editor.save().then((outputData) => {
-        console.log('Article data:', outputData);
-        let a = JSON.stringify(outputData)
-        console.log(a);
-    });
+// 콘텐츠를 JSON 형식으로 출력하는 함수
+async function getEditorContent() {
+    try {
+        const outputData = await editor.save();
+        $("#contentField").val(JSON.stringify(outputData));
+    } catch (error) {
+        console.error('Error getting editor content:', error);
+    }
 }
+
+// 버튼 클릭 시 콘텐츠를 출력하도록 jQuery 이벤트 핸들링
+$(document).ready(function() {
+    $('#submitButton').on('click', function() {
+        getEditorContent();
+    });
+});
