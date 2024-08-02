@@ -97,7 +97,7 @@ public class EmployeeServiceImpl implements EmployeeService {
                         .location(dto.getDepartment().getLocation())
                         .build())
                 .email(dto.getEmail())
-                .joinDate(dto.getJoinDate())
+                .createdDate(dto.getJoinDate())
                 .phoneNumber(dto.getPhoneNumber())
                 .address(dto.getAddress())
                 .gender(dto.getGender())
