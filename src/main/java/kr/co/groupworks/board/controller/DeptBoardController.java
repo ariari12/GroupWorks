@@ -18,6 +18,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttribute;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Slf4j
 @Controller
@@ -72,7 +75,8 @@ public class DeptBoardController {
     }
 
     @GetMapping("{departmentId}/detail/{no}")
-    public String deptDetail(@PathVariable("departmentId") Long departmentId, Model model,
+    public String deptDetail(@PathVariable("departmentId") Long departmentId,
+                             @PathVariable("no") Long no, Model model,
                          @SessionAttribute("employee") SessionEmployeeDTO sessionEmployeeDTO) {
         if (!BoardUtils.hasAccessToDepartment(sessionEmployeeDTO, departmentId)) {
             return "redirect:/main?alert=invalid_department";

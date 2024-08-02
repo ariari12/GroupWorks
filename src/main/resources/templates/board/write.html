@@ -44,7 +44,7 @@
 </th:block>
 
 <th:block layout:fragment="content" th:with="boardType=${title == '공지 게시판'} ? 'notice' : ${session.employee.departmentId}">
-    <form th:action="@{|/board/${boardType}/write|}" method="post">
+    <form id="writeForm" th:action="@{|/board/${boardType}/write|}" method="post">
         <div class="container" style="margin: 50px; width: 90%">
             <div class="form-group">
                 <select class="form-control" aria-label="말머리" name="subject" id="subject">
@@ -74,7 +74,7 @@
             </div>
 
             <div>
-                <input type="submit" class="btn btn-success" value="등록하기">
+                <input type="submit" class="btn btn-success" id="submitButton" value="등록하기">
                 <button type="button" class="btn btn-primary" data-bs-target="#exampleModal"
                         onclick="preview()" th:text="미리보기">
                 </button>
