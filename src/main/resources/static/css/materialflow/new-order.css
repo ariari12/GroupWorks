@@ -4,10 +4,57 @@ form> .title-header {
     font-weight: bolder;
 }
 
-form> * {
-    margin: 30px;
+form {
+    border: 15px solid grey;
+    padding: 60px;
 }
 
 .table-margin {
-    margin-right: 500px;
+    margin-right: 50px;
+}
+
+table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+th, td {
+    padding: 8px;
+    text-align: left;
+    position: relative;
+}
+.delete-column {
+    border: 1px solid transparent; /* 외곽선 숨기기 */
+}
+.delete-button {
+    border: none;
+    background: none;
+    cursor: pointer;
+}
+.delete-button i {
+    color: red;
+}
+.table-container {
+    margin: 20px auto;
+    overflow-x: auto;
+}
+.table-margin-auto {
+    width: 100%;
+    margin: auto;
+}
+.table-input {
+    border: none;
+    box-shadow: none;
+    width: 100%;
+    padding: 4px;
+}
+.table-input:focus {
+    outline: none;
+}
+.currency-wrapper {
+    display: flex;
+    align-items: center;
+}
+.currency {
+    margin-left: 5px;
+    font-size: 1.1em;
 }
