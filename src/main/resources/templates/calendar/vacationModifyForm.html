@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<th:block layout:fragment="css">
+</th:block>
+<th:block layout:fragment="javascript">
+      <script src="/js/calendar/datatables.js"></script>
+      <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                  flatpickr(".vacationDate", {
+                        locale: "ko", // 한국어 설정
+                        mode: "range"
+                  });
+
+                  flatpickr(".halfDate", {
+                        locale: "ko", // 한국어 설정
+                        wrap: true
+                  });
+
+                  flatpickr(".sickDate", {
+                        locale: "ko", // 한국어 설정
+                        mode: "range"
+                  });
+            });
+      </script>
+</th:block>
+
+<div layout:fragment="content">
+        <div class="modal-dialog">
+            <div class="modal-content" th:object="${modifyForm}">
+                <form th:action="@{|/vacation/modify/*{calendarId}|}" method="post" enctype="multipart/form-data">
+                    <div class="modal-body">
+                        <div class="modal-content">
+                            <h5>휴가 종류</h5>
+                            <select class="form-select" aria-label="Default select example"
+                                    th:field="*{vacationType}">
+                                <th:block th:each="vacationStatus : ${vacationStatusList}">
+                                    <option th:selected="*{vacationType} == ${vacationStatus}"
+                                            th:value="${vacationStatus}" th:text="${vacationStatus.getName()}"></option>
+                                </th:block>
+                            </select>
+                            <br>
+                            <h5>휴가 일정</h5>
+                            <input type="text" placeholder="Select Date.." class="form-control vacationDate"
+                                   th:name="date" th:value="|*{startDate} ~ *{endDate}|">
+                            <br>
+
+                            <h5>상세 사유</h5>
+                            <textarea class="form-control" placeholder="병가 사유 입력" th:field="*{contents}"></textarea>
+                            <br>
+                            <h5>승인 상태 :
+                                <span class="modal-status" th:field="*{status}" th:text="*{status.getDescription()}"></span>
+                            </h5>
+
+                            <br>
+                            <h5>첨부 파일</h5>
+                            <input type="file" th:name="fileUpload" class="form-control" multiple>
+                            <th:block th:if="${!#lists.isEmpty(modifyForm.getFileList())}">
+                                <th:block th:each="file : *{fileList}">
+                                    <div>
+                                        <a th:href="@{|/calendar/fileDownload/${file.filePath}|}"
+                                           th:text="${file.fileName}">파일이름</a>
+                                    </div>
+                                </th:block>
+                            </th:block>
+                        </div>
+                    </div>
+                    <div class="modal-footer m-2">
+                        <a href="/vacation" class="btn btn-secondary m-lg-2" >취소</a>
+                        <button type="submit" class="btn btn-primary">수정</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+</div>

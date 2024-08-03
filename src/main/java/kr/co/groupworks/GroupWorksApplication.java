@@ -6,9 +6,11 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 @SpringBootApplication
-@ComponentScan(basePackages = {"kr.co.groupworks.util.mapper", "kr.co.groupworks"})
+@EnableJpaAuditing// spring data jpa Auditing 설정 필수
+//@ComponentScan(basePackages = {"kr.co.groupworks.util.mapper", "kr.co.groupworks"})
 public class GroupWorksApplication {
 
     public static void main(String[] args) {
