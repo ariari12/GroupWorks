@@ -10,48 +10,107 @@
 </th:block>
 
 <th:block layout:fragment="content">
-    <form id="approveForm" class="row g-3 needs-validation frm-content" action="/materialflow/" method="post" novalidate>
-        <h3 class="title-header">[[${title}]]</h3>
+<form id="orderForm" class="row g-3 needs-validation frm-content" action="/materialflow/" method="post" novalidate>
+    <h3 class="title-header">[[${title}]]</h3>
 
-        <div class="input-group mb-3">
-            <button class="btn btn-danger" id="registerBusiness" type="button">거래처 등록</button>
-            <button class="btn btn-success" id="chooseBusiness" type="button">거래처 선택</button>
-        </div>
+    <div class="input-group mb-3">
+        <button class="btn btn-danger" id="registerBusiness" type="button">거래처 등록</button>
+        <button class="btn btn-success" id="chooseBusiness" type="button">거래처 선택</button>
+    </div>
++
+    <div class="input-group mb-3">
+        <!--/* 수주자 란 */-->
+        <table class="border-white table-margin">
+            <tr>
+                <td th:if="${division == 1}">수주일자</td>
+                <td th:if="${division == 2}">발주일자</td>
+                <td><input class="table-input" type="date" id="orderDate" required></td>
+            </tr>
+            <tr>
+                <td th:if="${division == 1}">수주서 번호</td>
+                <td th:if="${division == 2}">발주서 번호</td>
+                <td><input class="table-input" type="text" id="orderNumber" placeholder="발주서 번호를 입력하세요" required></td>
+            </tr>
+            <tr>
+                <td>공급업체 명</td>
+                <td><input class="table-input" type="text" id="01" placeholder="공급업체 명을 입력하세요" required></td>
+            </tr>
+            <tr>
+                <td>수주 담당자</td>
+                <!--/* 수주서: 수주 담당자:직원 */-->
+                <td><input class="table-input" type="text" id="02" placeholder="수주 담당자 성함을 입력하세요" required>
+                    <input th:if="${division == 1}" type="hidden" id="02-1" required>
+                </td>
+            </tr>
+            <tr>
+                <td>담당자 연락처</td>
+                <td><input class="table-input" type="text" id="03" placeholder="담당자 연락처를 입력하세요" required></td>
+                <td>담당자 이메일</td>
+                <td><input class="table-input" type="text" id="04" placeholder="담당자 이메일을 입력하세요" required></td>
+            </tr>
+        </table>
 
-        <div class="input-group mb-3">
-            <!--/* 수주자 란 */-->
-            <table class="border table-margin">
+        <!--/* 발주자 란 */-->
+        <table class="border-white">
+            <tr>
+                <td>사업자 등록 번호</td>
+                <td><input class="table-input" type="text" id="05" placeholder="012-34-56789" required></td>
+            </tr>
+            <tr>
+                <td>발주업체 명</td>
+                <td><input th:if="${division == 2}" type="hidden" id="06-1" required>
+                    <input class="table-input" type="text" id="06-2" placeholder="발주업체 명을 입력하세요" required>
+                </td>
+            </tr>
+            <tr>
+                <td>발주 담당자</td>
+                <!--/* 발주서: 발주 담당자:직원 */-->
+                <td><input class="table-input" type="text" id="07" placeholder="공급업체 명을 입력하세요" required>
+                    <input th:if="${division == 2}" type="hidden" id="07-1" required>
+                </td>
+            </tr>
+            <tr>
+                <td>담당자 연락처</td>
+                <td><input class="table-input" type="text" id="08" placeholder="담당자 연락처를 입력하세요" required></td>
+                <td>담당자 이메일</td>
+                <td><input class="table-input" type="text" id="09" placeholder="담당자 이메일을 입력하세요" required></td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="mt-3">
+        <div class="table-container">
+            <table class="table-margin-auto" id="itemTable">
+                <thead>
+                <!-- 테이블 헤더 -->
                 <tr>
-                    <td th:if="${division == 1}">수주일자</td>
-                    <td th:if="${division == 2}">발주일자</td>
-                    <td><label><input type="text"></label></td>
+                    <th>품목명</th>
+                    <th>수량</th>
+                    <th>단가</th>
+                    <th>총액</th>
+                    <th class="delete-column"></th>
                 </tr>
+                </thead>
+                <tbody>
+                <!-- 초기 품목 입력 행 -->
                 <tr>
-                    <td></td>
-                    <td></td>
+                    <td><input type="text" name="itemName" class="table-input" placeholder="품목명을 입력하세요" required></td>
+                    <td><input type="number" name="itemQuantity" class="table-input" placeholder="수량을 입력하세요" min="0" step="1" required oninput="calculateTotal(this)"></td>
+                    <td><input type="number" name="itemPrice" class="table-input" placeholder="단가를 입력하세요" min="0" step="100" required oninput="calculateTotal(this)"></td>
+                    <td><div class="currency-wrapper"><input type="number" name="itemTotal" class="table-input" placeholder="총액을 입력하세요" readonly><span class="currency">￦</span></div></td>
+                    <td class="delete-column"><button type="button" class="btn btn-danger" onclick="removeItem(this)"><i class="fas fa-trash-alt"></i></button></td>
                 </tr>
+                </tbody>
             </table>
-
-            <!--/* 발주자 란 */-->
-            <table class="border table-margin">
-                <tr>
-                    <td>사업자 등록 번호</td>
-                    <td><label><input type="text"></label></td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td></td>
-                </tr>
-            </table>
+            <!-- 품목 추가 버튼 -->
+            <button type="button" class="btn btn-primary mt-3" onclick="addItem()"><i class="fas fa-plus"></i></button>
+            <!-- 발주서 제출 버튼 -->
+            <button type="submit" class="btn btn-success mt-3">발주서 제출</button>
         </div>
-    </form>
+    </div>
+</form>
 </th:block>
 
 <th:block layout:fragment="javascript">
-    <script>
-        const userNum = "[";
-        const deptNum = "$";
-        const tabNames = ["#category", "#draft-date"];
-    </script>
     <script src="/js/materialflow/new-order.js"></script>
 </th:block>
