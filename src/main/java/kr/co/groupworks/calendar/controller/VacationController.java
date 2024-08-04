@@ -114,7 +114,7 @@ public class VacationController {
 
     // 구성원 휴가 신청 내역
     @GetMapping(value = "/team") //page=0 부터 시작 size 를 정하면 된다
-    public String vacationTeam(Model model, @PageableDefault(size = 3) Pageable pageable,
+    public String vacationTeam(Model model, @PageableDefault(size = 10) Pageable pageable,
                                @SessionAttribute(name = "employee")SessionEmployeeDTO sessionEmployeeDTO) {
         log.info("VacationController - vacationTeam");
 
@@ -129,5 +129,22 @@ public class VacationController {
         model.addAttribute("title", "구성원 휴가");
         model.addAttribute("vacationRequestList",vacationRequestList);
         return "calendar/vacationTeam";
+    }
+
+    //휴가 신청 세부내역
+    @GetMapping(value = "/team/detail")
+    public String vacationTeam(Model model, @RequestParam(value = "id") Long id,
+                               @SessionAttribute(name = "employee")SessionEmployeeDTO sessionEmployeeDTO) {
+        log.info("VacationController - vacationTeamDetail");
+        Long employeeId = sessionEmployeeDTO.getEmployeeId();
+
+        // 휴가 신청 내역 조회
+        VacationModifyFormDTO modifyFormDTO = vacationService.findCalendarByIdAndEmployee(id, employeeId);
+
+
+        // header title 넘겨주기
+        model.addAttribute("modifyForm",modifyFormDTO);
+        model.addAttribute("vacationStatusList",vacationStatusList());
+        return "calendar/vacationDetail";
     }
 }

@@ -109,7 +109,7 @@ public class VacationApiController {
         return ResponseEntity.status(HttpStatus.OK).body("기타 휴가 신청이 성공적으로 처리되었습니다.");
     }
 
-    
+
 
 
 

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>휴가 신청 상세 내역</title>
+</head>
+<body>
+<div class="modal fade" id="vacationModal" tabindex="-1" aria-labelledby="vacationModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content" th:object="${modifyForm}">
+      <form th:action="@{|/vacation/modify/*{calendarId}|}" method="post" enctype="multipart/form-data">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="confirmModalLabel">휴가 상세 내역</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="modal-content">
+            <h5>휴가 종류</h5>
+            <select class="form-select" aria-label="Default select example"
+                    th:field="*{vacationType}">
+              <th:block th:each="vacationStatus : ${vacationStatusList}">
+                <option th:selected="*{vacationType} == ${vacationStatus}"
+                        th:value="${vacationStatus}" th:text="${vacationStatus.getName()}"></option>
+              </th:block>
+            </select>
+            <br>
+            <h5>휴가 일정</h5>
+            <input type="text" placeholder="Select Date.." class="form-control vacationDate"
+                   th:name="date" th:value="|*{startDate} ~ *{endDate}|">
+            <br>
+
+            <h5>상세 사유</h5>
+            <textarea class="form-control" placeholder="병가 사유 입력" th:field="*{contents}"></textarea>
+            <br>
+            <h5>승인 상태 :
+              <span class="modal-status" th:field="*{status}" th:text="*{status.getDescription()}"></span>
+            </h5>
+
+            <br>
+            <h5>첨부 파일</h5>
+            <input type="file" th:name="fileUpload" class="form-control" multiple>
+            <th:block th:if="${!#lists.isEmpty(modifyForm.getFileList())}">
+              <th:block th:each="file : *{fileList}">
+                <div>
+                  <a th:href="@{|/calendar/fileDownload/${file.filePath}|}"
+                     th:text="${file.fileName}">파일이름</a>
+                </div>
+              </th:block>
+            </th:block>
+          </div>
+        </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+</body>
+</html>

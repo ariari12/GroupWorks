@@ -360,6 +360,7 @@ public class VacationServiceImpl implements VacationService{
                 .map(vacation ->
                         VacationRequestDTO.builder()
                                 .calendarId(vacation.getCalendarId())
+                                .employeeId(vacation.getEmployee().getEmployeeId())
                                 .name(vacation.getEmployee().getEmployeeName())
                                 .startDate(vacation.getStartDate())
                                 .endDate(vacation.getEndDate() != null ? vacation.getEndDate() : vacation.getStartDate())
