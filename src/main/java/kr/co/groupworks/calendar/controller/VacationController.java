@@ -1,14 +1,15 @@
 package kr.co.groupworks.calendar.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.co.groupworks.calendar.dto.*;
-import kr.co.groupworks.calendar.entity.VacationStatus;
 import kr.co.groupworks.calendar.entity.VacationType;
 import kr.co.groupworks.calendar.entity.AmPm;
 import kr.co.groupworks.calendar.service.VacationService;
 import kr.co.groupworks.employee.dto.SessionEmployeeDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -48,7 +49,7 @@ public class VacationController {
         log.info("세션 값 : "+employeeId);
 
         // 휴가 신청 내역 조회
-        List<VacationMyRequestDTO> vacationRequestList = vacationService.findAllByEmployeeId(employeeId);
+        List<VacationRequestDTO> vacationRequestList = vacationService.findAllByEmployeeId(employeeId);
         log.info("휴가 신청 내역 조회 : {}",vacationRequestList);
 
         // 휴가 보유 사용현황 조회
@@ -110,14 +111,23 @@ public class VacationController {
         return "redirect:/vacation";
     }
 
-    @GetMapping(value = "/team")
-    public String vacationTeam(Model model) {
+
+    // 구성원 휴가 신청 내역
+    @GetMapping(value = "/team") //page=0 부터 시작 size 를 정하면 된다
+    public String vacationTeam(Model model, @PageableDefault(size = 3) Pageable pageable,
+                               @SessionAttribute(name = "employee")SessionEmployeeDTO sessionEmployeeDTO) {
         log.info("VacationController - vacationTeam");
+
+        Long employeeId = sessionEmployeeDTO.getEmployeeId();
+        log.info("세션 값 : "+employeeId);
+
+        // 휴가 신청 내역 조회
+        Page<VacationRequestDTO> vacationRequestList = vacationService.findAllTeam(employeeId, pageable);
+        log.info("휴가 신청 내역 조회 : {}",vacationRequestList);
 
         // header title 넘겨주기
         model.addAttribute("title", "구성원 휴가");
+        model.addAttribute("vacationRequestList",vacationRequestList);
         return "calendar/vacationTeam";
     }
-
-
 }

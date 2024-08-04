@@ -5,16 +5,10 @@
 <th:block layout:fragment="css">
 
 </th:block>
-<th:block layout:fragment="javascript">
-      <script src="/js/calendar/datatables.js"></script>
-</th:block>
 <div layout:fragment="content">
       <!-- 조건문으로 하나만 나오게 할거임-->
       <th:block>
-            <div th:replace="~{calendar/fragments/vacationRequests.html::tables}" ></div>
-      </th:block>
-      <th:block>
-            <div th:replace="~{calendar/fragments/vacationStatus.html::tables}" ></div>
+            <div th:replace="~{calendar/fragments/vacationTeamRequest.html::vacationTeamRequest}" ></div>
       </th:block>
 
       <!-- Modal -->

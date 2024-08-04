@@ -12,7 +12,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface VacationRepository extends JpaRepository<Vacation, Long>, VacationQueryDsl {
-    @Query("SELECT v FROM Vacation v JOIN v.employee e WHERE e.employeeId = :employeeId")
+    //fetch 조인으로 바꿔야함
+    @Query("SELECT v FROM Vacation v JOIN v.employee e " +
+            "left join CalendarAttachment ca ON ca.calendar.calendarId = v.calendarId WHERE e.employeeId = :employeeId")
     List<Vacation> findAllByEmployeeId(@Param("employeeId") Long employeeId);
 
     // 사원의 휴가기간이 겹치치 않는 휴가 조회

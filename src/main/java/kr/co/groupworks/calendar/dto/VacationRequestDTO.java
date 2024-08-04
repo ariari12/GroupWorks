@@ -11,7 +11,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class VacationMyRequestDTO {
+public class VacationRequestDTO {
     //이름 잔여연차 잔여병가	기타 사용일
     //기간 종류 사용기간	증명자료 승인
     private Long calendarId;

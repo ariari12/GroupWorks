@@ -2,7 +2,7 @@ package kr.co.groupworks.service.kah;
 
 import kr.co.groupworks.calendar.dto.AnnualFormDTO;
 import kr.co.groupworks.calendar.dto.HalfFormDTO;
-import kr.co.groupworks.calendar.dto.VacationMyRequestDTO;
+import kr.co.groupworks.calendar.dto.VacationRequestDTO;
 import kr.co.groupworks.calendar.entity.AmPm;
 import kr.co.groupworks.calendar.entity.Vacation;
 import kr.co.groupworks.calendar.entity.VacationStatus;
@@ -94,7 +94,7 @@ class VacationServiceImplTest {
         vacationService.save(annualFormDTO1);
         vacationService.save(halfFormDTO1);
 
-        List<VacationMyRequestDTO> vacationRequestList = vacationService.findAllByEmployeeId(1L);
+        List<VacationRequestDTO> vacationRequestList = vacationService.findAllByEmployeeId(1L);
         assertThat(vacationRequestList).isNotNull();
 
     }

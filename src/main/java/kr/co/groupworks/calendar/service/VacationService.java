@@ -1,6 +1,8 @@
 package kr.co.groupworks.calendar.service;
 
 import kr.co.groupworks.calendar.dto.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -8,7 +10,7 @@ import java.util.List;
 public interface VacationService {
     Long save(AnnualFormDTO dto);
 
-    List<VacationMyRequestDTO> findAllByEmployeeId(Long employeeId);
+    List<VacationRequestDTO> findAllByEmployeeId(Long employeeId);
 
 
     Long save(HalfFormDTO dto);
@@ -26,4 +28,6 @@ public interface VacationService {
     void modifyVacation(Long calendarId, VacationModifyFormDTO dto, Long employeeId, MultipartFile[] files);
 
     List<CalendarFormDTO> findAllVacation(Long employeeId);
+
+    Page<VacationRequestDTO> findAllTeam(Long employeeId, Pageable pageable);
 }
