@@ -1,4 +1,4 @@
-package kr.co.groupworks.calendar.entity;
+package kr.co.groupworks.notification.entity;
 
 import jakarta.persistence.*;
 import kr.co.groupworks.common.BaseEntity;
