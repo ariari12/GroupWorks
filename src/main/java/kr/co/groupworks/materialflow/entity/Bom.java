@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-@Table(name = "bom")
+@Table(name = "materialflow_bom")
 @Builder
 @Getter @ToString
 @NoArgsConstructor
