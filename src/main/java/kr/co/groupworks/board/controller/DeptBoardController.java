@@ -3,10 +3,8 @@ package kr.co.groupworks.board.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import kr.co.groupworks.board.dto.BoardDTO;
-import kr.co.groupworks.board.entity.Board;
-import kr.co.groupworks.board.entity.BoardStatus;
 import kr.co.groupworks.board.service.BoardService;
-import kr.co.groupworks.dto.cis.employee.SessionEmployeeDTO;
+import kr.co.groupworks.employee.dto.SessionEmployeeDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
