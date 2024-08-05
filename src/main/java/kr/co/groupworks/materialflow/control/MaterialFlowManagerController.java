@@ -92,12 +92,24 @@ public class MaterialFlowManagerController {
     public String businessSelect(Model model) {
         log.info("business-select");
         List<Business> businessList = (List<Business>)materialOpenApiService.getBusiness(null);
-        String title = "거래처 목록", subTitle = "거래처 목록";
+        String title = "거래처 선택", subTitle = "거래처 목록";
         model.addAttribute(ATTR_TITLE, title);
         model.addAttribute(ATTR_SUB_TITLE, subTitle);
         log.info("business-select, size: " + businessList.size());
         model.addAttribute("businessList", businessList);
         return "materialflow/window/businessSelect";
+    }
+    /* 발주/수주 담당자 선택 창 */
+    @GetMapping(value = "/manager-select")
+    public String managerSelect(Model model) {
+        log.info("manager-select");
+//        List<Employee> managerList = ;
+        String title = "담당자 선택", subTitle = "사원 목록";
+        model.addAttribute(ATTR_TITLE, title);
+        model.addAttribute(ATTR_SUB_TITLE, subTitle);
+//        log.info("manager-select, size: " + managerList.size());
+//        model.addAttribute("managerList", managerList);
+        return "materialflow/window/managerSelect";
     }
 
 }

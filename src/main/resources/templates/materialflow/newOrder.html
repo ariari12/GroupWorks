@@ -17,7 +17,7 @@
         <button class="btn btn-danger" id="registerBusiness" type="button">거래처 등록</button>
         <button class="btn btn-success" id="chooseBusiness" type="button">거래처 선택</button>
     </div>
-+
+
     <div class="input-group mb-3">
         <!--/* 수주자 란 */-->
         <table class="border-white table-margin">
@@ -39,7 +39,9 @@
                 <td>수주 담당자</td>
                 <!--/* 수주서: 수주 담당자:직원 */-->
                 <td><input class="table-input" type="text" id="02" placeholder="수주 담당자 성함을 입력하세요" required>
-                    <input th:if="${division == 1}" type="hidden" id="02-1" required>
+                    <th:block th:if="${division == 1}">
+                        <input type="hidden" id="02-1" required>
+                    </th:block>
                 </td>
             </tr>
             <tr>
@@ -66,7 +68,9 @@
                 <td>발주 담당자</td>
                 <!--/* 발주서: 발주 담당자:직원 */-->
                 <td><input class="table-input" type="text" id="07" placeholder="공급업체 명을 입력하세요" required>
-                    <input th:if="${division == 2}" type="hidden" id="07-1" required>
+                    <th:block th:if="${division == 2}">
+                        <input type="hidden" id="07-1" required>
+                    </th:block>
                 </td>
             </tr>
             <tr>

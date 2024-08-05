@@ -1,5 +1,4 @@
 document.addEventListener("DOMContentLoaded", function () {
-    documentNumbDefined();
     disableEnterSubmit();
 
     document.getElementById('registerBusiness').addEventListener("click", ev => registerWindow());
@@ -21,7 +20,7 @@ function registerWindow() {
     }
 }
 
-/* 문서 번호 정하기 */
+/* 수주/발주 번호 정하기 */
 function documentNumbDefined() {
     $("#docsNum").val(userNum + deptNum + " - ");
     for (const item of tabNames) {
