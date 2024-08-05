@@ -12,4 +12,5 @@ public interface WorkflowApproversRepository {
 
     List<Long> workflowTypeByThisYear();
 
+    List<WorkFlowEntity> employeeWorkflowStat(Integer c, Long e);
 }

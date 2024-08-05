@@ -1,10 +1,10 @@
 package kr.co.groupworks.repository.kah;
 
-import kr.co.groupworks.calendar.repository.VacationRepository;
 import kr.co.groupworks.calendar.dto.AnnualFormDTO;
 import kr.co.groupworks.calendar.entity.Vacation;
-import kr.co.groupworks.repository.cis.EmployeeRepository;
+import kr.co.groupworks.calendar.repository.VacationRepository;
 import kr.co.groupworks.common.mapper.VacationMapper;
+import kr.co.groupworks.employee.repository.EmployeeRepository;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
 @SpringBootTest
 @Transactional
@@ -44,7 +44,6 @@ class VacationRepositoryTest {
     void setUp() {
         Vacation entity = vacationMapper.toEntity(annualFormDTO1, employeeRepository.findById(1L).get());
         vacationRepository.save(entity);
-
     }
 
     @Test

@@ -3,8 +3,9 @@ package kr.co.groupworks.workflow.repository;
 import com.querydsl.core.Tuple;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
-import kr.co.groupworks.entity.cis.QDepartment;
+import kr.co.groupworks.department.entity.QDepartment;
 import kr.co.groupworks.workflow.entity.QApproverEntity;
+import kr.co.groupworks.workflow.entity.QAttachmentFileEntity;
 import kr.co.groupworks.workflow.entity.QWorkFlowEntity;
 import kr.co.groupworks.workflow.entity.WorkFlowEntity;
 import lombok.extern.slf4j.Slf4j;
@@ -123,4 +124,53 @@ public class WorkflowApproversRepositoryImpl extends QuerydslRepositorySupport i
         return typeList;
     }
 
+    @Override
+    public List<WorkFlowEntity> employeeWorkflowStat(Integer c, Long e) {
+        QWorkFlowEntity w = QWorkFlowEntity.workFlowEntity;
+        QApproverEntity a = QApproverEntity.approverEntity;
+        QAttachmentFileEntity fs = QAttachmentFileEntity.attachmentFileEntity;
+
+        if (c == null || c < 1) {
+            /* 사원에 모든 결재목록 */
+            return queryFactory
+                    .select(w).from(w)
+                    .where(w.employeeId.eq(e))
+                    .fetch();
+        }
+        return switch (c) {
+            /* 사원이 발송한 결재 중 승인된 결재목록 */
+            case 1 -> queryFactory
+                    .select(w).from(w)
+                    .where(w.employeeId.eq(e).and(w.status.eq(1)))
+                    .fetch();
+            /* 사원이 발송한 결재 중 반려된 결재목록 */
+            case 2 -> queryFactory
+                    .select(w).from(w)
+                    .where(w.employeeId.eq(e).and(w.status.eq(2)))
+                    .fetch();
+            /* 사원이 발송한 결재 중 진행 증인 결재목록 */
+            case 3 -> queryFactory
+                    .select(w).from(w)
+                    .where(w.employeeId.eq(e).and(
+                            w.status.eq(0).or(w.status.eq(3))
+                    ) ).fetch();
+            /* 사원이 승인한 결재목록 */
+            case 4 -> queryFactory
+                    .select(w).from(w)
+                    .where( w.approvers.contains( queryFactory
+                                    .select(a).from(a)
+                                    .where(a.employeeId.eq(e).and(a.approval.eq(1)))
+                            )
+                    ).fetch();
+            /* 사원이 반려한 결재목록 */
+            case 5 -> queryFactory
+                    .select(w).from(w)
+                    .where( w.approvers.contains( queryFactory
+                                    .select(a).from(a)
+                                    .where(a.employeeId.eq(e).and(a.approval.eq(2)))
+                            )
+                    ).fetch();
+            default -> null;
+        };
+    }
 }

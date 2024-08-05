@@ -1,6 +1,8 @@
 package kr.co.groupworks.board.entity;
 
 import jakarta.persistence.*;
+import kr.co.groupworks.department.entity.Department;
+import kr.co.groupworks.employee.entity.Employee;
 import kr.co.groupworks.BaseEntity;
 import kr.co.groupworks.entity.cis.Department;
 import kr.co.groupworks.entity.cis.Employee;
@@ -70,4 +72,3 @@ public class Board{
     @JoinColumn(name = "department_id")
     private Department department;
 }
-

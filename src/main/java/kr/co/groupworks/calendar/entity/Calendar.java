@@ -2,7 +2,9 @@ package kr.co.groupworks.calendar.entity;
 
 
 import jakarta.persistence.*;
-import kr.co.groupworks.entity.cis.Employee;
+import kr.co.groupworks.calendar.dto.CalendarFormDTO;
+import kr.co.groupworks.common.BaseEntity;
+import kr.co.groupworks.employee.entity.Employee;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.CreatedDate;
@@ -23,7 +25,7 @@ import java.util.List;
 @EntityListeners(AuditingEntityListener.class)
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn(name = "dtype")
-public class Calendar {
+public class Calendar extends BaseEntity {
     @Id
     @Column(name = "calendar_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,14 +40,6 @@ public class Calendar {
     // 일정 종료일
     @Column(name = "end_date")
     protected String endDate;
-    @CreatedDate
-    @Column(updatable = false, name = "created_date")
-    protected LocalDateTime createdDate;
-
-    @LastModifiedDate
-    @Column(name = "last_modified_date")
-    protected LocalDateTime lastModifiedDate;
-
     // 사원 외래키
     @ManyToOne
     @JoinColumn(name = "employee_id")
@@ -55,6 +49,10 @@ public class Calendar {
     @OneToMany(mappedBy = "calendar",cascade = CascadeType.ALL, orphanRemoval = true)
     protected final List<CalendarAttachment> attachmentList = new ArrayList<>();
 
-
-
+    public void updateCalendar(CalendarFormDTO calendarFormDTO) {
+        this.title = calendarFormDTO.getTitle();
+        this.contents = calendarFormDTO.getContents();
+        this.startDate = calendarFormDTO.getStartDate();
+        this.endDate = calendarFormDTO.getEndDate();
+    }
 }

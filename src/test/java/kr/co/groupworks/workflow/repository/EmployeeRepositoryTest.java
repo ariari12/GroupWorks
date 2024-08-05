@@ -1,6 +1,6 @@
 package kr.co.groupworks.workflow.repository;
 
-import kr.co.groupworks.repository.cis.DepartmentRepository;
+import kr.co.groupworks.department.repository.DepartmentRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

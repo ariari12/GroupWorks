@@ -5,8 +5,8 @@ import kr.co.groupworks.calendar.dto.AnnualFormDTO;
 import kr.co.groupworks.calendar.dto.HalfFormDTO;
 import kr.co.groupworks.calendar.dto.OtherFormDTO;
 import kr.co.groupworks.calendar.dto.SickFormDTO;
-import kr.co.groupworks.dto.cis.employee.SessionEmployeeDTO;
 import kr.co.groupworks.calendar.service.VacationService;
+import kr.co.groupworks.employee.dto.SessionEmployeeDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -63,7 +63,6 @@ public class VacationApiController {
     @PostMapping("/annual")
     public ResponseEntity<?> vacationAnnual(@Validated @RequestBody AnnualFormDTO dto,
                                             @SessionAttribute(name = "employee") SessionEmployeeDTO sessionEmployeeDTO){
-
         log.info("AnnualFormDTO ={}",dto);
         log.info("sessionEmployeeDTO ={}",sessionEmployeeDTO.getEmployeeId());
         dto.setEmployeeId(sessionEmployeeDTO.getEmployeeId());
@@ -74,8 +73,7 @@ public class VacationApiController {
     // 반차 신청
     @PostMapping("/half")
     public ResponseEntity<?> vacationHalf(@Validated @RequestBody HalfFormDTO dto,
-                                          @SessionAttribute(name = "employee")SessionEmployeeDTO sessionEmployeeDTO){
-
+                                          @SessionAttribute(name = "employee") SessionEmployeeDTO sessionEmployeeDTO){
         log.info("HalfFormDTO ={}",dto);
         dto.setEmployeeId(sessionEmployeeDTO.getEmployeeId());
         vacationService.save(dto);

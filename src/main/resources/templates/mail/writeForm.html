@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<th:block layout:fragment="css">
+    <style>
+        .suggestions {
+            border: 1px solid #ccc;
+            max-height: 100px;
+            overflow-y: auto;
+            position: absolute;
+            z-index: 1000;
+            background: white;
+        }
+        .suggestion-item {
+            padding: 5px;
+            cursor: pointer;
+        }
+        .suggestion-item:hover {
+            background-color: #f0f0f0;
+        }
+    </style>
+</th:block>
+
+<th:block layout:fragment="javascript">
+    <script src="/js/tables/datatables-demo.js"></script>
+    <script>
+        function resetFile() {
+            const fileList = $("#files");
+            // 기존 첨부 파일 초기화
+            fileList.html("");
+            // 스타일 제거
+            fileList.removeClass("files");
+            // 초기화
+            document.querySelector("input[type=file]").value = "";
+        }
+
+        async function fetchEmailSuggestions(inputId) {
+            const input = document.getElementById(inputId);
+            const query = input.value;
+            if (query.length < 2) {
+                document.getElementById(inputId + 'Suggestions').innerHTML = '';
+                return;
+            }
+
+            const response = await fetch(`/mail/email-suggestions?query=${encodeURIComponent(query)}`);
+            const suggestions = await response.json();
+            const suggestionsContainer = document.getElementById(inputId + 'Suggestions');
+            suggestionsContainer.innerHTML = '';
+
+            suggestions.forEach(email => {
+                const div = document.createElement('div');
+                div.classList.add('suggestion-item');
+                div.textContent = email;
+                div.onclick = () => {
+                    input.value = email;
+                    suggestionsContainer.innerHTML = '';
+                };
+                suggestionsContainer.appendChild(div);
+            });
+        }
+    </script>
+</th:block>
+
+<th:block layout:fragment="content">
+    <div>
+        <h3>메일 작성</h3>
+        <form action="/mail/write" method="post" style="width: 50%; margin-left: 20%" enctype="multipart/form-data">
+            <div class="mb-3">
+                <label for="mailReceiver" class="form-label">받는사람</label>
+                <input type="email" class="form-control" id="mailReceiver" placeholder="name@example.com" name="mailReceiver" required oninput="fetchEmailSuggestions('mailReceiver')">
+                <div id="mailReceiverSuggestions" class="suggestions"></div>
+            </div>
+            <div class="mb-3">
+                <label for="mailReferrer" class="form-label">참조</label>
+                <input type="email" class="form-control" id="mailReferrer" placeholder="name@example.com" name="mailReferrer" oninput="fetchEmailSuggestions('mailReferrer')">
+                <div id="mailReferrerSuggestions" class="suggestions"></div>
+            </div>
+            <div class="mb-3">
+                <label for="mailTitle" class="form-label">제목</label>
+                <input type="text" class="form-control" id="mailTitle" placeholder="제목을 입력하세요" name="mailTitle" required>
+            </div>
+            <label for="files" class="form-label">파일첨부</label>
+            <div class="input-group mb-3">
+                <input type="file" class="form-control" id="files" name="files" onchange="addFile(this);" multiple accept=".jpg,.jpeg,.png,.pdf,.zip,.txt,.csv,.json,.xml,.docx,.hwp,.xls">
+                <button class="btn btn-outline-secondary" type="button" onclick="resetFile()">초기화</button>
+            </div>
+            <div class="mb-3" id="summernote">
+                <textarea class="form-control" id="mailContent" name="mailContent" rows="15" style="resize: none" placeholder="내용을 입력하세요"></textarea>
+            </div>
+            <script>
+                $('#summernote').summernote({
+                    placeholder: 'Hello Bootstrap 5',
+                    tabsize: 2,
+                    height: 100
+                });
+            </script>
+            <input class="btn btn-success" type="submit" value="메일 발송하기">
+        </form>
+    </div>
+</th:block>
+</html>

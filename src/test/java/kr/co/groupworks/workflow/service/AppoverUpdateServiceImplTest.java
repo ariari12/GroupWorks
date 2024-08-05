@@ -1,13 +1,13 @@
 package kr.co.groupworks.workflow.service;
 
+import kr.co.groupworks.department.entity.Department;
+import kr.co.groupworks.department.repository.DepartmentRepository;
+import kr.co.groupworks.employee.entity.Employee;
+import kr.co.groupworks.employee.repository.EmployeeRepository;
 import kr.co.groupworks.workflow.dto.dto.ApproverDTO;
 import kr.co.groupworks.workflow.dto.dto.WorkFlowDTO;
 import kr.co.groupworks.workflow.dto.employee.EmployeeDTO;
-import kr.co.groupworks.entity.cis.Department;
-import kr.co.groupworks.entity.cis.Employee;
 import kr.co.groupworks.workflow.entity.WorkFlowEntity;
-import kr.co.groupworks.repository.cis.DepartmentRepository;
-import kr.co.groupworks.repository.cis.EmployeeRepository;
 import kr.co.groupworks.workflow.repository.ApproversRepository;
 import kr.co.groupworks.workflow.repository.WorkFlowRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +22,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -74,7 +75,7 @@ class AppoverUpdateServiceImplTest {
                 .salary((3000L + i) * 10L) // salary: 사원 급여 (3000부터 시작, i에 따라 증가)
                 .supervisorId(0L) // supervisorId: 상사 ID (1부터 10까지 반복)
                 .build()
-        ).toList();
+        ).collect(Collectors.toList());
         employees = employeeRepository.saveAll(employees);
 
         // 출력 (확인 용)

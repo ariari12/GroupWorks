@@ -1,19 +1,11 @@
 package kr.co.groupworks.workflow.control;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
-import kr.co.groupworks.dto.cis.employee.SessionEmployeeDTO;
+import kr.co.groupworks.employee.dto.SessionEmployeeDTO;
 import kr.co.groupworks.workflow.dto.dto.ApproverDTO;
-import kr.co.groupworks.workflow.dto.dto.ExampleStatusDTO;
 import kr.co.groupworks.workflow.dto.dto.WorkFlowDTO;
-import kr.co.groupworks.workflow.dto.employee.EmployeeDTO;
 import kr.co.groupworks.workflow.service.WorkFlowService;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
@@ -38,7 +30,7 @@ public class WorkFlowRestController {
 
     private static final String WORKFLOW_URL = "work-flow";
     private static final String APPROVAL_HISTORY = "/approval-history";
-    private static final String EMPLOYEE = "/employee";
+    private static final String EMPLOYEE = "employee";
     private static final String FILE_SEND = "/file-send";
     private static final String FILE_RECEIVE = "/file-download";
     private static final String APPROVAL_REQUEST = "/request";
@@ -46,22 +38,7 @@ public class WorkFlowRestController {
     private static final String APPROVAL_PARAM = "/{workFlowId}/{employeeId}/{approverType}";
     private static final String APPROVER_SEND = "/approver-send";
     private static final String WORK_STATUS = "/stat";
-    private static final String STATUS_PARAMETER = "/{param}";
     private static final String SEPARATOR = "/";
-
-    @Getter
-    private enum AttributeName {
-        TITLE("title"),
-        SUB_TITLE("subTitle"),
-        EMPLOYEE("employee"),
-        ;
-
-        private final String status;
-
-        AttributeName(String status) {
-            this.status = status;
-        }
-    }
 
     private String title;
 
@@ -97,7 +74,7 @@ public class WorkFlowRestController {
 //            log.info("WorkFlowRestController - file-receive ok, file: {}", file.getOriginalFilename());
 //        }
 
-        SessionEmployeeDTO employeeDTO = (SessionEmployeeDTO) session.getAttribute(AttributeName.EMPLOYEE.getStatus());
+        SessionEmployeeDTO employeeDTO = (SessionEmployeeDTO) session.getAttribute(EMPLOYEE);
 
         // 응답을 JSON 형식으로 반환
         Map<String, String> response = new HashMap<>();
@@ -178,20 +155,6 @@ public class WorkFlowRestController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
     }
 
-    /* 전체 사원정보 */
-    @GetMapping(value = SEPARATOR + WORKFLOW_URL + EMPLOYEE)
-    public ResponseEntity<Map<String, Object>> employee() {
-        List<EmployeeDTO> employeeList = workFlowService.getEmployeeAllDTOList();
-//        log.info("WorkFlowRestController - employee ok");
-
-        Map<String, Object> response = new HashMap<>();
-        response.put("status", "success");
-        response.put("result", true);
-        response.put(AttributeName.EMPLOYEE.getStatus(), employeeList);
-
-        return ResponseEntity.ok().body(response);
-    }
-
     /* Approve Attachment File Download 결재 첨부파일 다운로드 */
     @GetMapping(value = SEPARATOR + WORKFLOW_URL + FILE_RECEIVE + SEPARATOR + "{fileId}")
     public ResponseEntity<Resource> fileReceive(@PathVariable long fileId) {
@@ -204,38 +167,6 @@ public class WorkFlowRestController {
             headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + result.get("fileName") + "\"");
             headers.add(HttpHeaders.CONTENT_LENGTH, result.get("fileSize") + "");
             return ResponseEntity.ok().headers(headers).body(resource);
-        }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-    }
-
-
-    @Operation(summary = "결재 통계 데이터",
-            description = "로그인한 사원의 사원번와 부서번호를 사용하여 각 종류의 따른 통계데이터 반환, parameter: 반환받을 데이터 종류 Code",
-            tags = "work-flow-rest-controller"
-    )
-    @Parameter(name = "param",
-            description = "Api 반환 데이터 종류 Code: { 1 부서 목록, 부서별 결재 발송/승인/반려 건 수, 2: 올해 연도 전체 결재 발송 건 수," +
-                    " 3: 부서 결재 완료 목록, 4: 월 별 결재 발송/승인/반려 건, 5: 누적 결재 발송 건 수 }",
-            required = true,
-            example = "1~6(Code 번호)"
-    )
-    @ApiResponse(responseCode = "200",
-            description = "요청 code에 따른 세션 사원정보에 해당하는 데이터 목록 데이터 반환",
-            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExampleStatusDTO.class))
-    )
-    @ApiResponse(responseCode = "404", description = "Url 에러", content = @Content(schema = @Schema(example = "404 Not Found Error")))
-    @ApiResponse(responseCode = "500", description = "서버 에러", content = @Content(schema = @Schema(example = "500 Server Error")))
-    @GetMapping(value = SEPARATOR + WORKFLOW_URL + WORK_STATUS + STATUS_PARAMETER)
-    public ResponseEntity<Object> workStatus(@PathVariable int param, HttpSession session) {
-        log.info("WorkFlowRestController - workStatus ok, param: {}", param);
-
-        SessionEmployeeDTO sessionDTO = (SessionEmployeeDTO) session.getAttribute(AttributeName.EMPLOYEE.getStatus());
-        log.info("WorkFlowRestController - workStatus ok, sessionDTO: {}", sessionDTO);
-
-        Object result = workFlowService.getWorkflowStatistics(sessionDTO.getEmployeeId(), sessionDTO.getDepartmentId(), param);
-        if (result != null) {
-            log.info("WorkFlowRestController - workStatus ok, result: {}", result);
-            return ResponseEntity.ok().body(result);
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }

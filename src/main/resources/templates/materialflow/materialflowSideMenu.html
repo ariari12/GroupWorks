@@ -1,0 +1,21 @@
+<html lang="kr" xmlns:th="http://www.thymeleaf.org">
+<th:block th:fragment="materialFlowSideMenu">
+    <!--/* 그룹 소 제목 */-->
+    <div class="sb-sidenav-menu-heading">Material Flow Management</div>
+
+    <a class="nav-link collapsed" data-bs-toggle="collapse" data-bs-target="#materialFlowMenu" aria-expanded="false" aria-controls="materialFlowMenu">
+        <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
+        통합 자재/유통 관리
+        <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+    </a>
+    <div class="collapse" id="materialFlowMenu" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
+        <nav class="sb-sidenav-menu-nested nav">
+            <a class="nav-link" href="/material/order-record">발주기록</a>
+            <a class="nav-link" href="/material/bom">자재/재고/유통 현황 (BOM)</a>
+            <a class="nav-link" href="/material/obtain-order">작업계획/수주기록</a>
+            <a class="nav-link" href="/material/mes">생산 현황 (MES)</a>
+            <a class="nav-link" href="/material/take-summation">영업손익 산출</a>
+        </nav>
+    </div>
+</th:block>
+</html>

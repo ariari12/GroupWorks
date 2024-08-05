@@ -13,63 +13,78 @@
 <th:block layout:fragment="javascript">
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.14/index.global.min.js'></script>
     <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/google-calendar@6.1.14/index.global.min.js'></script>
-    <script>
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        var calendarData = /*[[${calendarFormDTO}]]*/ [];
+        var vacationData = /*[[${vacationFormDTO}]]*/ [];
 
-        // 당일 설정 가능하게
-        function addOneDay(date) {
-            var newDate = new Date(date);
-            newDate.setDate(newDate.getDate() + 1);
-            return newDate.toISOString().split('T')[0];  // 'YYYY-MM-DD' 형식으로 반환
-        }
+
         document.addEventListener('DOMContentLoaded', function() {
-
             var calendarEl = document.getElementById('calendar');
-            var calendar = new FullCalendar.Calendar(calendarEl, {
-            googleCalendarApiKey: 'AIzaSyCyTApWr2NijbtvLNwUGFu3wCe_lYSSB5U',
-            initialView: 'dayGridMonth',
-            events:[ // 일정 데이터 추가 , DB의 event를 가져오려면 JSON 형식으로 변환해 events에 넣어주면된다.
-                {
-                    title:'일정',
-                    start:'2024-07-26',
-                    end:addOneDay('2024-07-30')
+
+            // calendarData와 vacationData를 합침
+            var combinedEvents = calendarData.map(event => ({
+                id: event.calendarId,
+                title: event.title,
+                contents: event.contents,
+                start: event.startDate,
+                end: event.endDate,
+                extendedProps: {
+                    type: 'calendar'
                 }
-            ],customButtons: {
-                        customPrevY: { // 이전 연도로 이동
-                            icon: 'fc-icon-chevrons-left',
-                            click: function() {
-                                calendar.prevYear();
-                            }
-                        },
-                        customPrev: { // 이전 달로 이동
-                            icon: 'fc-icon-chevron-left',
-                            click: function() {
-                                calendar.prev();
-                            }
-                        },
-                        customToday: { // 오늘 날짜로 이동
-                            text: 'Today',
-                            click: function() {
-                                calendar.today();
-                            }
-                        },
-                        customNext: { // 다음 월로 이동
-                            icon: 'fc-icon-chevron-right',
-                            click: function() {
-                                calendar.next();
-                            }
-                        },
-                        customNextY: { // 다음 연도로 이동
-                            icon: 'fc-icon-chevrons-right',
-                            click: function() {
-                                calendar.nextYear();
-                            }
-                        },
-                    }, headerToolbar: {
-                    //왼쪽툴바 설정
+            })).concat(vacationData.map(event => ({
+                id: event.vacationId,
+                title: event.title,
+                contents: event.contents,
+                start: event.startDate,
+                end: event.endDate,
+                backgroundColor: 'green',
+                extendedProps: {
+                    type: 'vacation'
+                }
+            })));
+
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                googleCalendarApiKey: 'AIzaSyCyTApWr2NijbtvLNwUGFu3wCe_lYSSB5U',
+                initialView: 'dayGridMonth',
+                events: combinedEvents,
+                customButtons: {
+                    customPrevY: {
+                        icon: 'fc-icon-chevrons-left',
+                        click: function() {
+                            calendar.prevYear();
+                        }
+                    },
+                    customPrev: {
+                        icon: 'fc-icon-chevron-left',
+                        click: function() {
+                            calendar.prev();
+                        }
+                    },
+                    customToday: {
+                        text: 'Today',
+                        click: function() {
+                            calendar.today();
+                        }
+                    },
+                    customNext: {
+                        icon: 'fc-icon-chevron-right',
+                        click: function() {
+                            calendar.next();
+                        }
+                    },
+                    customNextY: {
+                        icon: 'fc-icon-chevrons-right',
+                        click: function() {
+                            calendar.nextYear();
+                        }
+                    },
+                },
+                headerToolbar: {
                     left: 'customPrevY,customPrev,customToday,customNext,customNextY',
                     center: 'title',
                     //오른쪽 툴바 설정
-                    right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
+                    right: 'dayGridMonth'
                 },
                 allDaySlot: true,
                 dayMaxEvents: true, // 최대 이벤트 개수
@@ -77,29 +92,33 @@
 
                 //공휴일 데이터 추가
                 eventSources: [{ // 구글 캘린더 ID입력
-                googleCalendarId: 'ko.south_korea#holiday@group.v.calendar.google.com',
-                backgroundColor: "transparent",
-                borderColor: "transparent",
-                className: "kr-holiday",
-                textColor: "red"
-                }],editable: true,
+                    googleCalendarId: 'ko.south_korea#holiday@group.v.calendar.google.com',
+                    backgroundColor: "red",
+                    borderColor: "transparent",
+                    className: "kr-holiday",
+                    textColor: "white"
+                }],
+                editable: true,
 
                 //droppable을 사용할때 droppable true 드롭이벤트
                 droppable: true,
-                dateClick: function(info) {
                 //날짜 클릭 시 발생할 이벤트
+                dateClick: function(info) {
+                    $("#calendarId").val("");  // 새 이벤트를 추가할 때 ID는 비워 둡니다.
                     $("#calendar_start_date").val(info.dateStr);
+                    $("#calendar_end_date").val(info.dateStr);  // 기본적으로 시작 날짜와 같은 날짜로 설정합니다.
                     $("#calendarModal").modal("show");
                     $("#closeCalendar").on("click",function (){
                         $("#calendarModal").modal("hide");
-                    })
-                    $("#addCalendar").off("click").on("click",function() {  // modal의 추가 버튼 클릭 시
-                        var content = $("#calendar_content").val();
+                    });
+                    $("#addCalendar").off("click").on("click", function() {
+                        var id = $("#calendarId").val();
+                        var title = $("#calendar_title").val();
+                        var contents = $("#calendar_contents").val();
                         var start_date = $("#calendar_start_date").val();
-                        var end_date = addOneDay($("#calendar_end_date").val());
+                        var end_date = $("#calendar_end_date").val();
 
-                        //내용 입력 여부 확인
-                        if (content == null || content == "") {
+                        if (title == null || title == "") {
                             alert("내용을 입력하세요.");
                         } else if (start_date == "" || end_date == "") {
                             alert("날짜를 입력하세요.");
@@ -107,76 +126,193 @@
                             alert("종료일이 시작일보다 먼저입니다.");
                         } else { // 정상적인 입력 시
                             var obj = {
-                                "title": content,
-                                "start": start_date,
-                                "end": end_date
-                            }//전송할 객체 생성
-                            console.log(obj);
-                            // 일정 추가
-                            calendar.addEvent(obj);
-
-                            // 모달 닫기
-                            $("#calendarModal").modal("hide");
+                                id: id,
+                                title: title,
+                                contents: contents,
+                                startDate: start_date,
+                                endDate: end_date,
+                                location: 'Some location'
+                            };
+                            $.ajax({
+                                url: '/calendar/save',
+                                type: 'POST',
+                                contentType: 'application/json',
+                                data: JSON.stringify(obj),
+                                success: function(response) {
+                                    obj.calendarId = response.calendarId;
+                                    calendar.addEvent({
+                                        id: obj.calendarId,
+                                        title: title,
+                                        contents: contents,
+                                        start: start_date,
+                                        end: end_date,
+                                        location: 'Some location'
+                                    });
+                                    $("#calendarModal").modal("hide");
+                                },
+                                error: function(xhr) {
+                                    console.error("Error:", xhr);
+                                    alert("일정 추가에 실패했습니다.");
+                                }
+                            });
                         }
                     });
-
-
-                            console.log(info);
-                //info에서 console 찍어보면 편함
                 },
                 eventClick: function(info) {
+                    var event = info.event;
 
-                // 일정 클릭 시 발생할 이벤트
-                //클릭한 일정 Id
+                    if (event.extendedProps.type === 'vacation') {
+                        // 휴가 이벤트 클릭 시 조회용 모달 열기
+                        $("#viewCalendarTitle").text(event.title);
+                        $("#viewCalendarContents").text(event.extendedProps.contents);
+                        $("#viewCalendarStartDate").text(event.startStr);
+                        $("#viewCalendarEndDate").text(event.endStr ? event.endStr : event.startStr);
+                        $("#viewCalendarModal").modal("show");
+                    } else {
+                        // 일반 이벤트 클릭 시 발생할 동작
+                        $("#calendarModifyId").val(event.id);
+                        $("#deleteCalendar").val(event.id);
+                        $("#calendarModifyTitle").val(event.title);
+                        $("#calendarModifyContents").val(event.extendedProps.contents);
+                        $("#calendarModifyStartDate").val(event.startStr);
+                        $("#calendarModifyEndDate").val(event.endStr ? event.endStr : event.startStr);
+                        $("#calendarModifyModal").modal("show");
+                    }
+
                     console.log(info);
                 },
                 drop: function(info) {
-                //드래그 드롭 후 이벤트
+                    //드래그 드롭 후 이벤트
                 },
                 eventDrop: function(info) {
-
                 },
                 eventResize: function(info) {
-                //일정 크기를 변경했을떄 이벤트
+                    //일정 크기를 변경했을떄 이벤트
                 }
-
             });
             // 캘린더를 그려준다.
             calendar.render();
         });
-
-
-
-
+        /*]]>*/
     </script>
-    <!-- modal 추가 -->
+    <!--개인 일정 입력 모달-->
     <div class="modal fade" id="calendarModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
          aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header bg-primary text-white">
                     <h5 class="modal-title" id="exampleModalLabel">일정을 입력하세요.</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        <label for="taskId" class="col-form-label">일정 내용</label>
-                        <input type="text" class="form-control" id="calendar_content" name="calendar_content">
-                        <label for="taskId" class="col-form-label">시작 날짜</label>
+                        <label for="calendar_title" class="col-form-label">일정 제목</label>
+                        <input type="text" class="form-control" id="calendar_title" name="calendar_title">
+                        <label for="calendar_contents" class="col-form-label">일정 내용</label>
+                        <textarea class="form-control" name="calendar_contents" id="calendar_contents" cols="30" rows="10"></textarea>
+                        <label for="calendar_start_date" class="col-form-label">시작 날짜</label>
                         <input type="date" class="form-control" id="calendar_start_date" name="calendar_start_date">
-                        <label for="taskId" class="col-form-label">종료 날짜</label>
+                        <label for="calendar_end_date" class="col-form-label">종료 날짜</label>
                         <input type="date" class="form-control" id="calendar_end_date" name="calendar_end_date">
+                        <label for="calendar_location" class="col-form-label">위치</label>
+                        <input type="text" class="form-control" id="calendar_location" name="calendar_location">
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary" id="addCalendar">추가</button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal" id="closeCalendar">취소</button>
                 </div>
-
             </div>
         </div>
     </div>
 
+    <!--개인 일정 수정 모달-->
+    <div class="modal fade" id="calendarModifyModal" tabindex="-1" role="dialog" aria-labelledby="calendarModifyModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="calendarModifyModalLabel">개인 일정 사항</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form method="post" action="/calendar/modify">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <input type="hidden" id="calendarModifyId" name="calendarId">
+                            <label for="calendarModifyTitle" class="col-form-label">일정 제목</label>
+                            <input type="text" class="form-control" id="calendarModifyTitle" name="title">
+                            <label for="calendarModifyContents" class="col-form-label">일정 내용</label>
+                            <textarea class="form-control" name="contents" id="calendarModifyContents" cols="30" rows="10"></textarea>
+                            <label for="calendarModifyStartDate" class="col-form-label">시작 날짜</label>
+                            <input type="date" class="form-control" id="calendarModifyStartDate" name="startDate">
+                            <label for="calendarModifyEndDate" class="col-form-label">종료 날짜</label>
+                            <input type="date" class="form-control" id="calendarModifyEndDate" name="endDate">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary" id="modifyCalendar">수정</button>
+                        <button type="button" class="btn btn-secondary" data-bs-target="#deleteModalToggle" data-bs-toggle="modal">삭제</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
+    <!--휴가 일정 조회 모달-->
+    <div class="modal fade" id="viewCalendarModal" tabindex="-1" role="dialog" aria-labelledby="viewCalendarModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="viewCalendarModalLabel">휴가 일정 조회</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group mb-3">
+                        <label for="viewCalendarTitle" class="col-form-label font-weight-bold">일정 제목</label>
+                        <p id="viewCalendarTitle" class="form-control-plaintext border rounded p-2 bg-light"></p>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="viewCalendarContents" class="col-form-label font-weight-bold">일정 내용</label>
+                        <p id="viewCalendarContents" class="form-control-plaintext border rounded p-2 bg-light"></p>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="viewCalendarStartDate" class="col-form-label font-weight-bold">시작 날짜</label>
+                        <p id="viewCalendarStartDate" class="form-control-plaintext border rounded p-2 bg-light"></p>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="viewCalendarEndDate" class="col-form-label font-weight-bold">종료 날짜</label>
+                        <p id="viewCalendarEndDate" class="form-control-plaintext border rounded p-2 bg-light"></p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="deleteModalToggle" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h6 id="calendarDeleteId"></h6>
+                    <h1 class="modal-title fs-5" id="exampleModalToggleLabel">개인 일정 삭제</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    정말 삭제하시겠습니까?
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-target="#calendarModifyModal" data-bs-toggle="modal">취소</button>
+                    <form action="/calendar/delete" method="post">
+                        <input type="hidden" name="calendarId" id="deleteCalendar">
+                        <button type="submit" class="btn btn-danger" data-dismiss="modal">삭제</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </th:block>
 <th:block layout:fragment="content">
     <div id='calendar'></div>

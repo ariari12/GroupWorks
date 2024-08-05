@@ -1,9 +1,12 @@
 package kr.co.groupworks.calendar.entity;
 
 import jakarta.persistence.*;
-import kr.co.groupworks.BaseEntity;
-import kr.co.groupworks.entity.cis.Employee;
-import lombok.*;
+import kr.co.groupworks.common.BaseEntity;
+import kr.co.groupworks.employee.entity.Employee;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;

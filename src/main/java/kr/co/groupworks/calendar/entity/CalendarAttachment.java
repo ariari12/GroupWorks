@@ -1,14 +1,15 @@
 package kr.co.groupworks.calendar.entity;
 
 import jakarta.persistence.*;
-import kr.co.groupworks.BaseEntity;
+import kr.co.groupworks.common.BaseEntity;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @Table(name = "calendar_attachment")
 @Getter
 @ToString(exclude = {"calendar"})
-@Builder
+@SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
 public class CalendarAttachment extends BaseEntity {

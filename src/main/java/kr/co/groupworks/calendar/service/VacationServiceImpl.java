@@ -2,14 +2,17 @@ package kr.co.groupworks.calendar.service;
 
 import jakarta.persistence.EntityNotFoundException;
 import kr.co.groupworks.calendar.dto.*;
-import kr.co.groupworks.calendar.entity.*;
-import kr.co.groupworks.entity.cis.Employee;
-import kr.co.groupworks.repository.cis.EmployeeRepository;
+import kr.co.groupworks.calendar.entity.CalendarAttachment;
+import kr.co.groupworks.calendar.entity.Vacation;
+import kr.co.groupworks.calendar.entity.VacationHistory;
+import kr.co.groupworks.calendar.entity.VacationStatus;
 import kr.co.groupworks.calendar.repository.CalendarAttachmentRepository;
 import kr.co.groupworks.calendar.repository.VacationHistoryRepository;
 import kr.co.groupworks.calendar.repository.VacationRepository;
 import kr.co.groupworks.common.mapper.CalendarAttachmentMapper;
 import kr.co.groupworks.common.mapper.VacationMapper;
+import kr.co.groupworks.employee.entity.Employee;
+import kr.co.groupworks.employee.repository.EmployeeRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,7 +22,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
 
 @Service
 @Slf4j
@@ -67,6 +72,7 @@ public class VacationServiceImpl implements VacationService{
         //employee = employeeRepository.save(employee);
         // 휴가 엔티티 변환
         Vacation vacation = vacationMapper.toEntity(dto,employee);
+        System.out.println("vacation.getEmployee() = " + vacation.getEmployee());
         return vacationRepository.save(vacation).getCalendarId();
     }
 
@@ -303,6 +309,14 @@ public class VacationServiceImpl implements VacationService{
                 dto.getContents(), dto.getVacationType().getName(),
                 date[0], date[1]);
 
+    }
+
+    // 사원의 휴가신청 내역 모두 조회 DTO 다름
+    @Override
+    public List<CalendarFormDTO> findAllVacation(Long employeeId) {
+        Employee employee = employeeRepository.findById(employeeId)
+                .orElseThrow(() -> new EntityNotFoundException("사원을 찾을 수 없습니다. " + employeeId));
+        return vacationRepository.findCalendarFormByEmployee(employee);
     }
 
 

@@ -1,7 +1,7 @@
 package kr.co.groupworks.workflow.control;
 
 import jakarta.servlet.http.HttpSession;
-import kr.co.groupworks.dto.cis.employee.SessionEmployeeDTO;
+import kr.co.groupworks.employee.dto.SessionEmployeeDTO;
 import kr.co.groupworks.workflow.dto.dto.ApproverDTO;
 import kr.co.groupworks.workflow.dto.dto.WorkFlowDTO;
 import kr.co.groupworks.workflow.dto.vo.ApproverVO;
@@ -172,7 +172,6 @@ public class WorkFlowController {
         /* 사용자가(사원번호pk) 기안자:0 */
         if(workFlow.getEmployeeId() == employeeId) classifications = approverClass.DRAFTER.ordinal();
 
-        int commentLength = 0;
         /* 결재자 / 협조자 / 참조자 정보 */
         for (ApproverDTO a : workFlow.getApprovers()) {
             listMap.get(PARAM[a.getApproverType() -1]).add(new ApproverVO(a));
@@ -205,6 +204,6 @@ public class WorkFlowController {
     }
 
     private long getDepartmentId(HttpSession session) {
-        return ((SessionEmployeeDTO) session.getAttribute(AttributeName.EMPLOYEE.getStatus())).getDepartmentId();
+        return ((SessionEmployeeDTO) session.getAttribute(AttributeName.EMPLOYEE.getStatus())).getDepartment().getDepartmentId();
     }
 }
