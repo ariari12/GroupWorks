@@ -1,6 +1,7 @@
 package kr.co.groupworks.calendar.service;
 
 import kr.co.groupworks.calendar.dto.*;
+import kr.co.groupworks.calendar.entity.VacationStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
@@ -29,5 +30,7 @@ public interface VacationService {
 
     List<CalendarFormDTO> findAllVacation(Long employeeId);
 
-    Page<VacationRequestDTO> findAllTeam(Long employeeId, Pageable pageable);
+    Page<VacationRequestDTO> findAllTeamSearchPending(Long employeeId, Pageable pageable);
+
+    Long approvalVacation(Long calendarId, VacationStatus status, Long employeeId);
 }

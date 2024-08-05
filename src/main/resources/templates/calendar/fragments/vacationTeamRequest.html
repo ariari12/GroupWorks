@@ -47,19 +47,19 @@
         <nav aria-label="Page navigation example">
             <ul class="pagination justify-content-center">
                 <!-- Previous Page Link -->
-                <li class="page-item" th:class="${vacationRequestList.number == 0} ? 'disabled'">
-                    <a class="page-link" th:href="@{|?page=${vacationRequestList.number - 1}|}" aria-label="Previous" th:attr="aria-disabled=${vacationRequestList.number == 0}">
+                <li class="page-item" th:classappend="${vacationRequestList.number == 0 || vacationRequestList.totalPages == 0} ? 'disabled'">
+                    <a class="page-link" th:href="@{|?page=${vacationRequestList.number - 1 > 0 ? vacationRequestList.number - 1 : 0}|}" aria-label="Previous" th:attr="aria-disabled=${vacationRequestList.number == 0}">
                         <span aria-hidden="true">&laquo;</span>
                     </a>
                 </li>
 
                 <!-- Page Numbers -->
-                <li class="page-item" th:each="i : ${#numbers.sequence(0, vacationRequestList.totalPages - 1)}" th:classappend="${i == vacationRequestList.number} ? 'active'">
+                <li class="page-item" th:each="i : ${#numbers.sequence(0, vacationRequestList.totalPages > 0 ? vacationRequestList.totalPages - 1 : 0)}" th:classappend="${i == vacationRequestList.number} ? 'active'">
                     <a class="page-link" th:href="@{|?page=${i}|}" th:text="${i + 1}">1</a>
                 </li>
 
                 <!-- Next Page Link -->
-                <li class="page-item" th:class="${vacationRequestList.number + 1 == vacationRequestList.totalPages} ? 'disabled'">
+                <li class="page-item" th:classappend="${vacationRequestList.number + 1 == vacationRequestList.totalPages || vacationRequestList.totalPages == 0} ? 'disabled'">
                     <a class="page-link" th:href="@{|?page=${vacationRequestList.number + 1}|}" aria-label="Next" th:attr="aria-disabled=${vacationRequestList.number + 1 == vacationRequestList.totalPages}">
                         <span aria-hidden="true">&raquo;</span>
                     </a>

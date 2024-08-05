@@ -1,10 +1,8 @@
 package kr.co.groupworks.calendar.controller;
 
 
-import kr.co.groupworks.calendar.dto.AnnualFormDTO;
-import kr.co.groupworks.calendar.dto.HalfFormDTO;
-import kr.co.groupworks.calendar.dto.OtherFormDTO;
-import kr.co.groupworks.calendar.dto.SickFormDTO;
+import kr.co.groupworks.calendar.dto.*;
+import kr.co.groupworks.calendar.entity.VacationStatus;
 import kr.co.groupworks.calendar.service.VacationService;
 import kr.co.groupworks.employee.dto.SessionEmployeeDTO;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +21,7 @@ import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -109,8 +108,13 @@ public class VacationApiController {
         return ResponseEntity.status(HttpStatus.OK).body("기타 휴가 신청이 성공적으로 처리되었습니다.");
     }
 
-
-
-
+    //휴가 승인 반려
+    @PostMapping(value = "/team/approval")
+    public ResponseEntity<?> vacationTeamApproval(@RequestBody ApprovalRequestDTO approvalRequest,
+                                                  @SessionAttribute(name = "employee") SessionEmployeeDTO sessionEmployeeDTO) {
+        log.info("VacationController - vacationTeamApproval");
+        vacationService.approvalVacation(approvalRequest.getCalendarId(), approvalRequest.getStatus(), sessionEmployeeDTO.getEmployeeId());
+        return ResponseEntity.ok().build();
+    }
 
 }

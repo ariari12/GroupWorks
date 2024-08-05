@@ -5,10 +5,8 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import kr.co.groupworks.calendar.dto.CalendarFormDTO;
-import kr.co.groupworks.calendar.entity.QCalendar;
-import kr.co.groupworks.calendar.entity.QCalendarAttachment;
 import kr.co.groupworks.calendar.entity.Vacation;
-import kr.co.groupworks.department.entity.QDepartment;
+import kr.co.groupworks.calendar.entity.VacationStatus;
 import kr.co.groupworks.employee.entity.Employee;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -17,7 +15,6 @@ import org.springframework.data.support.PageableExecutionUtils;
 
 import java.util.List;
 
-import static kr.co.groupworks.calendar.entity.QCalendar.*;
 import static kr.co.groupworks.calendar.entity.QCalendarAttachment.calendarAttachment;
 import static kr.co.groupworks.calendar.entity.QVacation.*;
 import static kr.co.groupworks.department.entity.QDepartment.*;

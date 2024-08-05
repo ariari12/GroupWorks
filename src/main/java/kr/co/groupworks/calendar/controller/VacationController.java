@@ -1,6 +1,7 @@
 package kr.co.groupworks.calendar.controller;
 
 import kr.co.groupworks.calendar.dto.*;
+import kr.co.groupworks.calendar.entity.VacationStatus;
 import kr.co.groupworks.calendar.entity.VacationType;
 import kr.co.groupworks.calendar.entity.AmPm;
 import kr.co.groupworks.calendar.service.VacationService;
@@ -92,8 +93,6 @@ public class VacationController {
                                  @RequestParam("fileUpload") MultipartFile[] files,
                                  Model model){
         log.info("VacationController - modifyVacation");
-        log.info("{}",dto);
-        log.info("{}", (Object) files);
         vacationService.modifyVacation(calendarId,dto,sessionEmployeeDTO.getEmployeeId(), files);
         model.addAttribute("title", "휴가 신청 수정");
         model.addAttribute("vacationStatusList",vacationStatusList());
@@ -122,7 +121,7 @@ public class VacationController {
         log.info("세션 값 : "+employeeId);
 
         // 휴가 신청 내역 조회
-        Page<VacationRequestDTO> vacationRequestList = vacationService.findAllTeam(employeeId, pageable);
+        Page<VacationRequestDTO> vacationRequestList = vacationService.findAllTeamSearchPending(employeeId, pageable);
         log.info("휴가 신청 내역 조회 : {}",vacationRequestList);
 
         // header title 넘겨주기
