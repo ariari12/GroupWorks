@@ -49,24 +49,29 @@
                 <td>수주 담당자</td>
                 <!--/* 수주서: 수주 담당자:직원 */-->
                 <td colspan="3">
-                    <input th:if="${division == 1}" class="table-input" type="text" id="manager1Name" placeholder="수주 담당자 성함을 입력하세요." required>
+                    <th:block th:if="${division == 1}">
+                        <input class="table-input" type="text" id="managerName" placeholder="수주 담당자를 선택하세요." readonly required>
+                        <button class="btn btn-primary none-print" id="chooseManager" type="button">거래처 담당자 선택</button>
+                        <input type="hidden" id="managerId" readonly required>
+                    </th:block>
                     <th:block th:if="${division == 2}">
-                        <input class="table-input" type="text" id="manager1Name" placeholder="수주 담당자를 선택하세요." readonly required>
+                        <input class="table-input" type="text" id="employeeName" placeholder="수주 담당자를 선택하세요." readonly required>
                         <button class="btn btn-danger none-print" id="chooseEmployee" type="button">담당자 사원 선택</button>
-                        <input type="hidden" id="employee" readonly required>
+                        <input type="hidden" id="employeeId" readonly required>
                     </th:block>
                 </td>
             </tr>
             <tr>
                 <td>담당자 연락처</td>
                 <td>
-                    <input th:if="${division == 1}" class="table-input" type="text" id="manager1Phone" placeholder="수주 담당자 연락처를 입력하세요." required>
-                    <input th:if="${division == 2}" class="table-input" type="text" id="manager1Phone" placeholder="수주 담당자를 선택하세요." readonly required>
+                    <input th:if="${division == 1}" class="table-input" type="text" id="managerPhone" placeholder="수주 담당자를 선택하세요." readonly required>
+                    <input th:if="${division == 2}" class="table-input" type="text" id="employeePhone" placeholder="수주 담당자를 선택하세요." readonly required>
                 </td>
                 <td>담당자 이메일</td>
                 <td>
-                    <input th:if="${division == 1}" class="table-input" type="text" id="manager1Email" placeholder="수주 담당자 이메일을 입력하세요." required>
-                    <input th:if="${division == 2}" class="table-input" type="text" id="manager1Email" placeholder="수주 담당자를 선택하세요." readonly required>
+
+                    <input th:if="${division == 1}" class="table-input" type="text" id="managerEmail" placeholder="수주 담당자를 선택하세요." readonly required>
+                    <input th:if="${division == 2}" class="table-input" type="text" id="employeeEmail" placeholder="수주 담당자를 선택하세요." readonly required>
                 </td>
             </tr>
         </table>
@@ -111,24 +116,28 @@
                 <td>발주 담당자</td>
                 <!--/* 발주서: 발주 담당자:직원 */-->
                 <td colspan="3">
-                    <input th:if="${division == 2}" class="table-input" type="text" id="manager2Name" placeholder="발주 담당자를 입력하세요" required>
                     <th:block th:if="${division == 1}">
-                        <input class="table-input" type="text" id="manager2Name" placeholder="발주 담당자를 선택하세요." readonly required>
+                        <input class="table-input" type="text" id="employeeName" placeholder="발주 담당자를 선택하세요." readonly required>
                         <button class="btn btn-danger none-print" id="chooseEmployee" type="button">담당자 사원 선택</button>
-                        <input type="hidden" id="employee" required>
+                        <input type="hidden" id="employeeId" required>
+                    </th:block>
+                    <th:block th:if="${division == 2}">
+                        <input class="table-input" type="text" id="managerName" placeholder="발주 담당자를 선택하세요." readonly required>
+                        <button class="btn btn-primary none-print" id="chooseManager" type="button">거래처 담당자 선택</button>
+                        <input type="hidden" id="managerId" readonly required>
                     </th:block>
                 </td>
             </tr>
             <tr>
                 <td>담당자 연락처</td>
                 <td>
-                    <input th:if="${division == 1}" class="table-input" type="text" id="manager2Phone" placeholder="발주 담당자를 선택하세요." readonly required>
-                    <input th:if="${division == 2}" class="table-input" type="text" id="manager2Phone" placeholder="발주 담당자 연락처를 입력하세요." required>
+                    <input th:if="${division == 1}" class="table-input" type="text" id="employeePhone" placeholder="발주 담당자를 선택하세요." readonly required>
+                    <input th:if="${division == 2}" class="table-input" type="text" id="managerPhone" placeholder="발주 담당자를 선택하세요." readonly required>
                 </td>
                 <td>담당자 이메일</td>
                 <td>
-                    <input th:if="${division == 1}" class="table-input" type="text" id="manager2Email" placeholder="수주 담당자를 선택하세요." readonly required>
-                    <input th:if="${division == 2}" class="table-input" type="text" id="manager2Email" placeholder="수주 담당자 이메일을 입력하세요." required>
+                    <input th:if="${division == 1}" class="table-input" type="text" id="employeeEmail" placeholder="수주 담당자를 선택하세요." readonly required>
+                    <input th:if="${division == 2}" class="table-input" type="text" id="managerEmail" placeholder="수주 담당자를 선택하세요." readonly required>
                 </td>
 
             </tr>
@@ -188,6 +197,19 @@
         </div>
     </div>
 </form>
+
+<!--/* 거래처 미 선택 중 거래처 담당자 선택 버튼을 클릭 했을 때 알림토스트 */-->
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+    <div id="managerToastTemplate" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+            <img src="" class="rounded me-2" alt="">
+            <strong class="me-auto">거래처 담당자 선택 알림</strong>
+            <small class="text-body-secondary">1 sec ago</small>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body"></div>
+    </div>
+</div>
 </th:block>
 
 <th:block layout:fragment="javascript">

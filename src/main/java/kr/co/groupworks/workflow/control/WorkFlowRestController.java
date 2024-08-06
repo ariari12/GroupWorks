@@ -173,4 +173,21 @@ public class WorkFlowRestController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
 
+    /* 전자결재 통계 */
+    @GetMapping(value = "/work-flow/stat/{code}")
+    public ResponseEntity<Object> workStatus(@PathVariable int code, HttpSession session) {
+        log.info("WorkFlowRestController - workStatus ok, param: {}", code);
+
+        SessionEmployeeDTO sessionDTO = (SessionEmployeeDTO) session.getAttribute("employee");
+        log.info("WorkFlowRestController - workStatus ok, sessionDTO: {}", sessionDTO);
+
+        Object result = workFlowService.getWorkflowStatistics(sessionDTO.getEmployeeId(), sessionDTO.getDepartment().getDepartmentId(), code);
+        if (result != null) {
+            log.info("WorkFlowRestController - workStatus ok, result: {}", result);
+            return ResponseEntity.ok().body(result);
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+    }
+
+
 }

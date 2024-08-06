@@ -6,7 +6,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     document.getElementById('registerBusiness').addEventListener("click", ev => registerWindow());
     document.getElementById('chooseBusiness').addEventListener("click", ev => chooseBusinessWindow());
-    document.getElementById('chooseEmployee').addEventListener("click", ev => chooseManagerWindow());
+    document.getElementById('chooseEmployee').addEventListener("click", ev => chooseEmployeeWindow());
+    document.getElementById('chooseManager').addEventListener("click", ev => chooseManagerWindow());
     document.getElementById('findZip').addEventListener("click", ev => addresZip());
 
     document.getElementById('orderForm').addEventListener('submit', ev => frmSubmit(ev));
@@ -70,12 +71,14 @@ function registerWindow() {
     }
 }
 
+const WINDOW_SIZE = "width=1400, height=1200, left=300, top=30";
+
 /* 거래처 목록 */
 let businessListWindow;
 let businessListener;
 function chooseBusinessWindow() {
     if (!businessListWindow || businessListWindow.closed) {
-        businessListWindow = window.open("/materialflow/business-select", "거래처 목록",  "width=1400, height=1000, left=300, top=30");
+        businessListWindow = window.open("/materialflow/business-select", "거래처 목록",  WINDOW_SIZE);
         businessListener = ev => businessReceive(ev);
         window.addEventListener("message", businessListener, false);
     } else {
@@ -101,16 +104,22 @@ function businessReceive(event) {
     window.removeEventListener("message", businessListener);
 }
 
-/* 담당자 사원 선택 */
-let employeeListWindow;
+/* 거래처 담당자 선택 */
+let managerListWindow;
 let managerListener;
 function chooseManagerWindow() {
-    if (!employeeListWindow || employeeListWindow.closed) {
-        employeeListWindow = window.open("/materialflow/manager-select", "거래처 목록",  "width=1400, height=1000, left=300, top=30");
+    if (!managerListWindow || managerListWindow.closed) {
+        let businessId = document.getElementById("businessId").value;
+        console.log(businessId);
+        if(businessId === undefined || businessId < 1) {
+            toastInfo("<span style=\"color: #bb2d3b; font-size: 16px;\">거래처를 먼저 선택해주세요.</span>");
+            return;
+        }
+        managerListWindow = window.open("/materialflow/manager-select/" + businessId, "거래처 목록",  WINDOW_SIZE);
         managerListener = ev => managerReceive(ev);
         window.addEventListener("message", managerListener, false);
     } else {
-        employeeListWindow.focus();
+        managerListWindow.focus();
     }
 }
 /* 담당자 사원 정보 받기 */
@@ -118,18 +127,38 @@ function managerReceive(event) {
     if (event.origin !== window.location.origin) { return; }
 
     const division = document.getElementById("division").value;
-    document.getElementById("employee").value = event.data.id;
+    document.getElementById("managerId").value = event.data.id;
 
-    if(division === '1') {
-        document.getElementById("manager2Name").value = event.data.name;
-        document.getElementById("manager2Phone").value = event.data.phone;
-        document.getElementById("manager2Email").value = event.data.email;
-    } else if(division === '2') {
-        document.getElementById("manager1Name").value = event.data.name;
-        document.getElementById("manager1Phone").value = event.data.phone;
-        document.getElementById("manager1Email").value = event.data.email;
-    }
+    document.getElementById("managerName").value = event.data.name;
+    document.getElementById("managerPhone").value = event.data.phone;
+    document.getElementById("managerEmail").value = event.data.email;
     window.removeEventListener("message", managerListener);
+}
+
+
+/* 담당자 사원 선택 */
+let employeeListWindow;
+let employeeListener;
+function chooseEmployeeWindow() {
+    if (!employeeListWindow || employeeListWindow.closed) {
+        employeeListWindow = window.open("/materialflow/employee-select", "거래처 목록",  WINDOW_SIZE);
+        employeeListener = ev => employeeReceive(ev);
+        window.addEventListener("message", employeeListener, false);
+    } else {
+        employeeListWindow.focus();
+    }
+}
+/* 담당자 사원 정보 받기 */
+function employeeReceive(event) {
+    if (event.origin !== window.location.origin) { return; }
+
+    const division = document.getElementById("division").value;
+    document.getElementById("employeeId").value = event.data.id;
+
+    document.getElementById("employeeName").value = event.data.name;
+    document.getElementById("employeePhone").value = event.data.phone;
+    document.getElementById("employeeEmail").value = event.data.email;
+    window.removeEventListener("message", employeeListener);
 }
 
 /* 납품 주소, 우편번호 */
@@ -217,10 +246,8 @@ function calculateTotal(input) {
         price = 10;
     }
     const totalField = row.querySelector('input[name="itemTotal"]');
-
     const total = quantity * price;
     totalField.value = total;
-
     updateTotal();
 }
 /* 모든 품목 합계 계산 */
@@ -232,7 +259,6 @@ function updateTotal() {
         const itemTotal = row.querySelector('[name="itemTotal"]').value;
         total += parseFloat(itemTotal) || 0;
     });
-
     document.getElementById('total').value = total;
     let tex = document.getElementById('tex').value;
     if(tex > 1) {
@@ -245,28 +271,26 @@ function frmSubmit(event) {
     event.preventDefault(); // form 제출 막기
 
     // 폼 데이터 수집
-    const orderCode = document.getElementById('orderCode').value;
-    const classification = document.getElementById('division').value;
-    const totalAmount = document.getElementById('total').value;
-    const tex = document.getElementById('tex').value;
-    const orderDate = document.getElementById('orderDate').value;
-    const dueDate = document.getElementById('dueDate').value;
     const items = [];
 
     // 각 품목 행의 데이터를 수집하여 배열에 추가
     document.querySelectorAll('#itemTable tbody tr').forEach(function (row) {
-        const itemName = row.querySelector('input[name="itemName"]').value;
-        const itemQuantity = row.querySelector('input[name="itemQuantity"]').value;
-        const itemPrice = row.querySelector('input[name="itemPrice"]').value;
-        const itemTotal = row.querySelector('input[name="itemTotal"]').value;
-        items.push({itemName, itemQuantity, itemPrice, itemTotal});
+        items.push({
+            itemName: row.querySelector('input[name="itemName"]').value,
+            itemQuantity: row.querySelector('input[name="itemQuantity"]').value,
+            itemPrice: row.querySelector('input[name="itemPrice"]').value,
+            itemTotal: row.querySelector('input[name="itemTotal"]').value
+        });
     });
 
     // 발주서 데이터 객체 생성
     const orderData = {
-        orderNumber,
-        orderDate,
-        supplier,
+        orderCode: document.getElementById('orderCode').value,
+        classification: document.getElementById('division').value,
+        totalAmount: document.getElementById('total').value,
+        tex: document.getElementById('tex').value,
+        orderDate: document.getElementById('orderDate').value,
+        dueDate: document.getElementById('dueDate').value,
         items
     };
 
@@ -291,4 +315,20 @@ function ajaxRequest(url, method, data, callback, err) {
             err();
         }
     })
+}
+
+
+function toastInfo(msgTag) {
+    // 템플릿 토스트 요소를 복제하여 새로운 토스트 생성
+    const clonedToast = document.getElementById('managerToastTemplate').cloneNode(true);
+
+    // 토스트 내용 업데이트
+    clonedToast.querySelector('.toast-body').innerHTML = msgTag;
+
+    // 복제된 토스트를 토스트 컨테이너에 추가
+    document.querySelector('.toast-container').appendChild(clonedToast);
+
+    // Initialize Bootstrap Toast for the new toast
+    const newToast = new bootstrap.Toast(clonedToast);
+    newToast.show();
 }

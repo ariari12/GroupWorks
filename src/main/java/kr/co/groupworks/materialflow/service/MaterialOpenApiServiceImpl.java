@@ -1,11 +1,10 @@
 package kr.co.groupworks.materialflow.service;
 
 import kr.co.groupworks.materialflow.dto.BusinessDTO;
+import kr.co.groupworks.materialflow.dto.ManagerDTO;
 import kr.co.groupworks.materialflow.entity.Business;
-import kr.co.groupworks.materialflow.repository.BomRepository;
-import kr.co.groupworks.materialflow.repository.BusinessRepository;
-import kr.co.groupworks.materialflow.repository.MesRepository;
-import kr.co.groupworks.materialflow.repository.OrderRepository;
+import kr.co.groupworks.materialflow.entity.BusinessManager;
+import kr.co.groupworks.materialflow.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -18,8 +17,9 @@ import java.util.List;
 @Transactional
 @RequiredArgsConstructor
 public class MaterialOpenApiServiceImpl implements MaterialOpenApiService {
-    private final OrderRepository orderRepository;
+    private final BusinessManagerRepository managerRepository;
     private final BusinessRepository businessRepository;
+    private final OrderRepository orderRepository;
     private final BomRepository bomRepository;
     private final MesRepository MesRepository;
 
@@ -38,4 +38,26 @@ public class MaterialOpenApiServiceImpl implements MaterialOpenApiService {
         businessRepository.saveAll(businessList);
         return true;
     }
+
+    @Override
+    public ManagerDTO getManager(Long managerId) {
+        BusinessManager bm = managerRepository.findById(managerId).orElse(null);
+        return bm == null ? null : new ManagerDTO(bm);
+    }
+
+    @Override
+    public List<ManagerDTO> getAllManager() {
+        return managerRepository.findAll().stream().map(ManagerDTO::new).toList();
+    }
+
+    @Override
+    public List<ManagerDTO> getManagersByBusiness(Long businessId) {
+        return managerRepository.findByBusiness_Id(businessId).stream().map(ManagerDTO::new).toList();
+    }
+
+    @Override
+    public void setManagers(List<ManagerDTO> managerList) {
+        managerRepository.saveAll(managerList.stream().map(ManagerDTO::dtoToEntity).toList());
+    }
+
 }
