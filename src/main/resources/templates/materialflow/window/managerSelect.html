@@ -34,7 +34,7 @@
     <div class="card-header">
         <!-- 아이콘 변경 필요 -->
         <i class="bi bi-folder-fill"></i>
-        거래처 목록
+        사원 목록
     </div>
     <div class="card-body">
         <table id="table" class="table table-hover" style="width:100%">
@@ -42,25 +42,20 @@
             <tr>
                 <th>소속부서 명</th>
                 <th>사원 명</th>
-                <th>이메일</th>
                 <th>연락처</th>
+                <th>이메일</th>
             </tr>
             </thead>
             <tbody>
-            <!--/*@thymesVar id="businessList" type="java.util.List"*/-->
-            <tr th:if="${businessList.size() > 1}" th:each="list : ${businessList}" onclick="sendDataToParent(this)">
-                <!--/*@thymesVar id="list" type="kr.co.groupworks.materialflow.entity.Business"*/-->
+            <tr th:if="${managerList.size() > 1}" th:each="list : ${managerList}" onclick="sendDataToParent(this)">
+               <!--/*@thymesVar id="list" type="kr.co.groupworks.materialflow.dto.EmployeeDTO"*/-->
                 <td>
                     <input type="hidden" th:value="${list.getId()}">
-                    <input style="border: none;" type="text" th:value="${list.getBusinessNumber()}" size="10" readonly>
+                    <input style="border: none;" type="text" th:value="${list.getDepartment()}" size="10" readonly>
                 </td>
-                <td th:text="${list.getBusinessName()}"></td>
-                <td th:text="${list.getCeo()}"></td>
-                <td th:text="${list.getType()}"></td>
-                <td th:text="${list.getItem()}"></td>
-                <td th:text="${list.getAddress()}"></td>
-                <td th:text="${list.getCeoTel()}"></td>
-                <td th:text="${list.getFax()}"></td>
+                <td th:text="${list.getName()}"></td>
+                <td th:text="${list.getPhone()}"></td>
+                <td th:text="${list.getEmail()}"></td>
             </tr>
             </tbody>
         </table>
@@ -69,20 +64,13 @@
 
 <script>
     function sendDataToParent(tr) {
-        // tr 요소에서 데이터 추출
         const inputs = tr.querySelectorAll('td input');
         const data = {
             id: inputs[0].value,
-            businessNumber: inputs[1].value,
-            businessName: tr.children[1].innerText,
-            ceo: tr.children[2].innerText,
-            type: tr.children[3].innerText,
-            item: tr.children[4].innerText,
-            address: tr.children[5].innerText,
-            ceoTel: tr.children[6].innerText,
-            fax: tr.children[7].innerText
+            name: tr.children[1].innerText,
+            phone: tr.children[2].innerText,
+            email: tr.children[3].innerText,
         };
-        // JSON으로 변환하여 부모 창으로 전송
         window.opener.postMessage(data, window.location.origin);
         window.close();
     }

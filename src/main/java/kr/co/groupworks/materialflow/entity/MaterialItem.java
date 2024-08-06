@@ -12,13 +12,13 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MaterialItem {
-    @Schema(name = "자재 고유 번호", defaultValue = "0")
+    @Schema(description = "자재 고유 번호", defaultValue = "0")
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "item_id")
     private long id;
 
-    @Schema(name = "자재 상태", defaultValue = "입고", description = "1입하예정, 2입고, 3생산, 4출하예정, 5출고")
+    @Schema(description = "자재 상태(1:입하예정, 2:입고, 3:생산, 4:출하예정, 5:출고)", defaultValue = "입고")
     @Convert(converter = ItemStatusConverter.class)
     private ItemStatus itemStatus;
 

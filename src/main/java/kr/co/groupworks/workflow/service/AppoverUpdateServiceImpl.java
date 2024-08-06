@@ -1,5 +1,6 @@
 package kr.co.groupworks.workflow.service;
 
+import io.micrometer.observation.annotation.Observed;
 import kr.co.groupworks.employee.entity.Employee;
 import kr.co.groupworks.workflow.dto.dto.ApproverDTO;
 import kr.co.groupworks.workflow.entity.ApproverEntity;
@@ -19,6 +20,7 @@ import java.util.List;
 public class AppoverUpdateServiceImpl implements AppoverUpdateService {
     private final ApproversRepository approverRepository;
 
+    @Observed
     public boolean setApproverUpdate(Employee employee) {
         List<ApproverEntity> approvalList = approverRepository.findByEmployeeIdAndApprovalMethodAndApproval(employee.getEmployeeId(), 0, 0);
 //        approvalList.forEach(a -> {log.info("{}", ApproverDTO.entityToDto(a));});

@@ -1,5 +1,6 @@
 package kr.co.groupworks.workflow.control;
 
+import io.swagger.v3.oas.annotations.Hidden;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import kr.co.groupworks.employee.dto.SessionEmployeeDTO;
@@ -24,6 +25,7 @@ import java.util.Map;
 
 @Slf4j
 @RestController
+@Hidden
 @RequiredArgsConstructor
 public class WorkFlowRestController {
     private final WorkFlowService workFlowService;

@@ -79,12 +79,8 @@
             id: inputs[0].value,
             businessNumber: inputs[1].value,
             businessName: tr.children[1].innerText,
-            ceo: tr.children[2].innerText,
             type: tr.children[3].innerText,
             item: tr.children[4].innerText,
-            address: tr.children[5].innerText,
-            ceoTel: tr.children[6].innerText,
-            fax: tr.children[7].innerText
         };
         // JSON으로 변환하여 부모 창으로 전송
         window.opener.postMessage(data, window.location.origin);

@@ -1,6 +1,8 @@
 package kr.co.groupworks.materialflow.control;
 
-import kr.co.groupworks.materialflow.entity.Business;
+import io.swagger.v3.oas.annotations.Hidden;
+import kr.co.groupworks.materialflow.dto.BusinessDTO;
+import kr.co.groupworks.materialflow.dto.EmployeeDTO;
 import kr.co.groupworks.materialflow.service.MaterialOpenApiService;
 import kr.co.groupworks.materialflow.service.MaterialService;
 import lombok.RequiredArgsConstructor;
@@ -11,9 +13,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Slf4j
+@Hidden
 @Controller
 @RequestMapping(value = "/materialflow")
 @RequiredArgsConstructor
@@ -48,8 +53,10 @@ public class MaterialFlowManagerController {
             subTitle = "수주서 양식";
         }
         model.addAttribute("division", f);
+        model.addAttribute("orderCode", getOrderCode(f));
         model.addAttribute(ATTR_TITLE, title);
         model.addAttribute(ATTR_SUB_TITLE, subTitle);
+        model.addAttribute("office", materialOpenApiService.getBusiness(0L));
         return "materialflow/newOrder";
     }
 
@@ -92,26 +99,40 @@ public class MaterialFlowManagerController {
     /* 거래처 선택 창 */
     @GetMapping(value = "/business-select")
     public String businessSelect(Model model) {
-        log.info("business-select");
-        List<Business> businessList = (List<Business>)materialOpenApiService.getBusiness(null);
-        String title = "거래처 선택", subTitle = "거래처 목록";
+        String title = "거래처 선택";
+        List<BusinessDTO> businessList = (List<BusinessDTO>)materialOpenApiService.getBusiness(null);
+        log.info("business-select, title: {}, size: {}", title, businessList.size());
+
         model.addAttribute(ATTR_TITLE, title);
-        model.addAttribute(ATTR_SUB_TITLE, subTitle);
-        log.info("business-select, size: " + businessList.size());
+        model.addAttribute(ATTR_SUB_TITLE, title);
         model.addAttribute("businessList", businessList);
+
         return "materialflow/window/businessSelect";
     }
     /* 발주/수주 담당자 선택 창 */
     @GetMapping(value = "/manager-select")
     public String managerSelect(Model model) {
-        log.info("manager-select");
-//        List<Employee> managerList = ;
-        String title = "담당자 선택", subTitle = "사원 목록";
+        String title = "담당자 선택";
+        List<EmployeeDTO> managerList = materialService.getAllManager();
+        log.info("manager-select, title: {}, size: {}", title, managerList.size());
+
         model.addAttribute(ATTR_TITLE, title);
-        model.addAttribute(ATTR_SUB_TITLE, subTitle);
-//        log.info("manager-select, size: " + managerList.size());
-//        model.addAttribute("managerList", managerList);
+        model.addAttribute(ATTR_SUB_TITLE, title);
+        model.addAttribute("managerList", managerList);
+
         return "materialflow/window/managerSelect";
+    }
+
+    private String getOrderCode(Integer f) {
+        LocalDateTime now = LocalDateTime.now();
+        String code = now.format(DateTimeFormatter.ofPattern("yyyyMMddHH"));
+        /*
+         * 고유 주문 번호: (발주:0A, 수주 0B) + 작성시각(ms)
+         * 주문 번호: 작성날짜 + "-" + 고유 주문 번호 + "품목개수"
+         * example: 20120618-0A337
+         */
+        return code + "-" + (f == 1 ? "0A" : "0B")
+                + now.format(DateTimeFormatter.ofPattern("SSS")) ;
     }
 
 }

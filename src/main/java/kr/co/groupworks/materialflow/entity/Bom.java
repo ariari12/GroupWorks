@@ -39,7 +39,7 @@ public class Bom {
     @Schema(name = "납품 우편번호", defaultValue = "1")
     private String zipCode;
 
-    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
-    @JoinColumn(name = "mes_id")
-    private List<Mes> mesList;
+    @OneToMany
+    @JoinColumn(name = "item_id")
+    private List<MaterialItem> itemList;
 }

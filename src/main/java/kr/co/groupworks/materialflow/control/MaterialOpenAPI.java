@@ -25,7 +25,7 @@ public class MaterialOpenAPI {
     private final MaterialOpenApiService materialOpenApiService;
 
     @Operation(tags = "통합 자재/유통 관리(Material Flow Management) OpenAPI", summary = "거래처 데이터 제공 API", description = "거래처 등록번호에 따른 거래처 데이터 제공 (*생략 시 전체 거래처 데이터 제공)")
-    @Parameter(name = "businessId", example = "거래처 등록 번호", required = false, description = "해당 거래처 등록번호에 따른 거래처 데이터 제공 (*생략 시 전체 거래처 데이터 제공)")
+    @Parameter(name = "businessId", example = "거래처 등록 번호", description = "해당 거래처 등록번호에 따른 거래처 데이터 제공 (*생략 시 전체 거래처 데이터 제공, 0:본사)")
     @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = Business.class)))
     @GetMapping("/business")
     public ResponseEntity<Object> business(@RequestParam(required = false) Long businessId) {

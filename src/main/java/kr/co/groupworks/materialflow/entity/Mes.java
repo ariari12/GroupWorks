@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Table(name = "materialflow_mes")
@@ -14,25 +15,29 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Mes {
-    @Schema(name = "생산 기록번호", defaultValue = "02132454")
+    @Schema(description = "생산 기록번호", defaultValue = "02132454")
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "mes_id")
     private Long id;
 
-    @Schema(name = "제품 코드", defaultValue = "02132454")
+    @Schema(description = "제품 코드", defaultValue = "02132454")
     private String itemCode;
-    @Schema(name = "제품 명", defaultValue = "우유")
+    @Schema(description = "제품 명", defaultValue = "우유")
     private String itemName;
-    @Schema(name = "공정 장소", defaultValue = "우유공장1")
+    @Schema(description = "공정 장소", defaultValue = "우유공장1")
     private String process;
-    @Schema(name = "생산 수량", defaultValue = "100")
+    @Schema(description = "생산 수량", defaultValue = "100")
     private Long quantity;
-    @Schema(name = "불량품 수량", defaultValue = "11")
+    @Schema(description = "불량품 수량", defaultValue = "11")
     private Long defectsNum;
-    @Schema(name = "단가", defaultValue = "1000")
+    @Schema(description = "단가", defaultValue = "1000")
     private Long unitPrice;
-    @Schema(name = "제조일자", defaultValue = "1999.11.27")
+    @Schema(description = "제조일자", defaultValue = "1999.11.27")
     private LocalDate manufactureDate;
+
+    @OneToMany
+    @JoinColumn(name = "item_id")
+    private List<MaterialItem> itemList;
 }
 

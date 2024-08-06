@@ -1,8 +1,7 @@
 package kr.co.groupworks.board.repository;
 
 import kr.co.groupworks.board.entity.Board;
-import kr.co.groupworks.board.entity.BoardType;
-import kr.co.groupworks.entity.cis.Department;
+import kr.co.groupworks.department.entity.Department;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

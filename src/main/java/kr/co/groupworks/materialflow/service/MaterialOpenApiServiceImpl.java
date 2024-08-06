@@ -1,5 +1,6 @@
 package kr.co.groupworks.materialflow.service;
 
+import kr.co.groupworks.materialflow.dto.BusinessDTO;
 import kr.co.groupworks.materialflow.entity.Business;
 import kr.co.groupworks.materialflow.repository.BomRepository;
 import kr.co.groupworks.materialflow.repository.BusinessRepository;
@@ -25,9 +26,10 @@ public class MaterialOpenApiServiceImpl implements MaterialOpenApiService {
     @Override
     public Object getBusiness(Long businessId) {
         if (businessId == null) {
-            return businessRepository.findAll();
+            return businessRepository.findByIdGreaterThan(0L).stream().map(BusinessDTO::new).toList();
         }
-        return businessRepository.findById(businessId).orElse(null);
+        Business b = businessRepository.findById(businessId).orElse(null);
+        return b != null ? new BusinessDTO(b) : null;
     }
 
     @Override

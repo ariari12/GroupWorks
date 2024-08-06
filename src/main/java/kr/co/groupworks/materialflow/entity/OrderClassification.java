@@ -9,7 +9,11 @@ public enum OrderClassification {
     ;
     private final String label;
 
-    OrderClassification(String label) {
-        this.label = label;
+    OrderClassification(String l) {
+        this.label = l;
+    }
+
+    public static OrderClassification getClassification(Integer i) {
+        return OrderClassification.values()[i];
     }
 }

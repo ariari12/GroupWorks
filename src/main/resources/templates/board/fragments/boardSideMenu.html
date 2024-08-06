@@ -16,7 +16,7 @@
                 공지사항
             </a>
 
-            <a class="nav-link collapsed" th:href="@{|/board/${session.employee.departmentId}/list|}">
+            <a class="nav-link collapsed" th:href="@{|/board/${session.employee.getDepartment().departmentId}/list|}">
                 부서게시판
             </a>
         </nav>

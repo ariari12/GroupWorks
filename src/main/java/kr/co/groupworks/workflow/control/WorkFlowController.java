@@ -1,5 +1,6 @@
 package kr.co.groupworks.workflow.control;
 
+import io.swagger.v3.oas.annotations.Hidden;
 import jakarta.servlet.http.HttpSession;
 import kr.co.groupworks.employee.dto.SessionEmployeeDTO;
 import kr.co.groupworks.workflow.dto.dto.ApproverDTO;
@@ -24,6 +25,7 @@ import java.util.Map;
 
 @Slf4j
 @Controller
+@Hidden
 @RequestMapping("/work-flow")
 @RequiredArgsConstructor
 public class WorkFlowController {
