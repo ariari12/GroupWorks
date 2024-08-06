@@ -39,7 +39,7 @@ public interface MailRepository extends MongoRepository<Mail, String> {
 //  ==================================================================================================
 
 //    중요 메일함에 사용하는 JPA
-    @Query(value = "{ 'mail_receiver': ?0, 'mail_status': 1 }", sort = "{mail_sendtime : -1}")
+    @Query(value = "{  '$or': [ {'mail_receiver': ?0}, {'mail_sender': ?0} ], 'mail_status': 1 }", sort = "{mail_sendtime : -1}")
     Page<Mail> findImportantByReceiver(String receiverEmail,  Pageable pageable);
 
 //    휴지통 메일함에 사용하는 JPA
