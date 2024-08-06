@@ -176,10 +176,21 @@
                         <div class="pb-3 mb-0 small lh-sm border-bottom w-100">
                             <!--보낸 사람(이메일) + 보낸 시간-->
                             <div class="d-flex justify-content-between" style="margin: 0 0 10px 0">
-                                <strong class="text-gray-dark"
-                                        th:text="${mail.getMailSenderName()}+'('+${mail.getMailSender()}+')'">
-                                </strong>
-                                <th:block th:text="${mail.getMailSendTime()}"></th:block>
+
+                                <!--발신메일일때-->
+                                <th:block th:if="${mail.getMailSenderName()} == ${employee.employeeName}">
+                                    <strong class="text-gray-dark"
+                                            th:text="${mail.getMailReceiverName()}+'('+${mail.getMailReceiver()}+')'">
+                                    </strong>
+                                </th:block>
+                                <!--수신메일일때-->
+                                <th:block th:if="${mail.getMailReceiverName()} == ${employee.employeeName} and ${mail.getMailSender()} != ${mail.getMailReceiver()}">
+                                    <strong class="text-gray-dark"
+                                            th:text="${mail.getMailSenderName()}+'('+${mail.getMailSender()}+')'">
+                                    </strong>
+                                </th:block>
+                                <th:block th:text="${mail.getMailSendTime()} + (${mail.getMailSenderName()} == ${employee.employeeName} ? ' (보낸메일)' : '(받은메일)')"></th:block>
+
                             </div>
 
                             <!--제목 + 아이콘-->
