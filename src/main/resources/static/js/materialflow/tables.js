@@ -1,11 +1,10 @@
 // Call the dataTables jQuery plugin
 $(document).ready(function() {
-
     for (let i = 1; i <= 4; i++) {
         $('#table' + i).DataTable({
             info: false,
             ordering: true,
-            order: [[5, 'desc']],
+            order: [[0, 'desc']],
             paging: true,
             scrollX: true,
             scrollCollapse: true,

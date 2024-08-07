@@ -1,5 +1,6 @@
 package kr.co.groupworks.workflow.control;
 
+import io.swagger.v3.oas.annotations.Hidden;
 import jakarta.servlet.http.HttpSession;
 import kr.co.groupworks.employee.dto.SessionEmployeeDTO;
 import kr.co.groupworks.workflow.dto.dto.ApproverDTO;
@@ -24,6 +25,7 @@ import java.util.Map;
 
 @Slf4j
 @Controller
+@Hidden
 @RequestMapping("/work-flow")
 @RequiredArgsConstructor
 public class WorkFlowController {
@@ -43,7 +45,7 @@ public class WorkFlowController {
     @Getter
     public enum AttributeName {
         TITLE("title"),
-        SUB_TITLE("subTitle"),
+        SUB_TITLE("subtitle"),
         WORK_FLOW_DTO("workFlowDto"),
         EMPLOYEE("employee"),   // SessionEmployee(사원 세션 정보)
         APPROVAl("approval"),   // 승인내역
@@ -66,6 +68,7 @@ public class WorkFlowController {
     }
 
     private String title;
+    private String subtitle;
 
     /* Request Approval(결제 요청) Form */
     @GetMapping( APPROVAL_REQUEST)
@@ -73,10 +76,11 @@ public class WorkFlowController {
         // 사원정보 받아오기
         WorkFlowDTO workFlowDTO = workFlowService.getWorkflowDTO(getEmployeeId(session));
         title = "Approval Request";
+        subtitle = "전자결재 발송";
 //        log.info("WorkFlowController - request title: {}, setDto: {}", title, workFlowDTO);
 
         model.addAttribute(AttributeName.TITLE.getStatus(), title);
-        model.addAttribute(AttributeName.SUB_TITLE.getStatus(), title);
+        model.addAttribute(AttributeName.SUB_TITLE.getStatus(), subtitle);
         model.addAttribute(AttributeName.WORK_FLOW_DTO.getStatus(), workFlowDTO);
 
         return DIRECTORY + "/approvalForm";
@@ -86,11 +90,12 @@ public class WorkFlowController {
     @GetMapping(APPROVAL_HISTORY)
     public String approvalHistory(Model model, HttpSession session) {
         title = "Approval History";
+        subtitle = "전자결재 발송 내역";
 //        log.info("WorkFlowController - approval history");
 
         Map<String, List<WorkflowListVO>> result = workFlowService.getMyWorkFlowDTOList(getEmployeeId(session));
         model.addAttribute(AttributeName.TITLE.getStatus(), title);
-        model.addAttribute(AttributeName.SUB_TITLE.getStatus(), title);
+        model.addAttribute(AttributeName.SUB_TITLE.getStatus(), subtitle);
         /* approval(승인), progress(진행), rejection(반려) */
         result.forEach(model::addAttribute);
 
@@ -100,11 +105,12 @@ public class WorkFlowController {
     /* Approval History details (결재 상세 내용) */
     @GetMapping(value = DETAIL + "{workflowId}")
     public String detail( HttpSession session, Model model, @PathVariable int workflowId) {
-        title = "Approval Detail";
+        title = "Approval Detail History";
+        subtitle = "전자결재 발송 상세내역";
 //        log.info("WorkFlowController - approval detail, id: {}, title: {}", workflowId, title);
 
         model.addAttribute(AttributeName.TITLE.getStatus(), title);
-        model.addAttribute(AttributeName.SUB_TITLE.getStatus(), title);
+        model.addAttribute(AttributeName.SUB_TITLE.getStatus(), subtitle);
         getDetailAttribute(workFlowService.getDetailWorkFlow(workflowId), getEmployeeId(session))
                 .forEach((k, v) -> {
                     if (k.equals("listMap")) {
@@ -124,10 +130,11 @@ public class WorkFlowController {
     @GetMapping(WORK_STATUS)
     public String workStat(Model model, HttpSession session) {
         title = "WorkFlow Status Board";
-        log.info("WorkFlowController - stat title: {}", title);
+        subtitle = "전자결재 현황";
+//        log.info("WorkFlowController - stat title: {}", title);
 
         model.addAttribute(AttributeName.TITLE.getStatus(), title);
-        model.addAttribute(AttributeName.SUB_TITLE.getStatus(), title);
+        model.addAttribute(AttributeName.SUB_TITLE.getStatus(), subtitle);
         model.addAttribute(AttributeName.APPROVAl.getStatus(), workFlowService.getWorkflowStatistics(getEmployeeId(session), getDepartmentId(session), 3));
 
         return DIRECTORY + "/workStatus";
@@ -136,12 +143,13 @@ public class WorkFlowController {
     /* 결재 대기(승인대기 / 요청대기) 목록 */
     @GetMapping(WORK_WAIT)
     public String workWait(Model model, HttpSession session) {
-        title = "WorkFlow Wait";
+        title = "WorkFlow Approve Wait List";
+        subtitle = "결재 승인대기 목록";
         long employeeId = getEmployeeId(session);
 //        log.info("WorkFlowController - wait, id: {}, title: {}", employeeId, title);
 
         model.addAttribute(AttributeName.TITLE.getStatus(), title);
-        model.addAttribute(AttributeName.SUB_TITLE.getStatus(), title);
+        model.addAttribute(AttributeName.SUB_TITLE.getStatus(), subtitle);
         workFlowService.getWorkflowWaitList(employeeId).forEach(model::addAttribute);
 
         return DIRECTORY + "/approvalWaitList";
@@ -150,12 +158,13 @@ public class WorkFlowController {
     /* Referer 참조 / Collaborator 협조 */
     @GetMapping(WORK_REFERR)
     public String workRefer(Model model, HttpSession session) {
-        title = "WorkFlow Refer";
+        title = "WorkFlow Referer / Collaborator List";
+        subtitle = "결재 참조 / 협조 목록";
         long employeeId = getEmployeeId(session);
 //        log.info("WorkFlowController - wait");
 
         model.addAttribute(AttributeName.TITLE.getStatus(), title);
-        model.addAttribute(AttributeName.SUB_TITLE.getStatus(), title);
+        model.addAttribute(AttributeName.SUB_TITLE.getStatus(), subtitle);
         workFlowService.getWorkflowReferrerList(employeeId).forEach(model::addAttribute);
 
         return DIRECTORY + "/approvalReferrerList";

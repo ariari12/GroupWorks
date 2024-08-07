@@ -3,13 +3,12 @@ package kr.co.groupworks.board.entity;
 import jakarta.persistence.*;
 import kr.co.groupworks.department.entity.Department;
 import kr.co.groupworks.employee.entity.Employee;
-import kr.co.groupworks.BaseEntity;
-import kr.co.groupworks.entity.cis.Department;
-import kr.co.groupworks.entity.cis.Employee;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.ColumnDefault;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDateTime;
 

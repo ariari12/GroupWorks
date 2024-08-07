@@ -31,7 +31,6 @@
     <!--/*@thymesVar id="workFlowDto" type="kr.co.groupworks.workflow.dto.dto.WorkFlowDTO"*/-->
     <form id="approveForm" class="row g-3 needs-validation" th:action="@{/work-flow/request}" th:object="${workFlowDto}"
         enctype="multipart/form-data" method="post" novalidate>
-
         <!--/* 결재 구분 */-->
         <div class="input-group mb-3" style="width: 1200px;">
             <label class="input-group-text" for="category">결재 구분</label>

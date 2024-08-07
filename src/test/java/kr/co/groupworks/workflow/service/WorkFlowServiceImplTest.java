@@ -7,9 +7,12 @@ import kr.co.groupworks.employee.repository.EmployeeRepository;
 import kr.co.groupworks.workflow.dto.dto.ApproverDTO;
 import kr.co.groupworks.workflow.dto.dto.OpenWorkflowVO;
 import kr.co.groupworks.workflow.dto.employee.EmployeeDTO;
+
 import lombok.extern.slf4j.Slf4j;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockMultipartFile;
@@ -19,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -54,7 +58,6 @@ class WorkFlowServiceImplTest {
                 .phoneNumber("010-1111-0000")
                 .address("주소")
                 .gender("남")
-                .joinDate(LocalDateTime.now())
                 .salary(300000L)
                 .supervisorId(0L)
                 .build()

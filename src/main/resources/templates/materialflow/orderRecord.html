@@ -6,9 +6,15 @@
 </th:block>
 
 <th:block layout:fragment="content">
+<div class="mb-4">
+    <a href="/materialflow/new-order/1" class="btn btn-success">발주서 작성</a>
+    <a href="/materialflow/new-order/2" class="btn btn-primary">수주서 작성</a>
+</div>
+
+<div class="card mb-4">
     <div class="card-header">
         <i class="bi bi-folder-fill"></i>
-        발주 대기 목록
+        수주 목록
     </div>
     <div class="card-body">
         <table id="table1" class="table table-hover" style="width:100%">
@@ -34,7 +40,6 @@
                 <th>진행도</th>
             </tr>
             </thead>
-
             <tbody>
             <!--/*@thymesVar id="approval" type="kr.co.groupworks.workflow.dto.dto.WorkFlowDTO"*/-->
             <tr th:onclick="load([[${list.id}]])" th:each="list : ${approval}">
@@ -69,10 +74,13 @@
             </tbody>
         </table>
     </div>
+</div>
 
+<div class="card mb-4">
     <div class="card-header">
+        <!-- 아이콘 변경 필요 -->
         <i class="bi bi-folder-fill"></i>
-        발주 완료 목록
+        발주 목록
     </div>
     <div class="card-body">
         <table id="table2" class="table table-hover" style="width:100%">
@@ -101,7 +109,7 @@
 
             <tbody>
             <!--/*@thymesVar id="approval" type="kr.co.groupworks.workflow.dto.dto.WorkFlowDTO"*/-->
-            <tr th:onclick="load([[${list.id}]])" th:each="list : ${approval}">
+            <tr th:onclick="load([[${list.id}]])" th:each="list : ${list}">
                 <!--/* 거래처 정보 */-->
                 <td>[[${list.id}]]</td>
                 <td>[[${list.workFlowType}]]</td>
@@ -133,9 +141,7 @@
             </tbody>
         </table>
     </div>
-
-    <a href="/material/new-order" class="btn btn-danger">발주하기</a>
-
+</div>
 </th:block>
 
 <th:block layout:fragment="javascript">

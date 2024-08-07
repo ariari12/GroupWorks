@@ -1,6 +1,6 @@
 package kr.co.groupworks.board.controller;
 
-import kr.co.groupworks.dto.cis.employee.SessionEmployeeDTO;
+import kr.co.groupworks.employee.dto.SessionEmployeeDTO;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 
@@ -20,7 +20,7 @@ public class BoardUtils {
 
     // 부서 접근 권한 메소드
     public static boolean hasAccessToDepartment (SessionEmployeeDTO sessionEmployeeDTO, Long departmentId) {
-        Long empDepartmentId = sessionEmployeeDTO.getDepartmentId();
+        Long empDepartmentId = sessionEmployeeDTO.getDepartment().getDepartmentId();
         return empDepartmentId.equals(departmentId);
     }
 
