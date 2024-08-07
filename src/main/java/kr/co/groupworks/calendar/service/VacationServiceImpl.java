@@ -251,9 +251,9 @@ public class VacationServiceImpl implements VacationService{
     @Override
     public VacationModifyFormDTO findCalendarByIdAndEmployee(Long calendarId, Long employeeId) {
         log.info("service {}",employeeId);
-        Employee employee = employeeRepository.findById(employeeId)
+        employeeRepository.findById(employeeId)
                 .orElseThrow(() -> new EntityNotFoundException("사원을 찾을 수 없습니다. " + employeeId));
-        Vacation vacation = vacationRepository.findByCalendarIdAndEmployee(calendarId, employee)
+        Vacation vacation = vacationRepository.findById(calendarId)
                 .orElseThrow(() -> new EntityNotFoundException("휴가 일정이 존재하지 않습니다."));
         VacationModifyFormDTO modifyFormDto = vacationMapper.toModifyFormDto(vacation);
         if(!vacation.getAttachmentList().isEmpty()){
