@@ -5,124 +5,117 @@
 <!--/* Sidebar */-->
 <th:block th:fragment="side">
 
+    <div id="layoutSidenav_nav">
+        <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+            <div class="sb-sidenav-menu">
+                <div class="nav">
 
-<div id="layoutSidenav_nav">
-    <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+                    <th:block th:replace="~{/attendance/fragments/attendanceTime::commuteTime}"></th:block>
 
-        <div class="sb-sidenav-menu">
-
-            <div class="nav">
-                <!--/* 그룹 소 제목 */-->
-                <div class="sb-sidenav-menu-heading">Core</div>
-                <a class="nav-link" href="/main">
-                    <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                    MAIN
-                </a>
-
-                <!--/* 그룹 소 제목 */-->
-                <div class="sb-sidenav-menu-heading">Interface</div>
-                <!--/* Layouts 최상위 */-->
-                <a class="nav-link collapsed" data-bs-toggle="collapse" data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
-                    <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
-                    Layouts
-                    <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                </a>
-                <!--/* Layouts 하위 */-->
-                <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
-                    <nav class="sb-sidenav-menu-nested nav">
-                        <a class="nav-link" href="layout-static.html">Static Navigation</a>
-                        <a class="nav-link" href="layout-sidenav-light.html">Light Sidenav</a>
-                    </nav>
-                </div>
-
-
-                <!--/* Pages 최상위 */-->
-                <a class="nav-link collapsed" data-bs-toggle="collapse" data-bs-target="#collapsePages" aria-expanded="false" aria-controls="collapsePages">
-                    <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
-                    Pages
-                    <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                </a>
-
-                <!--/* Pages 하위 그룹 */-->
-                <div class="collapse" id="collapsePages" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
-                    <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
-
-                        <!--/* Authentication 상위 메뉴 */-->
-                        <a class="nav-link collapsed" data-bs-toggle="collapse" data-bs-target="#pagesCollapseAuth" aria-expanded="false" aria-controls="pagesCollapseAuth">
-                            Authentication
-                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                        </a>
-                        <!--/* Authentication 하위 메뉴 */-->
-                        <div class="collapse" id="pagesCollapseAuth" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
-                            <nav class="sb-sidenav-menu-nested nav">
-                                <a class="nav-link" href="login.html">Login</a>
-                                <a class="nav-link" href="register.html">Register</a>
-                                <a class="nav-link" href="password.html">Forgot Password</a>
-                            </nav>
-                        </div>
-
-                        <!--/* Error 상위 메뉴 */-->
-                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#pagesCollapseError" aria-expanded="false" aria-controls="pagesCollapseError">
-                            Error
-                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                        </a>
-                        <!--/* Error 하위 메뉴 */-->
-                        <!--/* 필요한 만큼 수정 ERROR PAGE TEST */-->
-                        <div class="collapse" id="pagesCollapseError" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
-                            <nav class="sb-sidenav-menu-nested nav">
-                                <a class="nav-link" href="/templates/error/401.html">401 Page</a>
-                                <a class="nav-link" href="/templates/error/404.html">404 Page</a>
-                                <a class="nav-link" href="/templates/error/500.html">500 Page</a>
-                            </nav>
-                        </div>
-
-                    </nav>
-                </div>
-
-
-                <th:block th:replace="workflow/workFlowSideMenu.html :: workFlowSideMenu"></th:block>
-
-                <th:block th:replace="kah/fragments/kahSideMenu :: kahSideMenu"></th:block>
-
-                <th:block th:replace="cis/fragments/cisSideMenu :: cisSideMenu"></th:block>
-
-                <!--/* Sidebar Menu 필요한 만큼 추가 */-->
-                <!--/* 그룹 소 제목 */-->
-                <div class="sb-sidenav-menu-heading">Addons</div>
-                <!--/* 샘플:기능01 최상위 */-->
-                <nav class="sb-sidenav-menu-nested nav">
-                    <a class="nav-link" href="#">
-                        <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
-                        기능01
-
-                        <!--/* 하위 그룹 및 드롭다운 추가 가능 */-->
+                    <!--/* 그룹 소 제목 */-->
+                    <div class="sb-sidenav-menu-heading">Core</div>
+                    <a class="nav-link" href="/main">
+                        <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                        MAIN
                     </a>
-                </nav>
 
+                    <!--/* 그룹 소 제목 */-->
+                    <div class="sb-sidenav-menu-heading">Interface</div>
+                    <!--/* Layouts 최상위 */-->
+                    <a class="nav-link collapsed" data-bs-toggle="collapse" data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
+                        <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
+                        Layouts
+                        <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                    </a>
+                    <!--/* Layouts 하위 */-->
+                    <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
+                        <nav class="sb-sidenav-menu-nested nav">
+                            <a class="nav-link" href="layout-static.html">Static Navigation</a>
+                            <a class="nav-link" href="layout-sidenav-light.html">Light Sidenav</a>
+                        </nav>
+                    </div>
+
+
+                    <!--/* Pages 최상위 */-->
+                    <a class="nav-link collapsed" data-bs-toggle="collapse" data-bs-target="#collapsePages" aria-expanded="false" aria-controls="collapsePages">
+                        <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
+                        Pages
+                        <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                    </a>
+
+                    <!--/* Pages 하위 그룹 */-->
+                    <div class="collapse" id="collapsePages" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
+                        <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
+
+                            <!--/* Authentication 상위 메뉴 */-->
+                            <a class="nav-link collapsed" data-bs-toggle="collapse" data-bs-target="#pagesCollapseAuth" aria-expanded="false" aria-controls="pagesCollapseAuth">
+                                Authentication
+                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                            </a>
+                            <!--/* Authentication 하위 메뉴 */-->
+                            <div class="collapse" id="pagesCollapseAuth" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
+                                <nav class="sb-sidenav-menu-nested nav">
+                                    <a class="nav-link" href="/main">Login</a>
+                                    <a class="nav-link" href="/main">Register</a>
+                                    <a class="nav-link" href="/main">Forgot Password</a>
+                                </nav>
+                            </div>
+
+                            <!--/* Error 상위 메뉴 */-->
+                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#pagesCollapseError" aria-expanded="false" aria-controls="pagesCollapseError">
+                                Error
+                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                            </a>
+                            <!--/* Error 하위 메뉴 */-->
+                            <!--/* 필요한 만큼 수정 ERROR PAGE TEST */-->
+                            <div class="collapse" id="pagesCollapseError" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
+                                <nav class="sb-sidenav-menu-nested nav">
+                                    <a class="nav-link" href="/templates/error/401.html">401 Page</a>
+                                    <a class="nav-link" href="/templates/error/404.html">404 Page</a>
+                                    <a class="nav-link" href="/templates/error/500.html">500 Page</a>
+                                </nav>
+                            </div>
+
+                        </nav>
+                    </div>
+
+                    <th:block th:replace="~{workflow/workFlowSideMenu.html :: workFlowSideMenu}"></th:block>
+
+                    <th:block th:replace="~{board/fragments/boardSideMenu :: boardSideMenu}"></th:block>
+
+                    <th:block th:replace="~{calendar/fragments/kahSideMenu :: kahSideMenu}"></th:block>
+
+                    <th:block th:replace="~{attendance/fragments/attendanceSideMenu :: commuteSideMenu}"></th:block>
+
+                    <th:block th:replace="~{mail/mailSideMenu.html :: mailSideMenu}"></th:block>
+
+                    <th:block th:replace="~{videoConference/videoConferenceSideMenu.html :: videoConferenceSideMenu}"></th:block>
+
+                    <th:block th:replace="~{materialflow/materialflowSideMenu.html :: materialFlowSideMenu}"></th:block>
+
+                </div>
+
+                <!--/* Sidebar footer */-->
+                <div class="sb-sidenav-footer">
+                    <div class="small" >Logged in as : <span th:text="${session.employee.getEmployeeName()}"></span></div>
+                </div>
             </div>
-        </div>
+        </nav>
+    </div>
+    <div id="layoutSidenav_content">
+        <main>
+            <div class="container-fluid px-4">
+                <h1 class="mt-4">[[${title}]]</h1>
+                <ol class="breadcrumb mb-4">
+                    <li class="breadcrumb-item active">[[${subtitle}]]</li>
+                </ol>
+                <!--/* !필수 Contents */-->
+                <th:block layout:fragment="content">
 
-        <!--/* Sidebar footer */-->
-        <div class="sb-sidenav-footer">
-            <div class="small">Logged in as:</div>
-            로그인된 계정 이름
-        </div>
-    </nav>
-</div>
-<div id="layoutSidenav_content">
-    <main>
-        <div class="container-fluid px-4">
-            <h1 class="mt-4">[[${title}]]</h1>
-            <ol class="breadcrumb mb-4">
-                <li class="breadcrumb-item active">[[${subtitle}]]</li>
-            </ol>
-            <!--/* !필수 Contents */-->
-            <th:block layout:fragment="content">
-
-            </th:block>
-        </div>
-    </main>
-    <!--/* !필수 footer */-->
-    <footer th:replace="~{fragment/footer::footer}"></footer>
-</div>
+                </th:block>
+            </div>
+        </main>
+        <!--/* !필수 footer */-->
+        <footer th:replace="~{fragment/footer::footer}"></footer>
+    </div>
 </th:block>

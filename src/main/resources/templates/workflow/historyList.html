@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}"
+>
+
+<th:block layout:fragment="css">
+    <link rel="stylesheet" href="/css/workflow/table-hover.css">
+    <style>
+        #click {
+            width: 100px;
+            height: 100px;
+            background: white;
+            margin-top: -100px;
+            margin-left: 316px;
+            border: none;
+        }
+    </style>
+</th:block>
+
+<th:block layout:fragment="content">
+    <!--/* approvalWait Table */-->
+    <div th:replace="~{/workflow/approvehistorytables/approvedHistory :: approvedHistory}"></div>
+    <div th:replace="~{/workflow/approvehistorytables/progressHistory.html :: progressHistory}"></div>
+    <div th:replace="~{/workflow/approvehistorytables/rejectionHistory.html :: rejectionHistory}"></div>
+</th:block>
+
+<th:block layout:fragment="javascript">
+    <script src="/js/workflow/tables/approval-history-tables.js"></script>
+    <script src="/js/workflow/tables/table-hover.js"></script>
+</th:block>

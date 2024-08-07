@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}"
+>
+
+<th:block layout:fragment="css">
+    <style>
+        .file-list {
+            margin-top: -6px;
+            height: 200px;
+            overflow: auto;
+            border: 1px solid #989898;
+            padding: 10px;
+        }
+        .file-list .filebox p {
+            font-size: 14px;
+            margin-top: 10px;
+            display: inline-block;
+        }
+        .file-list .filebox .delete i{
+            color: #ff5353;
+            margin-left: 5px;
+        }
+    </style>
+</th:block>
+
+<th:block layout:fragment="content">
+
+    <!--/*@thymesVar id="workFlowDto" type="kr.co.groupworks.workflow.dto.dto.WorkFlowDTO"*/-->
+    <form id="approveForm" class="row g-3 needs-validation" th:action="@{/work-flow/request}" th:object="${workFlowDto}"
+        enctype="multipart/form-data" method="post" novalidate>
+
+        <!--/* 결재 구분 */-->
+        <div class="input-group mb-3" style="width: 1200px;">
+            <label class="input-group-text" for="category">결재 구분</label>
+            <select class="form-select" id="category" th:field="*{workFlowType}">
+                <option selected value="0">결재분류를 선택하세요.</option>
+                <option value="1">업무 결재</option>
+                <option value="2">재무 결재</option>
+                <option value="3">예산 결재</option>
+                <option value="4">구매 결재</option>
+                <option value="5">보고 결재</option>
+                <option value="6">특별 결재</option>
+            </select>
+            <span class="input-group-text">결재 번호</span>
+            <label for="docsNum">
+                <input type="hidden" th:field="*{id}">
+                <input class="form-control prevent-enter-submit" id="docsNum" type="text" th:field="*{code}" size="40" readonly>
+            </label>
+            <span class="input-group-text">기안날짜</span>
+            <label for="draft-date">
+                <input type="datetime-local" class="form-control" id="draft-date" th:field="*{draftDate}" placeholder="기안일" aria-label="기안일" aria-describedby="basic-addon2">
+            </label>
+        </div>
+
+        <div class="input-group mb-3">
+            <span class="input-group-text">사원번호</span>
+            <label>
+                <input class="form-control prevent-enter-submit" type="text" th:field="*{employeeId}" size="7" readonly>
+            </label>
+            <span class="input-group-text">기안자 명</span>
+            <label>
+                <input class="form-control prevent-enter-submit" type="text" th:field="*{employeeName}" size="7" readonly>
+            </label>
+            <span class="input-group-text">소속부서</span>
+            <label>
+                <input type="hidden" th:field="*{departmentId}">
+                <input class="form-control prevent-enter-submit" type="text" th:field="*{department}" size="7" readonly>
+            </label>
+            <span class="input-group-text">직급</span>
+            <label>
+                <input class="form-control prevent-enter-submit" type="text" th:field="*{employeeRank}" size="5" readonly>
+            </label>
+            <span class="input-group-text">이메일</span>
+            <label>
+                <input class="form-control prevent-enter-submit" type="text" th:field="*{email}" size="30" readonly>
+            </label>
+            <span class="input-group-text">연락처</span>
+            <label>
+                <input class="form-control prevent-enter-submit" type="text" th:field="*{phone}" size="15" readonlsy>
+            </label>
+        </div>
+
+        <div class="input-group mb-3">
+            <span class="input-group-text">결재 제목</span>
+            <input type="text" class="form-control prevent-enter-submit" th:field="*{title}"
+                placeholder="결재 제목을 입력해주세요." aria-label="결재 제목을 입력해주세요.">
+        </div>
+
+        <!--/* 결재선 */-->
+        <div class="input-group">
+            <div class="mb-3">
+                <label for="search" class="form-label">결재선 선택</label>
+                <div class="dropdown input-group">
+                    <span class="input-group-text" id="basic-addon1">결재자</span>
+                    <!-- style="width: 400px;" -->
+                    <input id="search" type="text"
+                        class="form-control dropdown-toggle prevent-enter-submit"
+                        data-bs-toggle="dropdown" aria-expanded="false"
+                        placeholder="사원명 또는 부서명 또는 직함를 입력해주세요." aria-label="사원명 또는 부서명 또는 직함를 입력해주세요."
+                        aria-describedby="basic-addon3 basic-addon4">
+
+                    <!--/* 추천 키워드 */-->
+                    <ul class="dropdown-menu overflow-auto" style="width: 900px; height: 200px;"></ul>
+
+                    <button id="add-member" class="btn btn-outline-secondary" type="button">결재자로 추가</button>
+                    <button id="add-member2" class="btn btn-outline-secondary" type="button">협조자로 추가</button>
+                    <button id="add-member3" class="btn btn-outline-secondary" type="button">참조자로 추가</button>
+                </div>
+                <br>
+
+                <div class="input-group">
+                    <div class="mb-3">
+                        <label class="form-label">결재선</label>
+                        <div class="form-text">결재자는 해당 결재를 승인하는 대상입니다.</div>
+                        <ul style="width: 450px;" class="list-group border" id="approval-line"></ul>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">결재 협조선</label>
+                        <div class="form-text">협조자는 해당 결재 내용을 시행하는 담당자입니다.</div>
+                        <ul style="width: 450px;" class="list-group border" id="collaborator-line"></ul>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">결재 참조선</label>
+                        <div class="form-text">결재 참조자는 해당 결재 내용을 열람만 할 수 있습니다.</div>
+                        <ul style="width: 450px;" class="list-group border" id="referrer-line"></ul>
+                    </div>
+                    <input type="hidden" th:field="*{approverCount}">
+                </div>
+            </div>
+        </div>
+
+        <div class="input-group">
+            <span class="input-group-text">결재 내용</span>
+            <textarea class="form-control" id="description" name="description" th:field="*{description}"
+                rows="10" placeholder="결재 내용을 입력하세요." aria-label="결재 내용을 입력하세요." style="resize: none;">
+            </textarea>
+        </div>
+
+        <div class="mb-3">
+            <div class="input-group">
+                <span class="input-group-text">비용</span>
+                <input type="text" class="form-control prevent-enter-submit" id="cost" name="cost" th:field="*{cost}"
+                    aria-label="Amount (to the nearest dollar)">
+                <span class="input-group-text">\</span>
+            </div>
+            <div class="form-text">필요 시 작성하세요.</div>
+        </div>
+        <div class="input-group mb-3">
+            <input type="file" class="form-control" id="files" onchange="addFile(this);" multiple>
+            <button class="btn btn-outline-secondary" type="button" onclick="resetFile()">초기화</button>
+        </div>
+        <div id="file-list"></div>
+
+        <div class="col-12">
+            <!--/* Button trigger modal */-->
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                결재 요청
+            </button>
+
+            <!--/* Modal */-->
+            <div class="modal fade" id="exampleModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="exampleModalLabel">결재 발송 알림</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body"><h5 class="text-center">발송 하시겠습니까?</h5></div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">발송</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+</th:block>
+
+<th:block layout:fragment="javascript">
+    <script>
+        const userNum = "[[${workFlowDto.employeeId}]]";
+        const deptNum = "[[${workFlowDto.departmentId}]]";
+        const tabNames = ["#category", "#draft-date"];
+
+        $(() => {
+            documentNumbering();
+            disableEnterSubmit();
+        });
+
+        /* 문서 번호 정하기 */
+        function documentNumbering() {
+            $("#docsNum").val(userNum + deptNum + " - ");
+
+            for (const item of tabNames) {
+                $(item).mouseout(function () {
+                    let suffix = $("#category option:selected").val() + " - ";
+                    suffix += $("#draft-date").val().replaceAll("-","").replace("T","").replace(":","");
+                    $("#docsNum").val(userNum + deptNum + " - " + suffix);
+                });
+            }
+        }
+
+        /* 엔터 키 전송 막기 */
+        function disableEnterSubmit() {
+            $('.prevent-enter-submit').on('keydown', function(event) {
+                if (event.key === 'Enter') {
+                    event.preventDefault();
+                }
+            });
+        }
+
+    </script>
+    <script src="/js/workflow/add-line.js"></script>
+    <script src="/js/workflow/file-select.js"></script>
+</th:block>

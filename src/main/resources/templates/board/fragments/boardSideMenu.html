@@ -1,0 +1,27 @@
+<html xmlns:th="http://www.thymeleaf.org">
+
+<th:block th:fragment="boardSideMenu">
+    <a class="nav-link collapsed" data-bs-toggle="collapse" data-bs-target="#boardPages" aria-expanded="false" aria-controls="collapsePages">
+        <div class="sb-nav-link-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-archive" viewBox="0 0 16 16">
+                <path d="M0 2a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1v7.5a2.5 2.5 0 0 1-2.5 2.5h-9A2.5 2.5 0 0 1 1 12.5V5a1 1 0 0 1-1-1zm2 3v7.5A1.5 1.5 0 0 0 3.5 14h9a1.5 1.5 0 0 0 1.5-1.5V5zm13-3H1v2h14zM5 7.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5"/>
+            </svg>
+        </div>게시판
+        <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+    </a>
+
+    <div class="collapse" id="boardPages" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
+        <nav class="sb-sidenav-menu-nested nav accordion">
+            <a class="nav-link collapsed" href="/board/notice/list">
+                공지사항
+            </a>
+
+            <a class="nav-link collapsed" th:href="@{|/board/${session.employee.departmentId}/list|}">
+                부서게시판
+            </a>
+        </nav>
+    </div>
+
+
+</th:block>
+

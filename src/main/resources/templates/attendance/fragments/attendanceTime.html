@@ -1,0 +1,15 @@
+<html xmlns:th="http://www.thymeleaf.org">
+
+<th:block th:fragment="commuteTime">
+    <div class="sb-sidenav-menu-heading"><span id="date"></span></div>
+    <span class="nav-link">
+        <div class="sb-nav-link-icon"></div>
+        <span style="font-size: 45px; margin: -30px 0 -10px -5px; color: white;" id="time"></span>
+    </span>
+    <div style="text-align: center;">
+        <input type="button" id="commute-btn"
+               class="btn btn-secondary btn-sm"
+               style="width: 150px; height: 35px; user-select: none;"
+               value="출근하기">
+    </div>
+</th:block>

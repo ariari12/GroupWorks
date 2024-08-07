@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}"
+      data-bs-theme="white">
+<th:block layout:fragment="css">
+    <style>
+        .bd-placeholder-img {
+            font-size: 1.125rem;
+            text-anchor: middle;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            user-select: none;
+        }
+
+        @media (min-width: 768px) {
+            .bd-placeholder-img-lg {
+                font-size: 3.5rem;
+            }
+        }
+
+        .b-example-divider {
+            width: 100%;
+            height: 3rem;
+            background-color: rgba(0, 0, 0, .1);
+            border: solid rgba(0, 0, 0, .15);
+            border-width: 1px 0;
+            box-shadow: inset 0 .5em 1.5em rgba(0, 0, 0, .1), inset 0 .125em .5em rgba(0, 0, 0, .15);
+        }
+
+        .b-example-vr {
+            flex-shrink: 0;
+            width: 1.5rem;
+            height: 100vh;
+        }
+
+        .bi {
+            vertical-align: -.125em;
+            fill: currentColor;
+        }
+
+        .nav-scroller {
+            position: relative;
+            z-index: 2;
+            height: 2.75rem;
+            overflow-y: hidden;
+        }
+
+        .nav-scroller .nav {
+            display: flex;
+            flex-wrap: nowrap;
+            padding-bottom: 1rem;
+            margin-top: -1px;
+            overflow-x: auto;
+            text-align: center;
+            white-space: nowrap;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .btn-bd-primary {
+            --bd-violet-bg: #712cf9;
+            --bd-violet-rgb: 112.520718, 44.062154, 249.437846;
+
+            --bs-btn-font-weight: 600;
+            --bs-btn-color: var(--bs-white);
+            --bs-btn-bg: var(--bd-violet-bg);
+            --bs-btn-border-color: var(--bd-violet-bg);
+            --bs-btn-hover-color: var(--bs-white);
+            --bs-btn-hover-bg: #6528e0;
+            --bs-btn-hover-border-color: #6528e0;
+            --bs-btn-focus-shadow-rgb: var(--bd-violet-rgb);
+            --bs-btn-active-color: var(--bs-btn-hover-color);
+            --bs-btn-active-bg: #5a23c8;
+            --bs-btn-active-border-color: #5a23c8;
+        }
+
+        .bd-mode-toggle {
+            z-index: 1500;
+        }
+
+        .bd-mode-toggle .dropdown-menu .active .bi {
+            display: block !important;
+        }
+        /*@font-face {*/
+        /*    font-family: 'Pretendard-Regular';*/
+        /*    src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');*/
+        /*    font-weight: 400;*/
+        /*    font-style: normal;*/
+        /*}*/
+    </style>
+</th:block>
+<th:block layout:fragment="javascript">
+    <script src="/js/tables/datatables-demo.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="//code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" src="cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.getElementById('passwordChangeBtn').addEventListener('click', function() {
+                var currentPassword = document.getElementById('currentPassword').value;
+                var newPassword = document.getElementById('newPassword').value;
+                var confirmNewPassword = document.getElementById('confirmNewPassword').value;
+                var employeeId = document.getElementById('employeeId').value;
+
+                if (newPassword !== confirmNewPassword) {
+                    alert('새 비밀번호가 일치하지 않습니다.');
+                    return;
+                }
+
+                var xhr = new XMLHttpRequest();
+                xhr.open('PUT', '/employee/modify', true);
+                xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+
+                xhr.onload = function() {
+                    if (xhr.status === 200) {
+                        alert('비밀번호가 성공적으로 변경되었습니다.');
+                    } else {
+                        alert('비밀번호 변경에 실패했습니다. 다시 시도해주세요.');
+                    }
+                };
+
+                xhr.onerror = function() {
+                    alert('요청을 처리하는 동안 오류가 발생했습니다.');
+                };
+
+                var data = JSON.stringify({
+                    employeeId: employeeId,
+                    employeePW: currentPassword,
+                    newEmployeePW: newPassword
+                });
+
+                xhr.send(data);
+            });
+        });
+    </script>
+</th:block>
+
+<th:block layout:fragment="content">
+    <div class="container">
+        <main>
+            <div class="row g-5" style="margin-left: 25%;  font-family: Pretendard-Regular">
+                <div class="col-md-7 col-lg-8" style="@font-face {font-family: 'Pretendard-Regular';src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');font-weight: 400;font-style: normal;}">
+                    <h3 class="mb-3">마이페이지</h3>
+                    <div class="row g-3" style="pointer-events: none">
+                        <div class="col-sm-6">
+                            <label for="employeeId" class="form-label">사원번호</label>
+                            <input type="text" class="form-control" id="employeeId" placeholder="" th:value="${employee.getEmployeeId()}" required>
+                            <div class="invalid-feedback">
+                                Valid first name is required.
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <label for="employeeName" class="form-label">사원이름</label>
+                            <input type="text" class="form-control" id="employeeName" placeholder="" th:value="${employee.getEmployeeName()}" required>
+                            <div class="invalid-feedback">
+                                Valid last name is required.
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <label for="departmentName" class="form-label">부서이름</label>
+                            <input type="text" class="form-control" id="departmentName" placeholder="" th:value="${employee.getDepartment().getDepartmentName()}" required>
+                            <div class="invalid-feedback">
+                                Valid first name is required.
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <label for="rankName" class="form-label">직급</label>
+                            <input type="text" class="form-control" id="rankName" placeholder="" th:value="${employee.getRankName()}" required>
+                            <div class="invalid-feedback">
+                                Valid last name is required.
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <label for="email" class="form-label">이메일</label>
+                            <input type="email" class="form-control" id="email" th:value="${employee.getEmail()}">
+                            <div class="invalid-feedback">
+                                Please enter a valid email address for shipping updates.
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <label for="address" class="form-label">주소</label>
+                            <input type="text" class="form-control" id="address" placeholder="1234 Main St" required th:value="${employee.getAddress()}">
+                            <div class="invalid-feedback">
+                                Please enter your shipping address.
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <label for="address2" class="form-label">입사일</label>
+                            <input type="text" class="form-control" id="address2" placeholder="Apartment or suite" th:value="${employee.getJoinDate()}">
+                        </div>
+
+                    </div>
+
+                    <hr class="my-4">
+
+                    <button class="w-100 btn btn-primary btn-lg" type="button" data-bs-toggle="modal" data-bs-target="#passwordChangeModal">비밀번호 변경하기</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="passwordChangeModal" tabindex="-1" aria-labelledby="passwordChangeModalLabel" aria-hidden="true" style="font-family: Pretendard-Regular">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="passwordChangeModalLabel">비밀번호 변경</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="currentPassword" class="form-label">현재 비밀번호 <small style="font-size: 10px">(초기값은 생년월일입니다.)</small></label>
+                        <input type="password" class="form-control" id="currentPassword" required name="currentPassword">
+                    </div>
+                    <div class="mb-3">
+                        <label for="newPassword" class="form-label">새 비밀번호</label>
+                        <input type="password" class="form-control" id="newPassword" required name="newPassword">
+                    </div>
+                    <div class="mb-3">
+                        <label for="confirmNewPassword" class="form-label">새 비밀번호 확인</label>
+                        <input type="password" class="form-control" id="confirmNewPassword" required name="confirmNewPassword">
+                    </div>
+                    <button type="button" class="btn btn-primary" id="passwordChangeBtn">변경하기</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="/js/bootstrap/bootstrap.bundle.min.js"></script>
+    <script src="/js/mail/offcanvas-navbar.js"></script>
+</th:block>
+</html>

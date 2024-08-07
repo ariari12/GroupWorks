@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+
+<th:block layout:fragment="css">
+    <style>
+        /* CSS style */
+    </style>
+</th:block>
+
+<th:block layout:fragment="javascript">
+    <script src="/js/attendance/datatables.js?v=<%=System.currentTimeMillis() %>"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            flatpickr("#monthYearPicker", {
+                locale: "ko", // 한국어 설정
+                plugins: [
+                    new monthSelectPlugin({
+                        shorthand: true, // 월을 짧게 표시
+                        dateFormat: "Y-m", // 형식 YYYY-MM
+                        altFormat: "Y년 F", // 표시 형식 Month YYYY
+                    })
+                ]
+            });
+
+            document.getElementById('monthYearPicker').addEventListener('change', function(e) {
+                filterDataByMonthYear(e.target.value);
+            });
+
+            function filterDataByMonthYear(selectedDate) {
+                console.log("선택된 날짜:", selectedDate); // YYYY-MM 형식
+            }
+
+            function filterData() {
+                const selectedDate = document.getElementById('monthYearPicker').value;
+                filterDataByMonthYear(selectedDate);
+            }
+        });
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            $('#dataForm').on('submit', function(event) {
+                var monthYearPickerValue = $('#monthYearPicker').val();
+                var formAction = 'commute/' + monthYearPickerValue;
+                $(this).attr('action', formAction);
+            });
+        });
+    </script>
+</th:block>
+
+<th:block layout:fragment="content">
+
+    <div class="row">
+        <h5>근태 현황</h5>
+        <hr>
+        <div class="col-sm-3 mb-3 mb-sm-0">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">이번주 누적</h5>
+                    <p class="card-text">6h 48m</p>
+                </div>
+            </div>
+            <br>
+        </div>
+        <div class="col-sm-3 mb-3 mb-sm-0">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">이번주 초과</h5>
+                    <p class="card-text">0h 0m</p>
+                </div>
+            </div>
+            <br>
+        </div>
+        <div class="col-sm-3 mb-3 mb-sm-0">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">이번달 누적</h5>
+                    <p class="card-text">52h 1m</p>
+                </div>
+            </div>
+            <br>
+        </div>
+        <div class="col-sm-3 mb-3 mb-sm-0">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">이번달 연장</h5>
+                    <p class="card-text">0h 0m</p>
+                </div>
+            </div>
+            <br>
+        </div>
+    </div>
+
+
+    <th:block th:replace="~{attendance/fragments/attendanceTables.html::tables}">
+    </th:block>
+</th:block>
