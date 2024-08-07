@@ -1,9 +1,10 @@
 package kr.co.groupworks.notification.service;
-
-import kr.co.groupworks.notification.dto.NotificationDTO;
-
-import java.util.List;
+import kr.co.groupworks.calendar.entity.Vacation;
+import kr.co.groupworks.employee.entity.Employee;
+import kr.co.groupworks.notification.model.Notification;
 
 public interface NotificationService {
-    List<NotificationDTO> getNotifications();
+    void saveNotification(Notification notification);
+    void sendVacationApproval(Vacation vacation, Employee employee);
+
 }

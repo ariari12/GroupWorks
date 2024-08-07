@@ -14,6 +14,7 @@ import kr.co.groupworks.common.mapper.CalendarAttachmentMapper;
 import kr.co.groupworks.common.mapper.VacationMapper;
 import kr.co.groupworks.employee.entity.Employee;
 import kr.co.groupworks.employee.repository.EmployeeRepository;
+import kr.co.groupworks.notification.service.NotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -46,6 +47,7 @@ public class VacationServiceImpl implements VacationService{
     private final EmployeeRepository employeeRepository;
     private final VacationHistoryRepository vacationHistoryRepository;
     private final VacationMapper vacationMapper;
+    private final NotificationService notificationService;
 
 
 
@@ -378,12 +380,16 @@ public class VacationServiceImpl implements VacationService{
 
     @Override
     public Long approvalVacation(Long calendarId, VacationStatus status, Long employeeId) {
-        Employee employee = employeeRepository.findById(employeeId)
+        Employee senderEmployee = employeeRepository.findById(employeeId)
                 .orElseThrow(() -> new EntityNotFoundException("사원을 찾을 수 없습니다. " + employeeId));
-        Vacation vacation = vacationRepository.findByCalendarIdAndEmployee(calendarId, employee)
+        Vacation vacation = vacationRepository.findById(calendarId)
                 .orElseThrow(() -> new EntityNotFoundException("휴가 일정이 존재하지 않습니다."));
+
         if (vacation.getStatus().equals(VacationStatus.PENDING)) {
             vacation.approvalStatus(status);
+            // sse로 전달할 id
+            notificationService.sendVacationApproval(vacation, senderEmployee);
+
         } else{
             throw new IllegalStateException("검토중인 휴가 신청만 승인/반려가 가능합니다.");
         }
