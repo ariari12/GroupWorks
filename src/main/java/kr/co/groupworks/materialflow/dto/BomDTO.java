@@ -18,7 +18,7 @@ public class BomDTO {
     @Schema(description = "자재 등록 번호", defaultValue = "1")
     private Long id;
 
-    @Schema(description = "품목 코드", defaultValue = "02132454")
+    @Schema(description = "품목 코드", defaultValue = "0A2132454-0AB7-1")
     private String itemCode;
     @Schema(description = "품목 명", defaultValue = "우유")
     private String itemName;
@@ -34,10 +34,8 @@ public class BomDTO {
     private String deliveryLocation;
     @Schema(description = "출고일자", defaultValue = "9999.99.99 97:91")
     private LocalDateTime deliveryTime;
-    @Schema(description = "납품 우편번호", defaultValue = "1")
-    private String zipCode;
 
-    private List<MesDTO> mesList;
+    private List<MaterialItemDTO> itemList;
 
     public BomDTO(Bom b) {
         this
@@ -50,7 +48,7 @@ public class BomDTO {
                 .setStorageTime(b.getStorageTime())
                 .setDeliveryLocation(b.getDeliveryLocation())
                 .setDeliveryTime(b.getDeliveryTime())
-                .setZipCode(b.getZipCode())
+                .setItemList(b.getItemList() == null ? null : b.getItemList().stream().map(MaterialItemDTO::new).toList());
         ;
     }
 
@@ -65,7 +63,7 @@ public class BomDTO {
                 .storageTime(this.storageTime)
                 .deliveryLocation(this.deliveryLocation)
                 .deliveryTime(this.deliveryTime)
-                .zipCode(this.zipCode)
+                .itemList(this.itemList.stream().map(MaterialItemDTO::dtoToEntity).toList())
                 .build();
     }
 }

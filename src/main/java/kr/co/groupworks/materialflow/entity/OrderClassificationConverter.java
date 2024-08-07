@@ -11,6 +11,11 @@ public class OrderClassificationConverter implements AttributeConverter<OrderCla
 
     @Override
     public OrderClassification convertToEntityAttribute(String s) {
-        return OrderClassification.valueOf(s);
+        for (OrderClassification classification : OrderClassification.values()) {
+            if (classification.getLabel().equals(s)) {
+                return classification;
+            }
+        }
+        throw new IllegalArgumentException("Unknown label: " + s);
     }
 }

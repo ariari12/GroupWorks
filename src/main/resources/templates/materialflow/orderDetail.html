@@ -6,7 +6,7 @@
 >
 
 <th:block layout:fragment="css">
-    <link rel="stylesheet" href="/css/materialflow/new-order.css">
+    <link rel="stylesheet" href="/css/materialflow/order-detail.css">
 </th:block>
 
 <th:block layout:fragment="content">
@@ -16,29 +16,26 @@
     </svg>인쇄
 </button>
 
-<form id="orderForm" class="row g-3 needs-validation frm-content" action="/materialflow/new-order" method="post">
+<div id="orderForm" class="row g-3 needs-validation">
     <h3 id="title" class="title-header">[[${title}]]</h3>
-    <input type="hidden" id="division" th:value="${division}">
 
     <div class="input-group mb-3">
         <!--/* 수주자 란 */-->
         <table class="border-white table-margin">
             <tr>
                 <td>납기 예정일자</td>
-                <td colspan="3"><input class="table-input" type="date" id="dueDate" required></td>
+                <td colspan="3" th:text="${order.getOrderDate()}"></td>
             </tr>
             <tr>
-                <td th:if="${division == 1}">수주서 번호</td>
-                <td th:if="${division == 2}">발주서 번호</td>
+                <td th:text="${title + ' 번호'}">]</td>
                 <td colspan="3">
-                    <input class="table-input" type="text" id="orderCode" th:value="${orderCode}" placeholder="발주서 번호를 입력하세요" size="60" readonly required>
+                    <input class="table-input" type="text" id="orderCode" th:value="${order.getOrderCode()}" placeholder="발주서 번호를 입력하세요" size="60" readonly required>
                 </td>
             </tr>
             <tr>
                 <td>공급업체 명</td>
                 <td colspan="3">
                     <th:block th:if="${division == 1}">
-                        <input type="hidden" id="businessId" required>
                         <input class="table-input" type="text" id="receiveBusiness" placeholder="공급업체를 선택하세요." readonly required>
                         <button class="btn btn-success none-print" id="registerBusiness" type="button">거래처 등록</button>
                         <button class="btn btn-primary none-print" id="chooseBusiness" type="button">거래처 선택</button>
@@ -199,7 +196,7 @@
             <button type="submit" class="btn btn-success mt-3 none-print">발주서 제출</button>
         </div>
     </div>
-</form>
+</div>
 
 <!--/* 거래처 미 선택 중 거래처 담당자 선택 버튼을 클릭 했을 때 알림토스트 */-->
 <div class="toast-container position-fixed bottom-0 end-0 p-3">
@@ -216,6 +213,4 @@
 </th:block>
 
 <th:block layout:fragment="javascript">
-    <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
-    <script src="/js/materialflow/new-order.js"></script>
 </th:block>

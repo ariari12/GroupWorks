@@ -1,16 +1,16 @@
 let orderCode;
 document.addEventListener("DOMContentLoaded", function () {
     orderCode = document.getElementById("orderCode").value;
-    disableEnterSubmit();
-    createOrderCode();
+    // disableEnterSubmit();
+    // createOrderCode();
 
-    document.getElementById('registerBusiness').addEventListener("click", ev => registerWindow());
-    document.getElementById('chooseBusiness').addEventListener("click", ev => chooseBusinessWindow());
-    document.getElementById('chooseEmployee').addEventListener("click", ev => chooseEmployeeWindow());
-    document.getElementById('chooseManager').addEventListener("click", ev => chooseManagerWindow());
-    document.getElementById('findZip').addEventListener("click", ev => addresZip());
+    // document.getElementById('registerBusiness').addEventListener("click", ev => registerWindow());
+    // document.getElementById('chooseBusiness').addEventListener("click", ev => chooseBusinessWindow());
+    // document.getElementById('chooseEmployee').addEventListener("click", ev => chooseEmployeeWindow());
+    // document.getElementById('chooseManager').addEventListener("click", ev => chooseManagerWindow());
+    // document.getElementById('findZip').addEventListener("click", ev => addresZip());
 
-    document.getElementById('orderForm').addEventListener('submit', ev => frmSubmit(ev));
+    // document.getElementById('orderForm').addEventListener('submit', ev => frmSubmit(ev));
 })
 
 /* 엔터 키 전송 막기 */

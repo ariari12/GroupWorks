@@ -14,6 +14,9 @@ public enum OrderClassification {
     }
 
     public static OrderClassification getClassification(Integer i) {
+        if (i < 0 || i >= OrderClassification.values().length) {
+            throw new IllegalArgumentException("Invalid index: " + i);
+        }
         return OrderClassification.values()[i];
     }
 }

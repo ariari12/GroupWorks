@@ -21,8 +21,4 @@ public class MaterialItem {
     @Schema(description = "자재 상태(1:입하예정, 2:입고, 3:생산, 4:출하예정, 5:출고)", defaultValue = "입고")
     @Convert(converter = ItemStatusConverter.class)
     private ItemStatus itemStatus;
-
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
-    @JoinColumn(name = "bom_id")
-    private Bom bom;
 }

@@ -36,8 +36,6 @@ public class Bom {
     private String deliveryLocation;
     @Schema(name = "출고일자", defaultValue = "9999.99.99 97:91")
     private LocalDateTime deliveryTime;
-    @Schema(name = "납품 우편번호", defaultValue = "1")
-    private String zipCode;
 
     @OneToMany
     @JoinColumn(name = "item_id")

@@ -121,7 +121,6 @@ public class EmployeeServiceImpl implements EmployeeService {
                         .location(employee.getDepartment().getLocation())
                         .build())
                 .email(employee.getEmail())
-                .joinDate(employee.getJoinDate())
                 .phoneNumber(employee.getPhoneNumber())
                 .address(employee.getAddress())
                 .gender(employee.getGender())

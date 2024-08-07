@@ -22,13 +22,17 @@ public class MaterialItemDTO {
     @Convert(converter = ItemStatusConverter.class)
     private ItemStatus itemStatus;
 
-    private BomDTO bom;
-
     public MaterialItemDTO(MaterialItem mi) {
         this
                 .setId(mi.getId())
                 .setItemStatus(mi.getItemStatus())
-                .setBom(new BomDTO(mi.getBom()))
         ;
+    }
+
+    public MaterialItem dtoToEntity() {
+        return MaterialItem.builder()
+                .id(this.getId())
+                .itemStatus(this.getItemStatus())
+                .build();
     }
 }
