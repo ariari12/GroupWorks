@@ -2,8 +2,17 @@
 ![gw](https://github.com/user-attachments/assets/04761ec1-eba2-4544-a323-98ee8283e824)
 
 # 프로젝트 소개
+## 주제
+- 
+<br/>
+
+## 구성도 
 - 
 - 
+<br/>
+
+## 기능
+- ### Work Flow - 전자 결재
 - 
 -
 
