@@ -78,11 +78,11 @@
 <br/>
 <br/>
 
-![Anurag's github stats](https://github-readme-stats.vercel.app/api?username=appapixie&theme=blue-green)
+- ![Anurag's github stats](https://github-readme-stats.vercel.app/api?username=appapixie&theme=blue-green)
 ![Anurag's github stats](https://github-readme-stats.vercel.app/api/top-langs/?username=appapixie&theme=blue-green)
-![Anurag's github stats](https://github-readme-stats.vercel.app/api?username=ILSEONG&theme=blue-green)
+- ![Anurag's github stats](https://github-readme-stats.vercel.app/api?username=ILSEONG&theme=blue-green)
 ![Anurag's github stats](https://github-readme-stats.vercel.app/api/top-langs/?username=ILSEONG&theme=blue-green)
-![Anurag's github stats](https://github-readme-stats.vercel.app/api?username=sczzsccs&theme=blue-green)
+- ![Anurag's github stats](https://github-readme-stats.vercel.app/api?username=sczzsccs&theme=blue-green)
 ![Anurag's github stats](https://github-readme-stats.vercel.app/api/top-langs/?username=sczzsccs&theme=blue-green)
-![Anurag's github stats](https://github-readme-stats.vercel.app/api?username=ariari12&theme=blue-green)
+- ![Anurag's github stats](https://github-readme-stats.vercel.app/api?username=ariari12&theme=blue-green)
 ![Anurag's github stats](https://github-readme-stats.vercel.app/api/top-langs/?username=ariari12&theme=blue-green)
