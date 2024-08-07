@@ -3,9 +3,11 @@ package kr.co.groupworks.notification.service;
 import kr.co.groupworks.calendar.entity.Vacation;
 import kr.co.groupworks.employee.entity.Employee;
 import kr.co.groupworks.notification.model.Notification;
+import kr.co.groupworks.notification.repository.NotificationRepository;
 import kr.co.groupworks.notification.sse.NotificationSseEmitter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.redis.core.RedisTemplate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -14,12 +16,12 @@ import java.time.format.DateTimeFormatter;
 @Service
 @RequiredArgsConstructor
 public class NotificationServiceImpl implements NotificationService {
-    private final RedisTemplate<String, Object> redisTemplate;
+    private static final Logger log = LoggerFactory.getLogger(NotificationServiceImpl.class);
+    private final NotificationRepository notificationRepository;
     private final NotificationSseEmitter notificationSseEmitter;
 
     public void saveNotification(Notification notification) {
-        String key = "notifications:" + notification.getReceiverId();
-        redisTemplate.opsForList().leftPush(key, notification);
+        notificationRepository.save(notification);
     }
 
     public void sendVacationApproval(Vacation vacation, Employee sender) {
@@ -33,6 +35,7 @@ public class NotificationServiceImpl implements NotificationService {
                 .senderName(sender.getEmployeeName())
                 .receiverName(vacation.getEmployee().getEmployeeName())
                 .build();
+        log.info(notification.getNotificationId());
         saveNotification(notification);
         notificationSseEmitter.sendNotification(notification.getReceiverId(), notification);
     }
