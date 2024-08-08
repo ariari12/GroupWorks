@@ -2,8 +2,47 @@
 ![gw](https://github.com/user-attachments/assets/04761ec1-eba2-4544-a323-98ee8283e824)
 
 # 프로젝트 소개
+
+---
+
+## 팀원 구성
+<table>
+  <tr>
+    <th>유현종</th>
+    <th>최일성</th>
+    <th>이정민</th>
+    <th>김아현</th>
+  </tr>
+  <tr>
+    <td>
+        <img src="https://avatars.githubusercontent.com/u/59546443?v=4">
+        <img src="https://github-readme-stats.vercel.app/api?username=appapixie">
+        <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=appapixie">
+    </td>
+    <td>
+        <img src="https://avatars.githubusercontent.com/u/66054061?v=4">
+        <img src="https://github-readme-stats.vercel.app/api?username=sczzsccs">
+        <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=ILSEONG">
+    </td>
+    <td>
+        <img src="https://avatars.githubusercontent.com/u/104063759?v=4">
+        <img src="https://github-readme-stats.vercel.app/api?username=sczzsccs">
+        <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=sczzsccs">
+    </td>
+    <td>
+        <img src="https://avatars.githubusercontent.com/u/79638001?v=4">
+        <img src="https://github-readme-stats.vercel.app/api?username=ariari12">
+        <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=ariari12">
+    </td>
+  </tr>
+</table>
+
 ## 주제
-- 
+
+---
+
+주제 소개
+
 <br/>
 
 ## 구성도 
@@ -12,36 +51,16 @@
 <br/>
 
 ## 기능
--
--
--
-- ### Work Flow - 전자 결재
-- ### Material Flow - 통합 자재/재고/유통 관리
--
 
-# 팀원 구성
-<table>
-  <tr>
-    <th>김아현</th>
-    <th>이정민</th>
-    <th>유현종</th>
-    <th>최일성</th>
-  </tr>
-  <tr>
-    <td>
-      <img src="https://avatars.githubusercontent.com/u/66054061?v=4">
-    </td>
-    <td>
-      <img src="https://avatars.githubusercontent.com/u/104063759?v=4">
-    </td>
-    <td>
-      <img src="https://avatars.githubusercontent.com/u/59546443?v=4">
-    </td>
-    <td>
-      <img src="https://avatars.githubusercontent.com/u/79638001?v=4">
-    </td>
-  </tr>
-</table>
+- ### <담당: 유현종>
+- ### <담당: 유현종>
+- ### <담당: 최일성>
+- ### <담당: 최일성>
+- ### Work Flow - 전자 결재 <담당: 이정민>
+- ### Material Flow - 통합 자재/재고/유통 관리 <담당: 이정민>
+- ###  <담당: 김아현>
+- ###  <담당: 김아현>
+
 
 # 📚 Stack
 ### FrontEnd
@@ -77,12 +96,3 @@
 
 <br/>
 <br/>
-
-- ![Anurag's github stats](https://github-readme-stats.vercel.app/api?username=appapixie&theme=blue-green)
-![Anurag's github stats](https://github-readme-stats.vercel.app/api/top-langs/?username=appapixie&theme=blue-green)
-- ![Anurag's github stats](https://github-readme-stats.vercel.app/api?username=ILSEONG&theme=blue-green)
-![Anurag's github stats](https://github-readme-stats.vercel.app/api/top-langs/?username=ILSEONG&theme=blue-green)
-- ![Anurag's github stats](https://github-readme-stats.vercel.app/api?username=sczzsccs&theme=blue-green)
-![Anurag's github stats](https://github-readme-stats.vercel.app/api/top-langs/?username=sczzsccs&theme=blue-green)
-- ![Anurag's github stats](https://github-readme-stats.vercel.app/api?username=ariari12&theme=blue-green)
-![Anurag's github stats](https://github-readme-stats.vercel.app/api/top-langs/?username=ariari12&theme=blue-green)
