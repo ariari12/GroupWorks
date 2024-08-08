@@ -175,11 +175,12 @@ const setupSubscriptions = () => {
         }
     });
 
-    stompClient.subscribe(`/topic/peer/endConference/${roomId}`, () => {
-        console.log('Received end conference message');
-        alert("AAAAAAAA");
-
-
+    // 종료 메시지를 수신하여 처리하는 부분
+    stompClient.subscribe(`/topic/peer/endConference/${roomId}`, message => {
+        console.log('Received end conference message:', message);
+        // 상대방이 종료했을 때 remoteStreamDiv 숨기기
+        document.querySelector('#remoteStreamDiv').style.display = 'none';
+        alert('상대방이 화상회의를 종료했습니다.');
         window.location.href = '/main'; // 모든 사용자 리다이렉트
     });
 };
@@ -200,6 +201,7 @@ let onTrack = (event, otherKey) => {
         video.style.height = '360px';  // 크기 설정
         document.getElementById('remoteStreamDiv').appendChild(video);
     }
+
 };
 
 // PeerConnection 생성 함수
@@ -286,19 +288,20 @@ function disconnect(){
         })
     }
 }
-
+// 종료 메시지를 보내는 함수
+const sendEndConferenceMessage = () => {
+    stompClient.send(`/app/peer/endConference/${roomId}`, {}, JSON.stringify({
+        content: "GoodBye!"
+    }));
+};
 // 화상회의 종료 함수
 const handleEndConference = async () => {
     console.log('Sending end conference message');
-    stompClient.send(`/app/peer/endConference/${roomId}`, {}, JSON.stringify({
-        content:"GoodBye!"
-    }));
-
-    setTimeout(()=>{
-        stompClient.disconnect(()=>{
+    setTimeout(() => {
+        stompClient.disconnect(() => {
             console.log("disconnected");
         });
-    },1000);
+    }, 1000);
     disconnect();
     alert('화상회의가 종료되었습니다.'); // 직접 종료 사용자에게도 알림
     window.location.href = '/main';
@@ -351,7 +354,9 @@ document.querySelector('#joinEnterRoomBtn').addEventListener('click', async () =
 document.querySelector('#createStartStreamsBtn').addEventListener('click', async () => {
     console.log('Start button clicked');
     await startConferenceHandler(); // 방 시작하기 핸들러 호출
-    toggleStartEndButton('#createStartStreamsBtn', '종료하기', handleEndConference);
+    document.querySelector('#createStartStreamsBtn').style.display = 'none'; // 시작하기 버튼 숨기기
+    // 종료하기 및 카메라끄기 버튼 표시
+    document.getElementById('controlButtons').style.display = 'block';
 });
 
 const startConferenceHandler = async () => {
@@ -388,7 +393,7 @@ document.querySelector('#joinStartStreamsBtn').addEventListener('click', async (
 
         return;
     }
-    toggleStartEndButton('#joinStartStreamsBtn', '종료하기', handleEndConference);
+    document.querySelector('#joinStartStreamsBtn').style.display = 'none'; // 시작하기 버튼 숨기기
     stompClient.send(`/app/call/key`, {}, {});
     setTimeout(() => {
         otherKeyList.forEach((key) => {
@@ -400,4 +405,37 @@ document.querySelector('#joinStartStreamsBtn').addEventListener('click', async (
             }
         });
     }, 1000);
+
+    // 종료하기 및 카메라끄기 버튼 표시
+    document.getElementById('controlButtons').style.display = 'block';
+});
+
+// 종료하기 버튼 이벤트 리스너를 새로운 종료하기 버튼에 추가
+document.querySelector('#endConferenceBtn').addEventListener('click', async () => {
+    handleEndConference();
+    sendEndConferenceMessage(); // 종료 메시지를 보냄
+    if(localStream.getVideoTracks()[0].enabled){
+        localStream.getVideoTracks()[0].enabled = !localStream.getVideoTracks()[0].enabled;
+    }
+    if(localStream.getAudioTracks()[0].enabled){
+        localStream.getAudioTracks()[0].enabled = !localStream.getAudioTracks()[0].enabled;
+    }
+    document.querySelector('#localStream').style.display = 'none'; // 내 video 컴포넌트를 숨김
+});
+// 카메라 끄기/켜기 버튼 이벤트 리스너
+document.querySelector('#toggleCameraBtn').addEventListener('click', () => {
+    if (localStream) {
+        localStream.getVideoTracks()[0].enabled = !localStream.getVideoTracks()[0].enabled;
+        document.querySelector('#toggleCameraBtn').textContent =
+            localStream.getVideoTracks()[0].enabled ? '카메라 끄기' : '카메라 켜기';
+    }
+});
+
+// 마이크 끄기/켜기 버튼 이벤트 리스너
+document.querySelector('#toggleMicBtn').addEventListener('click', () => {
+    if (localStream) {
+        localStream.getAudioTracks()[0].enabled = !localStream.getAudioTracks()[0].enabled;
+        document.querySelector('#toggleMicBtn').textContent =
+            localStream.getAudioTracks()[0].enabled ? '마이크 끄기' : '마이크 켜기';
+    }
 });
