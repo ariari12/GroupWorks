@@ -42,7 +42,10 @@
     <!-- 내 웹캠 화면을 보여주는 video html -->
     <div class="video-container">
         <video id="localStream" autoplay playsinline controls style="display: none;"></video>
-        <div id="remoteStreamDiv"></div>
+        <div id="remoteStreamDiv">
+            <!-- remoteStreamDiv 내부의 video 요소도 동일한 크기로 설정 -->
+            <video id="remoteStream" autoplay playsinline controls style="display: none;"></video>
+        </div>
     </div>
     <!-- webRTC 연결을 위한 js  -->
     <script src="/js/videoConference/peerConfig.js"></script>
