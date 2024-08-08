@@ -32,21 +32,27 @@
             <input type="text" class="roomIdInput" id="joinRoomIdInput"/>
             <button type="button" class="enterRoomBtn" id="joinEnterRoomBtn">채팅방 참여하기</button>
             <!-- enterRoomBtn 클릭시 나타남, Streams 정보를 담은 Peer 를 웹소켓 ( 시그널링 )   -->
-            <button type="button" class="startStreamsBtn" id="joinStartStreamsBtn" style="display: none; ;">시작하기</button>
+            <button type="button" class="startStreamsBtn" id="joinStartStreamsBtn" style="display: none;">시작하기</button>
         </div>
 
-    </div>
+        <br><br>
+        <!-- 종료하기 및 카메라끄기 버튼을 담을 div 추가 -->
+        <div id="controlButtons" style="display: none; text-align: center; width: 640px">
+            <button type="button" id="endConferenceBtn">종료하기</button>
+            <button type="button" id="toggleCameraBtn">카메라 끄기</button>
+            <button type="button" id="toggleMicBtn">마이크 끄기</button>
+        </div>
 
-
-
-    <!-- 내 웹캠 화면을 보여주는 video html -->
-    <div class="video-container">
-        <video id="localStream" autoplay playsinline controls style="display: none;"></video>
-        <div id="remoteStreamDiv">
-            <!-- remoteStreamDiv 내부의 video 요소도 동일한 크기로 설정 -->
-            <video id="remoteStream" autoplay playsinline controls style="display: none;"></video>
+        <!-- 내 웹캠 화면을 보여주는 video html -->
+        <div class="video-container" style="width: 1350px">
+            <video id="localStream" autoplay playsinline controls style="display: none;"></video>
+            <div id="remoteStreamDiv">
+                <!-- remoteStreamDiv 내부의 video 요소도 동일한 크기로 설정 -->
+                <video id="remoteStream" autoplay playsinline controls style="display: none;"></video>
+            </div>
         </div>
     </div>
+
     <!-- webRTC 연결을 위한 js  -->
     <script src="/js/videoConference/peerConfig.js"></script>
 </th:block>

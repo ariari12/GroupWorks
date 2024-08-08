@@ -95,8 +95,7 @@ public class SignalingController {
     // 회의 종료 메시지를 처리하기 위한 핸들러 추가
     @MessageMapping("/peer/endConference/{roomId}")
     @SendTo("/topic/peer/endConference/{roomId}")
-    public void handleEndConference(@DestinationVariable(value = "roomId") String roomId) {
-
-        log.info("Conference ended for room: {}", roomId);
+    public String endConference(@DestinationVariable String roomId, String message) {
+        return message;
     }
 }
