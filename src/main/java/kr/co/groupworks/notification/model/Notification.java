@@ -25,7 +25,7 @@ public class Notification implements Serializable {
     private String createdDate;
     private String type;
     private String url;
-    private boolean isRead;
+    private boolean read;
     private Long receiverId;
     private Long senderId;
     private String senderName;

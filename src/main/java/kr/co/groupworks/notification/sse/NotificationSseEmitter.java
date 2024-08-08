@@ -1,5 +1,6 @@
 package kr.co.groupworks.notification.sse;
 
+import kr.co.groupworks.notification.dto.NotificationDTO;
 import kr.co.groupworks.notification.model.Notification;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -23,13 +24,13 @@ public class NotificationSseEmitter {
         return sseEmitter;
     }
 
-    public void sendNotification(Long employeeId, Notification notification) {
-        SseEmitter sseEmitter = sseEmitters.get(employeeId);
+    public void sendNotification(Long receiverId, NotificationDTO notificationDTO) {
+        SseEmitter sseEmitter = sseEmitters.get(receiverId);
         if (sseEmitter != null) {
             try {
-                sseEmitter.send(notification);
+                sseEmitter.send(notificationDTO);
             } catch (IOException e) {
-                sseEmitters.remove(employeeId);
+                sseEmitters.remove(receiverId);
             }
         }
     }

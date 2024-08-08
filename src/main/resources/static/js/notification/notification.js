@@ -15,7 +15,9 @@ document.addEventListener("DOMContentLoaded", function() {
         toast.innerHTML = `
                     <div class="toast-header">
                        
-                        <strong class="me-auto">🔔 ${notification.title}</strong>
+                        <strong class="me-auto">
+                        <a href="${notification.url}">🔔 ${notification.title}
+                        </a></strong>
                         <small>${notification.createdDate}</small>
                         <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
                     </div>

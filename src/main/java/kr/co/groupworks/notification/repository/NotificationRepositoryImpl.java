@@ -14,11 +14,13 @@ public class NotificationRepositoryImpl implements NotificationRedis{
     private final RedisTemplate<String, Notification> redisTemplate;
 
     @Override
-    public void saveWithTTL(Notification notification, long timeout, TimeUnit unit) {
+    public Notification saveWithTTL(Notification notification, long timeout, TimeUnit unit) {
         String key = "notification:" + notification.getNotificationId();
         HashOperations<String, String, Notification> hashOperations = redisTemplate.opsForHash();
         hashOperations.put(key, notification.getNotificationId(), notification);
         // TTL 설정
         redisTemplate.expire(key, timeout, unit);
+        // 저장된 데이터를 가져와 반환
+        return hashOperations.get(key, notification.getNotificationId());
     }
 }
