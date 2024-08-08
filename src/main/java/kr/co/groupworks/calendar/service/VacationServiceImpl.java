@@ -20,7 +20,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.support.PageableExecutionUtils;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
@@ -350,7 +352,11 @@ public class VacationServiceImpl implements VacationService{
 
     // 구성원 휴가 신청 내역 모두 조회
     @Override
-    public Page<VacationRequestDTO> findAllTeamSearchPending(Long employeeId, Pageable pageable) {
+    public Page<VacationRequestDTO> findAllTeamSearchPending(Long employeeId,
+                                                             @PageableDefault(
+                                                                     sort = {"createdDate","startDate"},
+                                                                     direction = Sort.Direction.DESC
+                                                             ) Pageable pageable) {
         Employee employee = employeeRepository.findById(employeeId)
                 .orElseThrow(() -> new EntityNotFoundException("사원을 찾을 수 없습니다. " + employeeId));
         Page<Vacation> vacationList = vacationRepository.findAllTeam(employee, pageable);
@@ -389,7 +395,6 @@ public class VacationServiceImpl implements VacationService{
             vacation.approvalStatus(status);
             // sse로 전달할 id
             notificationService.sendVacationApproval(vacation, senderEmployee);
-
         } else{
             throw new IllegalStateException("검토중인 휴가 신청만 승인/반려가 가능합니다.");
         }
