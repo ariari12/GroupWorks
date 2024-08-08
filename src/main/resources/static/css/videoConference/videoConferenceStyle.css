@@ -1,19 +1,7 @@
-#localStream.black-screen {
-    display: block;
-    background-color: black;
-    width: 640px;  /* 적절한 크기로 설정 */
-    height: 360px; /* 적절한 크기로 설정 */
-}
-
-#localStream {
+#localStream, #remoteStream {
     width: 640px;
     height: 360px;
     display: none; /* Ensure it is hidden initially */
-}
-
-#remoteStreamDiv {
-    width: 640px;
-    height: 360px;
 }
 
 .video-container {
@@ -24,7 +12,7 @@
     gap: 10px;
 }
 
-.btn-container{
+.btn-container {
     display: flex;
     gap: 20px;
 }

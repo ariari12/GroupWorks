@@ -1,20 +1,27 @@
 package kr.co.groupworks.videoConference.control;
 
 import io.swagger.v3.oas.annotations.Hidden;
+import kr.co.groupworks.videoConference.service.VideoConferenceService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.util.Map;
 
 @Hidden
 @Slf4j
 @RestController
 @RequestMapping("/videoConference")
+@RequiredArgsConstructor
 public class SignalingController {
+
+    private final VideoConferenceService videoConferenceService;
 
     @RequestMapping("")
     public ModelAndView videoConference() {
@@ -22,6 +29,23 @@ public class SignalingController {
         modelAndView.setViewName("videoConference/videoConferenceMenu.html");
         return modelAndView;
     }
+    // 방 생성 엔드포인트
+    @PostMapping("/rooms")
+    public ResponseEntity<Void> createRoom(@RequestBody Map<String, String> request) {
+        String roomId = request.get("roomId");
+        videoConferenceService.addRoom(roomId);
+        log.info("Room created: {}", roomId);
+        return ResponseEntity.ok().build();
+    }
+
+    // 방 확인 엔드포인트
+    @GetMapping("/rooms/{roomId}")
+    public ResponseEntity<Boolean> checkRoom(@PathVariable String roomId) {
+        log.info("Wanted join Room: {}", roomId);
+        boolean exists = videoConferenceService.roomExists(roomId);
+        return ResponseEntity.ok(exists);
+    }
+
     //offer 정보를 주고 받기 위한 websocket
     //camKey : 각 요청하는 캠의 key , roomId : 룸 아이디
     @MessageMapping("/peer/offer/{camKey}/{roomId}")
@@ -67,4 +91,12 @@ public class SignalingController {
         return message;
     }
 
+
+    // 회의 종료 메시지를 처리하기 위한 핸들러 추가
+    @MessageMapping("/peer/endConference/{roomId}")
+    @SendTo("/topic/peer/endConference/{roomId}")
+    public void handleEndConference(@DestinationVariable(value = "roomId") String roomId) {
+
+        log.info("Conference ended for room: {}", roomId);
+    }
 }
