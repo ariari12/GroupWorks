@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
@@ -20,8 +21,8 @@ public class NotificationServiceImpl implements NotificationService {
     private final NotificationRepository notificationRepository;
     private final NotificationSseEmitter notificationSseEmitter;
 
-    public void saveNotification(Notification notification) {
-        notificationRepository.save(notification);
+    public void saveWithTTL(Notification notification, Long timeout) {
+        notificationRepository.saveWithTTL(notification, timeout, TimeUnit.DAYS);
     }
 
     public void sendVacationApproval(Vacation vacation, Employee sender) {
@@ -36,7 +37,7 @@ public class NotificationServiceImpl implements NotificationService {
                 .receiverName(vacation.getEmployee().getEmployeeName())
                 .build();
         log.info(notification.getNotificationId());
-        saveNotification(notification);
+        saveWithTTL(notification,30L);
         notificationSseEmitter.sendNotification(notification.getReceiverId(), notification);
     }
 }

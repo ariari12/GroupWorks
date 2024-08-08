@@ -4,7 +4,7 @@ import kr.co.groupworks.employee.entity.Employee;
 import kr.co.groupworks.notification.model.Notification;
 
 public interface NotificationService {
-    void saveNotification(Notification notification);
+    void saveWithTTL(Notification notification, Long ttl);
     void sendVacationApproval(Vacation vacation, Employee employee);
 
 }

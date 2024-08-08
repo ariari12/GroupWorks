@@ -33,8 +33,8 @@ public class RedisConfig {
      * 해당 구성된 RedisTemplate을 통해서 데이터 통신으로 처리되는 대한 직렬화를 수행합니다.
      */
     @Bean
-    public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
-        RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
+    public <T> RedisTemplate<String, T> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
+        RedisTemplate<String, T> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(redisConnectionFactory);
 
         // Key-Value 형태로 직렬화를 수행합니다.
@@ -45,6 +45,8 @@ public class RedisConfig {
         redisTemplate.setHashKeySerializer(new StringRedisSerializer());
         redisTemplate.setHashValueSerializer(new GenericJackson2JsonRedisSerializer());
 
+        // 모든 설정이 완료된 후에 초기화 작업을 수행합니다.
+        redisTemplate.afterPropertiesSet();
         return redisTemplate;
     }
 }
