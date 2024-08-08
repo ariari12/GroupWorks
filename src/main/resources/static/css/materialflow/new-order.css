@@ -10,7 +10,7 @@ form {
 }
 
 .table-margin {
-    margin-right: 50px;
+    margin-right: 94px;
 }
 
 table, th, td {
@@ -73,3 +73,19 @@ th, td {
         margin: 10mm; /* 페이지 여백 모두 10mm */
     }
 }
+
+/* 닫기 버튼 */
+/*.close-btn {*/
+/*    position: absolute;*/
+/*    top: 10px;*/
+/*    right: 10px;*/
+/*    color: #aaa;*/
+/*    font-size: 28px;*/
+/*    font-weight: bold;*/
+/*    cursor: pointer;*/
+/*}*/
+/*.close-btn:hover, .close-btn:focus {*/
+/*    color: #000;*/
+/*    text-decoration: none;*/
+/*    cursor: pointer;*/
+/*}*/

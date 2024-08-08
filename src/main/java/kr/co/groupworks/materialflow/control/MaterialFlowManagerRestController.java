@@ -30,7 +30,7 @@ public class MaterialFlowManagerRestController {
     /* 거래처 정보 등록 */
     @PostMapping("/new-business")
     public ResponseEntity<Object> requestBusiness(@Valid @RequestBody BusinessDTO business, BindingResult bindingResult) {
-        log.info("request, business: {}", business);
+//        log.info("request, business: {}", business);
         if(business == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).body(false);
         if(bindingResult.hasErrors()) {
             // 검증 오류 메시지를 수집하여 반환
@@ -45,7 +45,7 @@ public class MaterialFlowManagerRestController {
     /* 거래처 담당자 정보 등록 */
     @PostMapping("/business-manager")
     public ResponseEntity<Object> requestManager(@Valid @RequestBody ManagerDTO manager, @RequestParam Long businessId, BindingResult bindingResult) {
-        log.info("request, bId: {}, manager: {}", businessId, manager);
+//        log.info("request, bId: {}, manager: {}", businessId, manager);
         if(manager == null || businessId == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).body(false);
         if(bindingResult.hasErrors()) {
             // 검증 오류 메시지를 수집하여 반환
@@ -60,7 +60,7 @@ public class MaterialFlowManagerRestController {
     /* 발주서, 수주서 작성 등록 */
     @PostMapping("/new-order")
     public ResponseEntity<Object> requestOrder(@Valid @RequestBody OrderDTO orderDTO, BindingResult bindingResult) {
-        log.info("request, OrderDTO: {}", orderDTO);
+//        log.info("request, OrderDTO: {}", orderDTO);
         if(orderDTO == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).body(false);
         if(bindingResult.hasErrors()) {
             // 검증 오류 메시지를 수집하여 반환

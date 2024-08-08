@@ -37,12 +37,14 @@
             <tr>
                 <td>공급업체 명</td>
                 <td colspan="3">
+                    <!--/* 수주서: 공급업체: 거래처 */-->
                     <th:block th:if="${division == 1}">
                         <input type="hidden" id="businessId" required>
                         <input class="table-input" type="text" id="receiveBusiness" placeholder="공급업체를 선택하세요." readonly required>
                         <button class="btn btn-success none-print" id="registerBusiness" type="button">거래처 등록</button>
                         <button class="btn btn-primary none-print" id="chooseBusiness" type="button">거래처 선택</button>
                     </th:block>
+                    <!--/* 수주서: 공급업체: 본사 */-->
                     <th:block th:if="${division == 2}">
                         <input class="table-input" type="text" th:value="${office.businessName}" size="60" readonly required>
                     </th:block>
@@ -50,13 +52,14 @@
             </tr>
             <tr>
                 <td>수주 담당자</td>
-                <!--/* 수주서: 수주 담당자:직원 */-->
                 <td colspan="3">
+                    <!--/* 수주서: 수주 담당자: 거래처 */-->
                     <th:block th:if="${division == 1}">
                         <input type="hidden" id="managerId" readonly required>
                         <input class="table-input" type="text" id="managerName" placeholder="수주 담당자를 선택하세요." readonly required>
                         <button class="btn btn-primary none-print" id="chooseManager" type="button">거래처 담당자 선택</button>
                     </th:block>
+                    <!--/* 수주서: 수주 담당자: 사원 */-->
                     <th:block th:if="${division == 2}">
                         <input class="table-input" type="text" id="employeeName" placeholder="수주 담당자를 선택하세요." readonly required>
                         <button class="btn btn-primary none-print" id="chooseEmployee" type="button">담당자 사원 선택</button>
@@ -72,7 +75,6 @@
                 </td>
                 <td>담당자 이메일</td>
                 <td>
-
                     <input th:if="${division == 1}" class="table-input" type="text" id="managerEmail" placeholder="수주 담당자를 선택하세요." readonly required>
                     <input th:if="${division == 2}" class="table-input" type="text" id="employeeEmail" placeholder="수주 담당자를 선택하세요." readonly required>
                 </td>
@@ -84,8 +86,10 @@
             <tr>
                 <td>사업자 등록 번호</td>
                 <td colspan="3">
+                    <!--/* 발주서: 사업자: 본사 */-->
                     <input th:if="${division == 1}" class="table-input" type="text" th:value="${office.businessNumber}" readonly required>
                     <th:block th:if="${division == 2}">
+                        <!--/* 발주서: 사업자: 거래처 */-->
                         <input type="hidden" id="businessId" required>
                         <input class="table-input" type="text" id="businessNumber" placeholder="거래처를 선택하세요." readonly required>
                         <button class="btn btn-success none-print" id="registerBusiness" type="button">거래처 등록</button>
@@ -96,7 +100,9 @@
             <tr>
                 <td>발주업체 명</td>
                 <td colspan="3">
+                    <!--/* 발주서: 발주업체: 본사 */-->
                     <input th:if="${division == 1}" class="table-input" type="text" th:value="${office.businessName}" size="60" readonly required>
+                    <!--/* 발주서: 발주업체: 거래처 */-->
                     <th:block th:if="${division == 2}">
                         <input type="hidden" id="businessId" required>
                         <input class="table-input" type="text" id="businessName" placeholder="거래처를 선택하세요." size="60" readonly required>
@@ -117,13 +123,14 @@
             </tr>
             <tr>
                 <td>발주 담당자</td>
-                <!--/* 발주서: 발주 담당자:직원 */-->
                 <td colspan="3">
+                    <!--/* 발주서: 발주 담당자: 사원 */-->
                     <th:block th:if="${division == 1}">
                         <input class="table-input" type="text" id="employeeName" placeholder="발주 담당자를 선택하세요." readonly required>
                         <button class="btn btn-primary none-print" id="chooseEmployee" type="button">담당자 사원 선택</button>
                         <input type="hidden" id="employeeId" required>
                     </th:block>
+                    <!--/* 발주서: 발주 담당자: 거래처 */-->
                     <th:block th:if="${division == 2}">
                         <input class="table-input" type="text" id="managerName" placeholder="발주 담당자를 선택하세요." readonly required>
                         <button class="btn btn-primary none-print" id="chooseManager" type="button">거래처 담당자 선택</button>
@@ -142,7 +149,6 @@
                     <input th:if="${division == 1}" class="table-input" type="text" id="employeeEmail" placeholder="수주 담당자를 선택하세요." readonly required>
                     <input th:if="${division == 2}" class="table-input" type="text" id="managerEmail" placeholder="수주 담당자를 선택하세요." readonly required>
                 </td>
-
             </tr>
             <tr>
                 <td>발주 일자</td>
@@ -163,7 +169,6 @@
         <div class="table-container">
             <table class="table-margin-auto" id="itemTable">
                 <thead>
-                <!-- 테이블 헤더 -->
                 <tr>
                     <th>품목명</th>
                     <th>수량</th>
@@ -183,6 +188,7 @@
                 </tr>
                 </tbody>
             </table>
+            <!--/* 총액, 세율, 세액 계산 */-->
             <table>
                 <tr>
                     <th>합 계</th>
@@ -193,13 +199,36 @@
                     <td><input type="number" class="table-input" id="totalTex" size="7" readonly required><span>￦</span></td>
                 </tr>
             </table>
-            <!-- 품목 추가 버튼 -->
             <button type="button" class="btn btn-primary mt-3 none-print" onclick="addItem()"><i class="fas fa-plus"></i></button>
-            <!-- 발주서 제출 버튼 -->
-            <button type="submit" class="btn btn-success mt-3 none-print">발주서 제출</button>
+            <button type="submit" class="btn btn-success mt-3 none-print">작성 완료</button>
         </div>
     </div>
 </form>
+
+<!-- The Modal -->
+<div class="modal fade" id="modal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 th:if="${division == 1}" class="modal-title" id="exampleModalLabel">수주서 작성 알림</h5>
+                <h5 th:if="${division == 2}" class="modal-title" id="exampleModalLabel">발주서 작성 알림</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>
+                <th:block th:if="${division == 1}">수주서를 작성 하시겠습니까?</th:block>
+                <th:block th:if="${division == 2}">수주서를 작성 하시겠습니까?</th:block>
+                <br/>
+                <span style="color: #ba3d3d">※주의</span> 작성을 완료하면 취소할 수 없습니다.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button id="okBtn" class="btn btn-success">작성 등록</button>
+                <button id="cns-Btn" class="btn btn-danger">작성 취소</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <!--/* 거래처 미 선택 중 거래처 담당자 선택 버튼을 클릭 했을 때 알림토스트 */-->
 <div class="toast-container position-fixed bottom-0 end-0 p-3">

@@ -10,6 +10,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+import java.time.LocalDateTime;
+
 @Data
 @Accessors(chain = true)
 @Builder
@@ -22,6 +24,15 @@ public class MaterialItemDTO {
     @Convert(converter = ItemStatusConverter.class)
     private ItemStatus itemStatus;
 
+    @Schema(description = "입고장소", defaultValue = "우리집")
+    private String storageLocation;
+    @Schema(description = "입고일자", defaultValue = "1111.11.11 17:01")
+    private LocalDateTime storageTime;
+    @Schema(description = "출고장소", defaultValue = "너희집")
+    private String deliveryLocation;
+    @Schema(description = "출고일자", defaultValue = "9999.99.99 97:91")
+    private LocalDateTime deliveryTime;
+
     public MaterialItemDTO(MaterialItem mi) {
         this
                 .setId(mi.getId())
@@ -33,6 +44,10 @@ public class MaterialItemDTO {
         return MaterialItem.builder()
                 .id(this.getId())
                 .itemStatus(this.getItemStatus())
+                .storageLocation(this.getStorageLocation())
+                .storageTime(this.getStorageTime())
+                .deliveryLocation(this.getDeliveryLocation())
+                .deliveryTime(this.getDeliveryTime())
                 .build();
     }
 }

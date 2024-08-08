@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <!--/* Boot Strap 5.3.0 */-->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <!--/* Boot Strap Template CSS & JS */-->
+    <link href="/css/styles.css" rel="stylesheet" />
+    <!--/* data tables library 5.3.0 */-->
+    <link href="https://cdn.datatables.net/v/bs5/dt-2.0.8/datatables.min.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/2.0.8/css/dataTables.dataTables.css" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/styles.css">
+
+    <script src="/js/materialflow/.."></script>
+    <!--/* Jquery CDN */-->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <!--/* Boot Strap 5.3.0 */-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <!--/* Boot Strap Template CSS & JS */-->
+    <script src="/js/side-menu.js"></script>
+    <!--/* data tables library 5.3.0 */-->
+    <script src="https://cdn.datatables.net/v/bs5/dt-2.0.8/datatables.min.js"></script>
+</head>
+<body>
+<div class="card mb-4">
+    <div class="card-header">
+        <i class="bi bi-folder-fill"></i>
+        자재/재고 품목 목록
+    </div>
+    <div class="card-body">
+        <table id="table1" class="table table-hover" style="width:100%">
+            <thead>
+            <tr>
+                <th>주뮨 코드</th>
+                <th>품목 코드</th>
+                <th>품목 명</th>
+
+                <th>주문 수량</th>
+                <th>단가</th>
+
+                <th>입고 수량</th>
+                <th>출고 수량</th>
+            </tr>
+            </thead>
+            <tbody>
+            <th:block th:each="list : ${bomList}">
+                <tr th:onclick="load([[${bom.id}]])" th:each="bom: ${list.getBomList()}">
+                    <td th:text="${list.getOrderCode()}"></td>
+                    <td th:text="${bom.getItemCode()}"></td>
+                    <td th:text="${bom.getItemName()}"></td>
+
+                    <td th:text="${bom.getQuantity()}"></td>
+                    <td th:text="${bom.getUnitPrice()}"></td>
+
+                    <td th:text="${bom.getStockQuantity()}"></td>
+                    <td th:text="${bom.getDeliveryQuantity()}"></td>
+                </tr>
+            </th:block>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

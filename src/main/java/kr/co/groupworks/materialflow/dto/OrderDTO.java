@@ -59,6 +59,7 @@ public class OrderDTO {
 
     private EmployeeDTO employee;
     private ManagerDTO manager;
+    @Size(min = 1, message = "품목은 최소 1종류 이상 존재해야 합니다.")
     private List<BomDTO> bomList;
     private List<MesDTO> mesList;
 
@@ -92,7 +93,7 @@ public class OrderDTO {
         return Order.builder()
                 .id(this.id)
                 .orderCode(this.orderCode)
-                .classification(OrderClassification.getClassification(this.classification))
+                .classification(OrderClassification.getClassification(this.classification -1))
                 .totalAmount(this.totalAmount)
                 .texAmount(this.tex)
                 .orderDate(od == null ? null : LocalDate.parse(od, DateTimeFormatter.ofPattern(DATE_FORMAT)))

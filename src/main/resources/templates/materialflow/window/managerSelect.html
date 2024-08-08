@@ -11,7 +11,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
     <!--/* data tables library 5.3.0 */-->
     <script src="https://cdn.datatables.net/v/bs5/dt-2.0.8/datatables.min.js"></script>
-    <script src="/js/materialflow/managerSelect.js"></script>
+    <script src="/js/materialflow/manager-select.js"></script>
 
     <!--/* data tables library 5.3.0 */-->
     <link href="https://cdn.datatables.net/v/bs5/dt-2.0.8/datatables.min.css" rel="stylesheet">
@@ -52,6 +52,7 @@
                 <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0M9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1M11 8a3 3 0 1 1-6 0 3 3 0 0 1 6 0m2 5.755V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-.245S4 12 8 12s5 1.755 5 1.755"/>
             </svg>거래처 담당자 목록
         </div>
+        <input type="hidden" id="businessId" th:value="${businessId}">
         <div class="card-body">
             <table id="table" class="table table-hover" style="width:100%">
                 <thead>

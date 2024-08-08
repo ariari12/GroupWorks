@@ -1,3 +1,15 @@
+INSERT INTO xe.department (department_id,contact_number,department_name,location) VALUES
+      (1,'010-1234-5678','기술부서','A동'),
+      (2,'010-1234-5679','마케팅부서','B동'),
+      (3,'010-1234-5680','영업부서','C동'),
+      (4,'010-1234-5681','인사부서','D동'),
+      (5,'010-1234-5682','재무부서','E동'),
+      (6,'010-1234-5683','IT 지원부서','F동'),
+      (7,'010-1234-5684','제품 관리부서','G동'),
+      (8,'010-1234-5685','고객 서비스부서','H동'),
+      (9,'010-1234-5686','법무부서','I동'),
+      (10,'010-1234-5687','연구개발부서','J동');
+
 INSERT INTO xe.employee (is_active,rank_id,created_date,department_id,last_modified_date,salary,supervisor_id,address,email,employee_name,employee_pw,gender,phone_number,rank_name) VALUES
 	 (1,5,'2021-01-01 00:00:00',1,NULL,30000,0,'주소 1','employee1@example.com','사원1','$2a$10$Vg4CIc8WunwnKoV2.j9J.uPep8BgLAzb2VelL89I.hGiLBDNoybpO','여','010-1111-1100','부장'),
 	 (1,4,'2022-01-01 00:00:00',1,NULL,30010,1,'주소 2','employee2@example.com','사원2','$2a$10$Vg4CIc8WunwnKoV2.j9J.uPep8BgLAzb2VelL89I.hGiLBDNoybpO','남','010-1111-1101','차장'),
@@ -108,3 +120,27 @@ INSERT INTO xe.employee (is_active,rank_id,created_date,department_id,last_modif
 	 (1,1,'2024-01-01 00:00:00',10,NULL,30970,96,'주소 98','employee98@example.com','사원98','$2a$10$Vg4CIc8WunwnKoV2.j9J.uPep8BgLAzb2VelL89I.hGiLBDNoybpO','남','010-1111-1197','사원'),
 	 (1,1,'2024-01-01 00:00:00',10,NULL,30980,96,'주소 99','employee99@example.com','사원99','$2a$10$Vg4CIc8WunwnKoV2.j9J.uPep8BgLAzb2VelL89I.hGiLBDNoybpO','여','010-1111-1198','사원'),
 	 (1,1,'2024-01-01 00:00:00',10,NULL,30990,96,'주소 100','employee100@example.com','사원100','$2a$10$Vg4CIc8WunwnKoV2.j9J.uPep8BgLAzb2VelL89I.hGiLBDNoybpO','남','010-1111-1199','사원');
+
+
+INSERT INTO xe.materialflow_business (address, business_name, business_number, ceo, ceo_tel, fax, item, type) VALUES ('서울특별시 강남구 테헤란로 123번지 45층', '중앙HTA', '123-45-67900', '최기리', '010-5678-1234', '02-1234-5678', 'IT 교육, 국비훈련', '교육 서비스업');
+INSERT INTO xe.materialflow_business (address, business_name, business_number, ceo, ceo_tel, fax, item, type) VALUES ('경기도 이천시 이천동 2000번지 2000-1', '◎◎제약™', '123-45-67890', '홍길동', '010-1234-1325', '031-123-1325', '유제품', '제조업');
+INSERT INTO xe.materialflow_business (address, business_name, business_number, ceo, ceo_tel, fax, item, type) VALUES ('서울특별시 강남구 테헤란로 123', '◇◇식품', '124-45-67891', '김영희', '010-5678-1325', '02-567-1325', '음료수', '식품업');
+INSERT INTO xe.materialflow_business (address, business_name, business_number, ceo, ceo_tel, fax, item, type) VALUES ('부산광역시 해운대구 우동 1234', '☆☆유통', '125-45-67892', '이철수', '010-8765-4321', '051-876-4321', '가전제품', '유통업');
+INSERT INTO xe.materialflow_business (address, business_name, business_number, ceo, ceo_tel, fax, item, type) VALUES ('대구광역시 달서구 상인동 987', '▲▲무역', '126-45-67893', '박영수', '010-4567-7890', '053-456-7890', '자동차 부품', '무역업');
+INSERT INTO xe.materialflow_business (address, business_name, business_number, ceo, ceo_tel, fax, item, type) VALUES ('울산광역시 남구 삼산동 456', '♤♤화학', '127-45-67894', '최지우', '010-2345-6789', '052-234-6789', '화학물질', '화학업');
+INSERT INTO xe.materialflow_business (address, business_name, business_number, ceo, ceo_tel, fax, item, type) VALUES ('전라북도 전주시 완산구 서노송동 789', '◆◆농산', '128-45-67895', '김민수', '010-3456-7891', '063-345-7891', '농산물', '농업');
+INSERT INTO xe.materialflow_business (address, business_name, business_number, ceo, ceo_tel, fax, item, type) VALUES ('경상남도 창원시 마산합포구 중앙동 123', '◇◇기계', '129-45-67896', '이성민', '010-4567-8912', '055-456-8912', '기계부품', '기계업');
+INSERT INTO xe.materialflow_business (address, business_name, business_number, ceo, ceo_tel, fax, item, type) VALUES ('경기도 수원시 팔달구 매산로 456', '○○전자', '130-45-67897', '박현준', '010-5678-9123', '031-567-9123', '전자제품', '전자업');
+INSERT INTO xe.materialflow_business (address, business_name, business_number, ceo, ceo_tel, fax, item, type) VALUES ('서울특별시 마포구 서교동 789', '△△의료', '131-45-67898', '최예진', '010-6789-1234', '02-678-1234', '의료기기', '의료업');
+INSERT INTO xe.materialflow_business (address, business_name, business_number, ceo, ceo_tel, fax, item, type) VALUES ('서울특별시 강남구 테헤란로 123번지 45층', '중앙HTA', '123-45-67900', '최기리', '010-5678-1234', '02-1234-5678', 'IT 교육, 국비훈련', '교육 서비스업');
+INSERT INTO xe.materialflow_business (address, business_name, business_number, ceo, ceo_tel, fax, item, type) VALUES ('대전광역시 중구 은행동 123', '▣▣섬유', '132-45-67899', '홍석현', '010-7891-2345', '042-789-2345', '섬유제품', '섬유업');
+INSERT INTO xe.materialflow_business (address, business_name, business_number, ceo, ceo_tel, fax, item, type) VALUES ('서울특별시 강남구 서초동 123-45', '삼성전자', '123-45-67890', '이재용', '010-1234-5678', '02-123-4567', '전자제품', '제조업');
+INSERT INTO xe.materialflow_business (address, business_name, business_number, ceo, ceo_tel, fax, item, type) VALUES ('서울특별시 영등포구 여의도동 234-56', 'LG화학', '124-45-67891', '신학철', '010-2345-6789', '02-234-5678', '화학물질', '화학업');
+INSERT INTO xe.materialflow_business (address, business_name, business_number, ceo, ceo_tel, fax, item, type) VALUES ('서울특별시 서초구 양재동 345-67', '현대자동차', '125-45-67892', '정의선', '010-3456-7890', '02-345-6789', '자동차', '제조업');
+INSERT INTO xe.materialflow_business (address, business_name, business_number, ceo, ceo_tel, fax, item, type) VALUES ('경기도 성남시 분당구 불정로 6', '네이버', '126-45-67893', '최수연', '010-4567-8901', '031-456-7890', '인터넷 서비스', '서비스업');
+INSERT INTO xe.materialflow_business (address, business_name, business_number, ceo, ceo_tel, fax, item, type) VALUES ('경기도 성남시 분당구 대왕판교로 645번길 16', '카카오', '127-45-67894', '홍은택', '010-5678-9012', '031-567-8901', '모바일 서비스', '정보통신업');
+INSERT INTO xe.materialflow_business (address, business_name, business_number, ceo, ceo_tel, fax, item, type) VALUES ('서울특별시 용산구 한강대로 100', '아모레퍼시픽', '128-45-67895', '서경배', '010-6789-0123', '02-678-9012', '화장품', '제조업');
+INSERT INTO xe.materialflow_business (address, business_name, business_number, ceo, ceo_tel, fax, item, type) VALUES ('서울특별시 강남구 테헤란로 152', '하이트진로', '129-45-67896', '김인규', '010-7890-1234', '02-789-0123', '음료', '제조업');
+INSERT INTO xe.materialflow_business (address, business_name, business_number, ceo, ceo_tel, fax, item, type) VALUES ('경기도 이천시 부발읍 경충대로 2091', 'SK하이닉스', '130-45-67897', '이석희', '010-8901-2345', '031-890-1234', '반도체', '제조업');
+INSERT INTO xe.materialflow_business (address, business_name, business_number, ceo, ceo_tel, fax, item, type) VALUES ('서울특별시 중구 동호로 330', 'CJ제일제당', '131-45-67898', '강신호', '010-9012-3456', '02-901-2345', '식품', '제조업');
+INSERT INTO xe.materialflow_business (address, business_name, business_number, ceo, ceo_tel, fax, item, type) VALUES ('서울특별시 강서구 하늘길 77', '대한항공', '132-45-67899', '우기홍', '010-0123-4567', '02-012-3456', '항공 서비스', '운송업');

@@ -1,9 +1,6 @@
 package kr.co.groupworks.materialflow.service;
 
-import kr.co.groupworks.materialflow.dto.BusinessDTO;
-import kr.co.groupworks.materialflow.dto.ManagerDTO;
-import kr.co.groupworks.materialflow.dto.MesDTO;
-import kr.co.groupworks.materialflow.dto.OrderDTO;
+import kr.co.groupworks.materialflow.dto.*;
 import kr.co.groupworks.materialflow.entity.Business;
 import kr.co.groupworks.materialflow.entity.BusinessManager;
 import kr.co.groupworks.materialflow.entity.Order;
@@ -82,6 +79,11 @@ public class MaterialOpenApiServiceImpl implements MaterialOpenApiService {
         Order o = orderRepository.findById(orderId).orElse(null);
         if(o == null) return null;
         return new OrderDTO(o);
+    }
+
+    @Override
+    public List<BomDTO> getBomList() {
+        return bomRepository.findAll().stream().map(BomDTO::new).toList();
     }
 
 }

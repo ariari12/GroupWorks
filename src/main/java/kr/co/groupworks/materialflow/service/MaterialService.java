@@ -1,10 +1,7 @@
 package kr.co.groupworks.materialflow.service;
 
 
-import kr.co.groupworks.materialflow.dto.BusinessDTO;
-import kr.co.groupworks.materialflow.dto.EmployeeDTO;
-import kr.co.groupworks.materialflow.dto.ManagerDTO;
-import kr.co.groupworks.materialflow.dto.OrderDTO;
+import kr.co.groupworks.materialflow.dto.*;
 
 import java.util.List;
 import java.util.Map;
@@ -19,4 +16,8 @@ public interface MaterialService {
     Object setOrder(OrderDTO orderDTO);
 
     Map<String, List<OrderDTO>> getOrders();
+
+    List<OrderBomListVO> getBomList();
+
+    List<MaterialItemDTO> getItemList(long bomId);
 }

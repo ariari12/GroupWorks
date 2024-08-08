@@ -36,7 +36,7 @@
             </thead>
             <tbody>
             <!--/*@thymesVar id="approval" type="kr.co.groupworks.workflow.dto.dto.WorkFlowDTO"*/-->
-            <tr th:onclick="load([[${list.id}]], [[${list.classification}]])" th:each="list : ${receiveList}">
+            <tr th:onclick="load([[${list.id}]], [[${list.classification +1}]])" th:each="list : ${receiveList}">
                 <!--/*@thymesVar id="list" type="kr.co.groupworks.materialflow.dto.OrderDTO"*/-->
                 <td th:text="${list.getOrderCode()}"></td>
                 <!--/* 거래처 정보 */-->
@@ -82,13 +82,12 @@
                 <th>납기 일자</th>
                 <th>총 액수</th>
                 <th>세 율</th>
-                <th>구분</th>
             </tr>
             </thead>
 
             <tbody>
             <!--/*@thymesVar id="approval" type="kr.co.groupworks.workflow.dto.dto.WorkFlowDTO"*/-->
-            <tr th:onclick="load([[${list.id} + ',' + ${list.classification}]])" th:each="list : ${sendList}">
+            <tr th:onclick="load([[${list.id}]], [[${list.classification +1}]])" th:each="list : ${sendList}">
                 <!--/*@thymesVar id="list" type="kr.co.groupworks.materialflow.dto.OrderDTO"*/-->
                 <td th:text="${list.getOrderCode()}"></td>
                 <!--/* 발주 정보 */-->

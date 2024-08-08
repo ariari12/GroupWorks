@@ -21,6 +21,9 @@ public class Mes {
     @Column(name = "mes_id")
     private Long id;
 
+    @Column(name = "order_id")
+    private Long orderId;
+
     @Schema(description = "제품 코드", defaultValue = "02132454")
     private String itemCode;
     @Schema(description = "제품 명", defaultValue = "우유")

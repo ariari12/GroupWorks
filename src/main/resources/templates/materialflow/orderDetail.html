@@ -17,7 +17,7 @@
 </button>
 
 <div id="orderForm" class="row g-3 needs-validation">
-    <h3 id="title" class="title-header">[[${title}]]</h3>
+    <h3 id="title" class="title-header" th:text="${title}"></h3>
 
     <div class="input-group mb-3">
         <!--/* 수주자 란 */-->
@@ -27,51 +27,39 @@
                 <td colspan="3" th:text="${order.getOrderDate()}"></td>
             </tr>
             <tr>
-                <td th:text="${title + ' 번호'}">]</td>
+                <td th:text="${title + ' 번호'}"></td>
                 <td colspan="3">
-                    <input class="table-input" type="text" id="orderCode" th:value="${order.getOrderCode()}" placeholder="발주서 번호를 입력하세요" size="60" readonly required>
+                    <input class="table-input" type="text" th:value="${order.getOrderCode()}" size="60" readonly>
                 </td>
             </tr>
             <tr>
                 <td>공급업체 명</td>
                 <td colspan="3">
-                    <th:block th:if="${division == 1}">
-                        <input class="table-input" type="text" id="receiveBusiness" placeholder="공급업체를 선택하세요." readonly required>
-                        <button class="btn btn-success none-print" id="registerBusiness" type="button">거래처 등록</button>
-                        <button class="btn btn-primary none-print" id="chooseBusiness" type="button">거래처 선택</button>
-                    </th:block>
-                    <th:block th:if="${division == 2}">
-                        <input class="table-input" type="text" th:value="${office.businessName}" size="60" readonly required>
-                    </th:block>
+                    <!--/* 수주서: 공급업체: 거래처 */-->
+                    <input th:if="${division == 1}" class="table-input" type="text" th:value="${order.getManager().getBusiness().getBusinessName()}" readonly>
+                    <!--/* 수주서: 공급업체: 본사 */-->
+                    <input th:if="${division == 2}" class="table-input" type="text" th:value="${office.businessName}" size="60" readonly>
                 </td>
             </tr>
             <tr>
                 <td>수주 담당자</td>
-                <!--/* 수주서: 수주 담당자:직원 */-->
                 <td colspan="3">
-                    <th:block th:if="${division == 1}">
-                        <input type="hidden" id="managerId" readonly required>
-                        <input class="table-input" type="text" id="managerName" placeholder="수주 담당자를 선택하세요." readonly required>
-                        <button class="btn btn-primary none-print" id="chooseManager" type="button">거래처 담당자 선택</button>
-                    </th:block>
-                    <th:block th:if="${division == 2}">
-                        <input class="table-input" type="text" id="employeeName" placeholder="수주 담당자를 선택하세요." readonly required>
-                        <button class="btn btn-primary none-print" id="chooseEmployee" type="button">담당자 사원 선택</button>
-                        <input type="hidden" id="employeeId" readonly required>
-                    </th:block>
+                    <!--/* 수주서: 수주 담당자:거래처 */-->
+                    <input th:if="${division == 1}" class="table-input" type="text" th:value="${order.getManager().getName()}" readonly>
+                    <!--/* 수주서: 수주 담당자:직원 */-->
+                    <input th:if="${division == 2}" class="table-input" type="text" th:value="${order.getEmployee().getName()}" readonly>
                 </td>
             </tr>
             <tr>
                 <td>담당자 연락처</td>
                 <td>
-                    <input th:if="${division == 1}" class="table-input" type="text" id="managerPhone" placeholder="수주 담당자를 선택하세요." readonly required>
-                    <input th:if="${division == 2}" class="table-input" type="text" id="employeePhone" placeholder="수주 담당자를 선택하세요." readonly required>
+                    <input th:if="${division == 1}" class="table-input" type="text" th:value="${order.getManager().getPhone()}" readonly>
+                    <input th:if="${division == 2}" class="table-input" type="text" th:value="${order.getEmployee().getPhone()}" readonly>
                 </td>
                 <td>담당자 이메일</td>
                 <td>
-
-                    <input th:if="${division == 1}" class="table-input" type="text" id="managerEmail" placeholder="수주 담당자를 선택하세요." readonly required>
-                    <input th:if="${division == 2}" class="table-input" type="text" id="employeeEmail" placeholder="수주 담당자를 선택하세요." readonly required>
+                    <input th:if="${division == 1}" class="table-input" type="text" th:value="${order.getManager().getEmail()}" readonly>
+                    <input th:if="${division == 2}" class="table-input" type="text" th:value="${order.getEmployee().getEmail()}" readonly>
                 </td>
             </tr>
         </table>
@@ -81,76 +69,65 @@
             <tr>
                 <td>사업자 등록 번호</td>
                 <td colspan="3">
-                    <input th:if="${division == 1}" class="table-input" type="text" th:value="${office.businessNumber}" readonly required>
-                    <th:block th:if="${division == 2}">
-                        <input type="hidden" id="businessId" required>
-                        <input class="table-input" type="text" id="businessNumber" placeholder="거래처를 선택하세요." readonly required>
-                        <button class="btn btn-success none-print" id="registerBusiness" type="button">거래처 등록</button>
-                        <button class="btn btn-primary none-print" id="chooseBusiness" type="button">거래처 선택</button>
-                    </th:block>
+                    <!--/* 발주서: 사업자: 본사 */-->
+                    <input th:if="${division == 1}" class="table-input" type="text" th:value="${office.businessNumber}" readonly>
+                    <!--/* 발주서: 사업자: 거래처 */-->
+                    <input th:if="${division == 2}" class="table-input" type="text" th:value="${order.getManager().getBusiness().getBusinessNumber()}" readonly>
                 </td>
             </tr>
             <tr>
                 <td>발주업체 명</td>
                 <td colspan="3">
-                    <input th:if="${division == 1}" class="table-input" type="text" th:value="${office.businessName}" size="60" readonly required>
-                    <th:block th:if="${division == 2}">
-                        <input type="hidden" id="businessId" required>
-                        <input class="table-input" type="text" id="businessName" placeholder="거래처를 선택하세요." size="60" readonly required>
-                    </th:block>
+                    <!--/* 발주서: 발주업체: 본사 */-->
+                    <input th:if="${division == 1}" class="table-input" type="text" th:value="${office.businessName}" readonly>
+                    <!--/* 발주서: 발주업체: 거래처 */-->
+                    <input th:if="${division == 2}" class="table-input" type="text" th:value="${order.getManager().getBusiness().getBusinessName()}" readonly>
                 </td>
             </tr>
             <tr>
                 <td>업 태</td>
                 <td>
-                    <input th:if="${division == 1}" class="table-input" type="text" th:value="${office.type}" readonly required>
-                    <input th:if="${division == 2}" class="table-input" type="text" id="type" placeholder="거래처를 선택하세요." readonly required>
+                    <input th:if="${division == 1}" class="table-input" type="text" th:value="${office.type}" readonly>
+                    <input th:if="${division == 2}" class="table-input" type="text" th:value="${order.getManager().getBusiness().getType()}" readonly>
                 </td>
                 <td>종 목</td>
                 <td>
-                    <input th:if="${division == 1}" class="table-input" type="text" th:value="${office.item}" readonly required>
-                    <input th:if="${division == 2}" class="table-input" type="text" id="item" placeholder="거래처를 선택하세요." readonly required>
+                    <input th:if="${division == 1}" class="table-input" type="text" th:value="${office.item}" readonly>
+                    <input th:if="${division == 2}" class="table-input" type="text" th:value="${order.getManager().getBusiness().getItem()}" readonly>
                 </td>
             </tr>
             <tr>
                 <td>발주 담당자</td>
-                <!--/* 발주서: 발주 담당자:직원 */-->
                 <td colspan="3">
-                    <th:block th:if="${division == 1}">
-                        <input class="table-input" type="text" id="employeeName" placeholder="발주 담당자를 선택하세요." readonly required>
-                        <button class="btn btn-primary none-print" id="chooseEmployee" type="button">담당자 사원 선택</button>
-                        <input type="hidden" id="employeeId" required>
-                    </th:block>
-                    <th:block th:if="${division == 2}">
-                        <input class="table-input" type="text" id="managerName" placeholder="발주 담당자를 선택하세요." readonly required>
-                        <button class="btn btn-primary none-print" id="chooseManager" type="button">거래처 담당자 선택</button>
-                        <input type="hidden" id="managerId" readonly required>
-                    </th:block>
+                    <!--/* 발주서: 발주 담당자: 사원 */-->
+                    <input th:if="${division == 1}" class="table-input" type="text" th:value="${order.getEmployee().getName()}" readonly>
+                    <!--/* 발주서: 발주 담당자: 거래처 */-->
+                    <input th:if="${division == 2}" class="table-input" type="text" th:value="${order.getManager().getName()}" readonly>
                 </td>
             </tr>
             <tr>
                 <td>담당자 연락처</td>
                 <td>
-                    <input th:if="${division == 1}" class="table-input" type="text" id="employeePhone" placeholder="발주 담당자를 선택하세요." readonly required>
-                    <input th:if="${division == 2}" class="table-input" type="text" id="managerPhone" placeholder="발주 담당자를 선택하세요." readonly required>
+                    <input th:if="${division == 1}" class="table-input" type="text" th:value="${order.getEmployee().getPhone()}" readonly>
+                    <input th:if="${division == 2}" class="table-input" type="text" th:value="${order.getManager().getPhone()}" readonly>
                 </td>
                 <td>담당자 이메일</td>
                 <td>
-                    <input th:if="${division == 1}" class="table-input" type="text" id="employeeEmail" placeholder="수주 담당자를 선택하세요." readonly required>
-                    <input th:if="${division == 2}" class="table-input" type="text" id="managerEmail" placeholder="수주 담당자를 선택하세요." readonly required>
+                    <input th:if="${division == 1}" class="table-input" type="text" th:value="${order.getEmployee().getEmail()}" readonly>
+                    <input th:if="${division == 2}" class="table-input" type="text" th:value="${order.getManager().getEmail()}" readonly>
                 </td>
 
             </tr>
             <tr>
                 <td>발주 일자</td>
-                <td colspan="3"><input class="table-input" type="date" id="orderDate" required></td>
+                <td colspan="3"><input class="table-input" type="text" th:value="${order.getOrderDate()}" readonly></td>
             </tr>
             <tr>
                 <td>납품 주소</td>
-                <td colspan="3"><input type="text" id="address" size="60" placeholder="주소" required><br/>
-                    <input type="text" id="zipCode" size="7" placeholder="우편번호" required>
-                    <button class="none-print" type="button" id="findZip">우편번호찾기</button>
-                    <input type="text" id="addressDetail" placeholder="상세주소">
+                <td colspan="3">
+                    <label>주소: <input type="text" class="table-input" th:value="${order.getAddress()}" size="60" readonly></label><br/>
+                    <label>우편번호: <input type="text" class="table-input" th:value="${order.getZipCode()}" size="7" readonly></label>
+                    <label>상세주소: <input type="text" class="table-input" th:value="${order.getAddressDetail()}" size="30"></label>
                 </td>
             </tr>
         </table>
@@ -160,40 +137,37 @@
         <div class="table-container">
             <table class="table-margin-auto" id="itemTable">
                 <thead>
-                <!-- 테이블 헤더 -->
                 <tr>
                     <th>품목명</th>
+                    <th>품목 코드</th>
                     <th>수량</th>
                     <th>단가</th>
                     <th>공급가액</th>
-                    <th class="delete-column"></th>
                 </tr>
                 </thead>
                 <tbody>
-                <!-- 초기 품목 입력 행 -->
-                <tr>
-                    <td><input type="text" name="itemName" class="table-input" placeholder="품목명을 입력하세요" required></td>
-                    <td><input type="number" name="itemQuantity" class="table-input" placeholder="수량을 입력하세요" min="1" step="1" required oninput="calculateTotal(this)"></td>
-                    <td><input type="number" name="itemPrice" class="table-input" placeholder="단가를 입력하세요" min="10" step="10" required oninput="calculateTotal(this)"></td>
-                    <td><div class="currency-wrapper"><input type="number" name="itemTotal" class="table-input" placeholder="총액을 입력하세요" readonly><span class="currency">￦</span></div></td>
-                    <td class="delete-column none-print"><button type="button" class="btn btn-danger" onclick="removeItem(this)"><i class="fas fa-trash-alt"></i></button></td>
+                <tr th:each="list : ${order.getBomList()}">
+                    <td th:text="${list.getItemName()}"></td>
+                    <td><input type="text" class="table-input" th:value="${list.getItemCode()}" readonly></td>
+                    <td><input type="number" class="table-input" th:value="${list.getQuantity()}" readonly></td>
+                    <td><input type="number" class="table-input" th:value="${list.getUnitPrice()}" readonly></td>
+                    <td><div class="currency-wrapper">
+                        <input type="text" class="table-input" th:value="${list.getQuantity() * list.getUnitPrice()}" readonly>
+                        <span class="currency">￦</span>
+                    </div></td>
                 </tr>
                 </tbody>
             </table>
             <table>
                 <tr>
                     <th>합 계</th>
-                    <td><input type="number" class="table-input" id="total" size="7" required><span>￦</span></td>
+                    <td><input type="number" class="table-input" th:value="${order.getTotalAmount()}" size="7" readonly><span>￦</span></td>
                     <th>세 율</th>
-                    <td><input type="number" class="table-input" id="tex" size="7" min="1" required oninput="updateTotal()"><span> %</span></td>
+                    <td><input type="number" class="table-input" th:value="${order.getTex()}" readonly><span> %</span></td>
                     <th>세 액</th>
-                    <td><input type="number" class="table-input" id="totalTex" size="7" readonly required><span>￦</span></td>
+                    <td><input type="number" class="table-input" th:value="${order.getTotalAmount() / (100 / order.getTex())}" size="7" readonly><span>￦</span></td>
                 </tr>
             </table>
-            <!-- 품목 추가 버튼 -->
-            <button type="button" class="btn btn-primary mt-3 none-print" onclick="addItem()"><i class="fas fa-plus"></i></button>
-            <!-- 발주서 제출 버튼 -->
-            <button type="submit" class="btn btn-success mt-3 none-print">발주서 제출</button>
         </div>
     </div>
 </div>
@@ -213,4 +187,5 @@
 </th:block>
 
 <th:block layout:fragment="javascript">
+    <script src="/js/materialflow/order-detail.js"></script>
 </th:block>

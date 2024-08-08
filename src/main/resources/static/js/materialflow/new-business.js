@@ -70,7 +70,7 @@ function submit(event) {
         window.opener.postMessage(d, window.location.origin);
         window.close();
     }, function (msg) {
-        alert("거래처 등록 실패.\n잠시 후 다시 시도해주세요.");
-        alert(msg);
+        let errMsg = "거래처 등록 실패.\n" + msg;
+        alert(errMsg);
     })
 }

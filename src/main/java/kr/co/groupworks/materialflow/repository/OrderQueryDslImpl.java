@@ -27,6 +27,17 @@ public class OrderQueryDslImpl extends QuerydslRepositorySupport implements Orde
         return findByOrderCodeOrItemCode(orderCode, itemCode);
     }
 
+    @Override
+    public List<Order> findByBomList() {
+        QOrder o = QOrder.order;
+        QBom b = QBom.bom;
+
+        return queryFactory
+                .select(o)
+                .from(o).leftJoin(o.boms, b)
+                .fetchJoin().fetch();
+    }
+
     private List<Order> findByItemName(String orderCode, String itemCode, String itemName) {
         QOrder o = QOrder.order;
         QBom b = QBom.bom;

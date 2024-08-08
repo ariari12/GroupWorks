@@ -69,18 +69,17 @@ public class MaterialFlowManagerController {
     /* 발주서 / 수주서 상세 기록 보기 */
     @GetMapping(value = "/order-detail/{orderId}/{classification}")
     public String orderDetail(@PathVariable("orderId") Long orderId, @PathVariable("classification") Integer classification, Model model) {
-        String title = "", subTitle = "";
+        String title = "";
         if(classification == 1) {
-            title = "발주서"; subTitle = "발주서";
+            title = "발주서";
         } else if(classification == 2) {
-            title = "수주서"; subTitle = "수주서";
+            title = "수주서";
         }
-        log.info("order-detail orderId: {}, classification: {}", orderId, classification);
         if(orderId == null || orderId == 0) return "/error/404";
         OrderDTO o = materialOpenApiService.getOrder(orderId);
         if(o == null) return "/error/404";
         model.addAttribute(ATTR_TITLE, title);
-        model.addAttribute(ATTR_SUB_TITLE, subTitle);
+        model.addAttribute(ATTR_SUB_TITLE, title);
         model.addAttribute("division", classification);
         model.addAttribute("order", o);
         model.addAttribute("office", materialOpenApiService.getBusiness(1L));
@@ -90,36 +89,38 @@ public class MaterialFlowManagerController {
     /* BOM 자재 현황 */
     @GetMapping(value = "/bom")
     public String bom(Model model) {
+        String title = "BOM", subTitle = "품목 관리";
+        model.addAttribute(ATTR_TITLE, title);
+        model.addAttribute(ATTR_SUB_TITLE, subTitle);
+        model.addAttribute("bomList", materialService.getBomList());
+        return "materialflow/bomRecord";
+    }
 
-        log.info("bom");
-
-        model.addAttribute(ATTR_TITLE, "수주/발주 기록");
-        model.addAttribute(ATTR_SUB_TITLE, "수주/발주");
-
-        return "materialflow/bom";
+    /* BOM 자재 품목에 속하는 자재 목록 조회 */
+    @GetMapping(value = "/item/{bomId}")
+    public String bom(@PathVariable("bomId") long bomId, Model model) {
+        String title = "BOM", subTitle = "자재 현황";
+        model.addAttribute(ATTR_TITLE, title);
+        model.addAttribute(ATTR_SUB_TITLE, subTitle);
+        model.addAttribute("itemList", materialService.getItemList(bomId));
+        return "materialflow/window/materialRecord";
     }
 
     /* MES 생산 현황 */
     @GetMapping(value = "/mes")
     public String mes(Model model) {
-
         log.info("mes");
-
         model.addAttribute(ATTR_TITLE, "수주/발주 기록");
         model.addAttribute(ATTR_SUB_TITLE, "수주/발주");
-
         return "materialflow/mes";
     }
 
     /* 매출액 산출 */
     @GetMapping(value = "/take-summation")
     public String takeSummation(Model model) {
-
         log.info("take-summation");
-
         model.addAttribute(ATTR_TITLE, "수주/발주 기록");
         model.addAttribute(ATTR_SUB_TITLE, "수주/발주");
-
         return "materialflow/takeSummation";
     }
 
@@ -148,13 +149,11 @@ public class MaterialFlowManagerController {
     public String managerSelect(@PathVariable("businessId") Long businessId, Model model) {
         String title = "거래처 담당자 선택";
         List<ManagerDTO> managerList = materialOpenApiService.getManagersByBusiness(businessId);
-        log.info("manager-select, title: {}, size: {}", title, managerList.size());
-        log.info("manager-select, managerList: {}", managerList);
 
         model.addAttribute(ATTR_TITLE, title);
         model.addAttribute(ATTR_SUB_TITLE, title);
+        model.addAttribute("businessId", businessId);
         model.addAttribute("managerList", managerList);
-
         return "materialflow/window/managerSelect";
     }
 

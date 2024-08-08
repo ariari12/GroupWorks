@@ -1,11 +1,9 @@
-let businessId;
 document.addEventListener('DOMContentLoaded', ev => {
     dataTableSetup();
     managerAddSubmit();
 });
 
 function dataTableSetup() {
-    window.addEventListener('message', e => businessId = e.data.businessId);
     $('#table').DataTable({
         info: false,
         ordering: true,
@@ -41,6 +39,7 @@ function managerAddSubmit() {
             phone: t[1].value,
             email: t[2].value
         };
+        const businessId = document.getElementById('businessId').value;
         ajaxRequest(t.action + "?businessId=" + businessId, t.method, data, c => {
             console.log(c);
             window.opener.postMessage(data, window.location.origin);

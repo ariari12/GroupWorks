@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface OrderQueryDsl {
     List<Order> findByOrderCodeAndItemCodeAndItemName(String orderCode, String itemCode, String itemName);
+
+    List<Order> findByBomList();
 }

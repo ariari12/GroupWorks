@@ -7,7 +7,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -22,18 +21,14 @@ public class BomDTO {
     private String itemCode;
     @Schema(description = "품목 명", defaultValue = "우유")
     private String itemName;
-    @Schema(description = "수량", defaultValue = "100")
-    private Long quantity;
+    @Schema(description = "수량", defaultValue = "150")
+    private long quantity;
     @Schema(description = "단가", defaultValue = "1")
-    private String unitPrice;
-    @Schema(description = "입고장소", defaultValue = "우리집")
-    private String storageLocation;
-    @Schema(description = "입고일자", defaultValue = "1111.11.11 17:01")
-    private LocalDateTime storageTime;
-    @Schema(description = "출고장소", defaultValue = "너희집")
-    private String deliveryLocation;
-    @Schema(description = "출고일자", defaultValue = "9999.99.99 97:91")
-    private LocalDateTime deliveryTime;
+    private long unitPrice;
+    @Schema(description = "입고 수량", defaultValue = "100")
+    private long stockQuantity;
+    @Schema(description = "출고 수량", defaultValue = "30")
+    private long deliveryQuantity;
 
     private List<MaterialItemDTO> itemList;
 
@@ -44,10 +39,8 @@ public class BomDTO {
                 .setItemName(b.getItemName())
                 .setQuantity(b.getQuantity())
                 .setUnitPrice(b.getUnitPrice())
-                .setStorageLocation(b.getStorageLocation())
-                .setStorageTime(b.getStorageTime())
-                .setDeliveryLocation(b.getDeliveryLocation())
-                .setDeliveryTime(b.getDeliveryTime())
+                .setStockQuantity(b.getStockQuantity())
+                .setDeliveryQuantity(b.getDeliveryQuantity())
                 .setItemList(b.getItemList() == null ? null : b.getItemList().stream().map(MaterialItemDTO::new).toList());
         ;
     }
@@ -59,11 +52,9 @@ public class BomDTO {
                 .itemName(this.itemName)
                 .quantity(this.quantity)
                 .unitPrice(this.unitPrice)
-                .storageLocation(this.storageLocation)
-                .storageTime(this.storageTime)
-                .deliveryLocation(this.deliveryLocation)
-                .deliveryTime(this.deliveryTime)
-                .itemList(this.itemList.stream().map(MaterialItemDTO::dtoToEntity).toList())
+                .stockQuantity(this.stockQuantity)
+                .deliveryQuantity(this.deliveryQuantity)
+                .itemList(this.itemList == null ? null : this.itemList.stream().map(MaterialItemDTO::dtoToEntity).toList())
                 .build();
     }
 }

@@ -51,19 +51,19 @@ public class Order {
     private String zipCode;
 
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "employee_id")
     private Employee employee;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "manager_id")
     private BusinessManager manager;
 
-    @OneToMany
-    @JoinColumn(name = "bom_id")
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "order_id")
     private List<Bom> boms;
 
-    @OneToMany
-    @JoinColumn(name = "mes_id")
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "order_id")
     private List<Mes> mes;
 }

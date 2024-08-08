@@ -1,15 +1,21 @@
 let orderCode;
+
+let currentWindow = null; // 공용 창 변수
+let currentListener = null; // 공용 리스너 변수
+let preUrl = null; // 현재 열려있는 창에 URL
+
 document.addEventListener("DOMContentLoaded", function () {
     orderCode = document.getElementById("orderCode").value;
     disableEnterSubmit();
     createOrderCode();
 
-    document.getElementById('registerBusiness').addEventListener("click", ev => registerWindow());
-    document.getElementById('chooseBusiness').addEventListener("click", ev => chooseBusinessWindow());
-    document.getElementById('chooseEmployee').addEventListener("click", ev => chooseEmployeeWindow());
-    document.getElementById('chooseManager').addEventListener("click", ev => chooseManagerWindow());
-    document.getElementById('findZip').addEventListener("click", ev => addresZip());
+    /* window event handler, listener */
+    registerWindow();
+    chooseBusinessWindow();
+    chooseEmployeeWindow();
+    chooseManagerWindow();
 
+    document.getElementById('findZip').addEventListener("click", ev => addresZip());
     document.getElementById('orderForm').addEventListener('submit', ev => frmSubmit(ev));
 })
 
@@ -60,36 +66,65 @@ function printBtn () {
     };
 }
 
-/* 거래처 등록 */
-let registerBusinessWindow;
-function registerWindow() {
-    if (!registerBusinessWindow || registerBusinessWindow.closed) {
-        registerBusinessWindow = window.open("/materialflow/new-business", "거래처 등록",  "width=805, height=510, left=470, top=150");
-        window.addEventListener("message", ev => businessReceive(ev), false);
-    } else {
-        registerBusinessWindow.focus();
-    }
-}
-
 const WINDOW_SIZE = "width=1400, height=1200, left=300, top=30";
-
-/* 거래처 목록 */
-let businessListWindow;
-let businessListener;
-function chooseBusinessWindow() {
-    if (!businessListWindow || businessListWindow.closed) {
-        businessListWindow = window.open("/materialflow/business-select", "거래처 목록",  WINDOW_SIZE);
-        businessListener = ev => businessReceive(ev);
-        window.addEventListener("message", businessListener, false);
-    } else {
-        businessListWindow.focus();
-    }
-}
-/* 거래처 정보 받기 */
-function businessReceive(event) {
-    if (event.origin !== window.location.origin) {
+/* window 기존 창을 닫고 새창을 열고 Listener 등록 함수 */
+function openWindow(url, windowName, windowSize, eventHandler, message) {
+    // 기존 창이 열려 있다면 포커스
+    if (preUrl === url && currentWindow) {
+        currentWindow.focus();
         return;
     }
+    if (eventHandler) {
+        // 다른 새창이 열릴 경우 기존 창 닫기
+        if(currentWindow) currentWindow.close();
+
+        // 새 창 열기
+        currentWindow = window.open(url, windowName, windowSize);
+        preUrl = url;
+
+        
+        // 창이 열리고 나서 이벤트 리스너 추가
+        currentListener = eventHandler;
+        window.addEventListener("message", currentListener, { once : true });
+
+        // 창이 로드된 후 메시지 전송
+        if (message) {
+            currentWindow.onload = () => {
+                if (currentWindow && currentWindow.opener) {
+                    message(); // 메시지를 전송하는 함수 호출
+                } else {
+                    console.error("No opener found for the current window.");
+                }
+            };
+        }
+    }
+}
+function windowClosed() {
+    if(currentWindow || currentListener) {
+        currentWindow.removeEventListener("message", currentListener);
+        currentWindow = null; // 윈도우 객체 초기화
+        currentListener = null; // 리스너 초기화
+        preUrl = null; // URL 초기화
+    }
+}
+
+/* 거래처 등록 */
+function registerWindow() {
+    document.getElementById('registerBusiness').addEventListener("click", ev => {
+        openWindow("/materialflow/new-business", "거래처 등록", "width=805, height=510, left=470, top=150", ev => businessInfoUpdate(ev))
+    });
+}
+/* 거래처 목록 */
+function chooseBusinessWindow() {
+    document.getElementById('chooseBusiness').addEventListener("click", ev => {
+        openWindow("/materialflow/business-select", "거래처 목록", WINDOW_SIZE, ev => businessInfoUpdate(ev))
+    });
+}
+/* 거래처 정보 업데이트, 거래처 담당자 정보 초기화 */
+function businessInfoUpdate(event) {
+    if (event.origin !== window.location.origin) return;
+    if(event.data.id === undefined) return;
+
     const division = document.getElementById("division").value;
     if(division === '1') {
         document.getElementById("businessId").value = event.data.id;
@@ -101,65 +136,58 @@ function businessReceive(event) {
         document.getElementById("type").value = event.data.type;
         document.getElementById("item").value = event.data.item;
     }
-    window.removeEventListener("message", businessListener);
+
+    document.getElementById("managerId").value = null;
+    document.getElementById("managerName").value = null;
+    document.getElementById("managerPhone").value = null;
+    document.getElementById("managerEmail").value = null;
 }
 
 /* 거래처 담당자 선택 */
-let managerListWindow;
-let managerListener;
 function chooseManagerWindow() {
-    if (!managerListWindow || managerListWindow.closed) {
+    document.getElementById('chooseManager').addEventListener("click", ev => {
         let businessId = document.getElementById("businessId").value;
         if(businessId === undefined || businessId < 1) {
             toastInfo("<span style=\"color: #bb2d3b; font-size: 16px;\">거래처를 먼저 선택해주세요.</span>");
             return;
         }
-        managerListWindow = window.open("/materialflow/manager-select/" + businessId, "거래처 목록",  WINDOW_SIZE);
-        managerListWindow.onload = () => managerListWindow.postMessage({businessId: businessId}, '*');
-        managerListener = ev => managerReceive(ev);
-        window.addEventListener("message", managerListener, false);
-    } else {
-        managerListWindow.focus();
-    }
+        openWindow("/materialflow/manager-select/" + businessId, "거래처 목록", WINDOW_SIZE, ev => managerReceive(ev), () => {
+            if (currentWindow && currentWindow.opener) {
+                currentWindow.opener.postMessage({ businessId: businessId }, '*');
+            } else {
+                console.error("No opener found for the current window.");
+            }
+        });
+    });
 }
-/* 담당자 사원 정보 받기 */
+/* 거래처 담당자 정보 받기 */
 function managerReceive(event) {
     if (event.origin !== window.location.origin) { return; }
+    if(event.data.id === undefined) return;
 
-    const division = document.getElementById("division").value;
     document.getElementById("managerId").value = event.data.id;
-
     document.getElementById("managerName").value = event.data.name;
     document.getElementById("managerPhone").value = event.data.phone;
     document.getElementById("managerEmail").value = event.data.email;
-    window.removeEventListener("message", managerListener);
 }
 
-
 /* 담당자 사원 선택 */
-let employeeListWindow;
-let employeeListener;
 function chooseEmployeeWindow() {
-    if (!employeeListWindow || employeeListWindow.closed) {
-        employeeListWindow = window.open("/materialflow/employee-select", "거래처 목록",  WINDOW_SIZE);
-        employeeListener = ev => employeeReceive(ev);
-        window.addEventListener("message", employeeListener, false);
-    } else {
-        employeeListWindow.focus();
-    }
+    document.getElementById('chooseEmployee').addEventListener("click", ev => {
+        openWindow("/materialflow/employee-select", "사원 목록", WINDOW_SIZE, ev => employeeReceive(ev))
+    });
 }
 /* 담당자 사원 정보 받기 */
 function employeeReceive(event) {
     if (event.origin !== window.location.origin) { return; }
+    if(event.data.id === undefined) return;
 
-    const division = document.getElementById("division").value;
     document.getElementById("employeeId").value = event.data.id;
-
     document.getElementById("employeeName").value = event.data.name;
     document.getElementById("employeePhone").value = event.data.phone;
     document.getElementById("employeeEmail").value = event.data.email;
-    window.removeEventListener("message", employeeListener);
 }
+
 
 /* 납품 주소, 우편번호 */
 function addresZip() {
@@ -262,7 +290,7 @@ function updateTotal() {
     document.getElementById('total').value = total;
     let tex = document.getElementById('tex').value;
     if(tex > 1) {
-        document.getElementById('totalTex').value = total / (100 / tex);
+        document.getElementById('totalTex').value = Math.floor(total / (100 / tex));
     }
 }
 
@@ -282,15 +310,21 @@ function frmSubmit(event) {
             id: 0,
             itemCode: itemCode + "-" + i,
             itemName: row.querySelector('input[name="itemName"]').value,
-            itemQuantity: row.querySelector('input[name="itemQuantity"]').value,
+            quantity: row.querySelector('input[name="itemQuantity"]').value,
             unitPrice: row.querySelector('input[name="itemPrice"]').value,
             itemTotal: row.querySelector('input[name="itemTotal"]').value
         });
         i++;
     });
 
+    if(bomList.length < 1) {
+        alert("품목은 1종류 이상 있어야 합니다.");
+        return;
+    }
+
     // 발주서 데이터 객체 생성
     const orderData = {
+        id: 0,
         orderCode: orderCode,
         classification: document.getElementById('division').value,
         totalAmount: document.getElementById('total').value,
@@ -308,18 +342,29 @@ function frmSubmit(event) {
         mesList: null
     };
 
-    const t = event.target;
-    ajaxRequest(t.action, t.method, orderData, function (c) {
-        console.log(c);
-        if(c) {
-            alert("주문서(발주/수주) 기록 작성 완료");
-            location.href = "/materialflow/order-record";
-        } else {
-            alert("주문서(발주/수주) 기록 작성 완료");
-        }
-    }, function (e) {
-        console.log(e.responseJSON);
-        console.log(e.responseText)
+    // 모달 창 띄우기
+    const modal = new bootstrap.Modal(document.getElementById('modal'));
+    modal.show();
+    // 모달 닫기 (닫기 버튼 클릭 시)
+    // document.querySelector(".close-btn").addEventListener("click", e => modal.hide());
+    // 작성 취소 버튼 클릭 시
+    document.getElementById("cns-Btn").addEventListener("click", e => modal.hide());
+    // 작성 등록 버튼 클릭 시
+    document.getElementById('okBtn').addEventListener('click', function (e) {
+        const t = event.target;
+        ajaxRequest(t.action, t.method, orderData, function (c) {
+            console.log(c);
+            if(c.result) {
+                alert(c.message);
+                location.href = "/materialflow/order-record";
+            } else {
+                modal.hide();
+                alert(c.message);
+            }
+        }, function (e) {
+            modal.hide();
+            alert(e.responseText)
+        })
     })
 }
 

@@ -5,10 +5,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import kr.co.groupworks.materialflow.dto.BusinessDTO;
-import kr.co.groupworks.materialflow.dto.ManagerDTO;
-import kr.co.groupworks.materialflow.dto.MesDTO;
-import kr.co.groupworks.materialflow.dto.OrderDTO;
+import kr.co.groupworks.materialflow.dto.*;
 import kr.co.groupworks.materialflow.entity.Business;
 import kr.co.groupworks.materialflow.service.MaterialOpenApiService;
 import lombok.RequiredArgsConstructor;
@@ -72,7 +69,7 @@ public class MaterialOpenAPI {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(false);
     }
 
-    @Operation(tags = TAGS, summary = "발주/수주 주문기록 정보 제공 API", description = "MES와 연동할 수 있는 발주/수주 주문기록 정보 제공 API 모든 Parameter 가 포함된 데이터 반환")
+    @Operation(tags = TAGS, summary = "발주/수주 주문기록 정보 제공 API", description = "발주/수주 주문기록 정보 제공 API 모든 Parameter 가 포함된 데이터 반환")
     @ApiResponse(responseCode = RESPONSE_CODE, content = @Content(schema = @Schema(implementation = OrderDTO.class)))
     @Parameter(name = "orderCode", description = "발주/수주서 번호로 주문기록 조회", example = "2020120317-0A1561733-A1V3")
     @Parameter(name = "itemCode", description = "품목 코드로 주문기록 조회", example = "0A1561733-A1V3-2")
@@ -82,6 +79,13 @@ public class MaterialOpenAPI {
         List<OrderDTO> os = materialOpenApiService.getOrderList(orderCode, itemCode, itemName);
         if(os.isEmpty()) return ResponseEntity.status(HttpStatus.NOT_FOUND).body(os);
         return ResponseEntity.ok().body(os);
+    }
+
+    @Operation(tags = TAGS, summary = "모든 자재관리 현황 정보 제공 API", description = "모든 BOM 자재/재고/유통 현황 정보제공 API")
+    @ApiResponse(responseCode = RESPONSE_CODE, content = @Content(schema = @Schema(implementation = BomDTO.class)))
+    @GetMapping("/bom")
+    public ResponseEntity<Object> getBom() {
+        return ResponseEntity.ok().body(materialOpenApiService.getBomList());
     }
 
     @Operation(tags = TAGS, summary = "MES연동 데이터 등록 API", description = "MES와 연동하여 MES로 부터 데이터 전달받는 API")
