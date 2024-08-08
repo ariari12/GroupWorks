@@ -23,10 +23,8 @@ public interface VacationRepository extends JpaRepository<Vacation, Long>, Vacat
     List<Vacation> findOverlappingVacations(@Param("employeeId") Long employeeId,
                                             @Param("startDate") String startDate,
                                             @Param("endDate") String endDate);
-
     Optional<Vacation> findByCalendarIdAndEmployee(Long calendarId, Employee employee);
 
     @Modifying
     void deleteByCalendarId(@Param("calendarId") Long calendarId);
-
 }
