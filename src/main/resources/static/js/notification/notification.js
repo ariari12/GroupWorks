@@ -1,5 +1,12 @@
 document.addEventListener("DOMContentLoaded", function() {
     const eventSource = new EventSource(`/notifications/sse`);
+
+    // Check local storage for the badge state
+    const notificationBadge = document.querySelector('.translate-middle.badge');
+    if (localStorage.getItem('notificationBadgeVisible') === 'true') {
+        notificationBadge.classList.remove('d-none');
+    }
+
     eventSource.onmessage = function(event) {
         const notification = JSON.parse(event.data);
         console.log("Received notification: ", notification);
@@ -33,9 +40,23 @@ document.addEventListener("DOMContentLoaded", function() {
         // Initialize the toast using Bootstrap's toast function
         const toastBootstrap = new bootstrap.Toast(toast);
         toastBootstrap.show();
+
+        // 알림 배지 추가
+        notificationBadge.classList.remove('d-none');
+
+        // Save badge state to local storage
+        localStorage.setItem('notificationBadgeVisible', 'true');
     };
 
     eventSource.onerror = function(err) {
         console.error("EventSource failed: ", err);
     };
+    // 알림 배지 클릭시 제거
+    const notificationButton = document.querySelector('[data-bs-target="#notificationOffcanvasRight"]');
+    notificationButton.addEventListener('click', function() {
+        const notificationBadge = document.querySelector('.translate-middle.badge');
+        notificationBadge.classList.add('d-none');
+        // Save badge state to local storage
+        localStorage.setItem('notificationBadgeVisible', 'false');
+    });
 });
