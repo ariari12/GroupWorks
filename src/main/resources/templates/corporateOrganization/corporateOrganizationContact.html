@@ -28,6 +28,7 @@
 <th:block layout:fragment="content">
     <div>
         <h3>연락망</h3>
+        <hr>
         <div class="container" style="margin-top: 50px">
             <table class="table">
                 <tr>
@@ -36,7 +37,10 @@
                 </tr>
                 <th:block th:each="department : ${departmentDTOList}">
                     <tr>
-                        <td th:text="${department.getDepartmentName()}"></td>
+                        <td>
+                            <span th:text="${department.getDepartmentName()}"></span>
+                            <small th:text="'('+${department.getLocation()}+')'"></small>
+                        </td>
                         <td th:text="${department.getContactNumber()}"></td>
                     </tr>
                 </th:block>

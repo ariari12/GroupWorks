@@ -12,7 +12,8 @@
             gap: 10px; /* div들 사이 간격 */
         }
         .employee-item {
-            margin: 30px 50px 0 0;
+            width: 100px;
+            margin: 15px 100px 0 0;
             padding: 15px; /* 각 div 내부의 패딩 설정 */
             border: 3px solid #212529; /* 테두리 색상 설정 */
             border-radius: 15px; /* 둥근 테두리 */
@@ -33,6 +34,7 @@
 <th:block layout:fragment="content">
     <div>
         <h3>조직도</h3>
+        <hr>
         <div>
             <th:block th:each=" department : ${departmentDTOList}">
                 <a th:href="@{/corporateOrganization/chart(id=${department.getDepartmentId()})}" class="btn btn-dark" th:text="${department.getDepartmentName()}" style="margin: 10px 20px 0 0 "></a>
@@ -41,8 +43,10 @@
 
         <div class="employee-container" th:each="rank : ${rankList}">
             <th:block th:each="employee : ${employeeDTOListByDepartmentId}" th:if="${employee.getRankId() == rank}">
+
                 <span class="employee-item" th:utext="${employee.getEmployeeName()} + '<br>' + ${employee.getRankName()}"></span>
             </th:block>
+            <hr style="width: 100%; border: 1px solid #212529;">
         </div>
     </div>
 </th:block>
