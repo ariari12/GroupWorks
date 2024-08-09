@@ -70,5 +70,10 @@ public class Board{
     @ManyToOne()
     @JoinColumn(name = "department_id")
     private Department department;
-}
 
+    public void updateBoard(String content, String subject, String title) {
+        this.content = content;
+        this.subject = subject;
+        this.title = title;
+    }
+}
