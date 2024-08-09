@@ -1,23 +1,38 @@
 version: '3.8'
 
 services:
-  mongodb:
+
+  db:
+    image: mysql:8.0
+    container_name: mysql_db
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: xe
+      MYSQL_USER: scott
+      MYSQL_PASSWORD: tiger
+    ports:
+      - "3306:3306"
+    volumes:
+      - db-data:/var/lib/mysql
+
+  mongo:
     image: mongo:latest
-    container_name: groupworks_mongodb
+    container_name: mongodb
     ports:
       - "27017:27017"
     volumes:
-      - mongo_data:/data/db
+      - mongo-data:/data/db
 
   redis:
     image: redis:latest
-    container_name: groupworks_redis
+    container_name: redis
+    command: ["redis-server", "--requirepass", "groupworksjhta"]
     ports:
       - "6379:6379"
-
-networks:
-  groupworks-network:
-    driver: bridge
+    volumes:
+      - redis-data:/data
 
 volumes:
-  mongo_data:
+  db-data:
+  mongo-data:
+  redis-data:

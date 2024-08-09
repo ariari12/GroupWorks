@@ -37,6 +37,9 @@ dependencies {
     // https://mvnrepository.com/artifact/io.lettuce/lettuce-core
     implementation 'io.lettuce:lettuce-core:6.4.0.RELEASE'
 
+    // https://mvnrepository.com/artifact/com.github.ulisesbocchio/jasypt-spring-boot-starter
+    implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.5'
+
     testImplementation 'org.springframework.security:spring-security-test'
 
     // https://mvnrepository.com/artifact/com.googlecode.json-simple/json-simple
