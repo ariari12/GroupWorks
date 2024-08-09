@@ -4,7 +4,6 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import kr.co.groupworks.board.entity.Board;
 import kr.co.groupworks.board.entity.BoardStatus;
-import kr.co.groupworks.board.entity.BoardType;
 import kr.co.groupworks.board.entity.QBoard;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -147,18 +146,6 @@ public class BoardRepositoryImpl implements BoardQueryDsl {
                         .and(getKeywordFilter(keyword, keywordType)))
                 .fetchCount();
         return new PageImpl<>(boards, pageable, total);
-    }
-
-
-    /* 공지사항 최근 5개 가져오기 */
-    @Override
-    public List<Board> recentNotices() {
-        QBoard b = QBoard.board;
-        return queryFactory
-                .select(b).from(b)
-                .where(b.boardType.eq(BoardType.NOTICE))
-                .orderBy(b.createDate.desc())
-                .limit(5).fetch();
     }
 
 }

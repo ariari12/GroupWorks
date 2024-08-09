@@ -54,6 +54,7 @@ class WorkFlowServiceImplTest {
                 .phoneNumber("010-1111-0000")
                 .address("주소")
                 .gender("남")
+                //.joinDate(LocalDateTime.now())
                 .salary(300000L)
                 .supervisorId(0L)
                 .build()

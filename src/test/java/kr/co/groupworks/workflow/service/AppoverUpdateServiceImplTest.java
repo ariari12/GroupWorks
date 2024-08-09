@@ -71,6 +71,7 @@ class AppoverUpdateServiceImplTest {
                 .phoneNumber("010-1111-111" + (i % 10)) // phoneNumber: 사원 전화번호 (010-1111-1110, 010-1111-1111, ..., 010-1111-1119 반복)
                 .address("주소 " + i) // address: 사원 주소 (주소 1, 주소 2, ..., 주소 100)
                 .gender((i % 2 == 0) ? "남" : "여") // gender: 사원 성별 (남 또는 여, 홀수는 여, 짝수는 남)
+                //.joinDate(LocalDateTime.now().minusDays(i)) // joinDate: 입사일 (현재 날짜에서 i일 전)
                 .salary((3000L + i) * 10L) // salary: 사원 급여 (3000부터 시작, i에 따라 증가)
                 .supervisorId(0L) // supervisorId: 상사 ID (1부터 10까지 반복)
                 .build()
@@ -79,11 +80,10 @@ class AppoverUpdateServiceImplTest {
 
         // 출력 (확인 용)
         employees.forEach(employee ->
-                log.info("{}: {}, {}, {}, {}",
-                        employee.getEmployeeId(),
-                        employee.getEmployeeName(),
-                        employee.getEmail(),
-                        employee.getPhoneNumber(),
+                System.out.println(employee.getEmployeeId() + ": " +
+                        employee.getEmployeeName() + ", " +
+                        employee.getEmail() + ", " +
+                        employee.getPhoneNumber() + ", " +
                         employee.getDepartment().getDepartmentName())
         );
         long employeeId01 = employees.get(0).getEmployeeId();
@@ -151,7 +151,7 @@ class AppoverUpdateServiceImplTest {
                 .employeeId(employee.getEmployeeId())
                 .email("test@test.test")
                 .phoneNumber("000-0000-0000")
-                .department(Department.builder().departmentName("전산").build())
+//                .departmentName("전산")
                 .rankName("이사")
                 .employeeName(employee.getEmployeeName())
                 .build();
