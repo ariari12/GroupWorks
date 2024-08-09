@@ -4,11 +4,11 @@ package kr.co.groupworks.employee.entity;
 import jakarta.persistence.*;
 import kr.co.groupworks.common.BaseEntity;
 import kr.co.groupworks.department.entity.Department;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import lombok.experimental.SuperBuilder;
-
-
-import java.time.LocalDateTime;
 
 @Getter
 @Entity
@@ -59,6 +59,5 @@ public class Employee extends BaseEntity {
 
     @Column(name = "is_active")
     private Integer isActive;
-
 
 }
