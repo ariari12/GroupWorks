@@ -31,9 +31,31 @@ public class CalendarServiceImpl implements CalendarService {
     }
 
     @Override
-    public List<CalendarFormDTO> findAllCalendar() {
-        return calendarRepository.findAll().
-                stream()
-                .map(calendarMapper::toDto).toList();
+    public List<CalendarFormDTO> findAllPersonalCalendar(Long employeeId) {
+        Employee employee = employeeRepository.findById(employeeId)
+                .orElseThrow(() -> new EntityNotFoundException("사원을 찾을 수 없습니다. " + employeeId));
+
+        return calendarRepository.findAllPersonalCalendarByEmployee(employee).
+                stream().map(calendarMapper::toDto).toList();
+    }
+
+    @Override
+    public Long deleteCalendar(Long calendarId, Long employeeId) {
+        Employee employee = employeeRepository.findById(employeeId)
+                .orElseThrow(() -> new EntityNotFoundException("사원을 찾을 수 없습니다. " + employeeId));
+        Calendar calendar = calendarRepository.findById(calendarId)
+                .orElseThrow(() -> new EntityNotFoundException("일정을 찾을 수 없습니다. " + calendarId));
+        calendarRepository.deleteByCalendarIdAndEmployee(calendar.getCalendarId(), employee);
+        return calendar.getCalendarId();
+    }
+
+    @Override
+    public Long modifyCalendar(CalendarFormDTO calendarFormDTO, Long employeeId) {
+        Calendar calendar = calendarRepository.findById(calendarFormDTO.getCalendarId())
+                .orElseThrow(() -> new EntityNotFoundException("일정을 찾을 수 없습니다. "
+                        + calendarFormDTO.getCalendarId()));
+        calendar.updateCalendar(calendarFormDTO);
+
+        return calendar.getCalendarId();
     }
 }

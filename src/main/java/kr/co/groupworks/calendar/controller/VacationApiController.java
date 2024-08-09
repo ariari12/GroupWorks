@@ -63,7 +63,6 @@ public class VacationApiController {
     @PostMapping("/annual")
     public ResponseEntity<?> vacationAnnual(@Validated @RequestBody AnnualFormDTO dto,
                                             @SessionAttribute(name = "employee") SessionEmployeeDTO sessionEmployeeDTO){
-
         log.info("AnnualFormDTO ={}",dto);
         log.info("sessionEmployeeDTO ={}",sessionEmployeeDTO.getEmployeeId());
         dto.setEmployeeId(sessionEmployeeDTO.getEmployeeId());
@@ -75,7 +74,6 @@ public class VacationApiController {
     @PostMapping("/half")
     public ResponseEntity<?> vacationHalf(@Validated @RequestBody HalfFormDTO dto,
                                           @SessionAttribute(name = "employee") SessionEmployeeDTO sessionEmployeeDTO){
-
         log.info("HalfFormDTO ={}",dto);
         dto.setEmployeeId(sessionEmployeeDTO.getEmployeeId());
         vacationService.save(dto);

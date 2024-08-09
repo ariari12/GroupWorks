@@ -2,6 +2,7 @@ package kr.co.groupworks.calendar.entity;
 
 
 import jakarta.persistence.*;
+import kr.co.groupworks.calendar.dto.CalendarFormDTO;
 import kr.co.groupworks.common.BaseEntity;
 import kr.co.groupworks.employee.entity.Employee;
 import lombok.*;
@@ -48,4 +49,10 @@ public class Calendar extends BaseEntity {
     @OneToMany(mappedBy = "calendar",cascade = CascadeType.ALL, orphanRemoval = true)
     protected final List<CalendarAttachment> attachmentList = new ArrayList<>();
 
+    public void updateCalendar(CalendarFormDTO calendarFormDTO) {
+        this.title = calendarFormDTO.getTitle();
+        this.contents = calendarFormDTO.getContents();
+        this.startDate = calendarFormDTO.getStartDate();
+        this.endDate = calendarFormDTO.getEndDate();
+    }
 }

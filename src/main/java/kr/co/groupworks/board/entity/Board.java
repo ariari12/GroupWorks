@@ -3,12 +3,23 @@ package kr.co.groupworks.board.entity;
 import jakarta.persistence.*;
 import kr.co.groupworks.department.entity.Department;
 import kr.co.groupworks.employee.entity.Employee;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.ColumnDefault;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDateTime;
 
 @Entity
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Table(name = "board")
-public class Board {
+public class Board{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,17 +32,26 @@ public class Board {
     @Column
     private String subject;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
 
-    @Column(name = "create_date", nullable = false)
+    @Column(name = "create_date", nullable = false, updatable = false)
     private LocalDateTime createDate;
+
+    @PrePersist
+    protected void onCreate() {
+        createDate = LocalDateTime.now();
+    }
 
     @Column(name = "update_date")
     private LocalDateTime updateDate;
 
     @Column(name = "ip_address")
     private String ipAddress;
+
+    @Column(name = "hits", nullable = false)
+    @ColumnDefault("0")
+    private int hits;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -52,14 +72,3 @@ public class Board {
     private Department department;
 }
 
-// 게시판 상태 ( 활성 / 비활성 )
-enum BoardStatus {
-    ACTIVE,
-    INACTIVE
-}
-
-// 게시판 타입 ( 공지 / 부서 )
-enum BoardType {
-    NOTICE,
-    DEPARTMENT
-}

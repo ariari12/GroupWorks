@@ -1,26 +1,38 @@
 package kr.co.groupworks.calendar.repository;
 
 
+import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import kr.co.groupworks.calendar.dto.CalendarFormDTO;
+import kr.co.groupworks.calendar.entity.QVacation;
+import kr.co.groupworks.employee.entity.Employee;
+import kr.co.groupworks.employee.entity.QEmployee;
 import lombok.RequiredArgsConstructor;
 
+import java.util.List;
 
+import static kr.co.groupworks.calendar.entity.QVacation.*;
+import static kr.co.groupworks.employee.entity.QEmployee.*;
 
 
 @RequiredArgsConstructor
 public class VacationRepositoryImpl implements VacationQueryDsl{
     private final JPAQueryFactory queryFactory;
-//    List<VacationMyHistoryDTO> contents = queryFactory.select(new QVacationMyHistoryDTO(employee.employeeId, employee.employeeName,
-//                    employee.rankName, department.departmentName, vacationHistory.annualDaysUsed,
-//                    vacationHistory.sickDaysUsed, vacationHistory.otherDaysUsed, vacationHistory.totalAnnual))
-//            .from(vacationHistory)
-//            .join(vacationHistory.employee, employee)
-//            .join(employee.department, department)
-//            .where(employee.employeeId.eq(employeeId))
-//            .offset(pageable.getOffset())
-//            .limit(pageable.getPageSize())
-//            .fetch();
-//
-//    PageableExecutionUtils.getPage(contents, pageable, countQuery::fetchOne)
 
+    @Override
+    public List<CalendarFormDTO> findCalendarFormByEmployee(Employee emp) {
+        return queryFactory.select(
+                Projections.constructor(
+                        CalendarFormDTO.class,
+                        vacation.calendarId,
+                        vacation.title,
+                        vacation.contents,
+                        vacation.startDate,
+                        vacation.endDate
+                ))
+                .from(vacation)
+                .join(vacation.employee, employee)
+                .where(employee.eq(emp))
+                .fetch();
+    }
 }
