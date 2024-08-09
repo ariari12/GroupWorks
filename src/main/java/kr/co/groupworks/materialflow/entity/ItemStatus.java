@@ -15,4 +15,11 @@ public enum ItemStatus {
     ItemStatus(String value) {
         this.value = value;
     }
+
+    public static ItemStatus getItemStatus(Integer i) {
+        if (i < 0 || i >= ItemStatus.values().length) {
+            throw new IllegalArgumentException("Invalid index: " + i);
+        }
+        return ItemStatus.values()[i];
+    }
 }

@@ -10,6 +10,11 @@ public class ItemStatusConverter implements AttributeConverter<ItemStatus, Strin
 
     @Override
     public ItemStatus convertToEntityAttribute(String s) {
-        return ItemStatus.valueOf(s);
+        for (ItemStatus itemStatus : ItemStatus.values()) {
+            if (itemStatus.getValue().equals(s)) {
+                return itemStatus;
+            }
+        }
+        throw new IllegalArgumentException("Unknown value: " + s);
     }
 }

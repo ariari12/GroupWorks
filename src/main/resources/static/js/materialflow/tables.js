@@ -9,12 +9,12 @@ $(document).ready(function() {
             scrollX: true,
             scrollCollapse: true,
             scrollY: 450,
-            lengthMenu: [ 10, 15, 20, 25, 30 ],
-            displayLength: 15,
+            lengthMenu: [ 20, 30, 40, 50, 75, 100 ],
+            displayLength: 30,
         });
     }
 });
 
-function load(pk) {
-    window.location = "/material/detail/" + pk;
+function load(pk, c) {
+    window.location = "/materialflow/order-detail/" + pk + "/" + c;
 }
