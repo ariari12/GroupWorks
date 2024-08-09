@@ -13,11 +13,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
 /* window 기존 창을 닫고 새창을 열고 Listener 등록 함수 */
 function openWindow(url, windowName, windowSize, eventHandler) {
-    // 기존 창이 열려 있다면 포커스
-    if (preUrl === url && currentWindow) {
+    // 기존 창(이전 url 과 새로여는 url 이 같은 경우)이 열려 있다면 포커스
+    if (preUrl === url && !currentWindow.closed) {
         currentWindow.focus();
         return;
     }
+    if(currentWindow != null && currentWindow.closed) preUrl = null; // 창닫힘 기존
     if (eventHandler) {
         // 다른 새창이 열릴 경우 기존 창 닫기
         if(currentWindow) currentWindow.close();
@@ -66,8 +67,6 @@ function businessInfoUpdate(event) {
     document.getElementById("managerName").value = null;
     document.getElementById("managerPhone").value = null;
     document.getElementById("managerEmail").value = null;
-
-    preUrl = null; // 열려있는 창 없음
 }
 
 /* 거래처 담당자 선택 */
@@ -86,6 +85,7 @@ function chooseManagerWindow() {
 /* 거래처 담당자 정보 받기 */
 function managerReceive(event) {
     if (event.origin !== window.location.origin) { return; }
+    if(currentWindow.closed) preUrl = null; // 창닫힘
     if(event.data.id === undefined) return;
 
     document.getElementById("managerId").value = event.data.id;
@@ -93,7 +93,6 @@ function managerReceive(event) {
     document.getElementById("managerPhone").value = event.data.phone;
     document.getElementById("managerEmail").value = event.data.email;
 
-    preUrl = null; // 열려있는 창 없음
 }
 
 /* 담당자 사원 선택 */
@@ -105,12 +104,11 @@ function chooseEmployeeWindow() {
 /* 담당자 사원 정보 받기 */
 function employeeReceive(event) {
     if (event.origin !== window.location.origin) { return; }
+    if(currentWindow.closed) preUrl = null; // 창닫힘
     if(event.data.id === undefined) return;
 
     document.getElementById("employeeId").value = event.data.id;
     document.getElementById("employeeName").value = event.data.name;
     document.getElementById("employeePhone").value = event.data.phone;
     document.getElementById("employeeEmail").value = event.data.email;
-
-    preUrl = null; // 열려있는 창 없음
 }
