@@ -7,7 +7,7 @@ services:
     container_name: mysql_db
     environment:
       MYSQL_ROOT_PASSWORD: rootpassword
-      MYSQL_DATABASE: xe
+      MYSQL_DATABASE: groupworks
       MYSQL_USER: scott
       MYSQL_PASSWORD: tiger
     ports:
@@ -26,7 +26,6 @@ services:
   redis:
     image: redis:latest
     container_name: redis
-    command: ["redis-server", "--requirepass", "groupworksjhta"]
     ports:
       - "6379:6379"
     volumes:
