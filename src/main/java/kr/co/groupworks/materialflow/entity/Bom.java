@@ -38,4 +38,9 @@ public class Bom {
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "bom_id")
     private List<MaterialItem> itemList;
+
+    public Bom setItemList(List<MaterialItem> itemList) {
+        this.itemList = itemList;
+        return this;
+    }
 }

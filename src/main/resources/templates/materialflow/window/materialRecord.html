@@ -84,7 +84,7 @@
             <tbody>
                 <tr th:each="list: ${itemList}">
                     <td th:text="${list.getItemCode() + list.getId()}"></td>
-                    <td th:text="${list.getItemStatus()}"></td>
+                    <td th:text="${list.getItemStatus().getValue()}"></td>
 
                     <td th:text="${list.getStorageManager()}"></td>
                     <td th:text="${list.getStorageLocation()}"></td>

@@ -66,4 +66,14 @@ public class Order {
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "order_id")
     private List<Mes> mes;
+
+    public Order setBomList(List<Bom> boms) {
+        this.boms = boms;
+        return this;
+    }
+
+    public Order setMesList(List<Mes> mes) {
+        this.mes = mes;
+        return this;
+    }
 }

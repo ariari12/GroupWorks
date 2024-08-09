@@ -2,9 +2,7 @@ package kr.co.groupworks.materialflow.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
-import jakarta.persistence.Convert;
 import kr.co.groupworks.materialflow.entity.ItemStatus;
-import kr.co.groupworks.materialflow.entity.ItemStatusConverter;
 import kr.co.groupworks.materialflow.entity.MaterialItem;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,7 +28,6 @@ public class MaterialItemDTO {
     private Long mesId;
 
     @Schema(description = "자재 상태(1:입하예정, 2:입고, 3:생산, 4:출하예정, 5:출고)", defaultValue = "입고")
-    @Convert(converter = ItemStatusConverter.class)
     private ItemStatus itemStatus;
     @Schema(description = "자재 코드(품목코드 + n번째 + 식별 id)", defaultValue = "0A9294117-Y6G3-1417, (4번째, 식별 id:17)")
     private String itemCode;
@@ -75,7 +72,7 @@ public class MaterialItemDTO {
                 .mesId(this.getMesId())
 
                 .itemStatus(this.getItemStatus())
-                .itemCode(this.itemCode)
+                .itemCode(this.getItemCode())
 
                 .storageManager(this.getStorageManager())
                 .storageLocation(this.getStorageLocation())

@@ -70,31 +70,26 @@ public class MaterialServiceImpl implements MaterialService {
         if(bm == null) return returnMessage("거래처 담당자 정보가 올바르지 않습니다.", false);
 
         /* 품목 유효성 체크 */
-        List<BomDTO> bList = orderDTO.getBomList();
-        if(bList == null || bList.isEmpty()) return returnMessage("품목 정보가 비어있습니다.", false);
-        
+        List<BomDTO> bomDTOList = orderDTO.getBomList();
+        if(bomDTOList == null || bomDTOList.isEmpty()) return returnMessage("품목 정보가 비어있습니다.", false);
+        List<Bom> bomList = bomDTOList.stream().map(BomDTO::dtoToEntity).toList();
+
         /* 자재리스트 생성 */
-        bList.forEach(b -> {
-            b.setItemList(new ArrayList<>());
+        bomList.forEach(b -> {
+            List<MaterialItem> itemList = new ArrayList<>();
             for (int i = 1; i <= b.getQuantity(); i++) {
-                b.getItemList().add(
-                        new MaterialItemDTO(new MaterialItem())
-                                .setId(0)
-                                .setItemStatus(ItemStatus.RECEIVING)
-                                .setItemCode(b.getItemCode() + i)
-                );
+                itemList.add(new MaterialItemDTO(new MaterialItem())
+                        .setId(0).setItemStatus(ItemStatus.RECEIVING).setItemCode(b.getItemCode() + i)
+                        .dtoToEntity());
             }
+            /* 자재 코드 업데이트 */
+            b.setItemList(materialItemRepository.saveAll(
+                    /* 자재 List 저장 */
+                    materialItemRepository.saveAll(itemList).stream().map(i ->
+                            new MaterialItemDTO(i).setItemCode(i.getItemCode() + i.getId())
+                                    .dtoToEntity()).toList()));
         });
-        Order checkOrder = orderRepository.save(orderDTO.setBomList(bList).dtoToEntity(eE, bm));
-        /* 자재 코드 업데이트 */
-        checkOrder.getBoms().forEach(b -> bomRepository.findById(b.getId()
-                ).ifPresent(bom -> materialItemRepository.saveAll(
-                        bom.getItemList().stream().map(i -> new MaterialItemDTO(i)
-                                .setItemCode(i.getItemCode() + i.getId())
-                                .dtoToEntity()
-                        ).toList())
-                )
-        );
+        orderRepository.save(orderDTO.dtoToEntity(eE, bm).setBomList(bomRepository.saveAll(bomList)));
         return returnMessage("발주서/수주서 등록 완료", true);
     }
 
