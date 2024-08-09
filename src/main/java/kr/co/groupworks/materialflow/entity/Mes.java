@@ -19,7 +19,7 @@ public class Mes {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "mes_id")
-    private Long id;
+    private long id;
 
     @Column(name = "order_id")
     private Long orderId;
@@ -31,16 +31,16 @@ public class Mes {
     @Schema(description = "공정 장소", defaultValue = "우유공장1")
     private String process;
     @Schema(description = "생산 수량", defaultValue = "100")
-    private Long quantity;
+    private long quantity;
     @Schema(description = "불량품 수량", defaultValue = "11")
-    private Long defectsNum;
+    private long defectsNum;
     @Schema(description = "단가", defaultValue = "1000")
-    private Long unitPrice;
+    private long unitPrice;
     @Schema(description = "제조일자", defaultValue = "1999.11.27")
     private LocalDate manufactureDate;
 
-    @OneToMany
-    @JoinColumn(name = "item_id")
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "mes_id")
     private List<MaterialItem> itemList;
 }
 

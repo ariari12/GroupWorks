@@ -15,7 +15,7 @@ function tableSet() {
         paging: true,
         scrollX: true,
         scrollCollapse: true,
-        scrollY: 450,
+        scrollY: 690,
         lengthMenu: [ 20, 30, 40, 50, 75, 100 ],
         displayLength: 30,
     });

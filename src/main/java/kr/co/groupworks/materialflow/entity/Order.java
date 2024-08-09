@@ -20,7 +20,7 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "order_id")
     @Schema(description = "주문 등록 번호", defaultValue = "1")
-    private Long id;
+    private long id;
     @Schema(description = "주문 번호(발주/수주)", defaultValue = "1515-01-151")
     private String orderCode;
 
@@ -28,9 +28,9 @@ public class Order {
     @Schema(description = "구분(발주/수주)", defaultValue = "발주")
     private OrderClassification classification;
     @Schema(description = "총 액수", defaultValue = "1000000")
-    private Long totalAmount;
+    private long totalAmount;
     @Schema(description = "세 율", defaultValue = "10")
-    private Long texAmount;
+    private long texAmount;
 
     @DateTimeFormat(pattern = "yyyy.MM.dd")
     @Schema(description = "발주 일자", defaultValue = "1001.01.11")

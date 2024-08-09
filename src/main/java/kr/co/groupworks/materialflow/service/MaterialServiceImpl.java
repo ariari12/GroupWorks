@@ -4,9 +4,7 @@ import kr.co.groupworks.employee.entity.Employee;
 import kr.co.groupworks.employee.repository.EmployeeRepository;
 import kr.co.groupworks.materialflow.control.MaterialFlowManagerController;
 import kr.co.groupworks.materialflow.dto.*;
-import kr.co.groupworks.materialflow.entity.Business;
-import kr.co.groupworks.materialflow.entity.BusinessManager;
-import kr.co.groupworks.materialflow.entity.OrderClassification;
+import kr.co.groupworks.materialflow.entity.*;
 import kr.co.groupworks.materialflow.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -60,21 +59,42 @@ public class MaterialServiceImpl implements MaterialService {
         /* 담당자 유효성 체크 */
         EmployeeDTO e = orderDTO.getEmployee();
         ManagerDTO m = orderDTO.getManager();
-        if(e == null || m == null) return returnMessage("담당자 정보가 비어있습니다.", false);
-        Long eId = e.getId();
-        Long mId = m.getId();
-        if(eId == null || mId == null) return returnMessage("담당자 정보가 비어있습니다.", false);
+        if(e == null) return returnMessage("사원 담당자 정보가 비어있습니다.", false);
+        if(m == null) return returnMessage("거래처 담당자 정보가 비어있습니다.", false);
+        Long eId = e.getId(), mId = m.getId();
+        if(eId == null) return returnMessage("사원 담당자 정보가 비어있습니다.", false);
+        if(mId == null) return returnMessage("거래처 담당자 정보가 비어있습니다.", false);
         Employee eE = employeeRepository.findById(eId).orElse(null);
         BusinessManager bm = managerRepository.findById(mId).orElse(null);
-        if(eE == null || bm == null) return returnMessage("담당자 정보가 올바르지 않습니다.", false);
+        if(eE == null) return returnMessage("사원 담당자 정보가 올바르지 않습니다.", false);
+        if(bm == null) return returnMessage("거래처 담당자 정보가 올바르지 않습니다.", false);
 
         /* 품목 유효성 체크 */
         List<BomDTO> bList = orderDTO.getBomList();
         if(bList == null || bList.isEmpty()) return returnMessage("품목 정보가 비어있습니다.", false);
-//        List<Bom> bomList = bomRepository.saveAll(bList.stream().map(BomDTO::dtoToEntity).toList());
-//        if(bomList.isEmpty()) return returnMessage("품목 정보를 저장할 수 없습니다.", false);
-
-        orderRepository.save(orderDTO.setBomList(bList).dtoToEntity(eE, bm));
+        
+        /* 자재리스트 생성 */
+        bList.forEach(b -> {
+            b.setItemList(new ArrayList<>());
+            for (int i = 1; i <= b.getQuantity(); i++) {
+                b.getItemList().add(
+                        new MaterialItemDTO(new MaterialItem())
+                                .setId(0)
+                                .setItemStatus(ItemStatus.RECEIVING)
+                                .setItemCode(b.getItemCode() + i)
+                );
+            }
+        });
+        Order checkOrder = orderRepository.save(orderDTO.setBomList(bList).dtoToEntity(eE, bm));
+        /* 자재 코드 업데이트 */
+        checkOrder.getBoms().forEach(b -> bomRepository.findById(b.getId()
+                ).ifPresent(bom -> materialItemRepository.saveAll(
+                        bom.getItemList().stream().map(i -> new MaterialItemDTO(i)
+                                .setItemCode(i.getItemCode() + i.getId())
+                                .dtoToEntity()
+                        ).toList())
+                )
+        );
         return returnMessage("발주서/수주서 등록 완료", true);
     }
 

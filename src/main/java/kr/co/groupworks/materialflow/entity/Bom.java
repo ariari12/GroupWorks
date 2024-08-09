@@ -35,7 +35,7 @@ public class Bom {
     @Schema(description = "출고 수량", defaultValue = "30")
     private long deliveryQuantity;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "bom_id")
     private List<MaterialItem> itemList;
 }

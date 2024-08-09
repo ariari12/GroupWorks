@@ -1,6 +1,7 @@
 package kr.co.groupworks.materialflow.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.persistence.Column;
 import kr.co.groupworks.materialflow.entity.Mes;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,7 +17,9 @@ import java.util.List;
 @AllArgsConstructor
 public class MesDTO {
     @Schema(description = "생산 기록번호", defaultValue = "02132454")
-    private Long id;
+    private long id;
+
+    private Long orderId;
 
     @Schema(description = "제품 코드", defaultValue = "02132454")
     private String itemCode;

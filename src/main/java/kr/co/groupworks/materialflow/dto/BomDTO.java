@@ -15,7 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 public class BomDTO {
     @Schema(description = "자재 등록 번호", defaultValue = "1")
-    private Long id;
+    private long id;
 
     @Schema(description = "품목 코드", defaultValue = "0A2132454-0AB7-1")
     private String itemCode;
