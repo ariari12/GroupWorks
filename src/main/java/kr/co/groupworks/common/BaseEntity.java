@@ -1,4 +1,4 @@
-package kr.co.groupworks.common;
+package kr.co.groupworks;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
