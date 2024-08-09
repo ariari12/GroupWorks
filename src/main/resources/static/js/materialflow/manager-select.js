@@ -24,6 +24,8 @@ function sendDataToParent(tr) {
         phone: tr.children[2].innerText,
         email: tr.children[3].innerText,
     };
+
+    // console.log(data);
     window.opener.postMessage(data, window.location.origin);
     window.close();
 }

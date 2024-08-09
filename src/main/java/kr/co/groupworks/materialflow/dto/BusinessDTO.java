@@ -25,7 +25,7 @@ public class BusinessDTO {
     @NotNull(message = "대표자 성명은 필수 입력 사항입니다.") @NotEmpty(message = "대표자 성명은 비어있을 수 없습니다.")
     @Schema(defaultValue = "홍길동", description = "대표자 성명")
     private String ceo;
-    @Pattern(regexp = "^010-\\d{3,4}-\\d{3,4}$", message = "연락처 번호 형식이 올바르지 않습니다.")
+    @Pattern(regexp = "^\\d{2,3}-\\d{3,4}-\\d{3,4}$", message = "연락처 번호 형식이 올바르지 않습니다.")
     @Schema(defaultValue = "010-1234-1325", description = "대표 연락처")
     private String ceoTel;
 

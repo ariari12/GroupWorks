@@ -45,7 +45,7 @@ public class MaterialFlowManagerRestController {
     /* 거래처 담당자 정보 등록 */
     @PostMapping("/business-manager")
     public ResponseEntity<Object> requestManager(@Valid @RequestBody ManagerDTO manager, @RequestParam Long businessId, BindingResult bindingResult) {
-//        log.info("request, bId: {}, manager: {}", businessId, manager);
+        log.info("request, bId: {}, manager: {}", businessId, manager);
         if(manager == null || businessId == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).body(false);
         if(bindingResult.hasErrors()) {
             // 검증 오류 메시지를 수집하여 반환

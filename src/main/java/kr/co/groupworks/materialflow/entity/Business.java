@@ -17,7 +17,7 @@ public class Business {
     @Schema(description = "거래처 등록 번호", defaultValue = "1")
     private Long id;
 
-    @Schema(description = "사업자 번호", defaultValue = "12345-12346-1325")
+    @Schema(description = "사업자 등록번호 형식: 000-00-00000", defaultValue = "123-12-1325")
     private String businessNumber;
     @Schema(description = "상호명", defaultValue = "◎◎제약™")
     private String businessName;
