@@ -13,6 +13,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -76,13 +77,33 @@ public class EmployeeServiceImpl implements EmployeeService {
         }
 
     }
-//    받는사람, 참조하는 이메일 쿼리로 찾기
+//    받는사람, 참조하는 이메일 쿼리로 찾는 서비스 로직
     @Override
     public List<String> getEmailsByQuery(String query) {
         return employeeRepository.findEmailsByQuery(query);
     }
 
-//    DTO to Entity
+//    부서번호에 해당하는 사원 목록 가져오는 서비스 로직
+    @Override
+    public List<EmployeeDTO> findByDepartmentId(Long departmentId) {
+        List<Employee> employeeList = employeeRepository.findEmployeeByDepartment_DepartmentId(departmentId);
+        List<EmployeeDTO> employeeDTOList = new ArrayList<>();
+        for(Employee employee : employeeList)
+        {
+            EmployeeDTO employeeDTO = toEmployeeDTO(employee);
+            employeeDTOList.add(employeeDTO);
+        }
+        return employeeDTOList;
+    }
+
+//    해당 부서에 존재하는 직급 번호 가져오는 서비스 로직
+    @Override
+    public List<Integer> findRankIdByDepartmentId(Long departmentId) {
+        List<Integer> rankIdList = employeeRepository.findRankIdByDepartmentId(departmentId);
+        return rankIdList;
+    }
+
+    //    DTO to Entity
     public Employee toEmployee(EmployeeDTO dto) {
         return Employee.builder()
                 .employeeId(dto.getEmployeeId())
@@ -121,7 +142,7 @@ public class EmployeeServiceImpl implements EmployeeService {
                         .location(employee.getDepartment().getLocation())
                         .build())
                 .email(employee.getEmail())
-                .joinDate(employee.getJoinDate())
+                .joinDate(employee.getCreatedDate())
                 .phoneNumber(employee.getPhoneNumber())
                 .address(employee.getAddress())
                 .gender(employee.getGender())
