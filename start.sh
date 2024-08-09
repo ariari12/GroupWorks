@@ -6,6 +6,8 @@
 
   #remove container
   echo "==> Remove previous container ..."
+
+  docker stop ${container_name}
   docker rm -f ${container_name}
 
   echo "==> Remove previous image .."
