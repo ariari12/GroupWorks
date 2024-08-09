@@ -1,14 +1,14 @@
-INSERT INTO xe.department (department_id,contact_number,department_name,location) VALUES
-      (1,'010-1234-5678','기술부서','A동'),
-      (2,'010-1234-5679','마케팅부서','B동'),
-      (3,'010-1234-5680','영업부서','C동'),
-      (4,'010-1234-5681','인사부서','D동'),
-      (5,'010-1234-5682','재무부서','E동'),
-      (6,'010-1234-5683','IT 지원부서','F동'),
-      (7,'010-1234-5684','제품 관리부서','G동'),
-      (8,'010-1234-5685','고객 서비스부서','H동'),
-      (9,'010-1234-5686','법무부서','I동'),
-      (10,'010-1234-5687','연구개발부서','J동');
+INSERT INTO xe.department (department_id, contact_number, department_name, location)
+VALUES (1, '010-1234-5678', '기술부서', 'A동'),
+       (2, '010-1234-5679', '마케팅부서', 'B동'),
+       (3, '010-1234-5680', '영업부서', 'C동'),
+       (4, '010-1234-5681', '인사부서', 'D동'),
+       (5, '010-1234-5682', '재무부서', 'E동'),
+       (6, '010-1234-5683', 'IT 지원부서', 'F동'),
+       (7, '010-1234-5684', '제품 관리부서', 'G동'),
+       (8, '010-1234-5685', '고객 서비스부서', 'H동'),
+       (9, '010-1234-5686', '법무부서', 'I동'),
+       (10, '010-1234-5687', '연구개발부서', 'J동');
 
 INSERT INTO xe.employee (is_active,rank_id,created_date,department_id,last_modified_date,salary,supervisor_id,address,email,employee_name,employee_pw,gender,phone_number,rank_name) VALUES
 	 (1,5,'2021-01-01 00:00:00',1,NULL,30000,0,'주소 1','employee1@example.com','사원1','$2a$10$Vg4CIc8WunwnKoV2.j9J.uPep8BgLAzb2VelL89I.hGiLBDNoybpO','여','010-1111-1100','부장'),
