@@ -2,8 +2,8 @@ package kr.co.groupworks.board.dto;
 
 import kr.co.groupworks.board.entity.BoardStatus;
 import kr.co.groupworks.board.entity.BoardType;
-import kr.co.groupworks.entity.cis.Department;
-import kr.co.groupworks.entity.cis.Employee;
+import kr.co.groupworks.department.entity.Department;
+import kr.co.groupworks.employee.entity.Employee;
 import lombok.*;
 
 import java.time.LocalDateTime;
