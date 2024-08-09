@@ -63,7 +63,7 @@ th, td {
 
 @media print {
     body {
-        zoom: 44%;
+        zoom: 42.7%;
     }
     .none-print {
         display: none !important;

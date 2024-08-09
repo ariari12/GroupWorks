@@ -97,11 +97,13 @@ public class MaterialFlowManagerController {
     }
 
     /* BOM 자재 품목에 속하는 자재 목록 조회 */
-    @GetMapping(value = "/item/{bomId}")
-    public String bom(@PathVariable("bomId") long bomId, Model model) {
+    @GetMapping(value = "/item/{bomId}/{itemCode}/{itemName}")
+    public String bom(@PathVariable("bomId") long bomId, @PathVariable("itemCode") String ic, @PathVariable("itemName") String in, Model model) {
         String title = "BOM", subTitle = "자재 현황";
         model.addAttribute(ATTR_TITLE, title);
         model.addAttribute(ATTR_SUB_TITLE, subTitle);
+        model.addAttribute("itemCode", ic);
+        model.addAttribute("itemName", in);
         model.addAttribute("itemList", materialService.getItemList(bomId));
         return "materialflow/window/materialRecord";
     }

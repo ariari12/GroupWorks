@@ -33,9 +33,9 @@ function printBtn () {
                     <link rel="stylesheet" href="/css/materialflow/order-detail.css">
                 </head>
                 <body>
-                    <form>
+                    <div id="orderForm">
                         ${prtContent}
-                    </form>
+                    </div>
                 </body>
             </html>
         `);

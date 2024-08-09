@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title th:text="${title}"></title>
 
     <!--/* Boot Strap 5.3.0 */-->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
@@ -35,31 +35,27 @@
         <table id="table1" class="table table-hover" style="width:100%">
             <thead>
             <tr>
-                <th>주뮨 코드</th>
                 <th>품목 코드</th>
                 <th>품목 명</th>
+                <th>자재 코드</th>
+                <th>자재 상태</th>
 
-                <th>주문 수량</th>
-                <th>단가</th>
+                <th>입고 담당자</th>
+                <th>입고 장소</th>
+                <th>입고 날짜</th>
 
-                <th>입고 수량</th>
-                <th>출고 수량</th>
+                <th>출고 담당자</th>
+                <th>출고 장소</th>
+                <th>출고 날짜</th>
             </tr>
             </thead>
             <tbody>
-            <th:block th:each="list : ${bomList}">
-                <tr th:onclick="load([[${bom.id}]])" th:each="bom: ${list.getBomList()}">
-                    <td th:text="${list.getOrderCode()}"></td>
-                    <td th:text="${bom.getItemCode()}"></td>
-                    <td th:text="${bom.getItemName()}"></td>
-
-                    <td th:text="${bom.getQuantity()}"></td>
-                    <td th:text="${bom.getUnitPrice()}"></td>
-
-                    <td th:text="${bom.getStockQuantity()}"></td>
-                    <td th:text="${bom.getDeliveryQuantity()}"></td>
+                <tr th:onclick="load([[${list.id}]])" th:each="list: ${itemList}">
+                    <td th:text="${itemCode}"></td>
+                    <td th:text="${itemName}"></td>
+                    <td th:text="${list.get()}"></td>
+                    <td th:text="${list.get()}"></td>
                 </tr>
-            </th:block>
             </tbody>
         </table>
     </div>

@@ -152,7 +152,7 @@
                     <td><input type="number" class="table-input" th:value="${list.getQuantity()}" readonly></td>
                     <td><input type="number" class="table-input" th:value="${list.getUnitPrice()}" readonly></td>
                     <td><div class="currency-wrapper">
-                        <input type="text" class="table-input" th:value="${list.getQuantity() * list.getUnitPrice()}" readonly>
+                        <input type="number" class="table-input" th:value="${list.getQuantity() * list.getUnitPrice()}" readonly>
                         <span class="currency">￦</span>
                     </div></td>
                 </tr>
