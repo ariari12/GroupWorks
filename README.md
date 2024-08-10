@@ -45,7 +45,6 @@
 ## 구성도 
 - ERD
 - System Architecture
-    <br/>
     <img src="https://github.com/user-attachments/assets/5a4d8592-d263-4ed4-9e49-6574ba7a8e82">
 
 
