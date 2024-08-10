@@ -76,7 +76,6 @@ function sideMenu(id) {
 function randomGreetings() {
     const greeting = greetings[new Date().getMonth()];
     let size = greeting.length;
-    console.log(Math.floor(Math.random() * size));
     document.getElementById('sideFooterGreeting').innerText = greeting[Math.floor(Math.random() * size)];
 }
 
