@@ -29,8 +29,8 @@ public class MaterialFlowManagerController {
     private final MaterialService materialService;
     private final MaterialOpenApiService materialOpenApiService;
 
-    private String ATTR_TITLE = "title";
-    private String ATTR_SUB_TITLE = "subtitle";
+    private final String ATTR_TITLE = "title";
+    private final String ATTR_SUB_TITLE = "subtitle";
 
     public static String receiveList = "receiveList";
     public static String sendList = "sendList";
