@@ -9,15 +9,23 @@ import kr.co.groupworks.calendar.entity.VacationStatus;
 import kr.co.groupworks.calendar.repository.CalendarAttachmentRepository;
 import kr.co.groupworks.calendar.repository.VacationHistoryRepository;
 import kr.co.groupworks.calendar.repository.VacationRepository;
+import kr.co.groupworks.common.exception.exhandler.VacationNotPendingException;
 import kr.co.groupworks.common.mapper.CalendarAttachmentMapper;
 import kr.co.groupworks.common.mapper.VacationMapper;
 import kr.co.groupworks.employee.entity.Employee;
 import kr.co.groupworks.employee.repository.EmployeeRepository;
+import kr.co.groupworks.notification.service.NotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.support.PageableExecutionUtils;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -25,6 +33,8 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @Slf4j
@@ -39,6 +49,7 @@ public class VacationServiceImpl implements VacationService{
     private final EmployeeRepository employeeRepository;
     private final VacationHistoryRepository vacationHistoryRepository;
     private final VacationMapper vacationMapper;
+    private final NotificationService notificationService;
 
 
 
@@ -244,9 +255,9 @@ public class VacationServiceImpl implements VacationService{
     @Override
     public VacationModifyFormDTO findCalendarByIdAndEmployee(Long calendarId, Long employeeId) {
         log.info("service {}",employeeId);
-        Employee employee = employeeRepository.findById(employeeId)
+        employeeRepository.findById(employeeId)
                 .orElseThrow(() -> new EntityNotFoundException("사원을 찾을 수 없습니다. " + employeeId));
-        Vacation vacation = vacationRepository.findByCalendarIdAndEmployee(calendarId, employee)
+        Vacation vacation = vacationRepository.findById(calendarId)
                 .orElseThrow(() -> new EntityNotFoundException("휴가 일정이 존재하지 않습니다."));
         VacationModifyFormDTO modifyFormDto = vacationMapper.toModifyFormDto(vacation);
         if(!vacation.getAttachmentList().isEmpty()){
@@ -266,8 +277,7 @@ public class VacationServiceImpl implements VacationService{
                 .orElseThrow(() -> new EntityNotFoundException("휴가 일정이 존재하지 않습니다."));
 
         if(vacation.getStatus() != VacationStatus.PENDING){
-            throw new IllegalStateException("휴가 상태가 PENDING이 아닙니다.");
-            // 뷰를 반환해야할지 모름
+            throw new VacationNotPendingException("휴가 상태가 검토중이 아닙니다.");
         }
 
 
@@ -323,12 +333,12 @@ public class VacationServiceImpl implements VacationService{
     // 사원의 휴가신청 내역 모두 조회
     @Override
     @Transactional(readOnly = true)
-    public List<VacationMyRequestDTO> findAllByEmployeeId(Long employeeId) {
+    public List<VacationRequestDTO> findAllByEmployeeId(Long employeeId) {
         List<Vacation> vacationList = vacationRepository.findAllByEmployeeId(employeeId);
         // 휴가 번호로 첨부파일 조회
         return vacationList.stream()
                 .map(vacation ->
-                        VacationMyRequestDTO.builder()
+                        VacationRequestDTO.builder()
                                 .calendarId(vacation.getCalendarId())
                                 .startDate(vacation.getStartDate())
                                 .endDate(vacation.getEndDate() != null ? vacation.getEndDate() : vacation.getStartDate())
@@ -338,6 +348,57 @@ public class VacationServiceImpl implements VacationService{
                                 .contents(vacation.getContents())
                                 .status(vacation.getStatus()).build())
                 .toList();
+    }
+
+    // 구성원 휴가 신청 내역 모두 조회
+    @Override
+    public Page<VacationRequestDTO> findAllTeamSearchPending(Long employeeId,
+                                                             @PageableDefault(
+                                                                     sort = {"createdDate","startDate"},
+                                                                     direction = Sort.Direction.DESC
+                                                             ) Pageable pageable) {
+        Employee employee = employeeRepository.findById(employeeId)
+                .orElseThrow(() -> new EntityNotFoundException("사원을 찾을 수 없습니다. " + employeeId));
+        Page<Vacation> vacationList = vacationRepository.findAllTeam(employee, pageable);
+        vacationList.forEach(vacation ->
+                log.info("service = {}",vacation)
+        );
+
+        // 페이징 처리하기 엔티티 dto 전환
+        return vacationList
+                .map(vacation ->
+                        VacationRequestDTO.builder()
+                                .calendarId(vacation.getCalendarId())
+                                .employeeId(vacation.getEmployee().getEmployeeId())
+                                .name(vacation.getEmployee().getEmployeeName())
+                                .startDate(vacation.getStartDate())
+                                .endDate(vacation.getEndDate() != null ? vacation.getEndDate() : vacation.getStartDate())
+                                .vacationType(vacation.getVacationType())
+                                .fileList(vacation.getAttachmentList()
+                                        .stream()
+                                        .map(calendarAttachmentMapper::toDto)
+                                        .toList())
+                                .contents(vacation.getContents())
+                                .status(vacation.getStatus())
+                                .build()
+                );
+    }
+
+    @Override
+    public Long approvalVacation(Long calendarId, VacationStatus status, Long employeeId) {
+        Employee senderEmployee = employeeRepository.findById(employeeId)
+                .orElseThrow(() -> new EntityNotFoundException("사원을 찾을 수 없습니다. " + employeeId));
+        Vacation vacation = vacationRepository.findById(calendarId)
+                .orElseThrow(() -> new EntityNotFoundException("휴가 일정이 존재하지 않습니다."));
+
+        if (vacation.getStatus().equals(VacationStatus.PENDING)) {
+            vacation.approvalStatus(status);
+            // sse로 전달할 id
+            notificationService.sendVacationApproval(vacation, senderEmployee);
+        } else{
+            throw new IllegalStateException("검토중인 휴가 신청만 승인/반려가 가능합니다.");
+        }
+        return vacation.getCalendarId();
     }
 
 
