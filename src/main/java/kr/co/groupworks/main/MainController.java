@@ -1,5 +1,6 @@
 package kr.co.groupworks.main;
 
+import io.swagger.v3.oas.annotations.Hidden;
 import jakarta.servlet.http.HttpSession;
 import kr.co.groupworks.employee.dto.EmployeeDTO;
 import kr.co.groupworks.employee.dto.SessionEmployeeDTO;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+@Hidden
 @Slf4j
 @Controller
 @RequiredArgsConstructor

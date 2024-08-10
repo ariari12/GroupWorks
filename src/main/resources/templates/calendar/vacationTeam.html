@@ -5,44 +5,10 @@
 <th:block layout:fragment="css">
 
 </th:block>
-<th:block layout:fragment="javascript">
-      <script src="/js/calendar/datatables.js"></script>
-</th:block>
 <div layout:fragment="content">
       <!-- 조건문으로 하나만 나오게 할거임-->
       <th:block>
-            <div th:replace="~{calendar/fragments/vacationRequests.html::tables}" ></div>
+            <div th:replace="~{calendar/fragments/vacationTeamRequest.html::vacationTeamRequest}" ></div>
       </th:block>
-      <th:block>
-            <div th:replace="~{calendar/fragments/vacationStatus.html::tables}" ></div>
-      </th:block>
-
-      <!-- Modal -->
-      <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                  <div class="modal-content">
-                        <div class="modal-header">
-                              <h1 class="modal-title fs-5" id="staticBackdropLabel">Modal title</h1>
-                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                              <h5>휴가정보</h5>
-                              <span>1년당 15개 사용가능</span><span>유급</span>
-                              <h5>사용 가능 연차</h5>
-                              <span>6일</span>
-                              <h5>휴가 일정 & 필요 정보 입력</h5>
-                              <label for="start">시작일</label><input type="date" name="" id="start">
-                              <label for="end">종료일</label><input type="date" name="" id="end">
-                              <label>
-                                    <textarea placeholder="휴가 등록 메세지 입력"></textarea>
-                              </label>
-                        </div>
-                        <div class="modal-footer">
-                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                              <button type="button" class="btn btn-primary">Understood</button>
-                        </div>
-                  </div>
-            </div>
-      </div>
 </div>
 </html>

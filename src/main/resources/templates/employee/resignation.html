@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<th:block layout:fragment="css">
+    <style>
+        .custom-table {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            border: 1px solid black;
+        }
+        .custom-table td, .custom-table th {
+            border: 1px solid black;
+            padding: 10px;
+            text-align: center;
+        }
+        .custom-table td:nth-child(2) {
+            width: 30%;
+        }
+        .custom-table td:nth-child(3) {
+            width: 70%;
+        }
+        .note, .signature {
+            margin-top: 20px;
+            text-align: center;
+        }
+        textarea {
+            width: 100%;
+            height: 100px;
+            border: none;
+            resize: none;
+        }
+    </style>
+</th:block>
+<th:block layout:fragment="javascript">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</th:block>
+
+<th:block layout:fragment="content">
+    <div class="container mt-5">
+        <table class="custom-table">
+            <thead>
+            <tr>
+                <th colspan="4">사 &nbsp; 직 &nbsp; 서</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td rowspan="3" class="align-middle">인<br>적<br>사<br>항</td>
+                <td>성명</td>
+                <td colspan="2" th:text="${employee.getEmployeeName()}"></td>
+            </tr>
+            <tr>
+                <td>연락처</td>
+                <td colspan="2" th:text="${employee.getPhoneNumber()}"></td>
+            </tr>
+            <tr>
+                <td>성별</td>
+                <td colspan="2"></td>
+            </tr>
+            <tr>
+                <td rowspan="2" class="align-middle">자<br>격<br>사<br>항</td>
+                <td>직 위</td>
+                <td colspan="2"></td>
+            </tr>
+            <tr>
+                <td>취득일</td>
+                <td colspan="2"></td>
+            </tr>
+            <tr>
+                <td colspan="4">
+                    <textarea placeholder="내용을 입력하세요."></textarea>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div class="note">
+            상기 본인은 현 회사의 퇴사를 희망합니다. 서약서 서명하여 주시기 바랍니다.
+        </div>
+
+        <div class="signature mt-5">
+            <div>년 &nbsp; &nbsp; 월 &nbsp; &nbsp; 일</div>
+            <div class="mt-2">서약자 성명 : &nbsp; &nbsp; (서명 또는 인)</div>
+            <div class="mt-2">원장 성명 : &nbsp; &nbsp; (서명 또는 인)</div>
+            <div class="mt-4">어린이집원장 귀하</div>
+        </div>
+    </div>
+</th:block>
+</html>

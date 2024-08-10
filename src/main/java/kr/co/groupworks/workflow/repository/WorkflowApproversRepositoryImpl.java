@@ -5,7 +5,6 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import kr.co.groupworks.department.entity.QDepartment;
 import kr.co.groupworks.workflow.entity.QApproverEntity;
-import kr.co.groupworks.workflow.entity.QAttachmentFileEntity;
 import kr.co.groupworks.workflow.entity.QWorkFlowEntity;
 import kr.co.groupworks.workflow.entity.WorkFlowEntity;
 import lombok.extern.slf4j.Slf4j;
@@ -24,9 +23,9 @@ public class WorkflowApproversRepositoryImpl extends QuerydslRepositorySupport i
     private final JPAQueryFactory queryFactory;
 
     @Autowired
-    public WorkflowApproversRepositoryImpl(EntityManager em) {
+    public WorkflowApproversRepositoryImpl(EntityManager entityManager) {
         super(WorkFlowEntity.class);
-        this.queryFactory = new JPAQueryFactory(em);
+        this.queryFactory = new JPAQueryFactory(entityManager);
     }
 
     @Override
@@ -125,49 +124,49 @@ public class WorkflowApproversRepositoryImpl extends QuerydslRepositorySupport i
     }
 
     @Override
-    public List<WorkFlowEntity> employeeWorkflowStat(Integer c, Long e) {
-        QWorkFlowEntity w = QWorkFlowEntity.workFlowEntity;
-        QApproverEntity a = QApproverEntity.approverEntity;
-        QAttachmentFileEntity fs = QAttachmentFileEntity.attachmentFileEntity;
+    public List<WorkFlowEntity> employeeWorkflowStat(Integer code, Long employeeId) {
+        QWorkFlowEntity workFlowEntity = QWorkFlowEntity.workFlowEntity;
+        QApproverEntity approverEntity = QApproverEntity.approverEntity;
 
-        if (c == null || c < 1) {
+        /* code: OpenAPI 명세에 사용자가 원하는 데이터 분류 Code */
+        if (code == null || code < 1) {
             /* 사원에 모든 결재목록 */
             return queryFactory
-                    .select(w).from(w)
-                    .where(w.employeeId.eq(e))
+                    .select(workFlowEntity).from(workFlowEntity)
+                    .where(workFlowEntity.employeeId.eq(employeeId))
                     .fetch();
         }
-        return switch (c) {
+        return switch (code) {
             /* 사원이 발송한 결재 중 승인된 결재목록 */
             case 1 -> queryFactory
-                    .select(w).from(w)
-                    .where(w.employeeId.eq(e).and(w.status.eq(1)))
+                    .select(workFlowEntity).from(workFlowEntity)
+                    .where(workFlowEntity.employeeId.eq(employeeId).and(workFlowEntity.status.eq(1)))
                     .fetch();
             /* 사원이 발송한 결재 중 반려된 결재목록 */
             case 2 -> queryFactory
-                    .select(w).from(w)
-                    .where(w.employeeId.eq(e).and(w.status.eq(2)))
+                    .select(workFlowEntity).from(workFlowEntity)
+                    .where(workFlowEntity.employeeId.eq(employeeId).and(workFlowEntity.status.eq(2)))
                     .fetch();
             /* 사원이 발송한 결재 중 진행 증인 결재목록 */
             case 3 -> queryFactory
-                    .select(w).from(w)
-                    .where(w.employeeId.eq(e).and(
-                            w.status.eq(0).or(w.status.eq(3))
+                    .select(workFlowEntity).from(workFlowEntity)
+                    .where(workFlowEntity.employeeId.eq(employeeId).and(
+                            workFlowEntity.status.eq(0).or(workFlowEntity.status.eq(3))
                     ) ).fetch();
             /* 사원이 승인한 결재목록 */
             case 4 -> queryFactory
-                    .select(w).from(w)
-                    .where( w.approvers.contains( queryFactory
-                                    .select(a).from(a)
-                                    .where(a.employeeId.eq(e).and(a.approval.eq(1)))
+                    .select(workFlowEntity).from(workFlowEntity)
+                    .where( workFlowEntity.approvers.contains( queryFactory
+                                    .select(approverEntity).from(approverEntity)
+                                    .where(approverEntity.employeeId.eq(employeeId).and(approverEntity.approval.eq(1)))
                             )
                     ).fetch();
             /* 사원이 반려한 결재목록 */
             case 5 -> queryFactory
-                    .select(w).from(w)
-                    .where( w.approvers.contains( queryFactory
-                                    .select(a).from(a)
-                                    .where(a.employeeId.eq(e).and(a.approval.eq(2)))
+                    .select(workFlowEntity).from(workFlowEntity)
+                    .where( workFlowEntity.approvers.contains( queryFactory
+                                    .select(approverEntity).from(approverEntity)
+                                    .where(approverEntity.employeeId.eq(employeeId).and(approverEntity.approval.eq(2)))
                             )
                     ).fetch();
             default -> null;

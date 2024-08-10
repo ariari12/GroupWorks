@@ -1,5 +1,6 @@
 package kr.co.groupworks.workflow.control;
 
+import io.swagger.v3.oas.annotations.Hidden;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import kr.co.groupworks.employee.dto.SessionEmployeeDTO;
@@ -8,6 +9,7 @@ import kr.co.groupworks.workflow.dto.dto.WorkFlowDTO;
 import kr.co.groupworks.workflow.service.WorkFlowService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -24,6 +26,7 @@ import java.util.Map;
 
 @Slf4j
 @RestController
+@Hidden
 @RequiredArgsConstructor
 public class WorkFlowRestController {
     private final WorkFlowService workFlowService;
@@ -170,5 +173,25 @@ public class WorkFlowRestController {
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
+
+    /* 전자결재 통계 */
+    @GetMapping(value = "/work-flow/stat/{code}")
+    public ResponseEntity<Object> workStatus(@PathVariable int code, HttpSession session) {
+//        log.info("WorkFlowRestController - workStatus ok, param: {}", code);
+        return getObjectResponseEntity(code, session, log, workFlowService);
+    }
+
+    public static ResponseEntity<Object> getObjectResponseEntity(@PathVariable int code, HttpSession session, Logger log, WorkFlowService workFlowService) {
+        SessionEmployeeDTO sessionDTO = (SessionEmployeeDTO) session.getAttribute("employee");
+        log.info("WorkFlowRestController - workStatus ok, sessionDTO: {}", sessionDTO);
+
+        Object result = workFlowService.getWorkflowStatistics(sessionDTO.getEmployeeId(), sessionDTO.getDepartment().getDepartmentId(), code);
+        if (result != null) {
+            log.info("WorkFlowRestController - workStatus ok, result: {}", result);
+            return ResponseEntity.ok().body(result);
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+    }
+
 
 }

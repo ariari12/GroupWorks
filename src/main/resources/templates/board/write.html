@@ -38,16 +38,16 @@
     <script src="/js/board/preview-editor.js?v=<%=System.currentTimeMillis() %>"></script>
     <!-- 파일 업로드 -->
     <script src="/js/board/fileupload.js?v=<%=System.currentTimeMillis() %"></script>
-
     <script>
     </script>
 </th:block>
 
-<th:block layout:fragment="content" th:with="boardType=${title == '공지 게시판'} ? 'notice' : ${session.employee.departmentId}">
+<th:block layout:fragment="content" th:with="boardType=${title == '공지 게시판'} ? 'notice' : ${session.employee.getDepartment().departmentId}">
     <form id="writeForm" th:action="@{|/board/${boardType}/write|}" method="post">
         <div class="container" style="margin: 50px; width: 90%">
             <div class="form-group">
-                <select class="form-control" aria-label="말머리" name="subject" id="subject">
+
+                <select class="form-control" aria-label="말머리" name="subject" th:if="${boardType != 'notice'}">
                     <option value="general" selected>일반</option>
                     <option value="suggestion">제안</option>
                     <option value="error">오류</option>
@@ -55,8 +55,14 @@
                     <option value="announcement">공지</option>
                     <option value="mandatory">필독</option>
                 </select>
+
+                <select class="form-control" aria-label="말머리" name="subject" th:if="${boardType == 'notice'}">
+                    <option value="announcement" selected>공지</option>
+                </select>
+
                 <input type="text" class="form-control" name="title" id="title" placeholder="제목을 입력하세요">
                 <input type="hidden" name="content" id="contentField">
+                <input type="hidden" name="departmentId" th:value="0">
                 <input type="hidden" name="boardType" th:value="${boardType == 'notice' ? 'NOTICE' : 'DEPARTMENT'}">
             </div>
 

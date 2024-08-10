@@ -8,12 +8,12 @@
     <div id="layoutSidenav_nav">
         <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
             <div class="sb-sidenav-menu">
-                <div class="nav">
 
-                    <th:block th:replace="~{/attendance/fragments/attendanceTime::commuteTime}"></th:block>
+            <div class="nav">
+                <th:block th:replace="~{attendance/fragments/attendanceTime :: commuteTime}"></th:block>
 
                     <!--/* 그룹 소 제목 */-->
-                    <div class="sb-sidenav-menu-heading">Core</div>
+                    <div class="sb-sidenav-menu-heading">Main</div>
                     <a class="nav-link" href="/main">
                         <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                         MAIN
@@ -78,6 +78,7 @@
 
                         </nav>
                     </div>
+                    <th:block th:replace="~{corporateOrganization/corporateOrganizationSideMenu.html :: corporateOrganizationSideMenu}"></th:block>
 
                     <th:block th:replace="~{workflow/workFlowSideMenu.html :: workFlowSideMenu}"></th:block>
 
@@ -90,6 +91,8 @@
                     <th:block th:replace="~{mail/mailSideMenu.html :: mailSideMenu}"></th:block>
 
                     <th:block th:replace="~{videoConference/videoConferenceSideMenu.html :: videoConferenceSideMenu}"></th:block>
+
+                    <th:block th:replace="~{chat/fragments/chatSideMenu :: chatSideMenu}"></th:block>
 
                     <th:block th:replace="~{materialflow/materialflowSideMenu.html :: materialFlowSideMenu}"></th:block>
 

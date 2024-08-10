@@ -19,4 +19,8 @@ public interface EmployeeService {
     boolean isEqualPassword(String checkPW, String currentPW);
 
     List<String> getEmailsByQuery(String query);
+
+    List<EmployeeDTO> findByDepartmentId(Long departmentId);
+
+    List<Integer> findRankIdByDepartmentId(Long departmentId);
 }

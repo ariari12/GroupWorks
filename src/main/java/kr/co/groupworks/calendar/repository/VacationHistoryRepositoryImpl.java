@@ -26,7 +26,9 @@ public class VacationHistoryRepositoryImpl implements VacationHistoryQueryDsl {
                 .from(vacationHistory)
                 .join(vacationHistory.employee, employee)
                 .join(employee.department, department)
-                .where(employee.employeeId.eq(employeeId))
+                .where(
+                        employee.employeeId.eq(employeeId)
+                )
                 .fetch();
     }
 }

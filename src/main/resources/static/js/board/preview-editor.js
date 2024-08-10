@@ -1,6 +1,10 @@
 let editor;
 document.addEventListener('DOMContentLoaded', function() {
 
+    // 기존의 게시판 콘텐츠를 서버에서 전달
+    let data = $('#realContent').val();
+    let initialData = data ? JSON.parse(data) : null;
+
     editor = new EditorJS({
         readOnly: false,
         holder: 'editorjs',
@@ -37,6 +41,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 shortcut: 'CMD+ALT+T'
             },
         },
+        data: initialData
     });
 });
 
@@ -177,4 +182,5 @@ $(document).ready(function() {
     $('#submitButton').on('click', function() {
         getEditorContent();
     });
+
 });

@@ -11,7 +11,7 @@
         <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
 
         <!-- kah 알람 버튼-->
-        <th:block th:replace="~{calendar/fragments/notification :: notification}">
+        <th:block th:replace="~{notification/notification :: notification}">
         </th:block>
 
         <!--/* Navbar */-->
@@ -22,16 +22,19 @@
                     <li><a class="dropdown-item" href="#">Settings</a></li>
                     <li><a class="dropdown-item" href="#">Activity Log</a></li>
                     <li><hr class="dropdown-divider" /></li>
-                    <li><a class="dropdown-item" href="/logout">Logout</a></li>
-                    <li><a class="dropdown-item" href="/mypage">MyPage</a></li>
-                    <li><a class="dropdown-item" href="#">Ddwon02</a></li>
+                    <li><a class="dropdown-item" href="/logout">로그아웃</a></li>
+                    <li><a class="dropdown-item" href="/mypage">마이페이지</a></li>
+                    <li><a class="dropdown-item" href="/employee/resignation">사직서</a></li>
                     <li><a class="dropdown-item" href="#">Ddwon03</a></li>
                     <li><a class="dropdown-item" href="#">Ddwon04</a></li>
                 </ul>
             </li>
         </ul>
     </nav>
-    <!-- kah 알람 모달 창 -->
-    <th:block th:replace="~{calendar/fragments/notification :: notificationModal}">
+    <!-- 알람 토스트 -->
+    <th:block th:replace="~{notification/notificationToast :: notificationToast}">
+    </th:block>
+    <!-- 알람 모달 창 -->
+    <th:block th:replace="~{notification/notification :: notificationModal}">
     </th:block>
 </th:block>
