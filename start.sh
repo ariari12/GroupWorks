@@ -4,6 +4,19 @@
   container_name="web"
   port=80
 
+  redis_container_name="redis"
+  redis_image_name="redis:latest"
+  redis_port=6379
+
+  # Remove previous Redis container if it exists
+  echo "==> Remove previous Redis container ..."
+  docker stop ${redis_container_name}
+  docker rm -f ${redis_container_name}
+
+  # Run Redis container
+  echo "==> Run Redis container"
+  docker run -d -p ${redis_port}:${redis_port} --name ${redis_container_name} ${redis_image_name}
+
   #remove container
   echo "==> Remove previous container ..."
 
