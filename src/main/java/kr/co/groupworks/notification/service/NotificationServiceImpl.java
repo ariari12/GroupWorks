@@ -39,7 +39,9 @@ public class NotificationServiceImpl implements NotificationService {
                 .senderName(sender.getEmployeeName())
                 .receiverName(vacation.getEmployee().getEmployeeName())
                 .build();
-        NotificationDTO dto = notificationMapper.toDto(saveWithTTL(notification, 30L, TimeUnit.DAYS));
+        NotificationDTO dto = notificationMapper.toDto(
+                saveWithTTL(notification, 30L, TimeUnit.DAYS)
+        );
         log.info(dto.toString());
         notificationSseEmitter.sendNotification(vacation.getEmployee().getEmployeeId(), dto);
     }
