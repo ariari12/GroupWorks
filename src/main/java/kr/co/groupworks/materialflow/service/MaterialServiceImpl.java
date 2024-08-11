@@ -87,7 +87,7 @@ public class MaterialServiceImpl implements MaterialService {
                     /* 자재 List 저장 */
                     materialItemRepository.saveAll(itemList).stream().map(i ->
                             new MaterialItemDTO(i).setItemCode(i.getItemCode() + i.getId())
-                                    .dtoToEntity()).toList()));
+                            .dtoToEntity()).toList()));
         });
         orderRepository.save(orderDTO.dtoToEntity(eE, bm).setBomList(bomRepository.saveAll(bomList)));
         return returnMessage("발주서/수주서 등록 완료", true);
@@ -109,6 +109,22 @@ public class MaterialServiceImpl implements MaterialService {
     @Override
     public List<MaterialItemDTO> getItemList(long bomId) {
         return materialItemRepository.findByBomId(bomId).stream().map(MaterialItemDTO::new).toList();
+    }
+
+    @Override
+    public Map<String, Object> deleteManager(Long managerId) {
+        managerRepository.deleteById(managerId);
+        if(managerRepository.findById(managerId).orElse(null) == null)
+            return returnMessage("거래처 담당자 정보가 삭제되었습니다.", true);
+        return returnMessage("거래처 담당자 정보를 삭제하지 못하였습니다.", false);
+    }
+
+    @Override
+    public Map<String, Object> deleteBusiness(Long businessId) {
+        businessRepository.deleteById(businessId);
+        if(businessRepository.findById(businessId).orElse(null) == null)
+            return returnMessage("거래처 정보가 삭제되었습니다.", true);
+        return returnMessage("거래처 정보를 삭제하지 못하였습니다.", false);
     }
 
     private Map<String, Object> returnMessage(String message, boolean result) {

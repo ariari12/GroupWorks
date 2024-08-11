@@ -24,6 +24,10 @@
             height: 100%;
             margin: 0;
         }
+        .btn-del {
+            height: 27px;
+            padding: 0 17px;
+        }
     </style>
 
     <title>[[${title}]]</title>
@@ -49,6 +53,7 @@
                 <th>주소</th>
                 <th>연락처</th>
                 <th>FAX</th>
+                <th>정보 삭제</th>
             </tr>
             </thead>
             <tbody>
@@ -66,9 +71,32 @@
                 <td th:text="${list.getAddress()}"></td>
                 <td th:text="${list.getCeoTel()}"></td>
                 <td th:text="${list.getFax()}"></td>
+                <td th:onclick="delClick(event, [[${list.getId()}]])">
+                    <input class="btn btn-danger btn-del" type="button" value="삭제">
+                </td>
             </tr>
             </tbody>
         </table>
+    </div>
+</div>
+
+<div class="modal fade" id="modal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">거래처 정보 삭제 알림</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>거래처 정보를 삭제 하시겠습니까?<br/>
+                    <span style="color: #ba3d3d; font-weight: bolder;">※주의※ 정보를 삭제하면 복구할 수 없습니다.</span>
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button id="okBtn" class="btn btn-danger">정보 삭제</button>
+                <button id="cns-Btn" class="btn btn-secondary">삭제 취소</button>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -86,6 +114,28 @@
         // JSON으로 변환하여 부모 창으로 전송
         window.opener.postMessage(data, window.location.origin);
         window.close();
+    }
+
+    function delClick(event, pk) {
+        event.stopPropagation();
+
+        const modal = new bootstrap.Modal(document.getElementById('modal'));
+        modal.show();
+        document.getElementById("cns-Btn").addEventListener("click", e => modal.hide(), { once : true });
+        document.getElementById('okBtn').addEventListener("click", function (e) {
+            const t = event.target;
+            ajaxRequest("materialflow/business-select/" + pk, "delete", null, function (c) {
+                if(c.result) {
+                    alert(c.message);
+                } else {
+                    modal.hide();
+                    alert(c.message);
+                }
+            }, function (e) {
+                modal.hide();
+                alert(e.responseText);
+            })
+        }, { once : true });
     }
 
     document.addEventListener('DOMContentLoaded', ev => {

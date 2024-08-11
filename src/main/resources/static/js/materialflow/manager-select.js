@@ -24,8 +24,6 @@ function sendDataToParent(tr) {
         phone: tr.children[2].innerText,
         email: tr.children[3].innerText,
     };
-
-    // console.log(data);
     window.opener.postMessage(data, window.location.origin);
     window.close();
 }
@@ -43,8 +41,7 @@ function managerAddSubmit() {
         };
         const businessId = document.getElementById('businessId').value;
         ajaxRequest(t.action + "?businessId=" + businessId, t.method, data, c => {
-            console.log(c);
-            window.opener.postMessage(data, window.location.origin);
+            window.opener.postMessage(c, window.location.origin);
             window.close();
         }, (x) => {
             let errMsg = "";
@@ -71,4 +68,27 @@ function ajaxRequest(url, method, data, callback, err) {
             err(x.responseJSON);
         }
     })
+}
+
+// 삭제 클릭 시 tr 이벤트 전파 중단
+function delClick(event, pk) {
+    event.stopPropagation();
+
+    const modal = new bootstrap.Modal(document.getElementById('modal'));
+    modal.show();
+    document.getElementById("cns-Btn").addEventListener("click", e => modal.hide(), { once : true });
+    document.getElementById('okBtn').addEventListener("click", function (e) {
+        const t = event.target;
+        ajaxRequest("materialflow/manager-select/" + pk, "delete", null, function (c) {
+            if(c.result) {
+                alert(c.message);
+            } else {
+                modal.hide();
+                alert(c.message);
+            }
+        }, function (e) {
+            modal.hide();
+            alert(e.responseText);
+        })
+    }, { once : true });
 }
