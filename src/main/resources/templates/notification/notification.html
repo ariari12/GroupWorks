@@ -10,7 +10,7 @@
         </span>
     </button>
 </th:block>
-<th:block th:fragment="notificationModal">
+<th:block th:fragment="notificationOffcanvas">
     <!-- 오프캔버스 -->
     <div class="offcanvas offcanvas-end" tabindex="-1" id="notificationOffcanvasRight" aria-labelledby="offcanvasRightLabel">
         <div class="offcanvas-header">
@@ -18,13 +18,21 @@
             <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
         <hr>
-
         <div class="offcanvas-body">
-            ...
+            <h5>알림 내역</h5>
+
+            </div>
+    </div>
+</th:block>
+<!--notification.js 파일과 연결되어있음-->
+<th:block th:fragment="notificationToast">
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div id="toast-container">
+
         </div>
     </div>
-
 </th:block>
+</html>
 
 
 
