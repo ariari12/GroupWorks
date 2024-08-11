@@ -30,6 +30,7 @@ services:
       - "6379:6379"
     volumes:
       - redis-data:/data
+    command: redis-server --requirepass groupworks # Redis 서버 실행 시 비밀번호 요구 설정
 
 volumes:
   db-data:
