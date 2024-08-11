@@ -9,10 +9,13 @@ import kr.co.groupworks.notification.repository.NotificationRepository;
 import kr.co.groupworks.notification.sse.NotificationSseEmitter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
@@ -27,6 +30,7 @@ public class NotificationServiceImpl implements NotificationService {
         return notificationRepository.saveWithTTL(notification, timeout, timeUnit);
     }
 
+    @CacheEvict(value = "notificationCache", key = "#vacation.employee.employeeId")
     public void sendVacationApproval(Vacation vacation, Employee sender) {
         Notification notification = Notification.builder()
                 .title("휴가 신청 알림")
@@ -44,5 +48,12 @@ public class NotificationServiceImpl implements NotificationService {
         );
         log.info(dto.toString());
         notificationSseEmitter.sendNotification(vacation.getEmployee().getEmployeeId(), dto);
+    }
+
+    @Cacheable(value = "notificationCache", key = "#receiverId")
+    public List<NotificationDTO> getAllNotificationsByReceiverId(Long receiverId) {
+        return notificationRepository.findAllByReceiverId(receiverId)
+                .stream().map(notificationMapper::toDto)
+                .toList();
     }
 }
