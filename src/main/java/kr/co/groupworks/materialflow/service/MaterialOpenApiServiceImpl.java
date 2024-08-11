@@ -32,7 +32,6 @@ public class MaterialOpenApiServiceImpl implements MaterialOpenApiService {
         return b != null ? new BusinessDTO(b) : null;
     }
 
-    /*  */
     @Override
     public boolean setBusinessList(List<Business> businessList) {
         if (businessList == null) return false;

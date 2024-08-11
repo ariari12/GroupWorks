@@ -74,6 +74,14 @@ public class MaterialServiceImpl implements MaterialService {
         if(bomDTOList == null || bomDTOList.isEmpty()) return returnMessage("품목 정보가 비어있습니다.", false);
         List<Bom> bomList = bomDTOList.stream().map(BomDTO::dtoToEntity).toList();
 
+        /*
+         * 고유 번호: (발주:0A, 수주 0B) + 작성시각 (ms),분,초
+         * 랜덤코드: 정수와 영문 대문자 포함 랜덤3자리
+         * 주문코드: 고유 번호 + "-" + 랜덤코드 + "품목개수"
+         * 품목코드: 주문코드 + "-" + n(주문의 n번째 품목), example: 0A13733178-3AB7-2
+         * 자재코드: 품목코드 + n(품목코드내 n번째 자재) + 자재고유Id,
+         *      example: 0A13733178-3AB7-2131 = "0A13733178-3AB7-2" 품목의 1번째 자재, 고유Id: 31
+         */
         /* 자재리스트 생성 */
         bomList.forEach(b -> {
             List<MaterialItem> itemList = new ArrayList<>();
@@ -121,10 +129,13 @@ public class MaterialServiceImpl implements MaterialService {
 
     @Override
     public Map<String, Object> deleteBusiness(Long businessId) {
-        businessRepository.deleteById(businessId);
-        if(businessRepository.findById(businessId).orElse(null) == null)
-            return returnMessage("거래처 정보가 삭제되었습니다.", true);
-        return returnMessage("거래처 정보를 삭제하지 못하였습니다.", false);
+        if(managerRepository.findByBusiness_Id(businessId).isEmpty()) {
+            businessRepository.deleteById(businessId);
+            if (businessRepository.findById(businessId).orElse(null) == null)
+                return returnMessage("거래처 정보가 삭제되었습니다.", true);
+            return returnMessage("거래처 정보를 삭제하지 못하였습니다.", false);
+        }
+        return returnMessage("거래처 담당자 정보가 남아있어 거래처 정보를 삭제할 수 없습니다.", false);
     }
 
     private Map<String, Object> returnMessage(String message, boolean result) {

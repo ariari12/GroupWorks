@@ -79,13 +79,14 @@ function delClick(event, pk) {
     document.getElementById("cns-Btn").addEventListener("click", e => modal.hide(), { once : true });
     document.getElementById('okBtn').addEventListener("click", function (e) {
         const t = event.target;
-        ajaxRequest("materialflow/manager-select/" + pk, "delete", null, function (c) {
+        ajaxRequest("/materialflow/manager-select/" + pk, "delete", null, function (c) {
             if(c.result) {
                 alert(c.message);
             } else {
-                modal.hide();
                 alert(c.message);
             }
+            modal.hide();
+            location.href = "/materialflow/manager-select";
         }, function (e) {
             modal.hide();
             alert(e.responseText);
