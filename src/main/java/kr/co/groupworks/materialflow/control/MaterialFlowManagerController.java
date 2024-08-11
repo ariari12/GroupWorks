@@ -112,7 +112,6 @@ public class MaterialFlowManagerController {
     @GetMapping(value = "/mes")
     public String mes(Model model) {
         String title = "생산 현황", subTitle = "생산 재고 현황";
-        log.info("mes title: {}, subTitle: {}", title, subTitle);
         model.addAttribute(ATTR_TITLE, title);
         model.addAttribute(ATTR_SUB_TITLE, subTitle);
         return "materialflow/mes";
@@ -122,7 +121,6 @@ public class MaterialFlowManagerController {
     @GetMapping(value = "/take-summation")
     public String takeSummation(Model model) {
         String title = "매출액 산출", subTitle = "영업 손익 계산";
-        log.info("take-summation title: {}, subTitle: {}", title, subTitle);
         model.addAttribute(ATTR_TITLE, title);
         model.addAttribute(ATTR_SUB_TITLE, subTitle);
         return "materialflow/takeSummation";
