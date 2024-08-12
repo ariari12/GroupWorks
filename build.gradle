@@ -37,7 +37,7 @@ dependencies {
     // https://mvnrepository.com/artifact/io.lettuce/lettuce-core
     implementation 'io.lettuce:lettuce-core:6.4.0.RELEASE'
 
-    // https://mvnrepository.com/artifact/com.github.ulisesbocchio/jasypt-spring-boot-starter
+//     https://mvnrepository.com/artifact/com.github.ulisesbocchio/jasypt-spring-boot-starter
     implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.5'
 
     testImplementation 'org.springframework.security:spring-security-test'
@@ -50,6 +50,9 @@ dependencies {
     // QR Code - zxing
     implementation group: 'com.google.zxing', name: 'javase', version: '3.5.0'
     implementation group: 'com.google.zxing', name: 'core', version: '3.5.0'
+
+    // Coolsms SMS send
+    implementation 'net.nurigo:sdk:4.3.0'
 
     //Querydsl 추가
     implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'

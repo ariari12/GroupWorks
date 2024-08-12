@@ -29,8 +29,8 @@ public class MaterialFlowManagerController {
     private final MaterialService materialService;
     private final MaterialOpenApiService materialOpenApiService;
 
-    private String ATTR_TITLE = "title";
-    private String ATTR_SUB_TITLE = "subtitle";
+    private final String ATTR_TITLE = "title";
+    private final String ATTR_SUB_TITLE = "subtitle";
 
     public static String receiveList = "receiveList";
     public static String sendList = "sendList";
@@ -99,7 +99,7 @@ public class MaterialFlowManagerController {
     /* BOM 자재 품목에 속하는 자재 목록 조회 */
     @GetMapping(value = "/item/{bomId}/{itemCode}/{itemName}")
     public String bom(@PathVariable("bomId") long bomId, @PathVariable("itemCode") String ic, @PathVariable("itemName") String in, Model model) {
-        String title = "BOM", subTitle = "자재 현황";
+        String title = "BOM 자재 현황", subTitle = "자재 관리";
         model.addAttribute(ATTR_TITLE, title);
         model.addAttribute(ATTR_SUB_TITLE, subTitle);
         model.addAttribute("itemCode", ic);
@@ -111,18 +111,18 @@ public class MaterialFlowManagerController {
     /* MES 생산 현황 */
     @GetMapping(value = "/mes")
     public String mes(Model model) {
-        log.info("mes");
-        model.addAttribute(ATTR_TITLE, "수주/발주 기록");
-        model.addAttribute(ATTR_SUB_TITLE, "수주/발주");
+        String title = "생산 현황", subTitle = "생산 재고 현황";
+        model.addAttribute(ATTR_TITLE, title);
+        model.addAttribute(ATTR_SUB_TITLE, subTitle);
         return "materialflow/mes";
     }
 
     /* 매출액 산출 */
     @GetMapping(value = "/take-summation")
     public String takeSummation(Model model) {
-        log.info("take-summation");
-        model.addAttribute(ATTR_TITLE, "수주/발주 기록");
-        model.addAttribute(ATTR_SUB_TITLE, "수주/발주");
+        String title = "매출액 산출", subTitle = "영업 손익 계산";
+        model.addAttribute(ATTR_TITLE, title);
+        model.addAttribute(ATTR_SUB_TITLE, subTitle);
         return "materialflow/takeSummation";
     }
 
@@ -177,7 +177,8 @@ public class MaterialFlowManagerController {
         /*
          * 고유 번호: (발주:0A, 수주 0B) + 작성시각 (ms),분,초
          * 랜덤코드: 정수와 영문 대문자 포함 랜덤3자리
-         * 고유 주문 번호: 작성날짜 + "-" + 고유 번호 + "-" + 랜덤코드 + "품목개수"
+         * 주문코드: 고유 번호 + "-" + 랜덤코드 + "품목개수"
+         * 고유 주문 번호: 작성날짜 + "-" + 주문코드
          * example: 20120618-0A13733178-3AB7
          */
         return code + "-" + (f == 1 ? "0A" : "0B")

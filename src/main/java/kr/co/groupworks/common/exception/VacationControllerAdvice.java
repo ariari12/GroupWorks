@@ -20,7 +20,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Slf4j
-//(basePackages = "kr.co.groupworks.control.kah.api")
 @RestControllerAdvice
 public class VacationControllerAdvice {
 

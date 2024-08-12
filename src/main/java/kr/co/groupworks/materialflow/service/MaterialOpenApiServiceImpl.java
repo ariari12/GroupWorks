@@ -26,14 +26,12 @@ public class MaterialOpenApiServiceImpl implements MaterialOpenApiService {
     /* 거래처 정보 반환 */
     @Override
     public Object getBusiness(Long businessId) {
-        if (businessId == null) { /* 거래처 정보 반환 id:1 = 본사 정보 */
-            return businessRepository.findByIdGreaterThan(1L).stream().map(BusinessDTO::new).toList();
-        }
+        /* 거래처 정보 반환 id:1 = 본사 정보 */
+        if (businessId == null) return businessRepository.findByIdGreaterThan(1L).stream().map(BusinessDTO::new).toList();
         Business b = businessRepository.findById(businessId).orElse(null);
         return b != null ? new BusinessDTO(b) : null;
     }
 
-    /*  */
     @Override
     public boolean setBusinessList(List<Business> businessList) {
         if (businessList == null) return false;

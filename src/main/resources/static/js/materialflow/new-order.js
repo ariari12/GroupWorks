@@ -211,15 +211,12 @@ function frmSubmit(event) {
     // 모달 창 띄우기
     const modal = new bootstrap.Modal(document.getElementById('modal'));
     modal.show();
-    // 모달 닫기 (닫기 버튼 클릭 시)
-    // document.querySelector(".close-btn").addEventListener("click", e => modal.hide());
     // 작성 취소 버튼 클릭 시
     document.getElementById("cns-Btn").addEventListener("click", e => modal.hide());
     // 작성 등록 버튼 클릭 시
     document.getElementById('okBtn').addEventListener('click', function (e) {
         const t = event.target;
         ajaxRequest(t.action, t.method, orderData, function (c) {
-            console.log(c);
             if(c.result) {
                 alert(c.message);
                 location.href = "/materialflow/order-record";
