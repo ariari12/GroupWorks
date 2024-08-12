@@ -33,9 +33,9 @@ public class CoolSmsConfig {
 
     @Bean
     public AES256TextEncryptor setEncryptor(){
+        log.info("keyProperty: " + keyProperty);
         encryptor = new AES256TextEncryptor();
         encryptor.setPassword(keyProperty);
-        log.info("keyProperty: " + keyProperty);
         return encryptor;
     }
 }
