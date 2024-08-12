@@ -96,7 +96,7 @@ public class MaterialFlowManagerRestController {
     @Value("${test.phone}")
     private String testPhone;
 
-    /* 메시지 발송 */
+    /* 메시지 발송 : 발주, 수주 품목이  */
     @PostMapping("/send-sms")
     public SingleMessageSentResponse sendOne() {
         Message message = new Message();

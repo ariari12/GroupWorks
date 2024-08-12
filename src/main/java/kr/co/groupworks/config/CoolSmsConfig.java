@@ -35,11 +35,11 @@ public class CoolSmsConfig {
 
     @Bean
     public AES256TextEncryptor setEncryptor() throws IOException {
-        String content = new String(Files.readAllBytes(Paths.get("D://key.txt")));
-        log.info("key property: {}", content);
+        String keyProperty = new String(Files.readAllBytes(Paths.get(keyFilePath)));
+        log.info("key property: {}", keyProperty);
 
         encryptor = new AES256TextEncryptor();
-        encryptor.setPassword(content);
+        encryptor.setPassword(keyProperty);
         return encryptor;
     }
 }
