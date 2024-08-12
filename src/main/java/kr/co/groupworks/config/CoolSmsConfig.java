@@ -1,21 +1,24 @@
 package kr.co.groupworks.config;
 
+import lombok.extern.slf4j.Slf4j;
 import net.nurigo.sdk.NurigoApp;
 import net.nurigo.sdk.message.service.DefaultMessageService;
 import org.jasypt.util.text.AES256TextEncryptor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
+@Slf4j
 @Configuration
 public class CoolSmsConfig {
-    private static final Logger log = LoggerFactory.getLogger(CoolSmsConfig.class);
     @Value("${coolsms.api.dmain.url}")
     private String smsApiDomain;
-    @Value("${coolsms.encryptor-key}")
-    private String encryptorKey;
+    @Value("${coolsms.encryptor.key.file-path}")
+    private String keyFilePath;
     @Value("${coolsms.api-key}")
     private String apiKey;
     @Value("${coolsms.secret-key}")
@@ -31,9 +34,12 @@ public class CoolSmsConfig {
     }
 
     @Bean
-    public AES256TextEncryptor setEncryptor() {
+    public AES256TextEncryptor setEncryptor() throws IOException {
+        String content = new String(Files.readAllBytes(Paths.get("D://key.txt")));
+        log.info("key property: {}", content);
+
         encryptor = new AES256TextEncryptor();
-        encryptor.setPassword(encryptorKey);
+        encryptor.setPassword(content);
         return encryptor;
     }
 }
