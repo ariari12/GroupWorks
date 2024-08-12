@@ -52,7 +52,7 @@ public class MaterialOpenApiServiceImpl implements MaterialOpenApiService {
 
     @Override
     public List<ManagerDTO> getManagersByBusiness(Long businessId) {
-        return managerRepository.findByBusiness_Id(businessId).stream().map(ManagerDTO::new).toList();
+        return managerRepository.findByBusinessId(businessId).stream().map(ManagerDTO::new).toList();
     }
 
     @Override

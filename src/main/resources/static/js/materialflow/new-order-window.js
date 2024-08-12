@@ -2,7 +2,7 @@ let currentWindow = null; // 공용 창 변수
 let currentListener = null; // 공용 리스너 변수
 let preUrl = null; // 현재 열려있는 창에 URL
 
-const WINDOW_SIZE = "width=1400, height=1200, left=300, top=30";
+const WINDOW_SIZE = "width=1800, height=1200, left=300, top=30";
 
 document.addEventListener("DOMContentLoaded", function () {
     registerWindow();

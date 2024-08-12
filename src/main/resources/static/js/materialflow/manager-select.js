@@ -86,7 +86,7 @@ function delClick(event, pk) {
                 alert(c.message);
             }
             modal.hide();
-            location.href = "/materialflow/manager-select";
+            location.href = "/materialflow/manager-select/" + document.getElementById('businessId').value;
         }, function (e) {
             modal.hide();
             alert(e.responseText);

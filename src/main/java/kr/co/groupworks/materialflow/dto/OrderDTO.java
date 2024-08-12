@@ -67,11 +67,12 @@ public class OrderDTO {
 
     public OrderDTO(Order o) {
         LocalDate od = o.getOrderDate(), duD = o.getDueDate(), dlD = o.getDeliveryDate();
+        OrderClassification oc = o.getClassification();
 
         this
                 .setId(o.getId())
                 .setOrderCode(o.getOrderCode())
-                .setClassification(o.getClassification().ordinal())
+                .setClassification(oc == null ? null : oc.ordinal())
                 .setTotalAmount(o.getTotalAmount())
                 .setTex(o.getTexAmount())
                 .setAddress(o.getAddress())

@@ -10,4 +10,6 @@ import java.util.List;
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Long>, OrderQueryDsl {
     List<Order> findByClassification(OrderClassification classification);
+
+    List<Order> findByManagerId(Long mId);
 }
