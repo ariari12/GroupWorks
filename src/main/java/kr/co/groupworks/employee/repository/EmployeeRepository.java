@@ -24,4 +24,9 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
 //    해당 부서에 존재하는 직급목록 가져오기
     @Query("SELECT distinct e.rankId  FROM Employee e WHERE e.department.departmentId = :departmentId ")
     List<Integer> findRankIdByDepartmentId(@Param("departmentId") Long departmentId);
+
+    // Repository 클래스
+    @Query("SELECT e FROM Employee e WHERE e.employeeId = :employeeId")
+    Employee findSupervisorEmployeeByEmployeeId(@Param("employeeId") Long employeeId);
+
 }

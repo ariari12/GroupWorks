@@ -103,6 +103,14 @@ public class EmployeeServiceImpl implements EmployeeService {
         return rankIdList;
     }
 
+//    사수 employee 정보 가져오기
+    @Override
+    public EmployeeDTO findSupervisorEmployeeByEmployeeId(Long employeeId) {
+        Employee employee = employeeRepository.findSupervisorEmployeeByEmployeeId(employeeId);
+        EmployeeDTO employeeDTO = toEmployeeDTO(employee);
+        return employeeDTO;
+    }
+
     //    DTO to Entity
     public Employee toEmployee(EmployeeDTO dto) {
         return Employee.builder()

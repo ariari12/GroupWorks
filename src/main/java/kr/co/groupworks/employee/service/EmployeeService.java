@@ -23,4 +23,6 @@ public interface EmployeeService {
     List<EmployeeDTO> findByDepartmentId(Long departmentId);
 
     List<Integer> findRankIdByDepartmentId(Long departmentId);
+
+    EmployeeDTO findSupervisorEmployeeByEmployeeId(Long employeeId);
 }

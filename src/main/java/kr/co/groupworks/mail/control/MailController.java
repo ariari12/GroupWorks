@@ -155,7 +155,9 @@ public class MailController {
 
     //    메일 쓰기 (메일 쓰기 버튼 누를 때 writeForm으로 이동)
     @GetMapping("/write")
-    public String write() {
+    public String write(@RequestParam(required = false,name = "email")String sendEmail, Model model) {
+        log.info(sendEmail + " email send request");
+        model.addAttribute("sendEmail", sendEmail);
         return "mail/writeForm";
     }
 
