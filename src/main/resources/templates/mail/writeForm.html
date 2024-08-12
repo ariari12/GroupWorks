@@ -64,17 +64,17 @@
 
 <th:block layout:fragment="content">
     <div>
-        <h3>메일 작성</h3>
+        <h1>메일 작성</h1>
         <hr>
         <form action="/mail/write" method="post" style="width: 50%; margin-left: 20%" enctype="multipart/form-data">
             <div class="mb-3">
                 <label for="mailReceiver" class="form-label">받는사람</label>
-                <input type="email" class="form-control" id="mailReceiver" placeholder="name@example.com" name="mailReceiver" required oninput="fetchEmailSuggestions('mailReceiver')">
+                <input type="email" class="form-control" id="mailReceiver" th:placeholder="${sendEmail != null ? sendEmail : 'name@example.com' } " name="mailReceiver" required oninput="fetchEmailSuggestions('mailReceiver')">
                 <div id="mailReceiverSuggestions" class="suggestions"></div>
             </div>
             <div class="mb-3">
                 <label for="mailReferrer" class="form-label">참조</label>
-                <input type="email" class="form-control" id="mailReferrer" placeholder="name@example.com" name="mailReferrer" oninput="fetchEmailSuggestions('mailReferrer')">
+                <input type="email" class="form-control" id="mailReferrer" placeholder="name@example.com" name="mailReferrer" oninput="fetchEmailSuggestions('mailReferrer')" >
                 <div id="mailReferrerSuggestions" class="suggestions"></div>
             </div>
             <div class="mb-3">

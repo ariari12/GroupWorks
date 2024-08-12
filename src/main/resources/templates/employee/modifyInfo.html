@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="~{layout/layout}"
+      layout:decorate="~{layout/layout}">
+<th:block layout:fragment="css">
+    <style>
+        @media (min-width: 768px) {
+            .bd-placeholder-img-lg {
+                font-size: 3.5rem;
+            }
+        }
+
+        .nav-scroller .nav {
+            display: flex;
+            flex-wrap: nowrap;
+            padding-bottom: 1rem;
+            margin-top: -1px;
+            overflow-x: auto;
+            text-align: center;
+            white-space: nowrap;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .bd-mode-toggle .dropdown-menu .active .bi {
+            display: block !important;
+        }
+
+        .list-group {
+            width: 100%;
+            max-width: 460px;
+            margin-inline: 1.5rem;
+        }
+
+        .form-check-input:checked + .form-checked-content {
+            opacity: .5;
+        }
+
+        .form-check-input-placeholder {
+            border-style: dashed;
+        }
+
+        [contenteditable]:focus {
+            outline: 0;
+        }
+
+        .list-group-checkable .list-group-item {
+            cursor: pointer;
+        }
+
+        .list-group-item-check {
+            position: absolute;
+            clip: rect(0, 0, 0, 0);
+        }
+
+        .list-group-item-check:hover + .list-group-item {
+            background-color: var(--bs-secondary-bg);
+        }
+
+        .list-group-item-check:checked + .list-group-item {
+            color: #fff;
+            background-color: var(--bs-primary);
+            border-color: var(--bs-primary);
+        }
+
+        .list-group-item-check[disabled] + .list-group-item,
+        .list-group-item-check:disabled + .list-group-item {
+            pointer-events: none;
+            filter: none;
+            opacity: .5;
+        }
+
+        .list-group-radio .list-group-item {
+            cursor: pointer;
+            border-radius: .5rem;
+        }
+
+        .list-group-radio .form-check-input {
+            z-index: 2;
+            margin-top: -.5em;
+        }
+
+        .list-group-radio .list-group-item:hover,
+        .list-group-radio .list-group-item:focus {
+            background-color: var(--bs-secondary-bg);
+        }
+
+        .list-group-radio .form-check-input:checked + .list-group-item {
+            background-color: var(--bs-body);
+            border-color: var(--bs-primary);
+            box-shadow: 0 0 0 2px var(--bs-primary);
+        }
+
+        .list-group-radio .form-check-input[disabled] + .list-group-item,
+        .list-group-radio .form-check-input:disabled + .list-group-item {
+            pointer-events: none;
+            filter: none;
+            opacity: .5;
+        }
+
+        .list-group-item {
+            margin-top: 50px;
+        }
+
+        @keyframes scale-in-ver-top {
+            0% {
+                transform: scaleY(0);
+                transform-origin: top;
+                opacity: 0;
+            }
+            100% {
+                transform: scaleY(1);
+                transform-origin: top;
+                opacity: 1;
+            }
+        }
+
+        .scale-in-ver-top {
+            animation: scale-in-ver-top 0.125s ease-out both;
+        }
+    </style>
+</th:block>
+<th:block layout:fragment="javascript">
+    <script src="/js/bootstrap/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('input[name="listGroupCheckableRadios"]').forEach(function (radio) {
+                radio.addEventListener('change', function () {
+                    if (this.id === 'listGroupCheckableRadios1') {
+                        var phoneModal = new bootstrap.Modal(document.getElementById('phoneModal'));
+                        phoneModal.show();
+                    } else if (this.id === 'listGroupCheckableRadios2') {
+                        var addressModal = new bootstrap.Modal(document.getElementById('addressModal'));
+                        addressModal.show();
+                    }
+                });
+            });
+        });
+    </script>
+</th:block>
+
+<th:block layout:fragment="content">
+    <h1>내정보변경</h1>
+    <hr>
+
+    <div class="d-flex flex-column flex-md-row p-4 gap-4 py-md-5 align-items-center justify-content-center">
+        <div class="list-group list-group-checkable d-grid gap-2 border-0">
+            <input class="list-group-item-check pe-none" type="radio" name="listGroupCheckableRadios" id="listGroupCheckableRadios1" value="">
+            <label class="list-group-item rounded-3 py-3" for="listGroupCheckableRadios1">
+                핸드폰 번호 바꾸기
+            </label>
+
+            <input class="list-group-item-check pe-none" type="radio" name="listGroupCheckableRadios" id="listGroupCheckableRadios2" value="">
+            <label class="list-group-item rounded-3 py-3" for="listGroupCheckableRadios2">
+                집 주소 바꾸기
+            </label>
+        </div>
+    </div>
+
+    <!-- 핸드폰 번호 바꾸기 모달 -->
+    <div class="modal fade" id="phoneModal" tabindex="-1" aria-labelledby="phoneModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content scale-in-ver-top">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="phoneModalLabel">핸드폰 번호 바꾸기</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="currentPhoneNumber" class="form-label">기존 핸드폰 번호</label>
+                        <input type="text" class="form-control" id="currentPhoneNumber" placeholder="010-1234-5678">
+                    </div>
+                    <div class="mb-3">
+                        <label for="newPhoneNumber" class="form-label">새 핸드폰 번호</label>
+                        <input type="text" class="form-control" id="newPhoneNumber" placeholder="010-9876-5432">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary">저장</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 집 주소 바꾸기 모달 -->
+    <div class="modal fade" id="addressModal" tabindex="-1" aria-labelledby="addressModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content scale-in-ver-top">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addressModalLabel">집 주소 바꾸기</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="currentAddress" class="form-label">기존 집 주소</label>
+                        <input type="text" class="form-control" id="currentAddress" placeholder="서울특별시 ...">
+                    </div>
+                    <div class="mb-3">
+                        <label for="newAddress" class="form-label">새 집 주소</label>
+                        <input type="text" class="form-control" id="newAddress" placeholder="부산광역시 ...">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary">저장</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</th:block>
+</html>
