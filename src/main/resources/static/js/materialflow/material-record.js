@@ -8,7 +8,6 @@ function tableSet() {
     $('#table').DataTable({
         info: false,
         ordering: true,
-        order: [[0, 'desc']],
         paging: true,
         scrollX: true,
         scrollCollapse: true,
@@ -20,12 +19,11 @@ function tableSet() {
 
 function itemCodeTableSet() {
     $('#itemCodeTable').DataTable({
-        // info: false,
-        // ordering: true,
-        // order: [[0, 'desc']],
+        info: false,
+        ordering: true,
         paging: true,
         scrollX: true,
-        // scrollCollapse: true,
+        scrollCollapse: true,
         scrollY: 260,
         lengthMenu: [ 5, 10, 15, 20, 25, 30 ],
         displayLength: 5,
@@ -36,20 +34,40 @@ function materialStatusUpdate() {
     document.getElementById('statusUpdateFrm').addEventListener('submit', ev => {
         ev.preventDefault();
 
+        const modal = new bootstrap.Modal(document.getElementById('modal'));
+        if(itemCodeList.length < 1) {
+            modal.hide();
+            alert("최소 1개 이상의 자재를 선택해야 합니다.");
+            return;
+        }
+
         const t = ev.target;
+
         const data = {
             itemCodeList: itemCodeList,
             item: {
-                itemStatus: document.querySelector('#statusUpdateFrm input[name="itemStatus"]:checked').value,
-                storageManager: t[4].value,
-                storageLocation: t[5].value,
-                storageTime: t[6].value,
-                deliveryManager: t[7].value,
-                deliveryLocation: t[8].value,
-                deliveryTime: t[9].value
+                "itemStatus": parseInt(document.querySelector('#statusUpdateFrm input[name="itemStatus"]:checked').value),
+                "storageManager": t[9].value,
+                "storageLocation": t[10].value,
+                "storageTime": t[11].value,
+                "deliveryManager": t[12].value,
+                "deliveryLocation": t[13].value,
+                "deliveryTime": t[14].value
             }
         };
-        console.log(data);
+
+        ajaxRequest("/materialflow/material", "put", data, function (r) {
+            console.log(r);
+            if(r.result) {
+                alert(r.message);
+            } else {
+                alert(r.message);
+            }
+            modal.hide();
+            location.href = window.location.pathname;
+        }, function (e) {
+            modal.hide();
+        });
     })
 }
 
@@ -67,4 +85,21 @@ function onCheckboxChange(checkbox, itemCode) {
             });
         }
     }
+}
+
+function ajaxRequest(url, method, data, callback, err) {
+    $.ajax({
+        url: url,
+        type: method,
+        data: JSON.stringify(data),
+        contentType: 'application/json',
+        success: function (r) {
+            callback(r);
+        }, error: function (x, e, r) {
+            console.error(x);
+            console.error(e);
+            console.error(r);
+            err(x.responseJSON);
+        }
+    })
 }

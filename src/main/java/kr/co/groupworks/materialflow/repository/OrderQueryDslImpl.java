@@ -2,9 +2,7 @@ package kr.co.groupworks.materialflow.repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
-import kr.co.groupworks.materialflow.entity.Order;
-import kr.co.groupworks.materialflow.entity.QBom;
-import kr.co.groupworks.materialflow.entity.QOrder;
+import kr.co.groupworks.materialflow.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 import org.springframework.stereotype.Repository;
@@ -36,6 +34,26 @@ public class OrderQueryDslImpl extends QuerydslRepositorySupport implements Orde
                 .select(o)
                 .from(o).leftJoin(o.boms, b)
                 .fetchJoin().fetch();
+    }
+
+    @Override
+    public boolean orderDeleteCheck(Long orderId) {
+        QOrder o = QOrder.order;
+        QBom b = QBom.bom;
+        QMes m = QMes.mes;
+        QMaterialItem i = QMaterialItem.materialItem;
+
+        Long result = queryFactory
+                .select(o.count()).from(o)
+                .leftJoin(b).on(b.orderId.eq(o.id))
+                .leftJoin(m).on(m.orderId.eq(o.id))
+                .leftJoin(i).on(i.bomId.eq(b.id))
+                .leftJoin(i).on(i.bomId.eq(m.id))
+                .where(o.id.eq(orderId).and(i.itemStatus.isNotNull()))
+                .fetchJoin().fetchOne();
+                // `fetchOne()`은 단일 결과(개수)를 반환
+
+        return result != null && result > 0;
     }
 
     private List<Order> findByItemName(String orderCode, String itemCode, String itemName) {

@@ -19,9 +19,13 @@ public interface MaterialService {
 
     List<OrderBomListVO> getBomList();
 
-    List<MaterialItemDTO> getItemList(long bomId);
+    List<MaterialItemVO> getItemList(long bomId);
+
+    Map<String, Object> deleteOrder(Long orderId);
 
     Map<String, Object> deleteManager(Long managerId);
 
     Map<String, Object> deleteBusiness(Long businessId);
+
+    Map<String, Object> updateItems(MaterialStatusUpdateDTO itemDTO);
 }

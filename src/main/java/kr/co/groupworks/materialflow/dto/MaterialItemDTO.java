@@ -9,7 +9,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Data
 @Accessors(chain = true)
@@ -36,15 +36,15 @@ public class MaterialItemDTO {
     private String storageManager;
     @Schema(name = "입고장소", defaultValue = "○○-3층 17번 입하장")
     private String storageLocation;
-    @Schema(name = "입고일자", defaultValue = "1111.11.11 17:01")
-    private LocalDateTime storageTime;
+    @Schema(name = "입고일자", defaultValue = "1111-11-11T17:01")
+    private LocalDate storageTime;
 
     @Schema(description = "출고 담당자(소속-성명)", defaultValue = "ㅁㅁ운송-홍길동")
     private String deliveryManager;
     @Schema(name = "출고장소", defaultValue = "ㅁㅁ창고-9번 출하장")
     private String deliveryLocation;
-    @Schema(name = "출고일자", defaultValue = "9999.99.99 97:91")
-    private LocalDateTime deliveryTime;
+    @Schema(name = "출고일자", defaultValue = "9999-99-99T97:91")
+    private LocalDate deliveryTime;
 
     public MaterialItemDTO(MaterialItem mi) {
         this

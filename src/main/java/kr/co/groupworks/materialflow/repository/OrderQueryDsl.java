@@ -8,4 +8,6 @@ public interface OrderQueryDsl {
     List<Order> findByOrderCodeAndItemCodeAndItemName(String orderCode, String itemCode, String itemName);
 
     List<Order> findByBomList();
+
+    boolean orderDeleteCheck(Long orderId);
 }

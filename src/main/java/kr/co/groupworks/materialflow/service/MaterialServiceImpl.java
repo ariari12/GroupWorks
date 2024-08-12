@@ -80,19 +80,19 @@ public class MaterialServiceImpl implements MaterialService {
          * 주문코드: 고유 번호 + "-" + 랜덤코드 + "품목개수"
          * 품목코드: 주문코드 + "-" + n(주문의 n번째 품목), example: 0A13733178-3AB7-2
          * 자재코드: 품목코드 + n(품목코드내 n번째 자재) + 자재고유Id,
-         *      example: 0A13733178-3AB7-2131 = "0A13733178-3AB7-2" 품목의 1번째 자재, 고유Id: 31
+         * 자재코드 example: 0A13733178-3AB7-2131 = "0A13733178-3AB7-2" 품목의 1번째 자재, 고유Id: 31
          */
-        /* 자재리스트 생성 */
         bomList.forEach(b -> {
+            /* 자재리스트 생성 */
             List<MaterialItem> itemList = new ArrayList<>();
             for (int i = 1; i <= b.getQuantity(); i++) {
                 itemList.add(new MaterialItemDTO(new MaterialItem())
-                        .setId(0).setItemStatus(ItemStatus.RECEIVING).setItemCode(b.getItemCode() + i)
+                        .setId(0).setItemStatus(null).setItemCode(b.getItemCode() + i)
                         .dtoToEntity());
             }
-            /* 자재 코드 업데이트 */
+            /* 각 BOM 자재 List 저장 */
             b.setItemList(materialItemRepository.saveAll(
-                    /* 자재 List 저장 */
+                    /* 자재 코드 업데이트 */
                     materialItemRepository.saveAll(itemList).stream().map(i ->
                             new MaterialItemDTO(i).setItemCode(i.getItemCode() + i.getId())
                             .dtoToEntity()).toList()));
@@ -115,27 +115,53 @@ public class MaterialServiceImpl implements MaterialService {
     }
 
     @Override
-    public List<MaterialItemDTO> getItemList(long bomId) {
-        return materialItemRepository.findByBomId(bomId).stream().map(MaterialItemDTO::new).toList();
+    public List<MaterialItemVO> getItemList(long bomId) {
+        return materialItemRepository.findByBomId(bomId).stream().map(MaterialItemVO::new).toList();
+    }
+
+    @Override
+    public Map<String, Object> deleteOrder(Long orderId) {
+        Order o = orderRepository.findById(orderId).orElse(null);
+        if(o == null) return returnMessage("발주서/수주서를 찾을 수 없습니다.", false);
+        if (orderRepository.orderDeleteCheck(orderId))
+            return returnMessage("발주/수주가 진행되기 전에만 삭제가 가능합니다.", false);
+        orderRepository.delete(o);
+        if(orderRepository.findById(orderId).orElse(null) != null)
+            return returnMessage("발주서/수주서를 삭제할 수 없습니다", false);
+        return returnMessage("발주서/수주서가 삭제되었습니다.", true);
     }
 
     @Override
     public Map<String, Object> deleteManager(Long managerId) {
-        managerRepository.deleteById(managerId);
-        if(managerRepository.findById(managerId).orElse(null) == null)
-            return returnMessage("거래처 담당자 정보가 삭제되었습니다.", true);
-        return returnMessage("거래처 담당자 정보를 삭제하지 못하였습니다.", false);
+        if(orderRepository.findByManagerId(managerId).isEmpty()) {
+            managerRepository.deleteById(managerId);
+            if (managerRepository.findById(managerId).orElse(null) == null)
+                return returnMessage("거래처 담당자 정보가 삭제되었습니다.", true);
+        }
+        return returnMessage("거래처 담당자 정보가 사용되는 발주/수주 기록이 존재하여\n거래처 담당자 정보를 삭제하지 못하였습니다.", false);
     }
 
     @Override
     public Map<String, Object> deleteBusiness(Long businessId) {
-        if(managerRepository.findByBusiness_Id(businessId).isEmpty()) {
+        if(managerRepository.findByBusinessId(businessId).isEmpty()) {
             businessRepository.deleteById(businessId);
             if (businessRepository.findById(businessId).orElse(null) == null)
                 return returnMessage("거래처 정보가 삭제되었습니다.", true);
             return returnMessage("거래처 정보를 삭제하지 못하였습니다.", false);
         }
         return returnMessage("거래처 담당자 정보가 남아있어 거래처 정보를 삭제할 수 없습니다.", false);
+    }
+
+    @Override
+    public Map<String, Object> updateItems(MaterialStatusUpdateDTO itemDTO) {
+        if(itemDTO.getItemCodeList().isEmpty()) return returnMessage("선택된 자재가 없습니다.", false);
+
+        List<MaterialItem> findItemList = materialItemRepository.findByItemCodeIn(itemDTO.getItemCodeList());
+        if(findItemList.isEmpty()) return returnMessage("자재를 찾을 수 없습니다.", false);
+
+        materialItemRepository.saveAll(findItemList.stream().map(item -> itemDTO.convertToDTO(new MaterialItemDTO(item))
+                .dtoToEntity()).toList());
+        return returnMessage("자재 상태 정보가 변경되었습니다.", true);
     }
 
     private Map<String, Object> returnMessage(String message, boolean result) {

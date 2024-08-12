@@ -98,8 +98,8 @@
             </thead>
             <tbody>
                 <tr th:each="list: ${itemList}">
-                    <td th:text="${list.getItemCode() + list.getId()}"></td>
-                    <td th:text="${list.getItemStatus().getValue()}"></td>
+                    <td th:text="${list.getItemCode()}"></td>
+                    <td th:text="${list.getItemStatus()}"></td>
 
                     <td th:text="${list.getStorageManager()}"></td>
                     <td th:text="${list.getStorageLocation()}"></td>
@@ -174,8 +174,8 @@
         </div>
     </div>
 
-    <!--/* TODO: 자재 상태 정보 받는 Controller, Service */-->
     <!--/* TODO: QR Code 발급 및 스캔 */-->
+    <button class="btn btn-danger" type="button">QR CODE 발급</button>
 </div>
 </body>
 </html>
