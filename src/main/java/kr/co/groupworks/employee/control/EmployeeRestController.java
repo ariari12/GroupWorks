@@ -3,9 +3,9 @@ package kr.co.groupworks.employee.control;
 import io.swagger.v3.oas.annotations.Hidden;
 import jakarta.servlet.http.HttpSession;
 import kr.co.groupworks.employee.dto.EmployeeDTO;
-import kr.co.groupworks.employee.service.EmployeeService;
 import kr.co.groupworks.employee.dto.SessionEmployeeDTO;
 import kr.co.groupworks.employee.entity.Employee;
+import kr.co.groupworks.employee.service.EmployeeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
-
 @Hidden
 @RestController
 @RequestMapping("/employee")
@@ -24,11 +23,20 @@ import java.util.Map;
 @Slf4j
 public class EmployeeRestController {
 
+
     private final EmployeeService employeeService;
+
+//    private final DefaultMessageService messageService;
 
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
+
+
+//    public EmployeeRestController() {
+//        // 반드시 계정 내 등록된 유효한 API 키, API Secret Key를 입력해주셔야 합니다!
+//        this.messageService = NurigoApp.INSTANCE.initialize("NCS5YXRIXQPF7INV", "FPPRUKWMCG6N3S9SNWSNQG05QOX49WVR", "https://api.coolsms.co.kr");
+//    }
 //    사원 저장
     @PostMapping("/save")
     public ResponseEntity<EmployeeDTO> addEmployee(@RequestBody EmployeeDTO employeeDTO) {
@@ -82,6 +90,19 @@ public class EmployeeRestController {
         }
     }
 
+//    @PostMapping("/send-one")
+//    public SingleMessageSentResponse sendOne() {
+//        Message message = new Message();
+//        // 발신번호 및 수신번호는 반드시 01012345678 형태로 입력되어야 합니다.
+//        message.setFrom("01082307981");
+//        message.setTo("수신번호 입력");
+//        message.setText("한글 45자, 영자 90자 이하 입력되면 자동으로 SMS타입의 메시지가 추가됩니다.");
+//
+//        SingleMessageSentResponse response = this.messageService.sendOne(new SingleMessageSendingRequest(message));
+//        System.out.println(response);
+//
+//        return response;
+//    }
 
 }
 
