@@ -91,20 +91,22 @@ public class MaterialFlowManagerRestController {
     }
 
 
-    private final AES256TextEncryptor textEncryptor;
-    private final DefaultMessageService messageService;
-    @Value("${test.phone}")
-    private String testPhone;
-
-    /* 메시지 발송 */
-    @PostMapping("/send-sms")
-    public SingleMessageSentResponse sendOne() {
-        Message message = new Message();
-        // 발신번호 및 수신번호는 반드시 01012345678 형태로 입력되어야 합니다.
-        message.setFrom(textEncryptor.decrypt(testPhone));
-        message.setTo(textEncryptor.decrypt(testPhone));
-        message.setText("test 중 입니다.");
-        return messageService.sendOne(new SingleMessageSendingRequest(message));
-    }
+////    private final AES256TextEncryptor textEncryptor;
+//    private final DefaultMessageService messageService;
+//    @Value("${test.phone}")
+//    private String testPhone;
+//
+//    /* 메시지 발송 */
+//    @PostMapping("/send-sms")
+//    public SingleMessageSentResponse sendOne() {
+//        Message message = new Message();
+//        // 발신번호 및 수신번호는 반드시 01012345678 형태로 입력되어야 합니다.
+////        message.setFrom(textEncryptor.decrypt(testPhone));
+////        message.setTo(textEncryptor.decrypt(testPhone));
+//        message.setFrom(testPhone);
+//        message.setTo(testPhone);
+//        message.setText("test 중 입니다.");
+//        return messageService.sendOne(new SingleMessageSendingRequest(message));
+//    }
 
 }
