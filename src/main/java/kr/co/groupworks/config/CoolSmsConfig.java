@@ -35,7 +35,7 @@ public class CoolSmsConfig {
 
     @Bean
     public AES256TextEncryptor setEncryptor() throws IOException {
-        String content = new String(Files.readAllBytes(Paths.get("D://key.txt")));
+        String content = new String(Files.readAllBytes(Paths.get(keyFilePath)));
         log.info("key property: {}", content);
 
         encryptor = new AES256TextEncryptor();
