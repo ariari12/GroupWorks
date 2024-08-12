@@ -32,9 +32,10 @@ public class CoolSmsConfig {
     }
 
     @Bean
-    public AES256TextEncryptor setEncryptor() throws IOException {
+    public AES256TextEncryptor setEncryptor(){
         encryptor = new AES256TextEncryptor();
         encryptor.setPassword(keyProperty);
+        log.info("keyProperty: " + keyProperty);
         return encryptor;
     }
 }
