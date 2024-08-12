@@ -40,13 +40,12 @@ public class QRTestContoller {
         BitMatrix encode = new MultiFormatWriter().encode(url, BarcodeFormat.QR_CODE, width, height);
         MatrixToImageConfig custom = new MatrixToImageConfig(MatrixToImageConfig.BLACK, -200);
 
-        // QR Code - Image 생성. : 1회성으로 생성해야 하기 때문에
-        // stream으로 Generate(1회성이 아니면 File로 작성 가능.)
+        // QR Code - Image 생성.
         try {
-            //output Stream
             ByteArrayOutputStream out = new ByteArrayOutputStream();
-            //Bitmatrix, file.format, outputStream
             MatrixToImageWriter.writeToStream(encode, "PNG", out, custom);
+
+
 
             model.addAttribute("qrCode", Base64.getEncoder().encodeToString(out.toByteArray()));
             return "materialflow/qrcode/qrCodePage";
