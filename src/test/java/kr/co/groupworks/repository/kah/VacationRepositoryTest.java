@@ -50,7 +50,7 @@ class VacationRepositoryTest {
     @DisplayName("휴가 기간 중복 테스트")
     void findOverlappingVacations() {
         List<Vacation> overlappingVacations = vacationRepository.findOverlappingVacations(1L, "2500-06-22", "2500-08-22");
-
+        System.out.println(" overlappingVacations " + overlappingVacations );
         assertThat(overlappingVacations).isNotEmpty();
 
     }
