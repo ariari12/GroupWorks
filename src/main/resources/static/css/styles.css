@@ -10935,7 +10935,8 @@ body {
   padding-top: 56px;
 }
 .sb-nav-fixed #layoutSidenav #layoutSidenav_nav .sb-sidenav .sb-sidenav-menu {
-  overflow-y: auto;
+  overflow-y: scroll; /* 수직 스크롤 설정 */
+  box-sizing: content-box; /* 패딩과 컨텐츠 박스 크기를 분리 */
 }
 .sb-nav-fixed #layoutSidenav #layoutSidenav_content {
   padding-left: 225px;

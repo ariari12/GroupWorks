@@ -1,5 +1,6 @@
 package kr.co.groupworks.mail.control;
 
+import io.swagger.v3.oas.annotations.Hidden;
 import jakarta.servlet.http.HttpSession;
 import kr.co.groupworks.employee.dto.SessionEmployeeDTO;
 import kr.co.groupworks.employee.service.EmployeeService;
@@ -32,6 +33,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 
+@Hidden
 @Controller
 @RequestMapping("/mail")
 @RequiredArgsConstructor
@@ -129,6 +131,7 @@ public class MailController {
         log.info(receiverEmail + "의 받은 메일 목록");
         log.info(mailPage.toString());
         model.addAttribute("mailList", mailPage);
+        model.addAttribute("employee",employeeDTO);
         return "mail/important";
     }
 

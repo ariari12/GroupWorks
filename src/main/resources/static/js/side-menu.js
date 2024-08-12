@@ -9,7 +9,15 @@
 
 window.addEventListener('DOMContentLoaded', event => {
     sideBar();
-    workflowSideMenu();
+    sideMenu('pagesCollapseActive');
+    sideMenu('commutePages');
+    sideMenu('boardPages');
+    sideMenu('vacationPages');
+    sideMenu('mailPages');
+    sideMenu('pagesCollapseActive');
+    sideMenu('videoChattingPage');
+
+    sideMenu('materialFlowMenu');
 });
 
 
@@ -30,14 +38,12 @@ function sideBar() {
     }
 }
 
-/* 이 함수를 복사하여 각자 SideMuen function 정의 */
-function workflowSideMenu() {
-                                                                        // SideMenu Id
-    const collapseElement = document.getElementById('pagesCollapseActive');                  // SideMenu Id
-    const triggerElement = document.querySelector('[data-bs-toggle="collapse"][data-bs-target="#pagesCollapseActive"]');
+function sideMenu(id) {
+    const collapseElement = document.getElementById(id);
+    const triggerElement = document.querySelector('[data-bs-toggle="collapse"][data-bs-target="#' + id + '"]');
 
     // Local Storage 에서 축소 상태를 확인
-    if (localStorage.getItem('pagesCollapseActive') === 'true') {
+    if (localStorage.getItem(id) === 'true') {
         collapseElement.classList.add('show');
         triggerElement.classList.remove('collapsed');
         triggerElement.setAttribute('aria-expanded', 'true');
@@ -49,10 +55,10 @@ function workflowSideMenu() {
 
     // 접힌 상태가 변경될 때 Local Storage 업데이트하는 이벤트 리스너를 추가
     collapseElement.addEventListener('shown.bs.collapse', () => {
-        localStorage.setItem('pagesCollapseActive', 'true');
+        localStorage.setItem(id, 'true');
     });
 
     collapseElement.addEventListener('hidden.bs.collapse', () => {
-        localStorage.setItem('pagesCollapseActive', 'false');
+        localStorage.setItem(id, 'false');
     });
 }

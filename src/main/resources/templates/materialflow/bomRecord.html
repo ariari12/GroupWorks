@@ -1,0 +1,64 @@
+<html lang="kr" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}"
+>
+<th:block layout:fragment="css">
+    <style>
+        .description {
+            background: rgb(0 0 0 / 3%);
+            border: 1px solid #d2d2d2;
+            border-radius: 15px;
+            padding: 12px 15px;
+        }
+    </style>
+</th:block>
+
+<th:block layout:fragment="content">
+<div class="description mb-2">
+    <span>품목 행을 클릭하면 품목 재고 현황을 보실 수 있습니다.</span>
+</div>
+
+<div class="card mb-4">
+    <div class="card-header">
+        <i class="bi bi-folder-fill"></i>
+        자재/재고 품목 목록
+    </div>
+    <div class="card-body">
+        <table id="table" class="table table-hover" style="width: 100%">
+            <thead>
+            <tr>
+                <th>주뮨 코드</th>
+                <th>품목 코드</th>
+                <th>품목 명</th>
+
+                <th>주문 수량</th>
+                <th>단가</th>
+
+                <th>입고 수량</th>
+                <th>출고 수량</th>
+            </tr>
+            </thead>
+            <tbody>
+            <th:block th:each="list : ${bomList}">
+            <tr th:onclick="load([[${bom.id}]], [[${bom.getItemCode()}]], [[${bom.getItemName()}]])" th:each="bom: ${list.getBomList()}">
+                <td th:text="${list.getOrderCode()}"></td>
+                <td th:text="${bom.getItemCode()}"></td>
+                <td th:text="${bom.getItemName()}"></td>
+
+                <td th:text="${bom.getQuantity()}"></td>
+                <td th:text="${bom.getUnitPrice()}"></td>
+
+                <td th:text="${bom.getStockQuantity()}"></td>
+                <td th:text="${bom.getDeliveryQuantity()}"></td>
+            </tr>
+            </th:block>
+            </tbody>
+        </table>
+    </div>
+</div>
+</th:block>
+
+<th:block layout:fragment="javascript">
+    <script src="/js/materialflow/bom-record.js"></script>
+</th:block>
+</html>

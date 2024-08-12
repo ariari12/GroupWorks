@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "attachment_file")
+@Table(name = "workflow_attachment_file")
 @Getter @ToString
 @Builder
 @AllArgsConstructor

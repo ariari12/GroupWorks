@@ -33,6 +33,7 @@ dependencies {
     implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
+    implementation 'org.springframework.boot:spring-boot-starter-websocket'
     testImplementation 'org.springframework.security:spring-security-test'
 
     // https://mvnrepository.com/artifact/com.googlecode.json-simple/json-simple
@@ -56,6 +57,7 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
 
     compileOnly 'org.projectlombok:lombok'
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
     runtimeOnly 'com.mysql:mysql-connector-j'
 //    runtimeOnly 'com.oracle.database.jdbc:ojdbc11'

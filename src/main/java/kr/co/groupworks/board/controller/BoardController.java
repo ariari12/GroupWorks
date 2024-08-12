@@ -98,7 +98,7 @@ public class BoardController {
         Long departmentId = BoardUtils.initializeBoard(boardType, sessionEmployeeDTO, "글쓰기", model);
         if (departmentId == null && !boardType.equals("notice"))
             return REDIRECT_URL;
-        
+
         return "board/write";
     }
 
@@ -155,7 +155,7 @@ public class BoardController {
         model.addAttribute("commentCount", commentCount);
         return "board/detail";
     }
-    
+
     // 게시판 수정
     @GetMapping("{departmentId}/edit/{no}")
     public String edit(@PathVariable("departmentId") String boardType,

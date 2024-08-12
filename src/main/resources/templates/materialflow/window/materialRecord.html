@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${title}"></title>
+
+    <!--/* Boot Strap 5.3.0 */-->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <!--/* Boot Strap Template CSS & JS */-->
+    <link href="/css/styles.css" rel="stylesheet" />
+    <!--/* data tables library 5.3.0 */-->
+    <link href="https://cdn.datatables.net/v/bs5/dt-2.0.8/datatables.min.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/2.0.8/css/dataTables.dataTables.css" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/styles.css">
+    <style>
+        .description {
+            width: 98%;
+            background-color: rgb(0 0 0 / 3%);
+            border: 1px solid #d2d2d2;
+            border-radius: 15px;
+            margin: 10px auto;
+        }
+        .title-header {
+            padding: 4px;
+            margin: 10px 20px;
+            font-weight: bolder;
+            font-size: 32px;
+        }
+        .header-line {
+            width: 101%;
+            margin-top: 10px;
+            margin-bottom: 5px;
+            margin-left: -1%;
+            border: 1px solid rgb(128, 128, 128, 0.3);
+        }
+        .table-content {
+            width: 98%;
+            margin: 10px auto;
+            border-radius: 15px;
+        }
+    </style>
+
+    <script src="/js/materialflow/.."></script>
+    <!--/* Jquery CDN */-->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <!--/* Boot Strap 5.3.0 */-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <!--/* data tables library 5.3.0 */-->
+    <script src="https://cdn.datatables.net/v/bs5/dt-2.0.8/datatables.min.js"></script>
+    <script src="/js/materialflow/material-record.js"></script>
+</head>
+<body>
+<div class="description">
+    <div class="title-header">
+        <span>품목코드: <span th:text="${itemCode}" readonly></span></span>
+        <br/><div class="header-line"></div>
+        <span>품목명: <span th:text="${itemName}" readonly></span></span>
+    </div>
+</div>
+<div class="card mb-4 table-content">
+    <div class="card-header">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-grid" viewBox="0 0 16 16">
+            <path d="M1 2.5A1.5 1.5 0 0 1 2.5 1h3A1.5 1.5 0 0 1 7 2.5v3A1.5 1.5 0 0 1 5.5 7h-3A1.5 1.5 0 0 1 1 5.5zM2.5 2a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5zm6.5.5A1.5 1.5 0 0 1 10.5 1h3A1.5 1.5 0 0 1 15 2.5v3A1.5 1.5 0 0 1 13.5 7h-3A1.5 1.5 0 0 1 9 5.5zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5zM1 10.5A1.5 1.5 0 0 1 2.5 9h3A1.5 1.5 0 0 1 7 10.5v3A1.5 1.5 0 0 1 5.5 15h-3A1.5 1.5 0 0 1 1 13.5zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5zm6.5.5A1.5 1.5 0 0 1 10.5 9h3a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1-1.5 1.5h-3A1.5 1.5 0 0 1 9 13.5zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5z"/>
+        </svg> 자재/재고 품목 목록
+    </div>
+    <div class="card-body">
+        <table id="table" class="table table-hover" style="width: 100%;">
+            <thead>
+            <tr>
+                <th>자재 코드</th>
+                <th>자재 상태</th>
+
+                <th>입고 담당자</th>
+                <th>입고 장소</th>
+                <th>입고 날짜</th>
+
+                <th>출고 담당자</th>
+                <th>출고 장소</th>
+                <th>출고 날짜</th>
+            </tr>
+            </thead>
+            <tbody>
+                <tr th:each="list: ${itemList}">
+                    <td th:text="${list.getItemCode() + list.getId()}"></td>
+                    <td th:text="${list.getItemStatus().getValue()}"></td>
+
+                    <td th:text="${list.getStorageManager()}"></td>
+                    <td th:text="${list.getStorageLocation()}"></td>
+                    <td th:text="${list.getStorageTime()}"></td>
+
+                    <td th:text="${list.getDeliveryManager()}"></td>
+                    <td th:text="${list.getDeliveryLocation()}"></td>
+                    <td th:text="${list.getDeliveryTime()}"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>
