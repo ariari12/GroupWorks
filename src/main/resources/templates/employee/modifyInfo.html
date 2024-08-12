@@ -128,6 +128,8 @@
     <script type="text/javascript" src="//code.jquery.com/jquery-3.6.0.min.js"></script>
     <script type="text/javascript" src="cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        let certificationCode;
+        let newPhoneNumber
         document.addEventListener('DOMContentLoaded', function () {
             document.querySelectorAll('input[name="listGroupCheckableRadios"]').forEach(function (radio) {
                 radio.addEventListener('change', function () {
@@ -139,6 +141,56 @@
                         addressModal.show();
                     }
                 });
+            });
+
+            document.getElementById('verifyPhoneButton').addEventListener('click', function () {
+                newPhoneNumber = document.getElementById('newPhoneNumber').value;
+                let certificationNumber =  Math.floor(Math.random() * 9000 + 1000).toString();
+                console.log(certificationNumber);
+                $.ajax({
+                    url: "/employee/send-one",
+                    type: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify({
+                        phoneNumber: newPhoneNumber,
+                        certificationNumber:certificationNumber
+                    }),
+                    success: function() {
+                        certificationCode = certificationNumber;  // 서버에서 받은 코드를 변수에 저장
+                        alert("인증 코드가 전송되었습니다.");
+
+                    },
+                    error: function() {
+                        alert("인증 코드 전송에 실패했습니다.");
+                    }
+                });
+            });
+
+            document.getElementById('verificationCodeButton').addEventListener('click', function () {
+                let inputCode = document.getElementById('verificationCode').value;
+                console.log("certificationCode = " + certificationCode);
+                console.log("certificationCode의 타입 " + typeof certificationCode);
+                console.log("inputCode = " + inputCode);
+                console.log("inputCode의 타입 " + typeof inputCode);
+                if (inputCode === certificationCode.toString()) {
+                    alert("인증 성공");
+                    $.ajax({
+                        url: "/employee/modifyphonenumber",
+                        type: "PUT",
+                        contentType: "application/json",
+                        data: JSON.stringify({
+                            newPhoneNumber: newPhoneNumber
+                        }),
+                        success: function() {
+                            window.location.href = "/main";
+                        },
+                        error: function() {
+                            alert("핸드폰 번호 변경에 실패했습니다.");
+                        }
+                    });
+                } else {
+                    alert("인증 실패");
+                }
             });
         });
     </script>
@@ -178,6 +230,11 @@
                     <div class="mb-3">
                         <label for="newPhoneNumber" class="form-label">새 핸드폰 번호</label>
                         <input type="text" class="form-control" id="newPhoneNumber" placeholder="010-9876-5432">
+                        <button id="verifyPhoneButton" class="btn btn-primary">핸드폰 인증</button>
+                    </div>
+                    <div id="verificationContainer" class="verification-container d-flex gap-2">
+                        <input type="text" class="form-control" id="verificationCode" placeholder="인증번호를 입력하세요">
+                        <button class="btn btn-primary" id="verificationCodeButton">확인</button>
                     </div>
                 </div>
                 <div class="modal-footer">

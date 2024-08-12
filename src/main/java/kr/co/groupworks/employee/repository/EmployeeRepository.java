@@ -3,8 +3,10 @@ package kr.co.groupworks.employee.repository;
 import kr.co.groupworks.employee.entity.Employee;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -25,7 +27,13 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
     @Query("SELECT distinct e.rankId  FROM Employee e WHERE e.department.departmentId = :departmentId ")
     List<Integer> findRankIdByDepartmentId(@Param("departmentId") Long departmentId);
 
-    // Repository 클래스
+//    핸드폰 번호 바꾸는 쿼리문
+    @Modifying
+    @Transactional
+    @Query("UPDATE Employee e SET e.phoneNumber = :phoneNumber WHERE e.employeeId = :employeeId")
+    void updatePhoneNumberByEmployeeId(@Param("employeeId")Long employeeId, @Param("phoneNumber")String phoneNumber);
+
+    // 사수 employee의 정보를 가져오는 쿼리문
     @Query("SELECT e FROM Employee e WHERE e.employeeId = :employeeId")
     Employee findSupervisorEmployeeByEmployeeId(@Param("employeeId") Long employeeId);
 

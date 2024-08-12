@@ -51,6 +51,7 @@ public class EmployeeController {
         SessionEmployeeDTO sessionEmployeeDTO = (SessionEmployeeDTO) session.getAttribute("employee");
         EmployeeDTO employeeDTO = employeeService.findByEmployeeId(sessionEmployeeDTO.getEmployeeId());
         model.addAttribute("employee", employeeDTO);
+
         return "employee/modifyInfo";
     }
 

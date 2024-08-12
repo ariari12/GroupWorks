@@ -8,6 +8,11 @@ import kr.co.groupworks.employee.entity.Employee;
 import kr.co.groupworks.employee.service.EmployeeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.nurigo.sdk.NurigoApp;
+import net.nurigo.sdk.message.model.Message;
+import net.nurigo.sdk.message.request.SingleMessageSendingRequest;
+import net.nurigo.sdk.message.response.SingleMessageSentResponse;
+import net.nurigo.sdk.message.service.DefaultMessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+
 @Hidden
 @RestController
 @RequestMapping("/employee")
@@ -23,20 +29,18 @@ import java.util.Map;
 @Slf4j
 public class EmployeeRestController {
 
+    @Autowired
+    private  EmployeeService employeeService;
 
-    private final EmployeeService employeeService;
-
-//    private final DefaultMessageService messageService;
+    private final DefaultMessageService messageService;
 
     @Autowired
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
+    private  BCryptPasswordEncoder bCryptPasswordEncoder;
 
 
-
-//    public EmployeeRestController() {
-//        // 반드시 계정 내 등록된 유효한 API 키, API Secret Key를 입력해주셔야 합니다!
-//        this.messageService = NurigoApp.INSTANCE.initialize("NCS5YXRIXQPF7INV", "FPPRUKWMCG6N3S9SNWSNQG05QOX49WVR", "https://api.coolsms.co.kr");
-//    }
+    public EmployeeRestController() {
+        this.messageService = NurigoApp.INSTANCE.initialize("NCS5YXRIXQPF7INV", "FPPRUKWMCG6N3S9SNWSNQG05QOX49WVR", "https://api.coolsms.co.kr");
+    }
 //    사원 저장
     @PostMapping("/save")
     public ResponseEntity<EmployeeDTO> addEmployee(@RequestBody EmployeeDTO employeeDTO) {
@@ -90,20 +94,41 @@ public class EmployeeRestController {
         }
     }
 
-//    @PostMapping("/send-one")
-//    public SingleMessageSentResponse sendOne() {
-//        Message message = new Message();
-//        // 발신번호 및 수신번호는 반드시 01012345678 형태로 입력되어야 합니다.
-//        message.setFrom("01082307981");
-//        message.setTo("수신번호 입력");
-//        message.setText("한글 45자, 영자 90자 이하 입력되면 자동으로 SMS타입의 메시지가 추가됩니다.");
-//
-//        SingleMessageSentResponse response = this.messageService.sendOne(new SingleMessageSendingRequest(message));
-//        System.out.println(response);
-//
-//        return response;
-//    }
+//    핸드폰 변경 시 문자 인증 로직
+    @PostMapping("/send-one")
+    public SingleMessageSentResponse sendOne(@RequestBody Map<String, String> request) {
+        String newPhoneNumber = request.get("phoneNumber").replaceAll("-","");
+        log.info("새로운 핸드폰 번호 : " + newPhoneNumber);
+        Message message = new Message();
+        // 발신번호 및 수신번호는 반드시 01012345678 형태로 입력되어야 합니다.
+        message.setFrom("01065639503");
+        message.setTo(newPhoneNumber);
+        String certificationNumber = request.get("certificationNumber");
 
+        message.setText("다음 번호를 입력해주세요 (" + certificationNumber + ")");
+
+        SingleMessageSentResponse response = this.messageService.sendOne(new SingleMessageSendingRequest(message));
+        System.out.println(response);
+
+        return response;
+    }
+
+//    핸드폰 번호 변경 로직
+    @PutMapping("/modifyphonenumber")
+    public ResponseEntity<String> modifyPhoneNumber(@RequestBody Map<String, String> request, HttpSession session) {
+        SessionEmployeeDTO sessionEmployeeDTO = (SessionEmployeeDTO) session.getAttribute("employee");
+        EmployeeDTO employeeDTO = employeeService.findByEmployeeId(sessionEmployeeDTO.getEmployeeId());
+
+        String newPhoneNumber = request.get("newPhoneNumber");
+        log.info("새로운 핸드폰 번호로 업데이트: " + newPhoneNumber);
+        log.info("핸드폰번호 변경 전 employeeDTO : " + employeeDTO.toString());
+        employeeDTO.setPhoneNumber(newPhoneNumber);
+        employeeService.updatePhoneNumberByEmployee(employeeDTO);
+        log.info("핸드폰번호 변경 후 employeeDTO : " + employeeDTO.toString());
+
+        // 성공적으로 업데이트되면 200 OK 응답을 반환합니다.
+        return ResponseEntity.ok("핸드폰 번호가 성공적으로 변경되었습니다.");
+    }
 }
 
 

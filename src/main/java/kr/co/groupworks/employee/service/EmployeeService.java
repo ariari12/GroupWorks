@@ -25,4 +25,6 @@ public interface EmployeeService {
     List<Integer> findRankIdByDepartmentId(Long departmentId);
 
     EmployeeDTO findSupervisorEmployeeByEmployeeId(Long employeeId);
+
+    void updatePhoneNumberByEmployee(EmployeeDTO employeeDTO);
 }
