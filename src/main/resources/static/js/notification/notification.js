@@ -68,7 +68,7 @@ document.addEventListener("DOMContentLoaded", function() {
     notificationButton.addEventListener('click', function() {
         if (!cachedNotifications) {
             // 서버에서 알림을 조회하고 캐싱
-            fetch('/notifications')
+            fetch('/notifications/all')
                 .then(response => response.json())
                 .then(data => {
                     cachedNotifications = data;
