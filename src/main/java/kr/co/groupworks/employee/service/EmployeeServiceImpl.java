@@ -120,6 +120,14 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     }
 
+    @Override
+    public void updateAddressByEmployee(EmployeeDTO employeeDTO) {
+        Long employeeId = employeeDTO.getEmployeeId();
+        String address = employeeDTO.getAddress();
+        employeeRepository.updateAddressByEmployeeId(employeeId,address);
+
+    }
+
     //    DTO to Entity
     public Employee toEmployee(EmployeeDTO dto) {
         return Employee.builder()

@@ -27,4 +27,6 @@ public interface EmployeeService {
     EmployeeDTO findSupervisorEmployeeByEmployeeId(Long employeeId);
 
     void updatePhoneNumberByEmployee(EmployeeDTO employeeDTO);
+
+    void updateAddressByEmployee(EmployeeDTO employeeDTO);
 }

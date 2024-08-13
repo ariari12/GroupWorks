@@ -129,6 +129,23 @@ public class EmployeeRestController {
         // 성공적으로 업데이트되면 200 OK 응답을 반환합니다.
         return ResponseEntity.ok("핸드폰 번호가 성공적으로 변경되었습니다.");
     }
+
+//    주소 변경 로직
+    @PutMapping("/modifyaddress")
+    public ResponseEntity<String> modifyAddress(@RequestBody Map<String, String> request, HttpSession session) {
+        SessionEmployeeDTO sessionEmployeeDTO = (SessionEmployeeDTO) session.getAttribute("employee");
+        EmployeeDTO employeeDTO = employeeService.findByEmployeeId(sessionEmployeeDTO.getEmployeeId());
+
+        String newAddress = request.get("newAddress");
+        log.info("새로운 주소로 업데이트: " + newAddress);
+        log.info("주소 변경 전 employeeDTO : " + employeeDTO.toString());
+        employeeDTO.setAddress(newAddress);
+        employeeService.updateAddressByEmployee(employeeDTO);
+        log.info("주소 변경 후 employeeDTO : " + employeeDTO.toString());
+
+        // 성공적으로 업데이트되면 200 OK 응답을 반환합니다.
+        return ResponseEntity.ok("주소가 성공적으로 변경되었습니다.");
+    }
 }
 
 
