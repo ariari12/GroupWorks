@@ -24,9 +24,6 @@ public class CoolSmsConfig {
 
     @Bean
     public DefaultMessageService encodeApiKeyCreateMessageService() {
-        log.info("encryptor: {}", encryptor);
-        if(encryptor == null) return null;
-
         String key = encryptor.decrypt(apiKey);
         String secret = encryptor.decrypt(apiSecretKey);
 
@@ -35,9 +32,6 @@ public class CoolSmsConfig {
 
     @Bean
     public AES256TextEncryptor setEncryptor(){
-        log.info("key: {}", keyProperty);
-        if(keyProperty == null) return null;
-
         encryptor = new AES256TextEncryptor();
         encryptor.setPassword(keyProperty);
         return encryptor;
