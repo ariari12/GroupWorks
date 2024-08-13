@@ -29,7 +29,9 @@ public class NotificationApiController {
     // 전체 알림 조회
     @GetMapping("/all")
     public List<NotificationDTO> getAllNotifications(@SessionAttribute(name = "employee") SessionEmployeeDTO sessionEmployeeDTO) {
-        log.info("NotificationController - Fetching All Notifications");
-        return notificationService.getAllNotificationsByReceiverId(sessionEmployeeDTO.getEmployeeId());
+//        log.info("NotificationController - Fetching All Notifications");
+//        return notificationService.getAllNotificationsByReceiverId(sessionEmployeeDTO.getEmployeeId());
+        log.info("NotificationControlleradsdasdas;fjasdlihfdseahflki.asdhfkshdakjfhdsakjhfkjsa");
+        return null;
     }
 }
