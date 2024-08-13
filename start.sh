@@ -28,7 +28,8 @@ docker rm -f redis web || true
 
 # Build and start the new containers
 echo "==> Building and starting new containers with Docker Compose..."
-docker-compose up --build -d
+
+#docker-compose up --build -d
 
 
 
