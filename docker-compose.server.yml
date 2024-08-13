@@ -7,9 +7,10 @@ services:
       - "6379:6379"
 
   web:
-    build:
-      context: .
-      dockerfile: Dockerfile
+#    build:
+#      context: .
+#      dockerfile: Dockerfile
+    image: app
     container_name: web
     ports:
       - "80:80"
