@@ -26,7 +26,7 @@ public class CoolSmsConfig {
     public DefaultMessageService encodeApiKeyCreateMessageService() {
         String key = encryptor.decrypt(apiKey);
         String secret = encryptor.decrypt(apiSecretKey);
-
+        System.out.println("key : "+ key + " secret : "+ secret);
         return NurigoApp.INSTANCE.initialize(key, secret, smsApiDomain);
     }
 
