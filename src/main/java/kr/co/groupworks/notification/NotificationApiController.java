@@ -36,11 +36,16 @@ public class NotificationApiController {
     // 전체 알림 삭제
     @DeleteMapping("/deleteAll")
     public void deleteAllNotifications(@SessionAttribute(name = "employee") SessionEmployeeDTO sessionEmployeeDTO) {
-
+        log.info("NotificationController - Deleting All Notifications");
+        notificationService.deleteAllNotificationsByReceiverId(sessionEmployeeDTO.getEmployeeId());
     }
+
     // 개별 알림 삭제
-    @DeleteMapping("/deleteOne")
-    public void deleteOneNotification(@SessionAttribute(name = "employee") SessionEmployeeDTO sessionEmployeeDTO) {
-
+    @DeleteMapping("/deleteOne/{notificationId}")
+    public void deleteOneNotification(@PathVariable String notificationId, @SessionAttribute(name = "employee") SessionEmployeeDTO sessionEmployeeDTO) {
+        log.info("NotificationController - Deleting One Notification with ID: {}", notificationId);
+        notificationService.deleteNotificationById(notificationId, sessionEmployeeDTO.getEmployeeId());
     }
+
+
 }
