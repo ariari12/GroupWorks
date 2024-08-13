@@ -8,17 +8,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-
 @Slf4j
 @Configuration
 public class CoolSmsConfig {
     @Value("${coolsms.api.dmain.url}")
     private String smsApiDomain;
-    @Value("${coolsms.encryptor.key.file-path}")
-    private String keyFilePath;
+    @Value("${coolsms.encryptor.key.property}")
+    private String keyProperty;
     @Value("${coolsms.api-key}")
     private String apiKey;
     @Value("${coolsms.secret-key}")
@@ -30,16 +26,14 @@ public class CoolSmsConfig {
     public DefaultMessageService encodeApiKeyCreateMessageService() {
         String key = encryptor.decrypt(apiKey);
         String secret = encryptor.decrypt(apiSecretKey);
+
         return NurigoApp.INSTANCE.initialize(key, secret, smsApiDomain);
     }
 
     @Bean
-    public AES256TextEncryptor setEncryptor() throws IOException {
-        String content = new String(Files.readAllBytes(Paths.get("D://key.txt")));
-        log.info("key property: {}", content);
-
+    public AES256TextEncryptor setEncryptor(){
         encryptor = new AES256TextEncryptor();
-        encryptor.setPassword(content);
+        encryptor.setPassword(keyProperty);
         return encryptor;
     }
 }
