@@ -14,4 +14,7 @@ public interface NotificationService {
     void sendNotificationOne(Notification notification);
     void sendNotificationList(List<Notification> notificationList);
 
+    void deleteAllNotificationsByReceiverId(Long employeeId);
+
+    void deleteNotificationById(String notificationId, Long employeeId);
 }

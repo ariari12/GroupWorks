@@ -1,9 +1,8 @@
-package kr.co.groupworks.sse.connection.model;
+package kr.co.groupworks.notification.sse.sse.connection.model;
 
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import kr.co.groupworks.sse.connection.ifs.ConnectionPoolIfs;
+import kr.co.groupworks.notification.sse.sse.connection.ifs.ConnectionPoolIfs;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

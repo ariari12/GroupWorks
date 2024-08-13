@@ -52,7 +52,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
             </div>
             <div class="toast-body">
-                ${notification.contents}
+                ${notification.contents}                
             </div>
         `;
 
@@ -61,24 +61,39 @@ document.addEventListener("DOMContentLoaded", function() {
 
         const toastBootstrap = new bootstrap.Toast(toast);
         toastBootstrap.show();
+
+        // 개별 삭제 버튼 이벤트 리스너 추가
+        const deleteButton = toast.querySelector('.delete-notification');
+        deleteButton.addEventListener('click', function() {
+            const notificationId = this.getAttribute('data-id');
+            deleteNotification(notificationId, toast);
+        });
+    }
+
+    // 개별 알림 삭제 함수
+    function deleteNotification(notificationId, notificationElement) {
+        fetch(`/notifications/deleteOne/${notificationId}`, { method: 'DELETE' })
+            .then(response => {
+                if (response.ok) {
+                    notificationElement.remove(); // 화면에서 알림 제거
+                    cachedNotifications = cachedNotifications.filter(n => n.notificationId !== notificationId); // 캐시에서도 제거
+                } else {
+                    console.error('Failed to delete notification');
+                }
+            })
+            .catch(error => console.error('Error deleting notification:', error));
     }
 
     // 오프캔버스 열기 이벤트 리스너 추가
     const notificationButton = document.querySelector('[data-bs-target="#notificationOffcanvasRight"]');
     notificationButton.addEventListener('click', function() {
-        if (!cachedNotifications) {
-            // 서버에서 알림을 조회하고 캐싱
-            fetch('/notifications/all')
-                .then(response => response.json())
-                .then(data => {
-                    cachedNotifications = data;
-                    displayNotifications(cachedNotifications);
-                })
-                .catch(error => console.error('Error fetching notifications:', error));
-        } else {
-            // 캐싱된 알림을 표시
-            displayNotifications(cachedNotifications);
-        }
+        // 서버에서 알림을 조회하고 화면에 표시
+        fetch('/notifications/all')
+            .then(response => response.json())
+            .then(data => {
+                displayNotifications(data);
+            })
+            .catch(error => console.error('Error fetching notifications:', error));
 
         // 알림 배지 숨기기
         notificationBadge.classList.add('d-none');
@@ -107,6 +122,33 @@ document.addEventListener("DOMContentLoaded", function() {
                 <hr>
             `;
             offcanvasBody.appendChild(notificationElement);
+
+            // 개별 삭제 버튼 이벤트 리스너 추가
+            notificationElement.querySelector('.delete-notification').addEventListener('click', function() {
+                const notificationId = this.getAttribute('data-id');
+                deleteNotification(notificationId, notificationElement);
+            });
         });
+    }
+
+    // 알림 전체 삭제 버튼 클릭 이벤트 리스너 추가
+    const deleteAllButton = document.querySelector('.btn-outline-danger');
+    deleteAllButton.addEventListener('click', function() {
+        deleteAllNotifications();
+    });
+
+    // 알림 전체 삭제 함수
+    function deleteAllNotifications() {
+        fetch(`/notifications/deleteAll`, { method: 'DELETE' })
+            .then(response => {
+                if (response.ok) {
+                    const offcanvasBody = document.querySelector('#notificationOffcanvasRight .offcanvas-body');
+                    offcanvasBody.innerHTML = ''; // 화면에서 모든 알림 제거
+                    cachedNotifications = []; // 캐시 초기화
+                } else {
+                    console.error('Failed to delete all notifications');
+                }
+            })
+            .catch(error => console.error('Error deleting all notifications:', error));
     }
 });
