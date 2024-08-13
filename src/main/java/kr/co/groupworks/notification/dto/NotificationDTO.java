@@ -19,6 +19,7 @@ public class NotificationDTO implements Serializable {
     private String type;
     private String url;
     private boolean read;
+    private Long receiverId;
     private String senderName;
     private String receiverName;
 }

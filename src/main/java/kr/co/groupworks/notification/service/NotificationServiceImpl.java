@@ -30,6 +30,15 @@ public class NotificationServiceImpl implements NotificationService {
         return notificationRepository.saveWithTTL(notification, timeout, timeUnit);
     }
 
+    //수신자의 모든 알림 캐싱
+    @Cacheable(value = "notificationCache", key = "#receiverId")
+    public List<NotificationDTO> getAllNotificationsByReceiverId(Long receiverId) {
+        return notificationRepository.findAllByReceiverId(receiverId)
+                .stream().map(notificationMapper::toDto)
+                .toList();
+    }
+
+    // 캐싱 제거, 레디스 저장 후 전송
     @CacheEvict(value = "notificationCache", key = "#vacation.employee.employeeId")
     public void sendVacationApproval(Vacation vacation, Employee sender) {
         Notification notification = Notification.builder()
@@ -41,7 +50,6 @@ public class NotificationServiceImpl implements NotificationService {
                 .receiverId(vacation.getEmployee().getEmployeeId())
                 .senderId(sender.getEmployeeId())
                 .senderName(sender.getEmployeeName())
-                .receiverName(vacation.getEmployee().getEmployeeName())
                 .build();
         NotificationDTO dto = notificationMapper.toDto(
                 saveWithTTL(notification, 30L, TimeUnit.DAYS)
@@ -50,10 +58,24 @@ public class NotificationServiceImpl implements NotificationService {
         notificationSseEmitter.sendNotification(vacation.getEmployee().getEmployeeId(), dto);
     }
 
-    @Cacheable(value = "notificationCache", key = "#receiverId")
-    public List<NotificationDTO> getAllNotificationsByReceiverId(Long receiverId) {
-        return notificationRepository.findAllByReceiverId(receiverId)
-                .stream().map(notificationMapper::toDto)
-                .toList();
+
+    // 캐싱 제거, 레디스 저장 후 한명에게 전송
+    @CacheEvict(value = "notificationCache", key = "#notification.senderId")
+    public void sendNotificationOne(Notification notification) {
+        NotificationDTO dto = notificationMapper.toDto(
+                saveWithTTL(notification, 30L, TimeUnit.DAYS)
+        );
+        log.info("sendNotificationOne - dto : {}",dto.toString());
+        notificationSseEmitter.sendNotification(Long.valueOf(dto.getNotificationId()), dto);
+    }
+
+    // 캐싱 제거, 레디스 저장 후 여러명에게 전송
+    @CacheEvict(value = "notificationCache", allEntries = true)
+    public void sendNotificationList(List<Notification> notificationList) {
+        List<NotificationDTO> list = notificationList.stream().map(
+                notification -> notificationMapper.toDto(saveWithTTL(notification, 30L, TimeUnit.DAYS))
+        ).toList();
+        log.info("sendNotificationList - list : {}",list);
+        notificationSseEmitter.sendNotificationsToMultipleUsers(list);
     }
 }
