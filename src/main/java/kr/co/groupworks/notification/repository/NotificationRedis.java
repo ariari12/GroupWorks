@@ -8,4 +8,8 @@ import java.util.concurrent.TimeUnit;
 public interface NotificationRedis {
     Notification saveWithTTL(Notification notification, long timeout, TimeUnit unit);
     List<Notification> findAllByReceiverId(Long receiverId);
+
+    void deleteAllByReceiverId(Long receiverId);
+
+    void deleteByIdAndReceiverId(String notificationId, Long receiverId);
 }

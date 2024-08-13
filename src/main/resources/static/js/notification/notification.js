@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", function() {
     let cachedNotifications = null;
 
     // SSE 연결을 설정합니다. 서버에서 알림을 실시간으로 수신합니다.
-    const eventSource = new EventSource(`/notifications/sse`);
+    const eventSource = new EventSource('/notifications/sse');
 
     // 로컬 스토리지에서 배지 상태를 확인합니다.
     const notificationBadge = document.querySelector('.translate-middle.badge');
@@ -52,7 +52,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
             </div>
             <div class="toast-body">
-                ${notification.contents}
+                ${notification.contents}                
             </div>
         `;
 
@@ -61,24 +61,39 @@ document.addEventListener("DOMContentLoaded", function() {
 
         const toastBootstrap = new bootstrap.Toast(toast);
         toastBootstrap.show();
+
+        // 개별 삭제 버튼 이벤트 리스너 추가
+        const deleteButton = toast.querySelector('.delete-notification');
+        deleteButton.addEventListener('click', function() {
+            const notificationId = this.getAttribute('data-id');
+            deleteNotification(notificationId, toast);
+        });
+    }
+
+    // 개별 알림 삭제 함수
+    function deleteNotification(notificationId, notificationElement) {
+        fetch(`/notifications/deleteOne/${notificationId}`, { method: 'DELETE' })
+            .then(response => {
+                if (response.ok) {
+                    notificationElement.remove(); // 화면에서 알림 제거
+                    cachedNotifications = cachedNotifications.filter(n => n.notificationId !== notificationId); // 캐시에서도 제거
+                } else {
+                    console.error('Failed to delete notification');
+                }
+            })
+            .catch(error => console.error('Error deleting notification:', error));
     }
 
     // 오프캔버스 열기 이벤트 리스너 추가
     const notificationButton = document.querySelector('[data-bs-target="#notificationOffcanvasRight"]');
     notificationButton.addEventListener('click', function() {
-        if (!cachedNotifications) {
-            // 서버에서 알림을 조회하고 캐싱
-            fetch('/notifications')
-                .then(response => response.json())
-                .then(data => {
-                    cachedNotifications = data;
-                    displayNotifications(cachedNotifications);
-                })
-                .catch(error => console.error('Error fetching notifications:', error));
-        } else {
-            // 캐싱된 알림을 표시
-            displayNotifications(cachedNotifications);
-        }
+        // 서버에서 알림을 조회하고 화면에 표시
+        fetch('/notifications/all')
+            .then(response => response.json())
+            .then(data => {
+                displayNotifications(data);
+            })
+            .catch(error => console.error('Error fetching notifications:', error));
 
         // 알림 배지 숨기기
         notificationBadge.classList.add('d-none');
@@ -94,57 +109,37 @@ document.addEventListener("DOMContentLoaded", function() {
             const notificationElement = document.createElement('div');
             notificationElement.classList.add('notification-item');
             notificationElement.innerHTML = `
-                
-                <div>
-                    <span class="d-grid gap-2 d-md-flex justify-content-md-end">
-                        <button class="btn-close delete-notification" data-id="${notification.notificationId}" aria-label="Close"></button>
-                    </span>                                        
-                    <small>${notification.createdDate}</small>                    
+                <div class="d-flex justify-content-between align-items-start">
                     <div>
                         <strong>
-                            <a class="" href="${notification.url}">${notification.title}</a>
+                            <a href="${notification.url}">${notification.title}</a>
                         </strong>
-                    </div>                                               
-                                        
-                    <p>${notification.contents}</p>                                       
+                        <p>${notification.contents}</p>
+                        <small>${notification.createdDate}</small>
+                    </div>
+                    <button type="button" class="btn-close delete-notification" data-id="${notification.notificationId}" aria-label="Close"></button>
                 </div>
                 <hr>
-                
             `;
             offcanvasBody.appendChild(notificationElement);
 
-            // 개별 알림 삭제 버튼 클릭 이벤트 리스너 추가
+            // 개별 삭제 버튼 이벤트 리스너 추가
             notificationElement.querySelector('.delete-notification').addEventListener('click', function() {
                 const notificationId = this.getAttribute('data-id');
                 deleteNotification(notificationId, notificationElement);
             });
-
         });
     }
 
     // 알림 전체 삭제 버튼 클릭 이벤트 리스너 추가
-    const deleteAllButton = document.querySelector('#delete-all-notifications');
+    const deleteAllButton = document.querySelector('.btn-outline-danger');
     deleteAllButton.addEventListener('click', function() {
         deleteAllNotifications();
     });
 
-    // 개별 알림 삭제 함수
-    function deleteNotification(notificationId, notificationElement) {
-        fetch(`/notifications/${notificationId}`, { method: 'DELETE' })
-            .then(response => {
-                if (response.ok) {
-                    notificationElement.remove(); // 화면에서 알림 제거
-                    cachedNotifications = cachedNotifications.filter(n => n.id !== notificationId); // 캐시에서도 제거
-                } else {
-                    console.error('Failed to delete notification');
-                }
-            })
-            .catch(error => console.error('Error deleting notification:', error));
-    }
-
     // 알림 전체 삭제 함수
     function deleteAllNotifications() {
-        fetch(`/notifications`, { method: 'DELETE' })
+        fetch(`/notifications/deleteAll`, { method: 'DELETE' })
             .then(response => {
                 if (response.ok) {
                     const offcanvasBody = document.querySelector('#notificationOffcanvasRight .offcanvas-body');
@@ -156,7 +151,4 @@ document.addEventListener("DOMContentLoaded", function() {
             })
             .catch(error => console.error('Error deleting all notifications:', error));
     }
-
-
-
 });

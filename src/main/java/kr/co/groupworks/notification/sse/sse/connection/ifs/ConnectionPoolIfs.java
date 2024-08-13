@@ -1,6 +1,4 @@
-package kr.co.groupworks.sse.connection.ifs;
-
-import kr.co.groupworks.sse.connection.model.UserSseConnection;
+package kr.co.groupworks.notification.sse.sse.connection.ifs;
 
 public interface ConnectionPoolIfs<T, R> {
     void addSession(T uniqueKey, R session);

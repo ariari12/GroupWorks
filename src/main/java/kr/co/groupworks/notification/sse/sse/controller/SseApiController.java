@@ -1,10 +1,10 @@
-package kr.co.groupworks.sse.controller;
+package kr.co.groupworks.notification.sse.sse.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.Parameter;
 import kr.co.groupworks.employee.dto.SessionEmployeeDTO;
-import kr.co.groupworks.sse.connection.SseConnectionPool;
-import kr.co.groupworks.sse.connection.model.UserSseConnection;
+import kr.co.groupworks.notification.sse.sse.connection.SseConnectionPool;
+import kr.co.groupworks.notification.sse.sse.connection.model.UserSseConnection;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
@@ -13,12 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyEmitter;
-import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
-import java.io.IOException;
-import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
 @RestController
