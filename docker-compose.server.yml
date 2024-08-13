@@ -7,17 +7,16 @@ services:
       - "6379:6379"
 
   web:
-#    build:
-#      context: .
-#      dockerfile: Dockerfile
-    image: app
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: web
     ports:
       - "80:80"
     depends_on:
       - redis
     environment:
-      - KEY_PROPERTY=${KEY_PROPERTY}
+      - coolsms.encryptor.key.property=${KEY_PROPERTY}
       - SPRING_PROFILES_ACTIVE=prod
       - SPRING_DATA_REDIS_HOST=redis
       - SPRING_DATA_REDIS_PORT=6379
