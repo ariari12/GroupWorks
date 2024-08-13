@@ -17,7 +17,7 @@ services:
     depends_on:
       - redis
     environment:
-      - KEY_PROPERTY=${KEY_PROPERTY}
+      - KEY_PROPERTY=$KEY_PROPERTY
       - SPRING_PROFILES_ACTIVE=prod
       - SPRING_DATA_REDIS_HOST=redis
       - SPRING_DATA_REDIS_PORT=6379
