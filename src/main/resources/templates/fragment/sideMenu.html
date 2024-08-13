@@ -8,11 +8,11 @@
     <div id="layoutSidenav_nav">
         <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
             <div class="sb-sidenav-menu">
-                <div class="nav">
 
-                    <th:block th:replace="~{/attendance/fragments/attendanceTime::commuteTime}"></th:block>
+            <div class="nav">
+                <th:block th:replace="~{attendance/fragments/attendanceTime :: commuteTime}"></th:block>
 
-                    <!--/* 그룹 소 제목 */-->
+                    <!--/* 그룹 소 제목 : main */-->
                     <div class="sb-sidenav-menu-heading">Main</div>
                     <a class="nav-link" href="/main">
                         <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
@@ -80,18 +80,36 @@
 <!--                    </div>-->
                     <th:block th:replace="~{corporateOrganization/corporateOrganizationSideMenu.html :: corporateOrganizationSideMenu}"></th:block>
 
-                    <th:block th:replace="~{workflow/workFlowSideMenu.html :: workFlowSideMenu}"></th:block>
 
-                    <th:block th:replace="~{board/fragments/boardSideMenu :: boardSideMenu}"></th:block>
-
-                    <th:block th:replace="~{calendar/fragments/kahSideMenu :: kahSideMenu}"></th:block>
+                    <!--/* 그룹 소 제목 : Schedule */-->
+                    <div class="sb-sidenav-menu-heading">Schedule</div>
 
                     <th:block th:replace="~{attendance/fragments/attendanceSideMenu :: commuteSideMenu}"></th:block>
 
+                    <th:block th:replace="~{calendar/fragments/kahSideMenu :: kahSideMenu}"></th:block>
+
+
+
+                    <!--/* 그룹 소 제목 : Work */-->
+                    <div class="sb-sidenav-menu-heading">Work</div>
+
+                    <th:block th:replace="~{workflow/workFlowSideMenu.html :: workFlowSideMenu}"></th:block>
+
                     <th:block th:replace="~{mail/mailSideMenu.html :: mailSideMenu}"></th:block>
+
+
+                    <!--/* 그룹 소 제목 : Communication */-->
+                    <div class="sb-sidenav-menu-heading">Communication</div>
+
+                    <th:block th:replace="~{board/fragments/boardSideMenu :: boardSideMenu}"></th:block>
 
                     <th:block th:replace="~{videoConference/videoConferenceSideMenu.html :: videoConferenceSideMenu}"></th:block>
 
+                    <th:block th:replace="~{chat/fragments/chatSideMenu :: chatSideMenu}"></th:block>
+
+
+                    <!--/* 그룹 소 제목 : Material Flow Management */-->
+                    <div class="sb-sidenav-menu-heading">Material Flow Management</div>
                     <th:block th:replace="~{materialflow/materialflowSideMenu.html :: materialFlowSideMenu}"></th:block>
 
 
@@ -99,7 +117,9 @@
 
                 <!--/* Sidebar footer */-->
                 <div class="sb-sidenav-footer">
-                    <div class="small" >Logged in as : <span th:text="${session.employee.getEmployeeName()}"></span></div>
+                    <div class="small" ><span th:text="${session.employee.getEmployeeName()}"></span> 님 좋은 하루 입니다.
+                        <br/><span id="sideFooterGreeting"></span>
+                    </div>
                 </div>
             </div>
         </nav>

@@ -10,7 +10,7 @@ form {
 }
 
 .table-margin {
-    margin-right: 50px;
+    margin-right: 94px;
 }
 
 table, th, td {
@@ -63,7 +63,7 @@ th, td {
 
 @media print {
     body {
-        zoom: 43%;
+        zoom: 42.7%;
     }
     .none-print {
         display: none !important;

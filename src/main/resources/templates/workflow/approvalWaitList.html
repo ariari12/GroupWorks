@@ -10,12 +10,12 @@
 
 <th:block layout:fragment="content">
     <!--/* approvalWait Table */-->
-    <div th:replace="~{/workflow/approvalwaittables/approvalWait.html :: approvalWait}"></div>
-    <div th:replace="~{/workflow/approvalwaittables/approvedList.html :: approvedList}"></div>
-    <div th:replace="~{/workflow/approvalwaittables/rejectionList.html :: rejectionList}"></div>
+    <div th:replace="~{workflow/approvalwaittables/approvalWait.html :: approvalWait}"></div>
+    <div th:replace="~{workflow/approvalwaittables/approvedList.html :: approvedList}"></div>
+    <div th:replace="~{workflow/approvalwaittables/rejectionList.html :: rejectionList}"></div>
 </th:block>
 
 <th:block layout:fragment="javascript">
     <script src="/js/workflow/tables/approval-wait-tables.js"></script>
-    <script src="/js/workflow/tables/table-hover.js"></script>
+    <script src="/js/workflow/tables/table-approval-badge-hover.js"></script>
 </th:block>

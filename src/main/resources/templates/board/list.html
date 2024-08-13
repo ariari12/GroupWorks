@@ -8,17 +8,60 @@
         .th-center, .td-center {
             text-align: center;
         }
+
+        .menu {
+            display: inline-block; margin: 0 10px 0 10px;
+        }
+
+        a {
+            color: black;
+            text-decoration: none;
+        }
+
+        .menu a.active {
+            font-weight: bold;
+            text-decoration: underline;
+            text-decoration-thickness: 3px;
+            text-underline-offset: 5px;
+        }
     </style>
 </th:block>
 
 <th:block layout:fragment="javascript">
-    <script>
+    <script th:inline="javascript">
+        /* 검색 */
+        $(document).ready(function (){
+            $('#keyword').keypress(function (e) {
+                if (e.keyCode == 13) {
+                    let keywordType = $('.keywordType').val();
+                    let keyword = $('#keyword').val();
+                    let type = [[${type}]].length !== 0 ? '&type=notice':'';
+                    location.href="./list?keyword=" + keyword + "&keywordtype=" + keywordType + type;
+                }
+            })
+        });
     </script>
 </th:block>
 
 <th:block layout:fragment="content">
     <div class="container" style="margin-top: 50px;"
-         th:with="boardType=${title == '공지 게시판'} ? 'notice' : ${session.employee.departmentId}">
+         th:with="boardType=${title == '공지 게시판'} ? 'notice' : ${session.employee.getDepartment().departmentId}">
+
+        <div style="margin-left: 10px;" th:if="${boardType != 'notice'}">
+            <div class="menu">
+                <a th:href="@{'/board/' + ${boardType} + '/list'}"
+                   th:class="${type == '' ? 'active' : ''}">
+                    <h3>전체</h3>
+                </a>
+            </div>
+            <div class="menu">
+                <a th:href="@{'/board/' + ${boardType} + '/list?type=notice'}"
+                   th:class="${type == 'notice' ? 'active' : ''}">
+                    <h3>공지</h3>
+                </a>
+            </div>
+        </div>
+
         <table class="table table-hover">
             <thead>
             <tr>
@@ -31,33 +74,33 @@
             </thead>
 
             <tbody>
-                <tr class="table-secondary">
+                <tr class="table-secondary"
+                    th:each="board : ${noticePosts}"
+                    th:attr="onclick=|location.href='@{/board/{boardType}/detail/{boardId}(boardType=${boardType}, boardId=${board.boardId})}'|">
                     <td class="td-center">→</td>
-                    <td>
-                        <span class="badge bg-danger">필독</span>
-                        <span>8월 5일 회식있습니다.</span>
+                    <td th:switch="${board.subject}">
+                        <span th:case="'mandatory'" class="badge bg-danger" th:text="필독"></span>
+                        <span th:case="'announcement'" class="badge bg-danger" th:text="공지"></span>
+                        <span th:text="${board.title}"></span>
                     </td>
-                    <td class="td-center">승진 부장</td>
-                    <td class="td-center">5일전</td>
-                    <td class="td-center">0</td>
+                    <td class="td-center" th:text="${board.employee.getRankName()} + ' ' + ${board.employee.getEmployeeName()}"></td>
+                    <td class="td-center" th:text="${board.relativeCreateDate}"></td>
+                    <td class="td-center" th:text="${board.hits}"></td>
                 </tr>
+            </tbody>
 
-                <tr class="table-secondary">
-                    <td class="td-center">→</td>
-                    <td>
-                        <span class="badge bg-danger">공지</span>
-                        <span>7월 15일까지 프로젝트 마감입니다.</span>
+            <tbody th:if="${allPosts.isEmpty()}">
+                <tr>
+                    <td colspan="5" style="text-align: center; vertical-align: middle;">
+                        <span style="font-size: 30px;">게시판 글이 없습니다.</span>
                     </td>
-                    <td class="td-center">승진 부장</td>
-                    <td class="td-center">2일전</td>
-                    <td class="td-center">0</td>
                 </tr>
             </tbody>
 
             <tbody>
-                <tr th:each="board : ${board}"
-                    th:attr="onclick=|location.href='@{/board/{boardType}/detail/{boardId}(boardType=${boardType}, boardId=${board.rankNum})}'|">
-                    <td class="td-center" th:text="${board.boardId}"></td>
+                <tr th:each="board : ${allPosts}"
+                    th:attr="onclick=|location.href='@{/board/{boardType}/detail/{boardId}(boardType=${boardType}, boardId=${board.boardId})}'|">
+                    <td class="td-center" th:text="${board.getRankNum()}"></td>
                     <td th:switch="${board.subject}">
                         <span th:case="'suggestion'" class="badge bg-primary" th:text="제안"></span>
                         <span th:case="'general'" class="badge bg-secondary" th:text="일반"></span>
@@ -73,17 +116,17 @@
                 </tr>
             </tbody>
 
-
             <tfoot>
             <tr>
                 <td colspan="4" style="border-bottom: none;">
                     <div class="input-group" style="width: 40%;">
-                        <select class="form-select" id="inputGroupSelect" style="width: 40%;">
+                        <select class="form-select keywordType" id="inputGroupSelect" style="width: 40%;">
                             <option value="title" selected>제목</option>
-                            <option value="writer">글쓴이</option>
                             <option value="content">내용</option>
+                            <option value="writer">작성자</option>
+                            <option value="rank">직급</option>
                         </select>
-                        <input type="text" class="form-control" style="width: 60%;">
+                        <input type="text" class="form-control" id="keyword" style="width: 60%;">
                     </div>
                 </td>
                 <td class="td-center" style="border-bottom: none;">
@@ -97,16 +140,54 @@
             </tr>
             </tfoot>
         </table>
-        <div class="d-flex justify-content-center">
+        <div class="d-flex justify-content-center" th:if="${!allPosts.isEmpty()}">
             <nav aria-label="Page navigation example">
                 <ul class="pagination">
-                    <li class="page-item"><a class="page-link" href="#">처음</a></li>
-                    <li class="page-item"><a class="page-link" href="#">이전</a></li>
-                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                    <li class="page-item"><a class="page-link" href="#">다음</a></li>
-                    <li class="page-item"><a class="page-link" href="#">마지막</a></li>
+                    <!-- 처음 버튼 -->
+                    <li class="page-item" th:classappend="${currentPage == 1} ? 'disabled' : ''">
+                        <a class="page-link"
+                           th:href="@{'/board/' + ${boardType} + '/list?' +
+                           (${keyword.length() != 0} ? 'keyword='+${keyword}:'') +
+                           (${keywordType.length() != 0} ? '&keywordtype='+${keywordType}:'') +
+                           (${type.length() != 0} ? '&type='+${type}:'') +
+                           '&page=1'}">처음</a>
+                    </li>
+                    <!-- 이전 버튼 -->
+                    <li class="page-item" th:classappend="${currentPage == 1} ? 'disabled' : ''">
+                        <a class="page-link"
+                           th:href="@{'/board/' + ${boardType} + '/list?' +
+                           (${keyword.length() != 0} ? 'keyword='+${keyword}:'') +
+                           (${keywordType.length() != 0} ? '&keywordtype='+${keywordType}:'') +
+                           (${type.length() != 0} ? '&type='+${type}:'') +
+                           '&page=' + ${currentPage - 1}}">이전</a>
+                    </li>
+                    <!-- 페이지 번호 버튼들 -->
+                    <li class="page-item" th:each="i : ${#numbers.sequence(startPage, endPage)}" th:classappend="${i == currentPage} ? 'active' : ''">
+                        <a class="page-link"
+                           th:href="@{'/board/' + ${boardType} + '/list?' +
+                           (${keyword.length() != 0} ? 'keyword='+${keyword}:'') +
+                           (${keywordType.length() != 0} ? '&keywordtype='+${keywordType}:'') +
+                           (${type.length() != 0} ? '&type='+${type}:'') +
+                           '&page=' + ${i}}">[[${i}]]</a>
+                    </li>
+                    <!-- 다음 버튼 -->
+                    <li class="page-item" th:classappend="${currentPage == totalPages} ? 'disabled' : ''">
+                        <a class="page-link"
+                           th:href="@{'/board/' + ${boardType} + '/list?' +
+                           (${keyword.length() != 0} ? 'keyword='+${keyword}:'') +
+                           (${keywordType.length() != 0} ? '&keywordtype='+${keywordType}:'') +
+                           (${type.length() != 0} ? '&type='+${type}:'') +
+                           '&page=' + ${currentPage + 1}}">다음</a>
+                    </li>
+                    <!-- 마지막 버튼 -->
+                    <li class="page-item" th:classappend="${currentPage == totalPages} ? 'disabled' : ''">
+                        <a class="page-link"
+                           th:href="@{'/board/' + ${boardType} + '/list?' +
+                           (${keyword.length() != 0} ? 'keyword='+${keyword}:'') +
+                           (${keywordType.length() != 0} ? '&keywordtype='+${keywordType}:'') +
+                           (${type.length() != 0} ? '&type='+${type}:'') +
+                           '&page=' + ${totalPages}}">마지막</a>
+                    </li>
                 </ul>
             </nav>
         </div>

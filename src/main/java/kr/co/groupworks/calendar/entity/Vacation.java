@@ -39,4 +39,8 @@ public class Vacation extends Calendar{
 
         return this;
     }
+
+    public void approvalStatus(VacationStatus status) {
+        this.status=status;
+    }
 }

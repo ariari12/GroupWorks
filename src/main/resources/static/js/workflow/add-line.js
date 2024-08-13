@@ -7,7 +7,7 @@ let memberList = [];
 
 function getEmployeeAll() {
     $.ajax({
-        url: "/work-flow/employee",
+        url: "/openapi/work-flow/employee",
         type: "GET",
         dataType: "json",
         contentType: 'application/x-www-form-urlencoded; charset=UTF-8',

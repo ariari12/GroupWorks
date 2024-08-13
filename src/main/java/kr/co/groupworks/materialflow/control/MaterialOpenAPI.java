@@ -5,8 +5,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import kr.co.groupworks.materialflow.dto.BusinessDTO;
-import kr.co.groupworks.materialflow.dto.ManagerDTO;
+import kr.co.groupworks.materialflow.dto.*;
 import kr.co.groupworks.materialflow.entity.Business;
 import kr.co.groupworks.materialflow.service.MaterialOpenApiService;
 import lombok.RequiredArgsConstructor;
@@ -30,9 +29,9 @@ public class MaterialOpenAPI {
 
 
     @Operation(tags = TAGS, summary = "거래처 데이터 제공 API", description = "거래처 등록번호에 따른 거래처 데이터 제공")
-    @Parameter(name = "businessId", example = "1", description = "해당 거래처 등록번호에 따른 거래처 데이터 제공 (*생략 시 전체 거래처 데이터 제공, 0:본사)")
+    @Parameter(name = "businessId", example = "1", description = "해당 거래처 등록번호에 따른 거래처 데이터 제공 (*생략 시 전체 거래처 데이터 제공, 1:본사)")
     @ApiResponse(responseCode = RESPONSE_CODE, content = @Content(schema = @Schema(implementation = Business.class)))
-    @GetMapping("/business")
+    @GetMapping(value = "/business")
     public ResponseEntity<Object> business(@RequestParam(required = false) Long businessId) {
         Object result = materialOpenApiService.getBusiness(businessId);
         return result == null ? ResponseEntity.status(HttpStatus.NOT_FOUND).body("해당되는 데이터가 없습니다.")
@@ -51,7 +50,7 @@ public class MaterialOpenAPI {
     @Parameter(name = "businessId", example = "1", description = "해당 거래처 등록번호에 따른 거래처 담당자 데이터 제공")
     @Parameter(name = "managerId", example = "1", description = "해당 거래처 담당자 등록번호에 따른 거래처 담당자 데이터 제공 (* managerId로 검색할 시 businessId 필요 없음)")
     @ApiResponse(responseCode = RESPONSE_CODE, content = @Content(schema = @Schema(implementation = ManagerDTO.class)))
-    @GetMapping("/business-manager")
+    @GetMapping(value = "/business-manager")
     public ResponseEntity<Object> getBusinessManager(@RequestParam(required = false) Long businessId, @RequestParam(required = false) Long managerId) {
         if(businessId != null) return ResponseEntity.ok().body(materialOpenApiService.getManagersByBusiness(businessId));
         if(managerId == null) return ResponseEntity.ok().body(materialOpenApiService.getAllManager());
@@ -61,7 +60,7 @@ public class MaterialOpenAPI {
 
     @Operation(tags = TAGS, summary = "거래처 담당자 정보 등록 API", description = "거래처 담당자 데이터 등록")
     @ApiResponse(responseCode = RESPONSE_CODE, content = @Content(schema = @Schema(implementation = Boolean.class)))
-    @PostMapping("/business-manager")
+    @PostMapping(value = "/business-manager")
     public ResponseEntity<Object> getBusinessManager(@RequestBody(required = false) List<ManagerDTO> managerList) {
         if(managerList.size() > 1) {
             materialOpenApiService.setManagers(managerList);
@@ -69,5 +68,33 @@ public class MaterialOpenAPI {
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(false);
     }
+
+    @Operation(tags = TAGS, summary = "발주/수주 주문기록 정보 제공 API", description = "발주/수주 주문기록 정보 제공 API 모든 Parameter 가 포함된 데이터 반환")
+    @ApiResponse(responseCode = RESPONSE_CODE, content = @Content(schema = @Schema(implementation = OrderDTO.class)))
+    @Parameter(name = "orderCode", description = "발주/수주서 번호로 주문기록 조회", example = "2020120317-0A1561733-A1V3")
+    @Parameter(name = "itemCode", description = "품목 코드로 주문기록 조회", example = "0A1561733-A1V3-2")
+    @Parameter(name = "itemName", description = "품목 명으로 주문기록 조회", example = "iPhone 16 다이아 케이스(색상 블루 계열)")
+    @GetMapping
+    public ResponseEntity<List<OrderDTO>> getOrders(@RequestParam(required = false) String orderCode, @RequestParam(required = false) String itemCode, @RequestParam(required = false) String itemName) {
+        List<OrderDTO> os = materialOpenApiService.getOrderList(orderCode, itemCode, itemName);
+        if(os.isEmpty()) return ResponseEntity.status(HttpStatus.NOT_FOUND).body(os);
+        return ResponseEntity.ok().body(os);
+    }
+
+    @Operation(tags = TAGS, summary = "모든 자재관리 현황 정보 제공 API", description = "모든 BOM 자재/재고/유통 현황 정보제공 API")
+    @ApiResponse(responseCode = RESPONSE_CODE, content = @Content(schema = @Schema(implementation = BomDTO.class)))
+    @GetMapping("/bom")
+    public ResponseEntity<Object> getBom() {
+        return ResponseEntity.ok().body(materialOpenApiService.getBomList());
+    }
+
+    @Operation(tags = TAGS, summary = "MES연동 데이터 등록 API", description = "MES와 연동하여 MES로 부터 데이터 전달받는 API")
+    @ApiResponse(responseCode = RESPONSE_CODE, content = @Content(schema = @Schema(implementation = MesDTO.class)))
+    @PostMapping(value = "/mes")
+    public ResponseEntity<Object> getMes(@RequestBody(required = false) List<MesDTO> mesList) {
+        if(mesList.size() > 1) return ResponseEntity.status(HttpStatus.NOT_FOUND).body(false);
+        return ResponseEntity.ok().body(materialOpenApiService.setMesList(mesList));
+    }
+
 
 }

@@ -95,16 +95,19 @@
                         <div class="col-sm-6">
                             <label for="employeeId" class="form-label">사원번호</label>
                             <input type="text" class="form-control" id="employeeId" placeholder="" th:value="${employee.getEmployeeId()}" required>
+
                         </div>
 
                         <div class="col-sm-6">
                             <label for="employeeName" class="form-label">사원이름</label>
                             <input type="text" class="form-control" id="employeeName" placeholder="" th:value="${employee.getEmployeeName()}" required>
+
                         </div>
 
                         <div class="col-sm-6">
                             <label for="departmentName" class="form-label">부서이름</label>
                             <input type="text" class="form-control" id="departmentName" placeholder="" th:value="${employee.department.getDepartmentName()}" required>
+
                         </div>
 
                         <div class="col-sm-6">
@@ -124,7 +127,7 @@
 
                         <div class="col-12">
                             <label for="address" class="form-label">주소</label>
-                            <input type="text" class="form-control" id="address" placeholder="1234 Main St" required th:value="${employee.getAddress()}">
+                            <input type="text" class="form-control" id="address" placeholder="1234 Main St" required th:value="${employee.address}">
                             <div class="invalid-feedback">
                                 Please enter your shipping address.
                             </div>
@@ -132,7 +135,7 @@
 
                         <div class="col-12">
                             <label for="address2" class="form-label">입사일</label>
-                            <input type="text" class="form-control" id="address2" placeholder="Apartment or suite" th:value="${employee.getJoinDate()}">
+                            <input type="text" class="form-control" id="address2" placeholder="Apartment or suite" th:value="${employee.joinDate}">
                         </div>
 
                         <th:block th:if="${supervisorEmployee != null}">

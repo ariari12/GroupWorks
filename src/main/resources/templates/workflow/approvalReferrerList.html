@@ -10,11 +10,11 @@
 
 <th:block layout:fragment="content">
     <!--/* approvalWait Table */-->
-    <div th:replace="~{/workflow/approvalReferrerTables/collaboratorList.html :: collaboratorList}"></div>
-    <div th:replace="~{/workflow/approvalReferrerTables/referrerList.html :: referrerList}"></div>
+    <div th:replace="~{workflow/approvalReferrerTables/collaboratorList.html :: collaboratorList}"></div>
+    <div th:replace="~{workflow/approvalReferrerTables/referrerList.html :: referrerList}"></div>
 </th:block>
 
 <th:block layout:fragment="javascript">
     <script src="/js/workflow/tables/approval-referrer-tables.js"></script>
-    <script src="/js/workflow/tables/table-hover.js"></script>
+    <script src="/js/workflow/tables/table-approval-badge-hover.js"></script>
 </th:block>

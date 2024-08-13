@@ -29,4 +29,5 @@ public interface EmployeeService {
     void updatePhoneNumberByEmployee(EmployeeDTO employeeDTO);
 
     void updateAddressByEmployee(EmployeeDTO employeeDTO);
+
 }

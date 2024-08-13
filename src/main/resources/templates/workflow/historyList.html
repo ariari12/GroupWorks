@@ -20,12 +20,12 @@
 
 <th:block layout:fragment="content">
     <!--/* approvalWait Table */-->
-    <div th:replace="~{/workflow/approvehistorytables/approvedHistory :: approvedHistory}"></div>
-    <div th:replace="~{/workflow/approvehistorytables/progressHistory.html :: progressHistory}"></div>
-    <div th:replace="~{/workflow/approvehistorytables/rejectionHistory.html :: rejectionHistory}"></div>
+    <div th:replace="~{workflow/approvehistorytables/approvedHistory :: approvedHistory}"></div>
+    <div th:replace="~{workflow/approvehistorytables/progressHistory.html :: progressHistory}"></div>
+    <div th:replace="~{workflow/approvehistorytables/rejectionHistory.html :: rejectionHistory}"></div>
 </th:block>
 
 <th:block layout:fragment="javascript">
     <script src="/js/workflow/tables/approval-history-tables.js"></script>
-    <script src="/js/workflow/tables/table-hover.js"></script>
+    <script src="/js/workflow/tables/table-approval-badge-hover.js"></script>
 </th:block>

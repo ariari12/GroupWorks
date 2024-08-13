@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${title}"></title>
+
+    <!--/* Boot Strap 5.3.0 */-->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <!--/* Boot Strap Template CSS & JS */-->
+    <link href="/css/styles.css" rel="stylesheet" />
+    <!--/* data tables library 5.3.0 */-->
+    <link href="https://cdn.datatables.net/v/bs5/dt-2.0.8/datatables.min.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/2.0.8/css/dataTables.dataTables.css" rel="stylesheet">
+    <!--/* Font Awesome for icons */-->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <!-- Select2 CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-beta.1/css/select2.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="/css/styles.css">
+    <style>
+        body, html {
+            overflow: hidden;
+            margin: 0;
+        }
+        label { padding: 5px; }
+        .description {
+            width: 98%;
+            background-color: rgb(0 0 0 / 3%);
+            border: 1px solid #d2d2d2;
+            border-radius: 15px;
+            margin: 10px auto;
+        }
+        .title-header {
+            padding: 4px;
+            margin: 10px 20px;
+            font-weight: bolder;
+            font-size: 32px;
+        }
+        .header-line {
+            width: 101%;
+            margin-top: 10px;
+            margin-bottom: 5px;
+            margin-left: -1%;
+            border: 1px solid rgb(128, 128, 128, 0.3);
+        }
+        .table-content {
+            width: 98%;
+            margin: 10px auto;
+            border-radius: 15px;
+        }
+        .modal-dialog { max-width: 555px; }
+        .dropdown {
+            display: inline;
+            margin-left: 22px;
+        }
+        .dropdown-menu { width: 200%; }
+    </style>
+
+    <!--/* Jquery CDN */-->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <!--/* Boot Strap 5.3.0 */-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <!--/* data tables library 5.3.0 */-->
+    <script src="https://cdn.datatables.net/v/bs5/dt-2.0.8/datatables.min.js"></script>
+    <!-- Select2 JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-beta.1/js/select2.min.js"></script>
+
+    <script src="/js/materialflow/material-record.js"></script>
+</head>
+<body>
+<div class="description">
+    <div class="title-header">
+        <span>품목코드: <span th:text="${itemCode}" readonly></span></span>
+        <br/><div class="header-line"></div>
+        <span>품목명: <span th:text="${itemName}" readonly></span></span>
+    </div>
+</div>
+<div class="card mb-4 table-content">
+    <div class="card-header">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-grid" viewBox="0 0 16 16">
+            <path d="M1 2.5A1.5 1.5 0 0 1 2.5 1h3A1.5 1.5 0 0 1 7 2.5v3A1.5 1.5 0 0 1 5.5 7h-3A1.5 1.5 0 0 1 1 5.5zM2.5 2a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5zm6.5.5A1.5 1.5 0 0 1 10.5 1h3A1.5 1.5 0 0 1 15 2.5v3A1.5 1.5 0 0 1 13.5 7h-3A1.5 1.5 0 0 1 9 5.5zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5zM1 10.5A1.5 1.5 0 0 1 2.5 9h3A1.5 1.5 0 0 1 7 10.5v3A1.5 1.5 0 0 1 5.5 15h-3A1.5 1.5 0 0 1 1 13.5zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5zm6.5.5A1.5 1.5 0 0 1 10.5 9h3a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1-1.5 1.5h-3A1.5 1.5 0 0 1 9 13.5zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5z"/>
+        </svg> 자재/재고 품목 목록
+    </div>
+    <div class="card-body">
+        <table id="table" class="table table-hover" style="width: 100%;">
+            <thead>
+            <tr>
+                <th>자재 코드</th>
+                <th>자재 상태</th>
+
+                <th>입고 담당자</th>
+                <th>입고 장소</th>
+                <th>입고 날짜</th>
+
+                <th>출고 담당자</th>
+                <th>출고 장소</th>
+                <th>출고 날짜</th>
+            </tr>
+            </thead>
+            <tbody>
+                <tr th:each="list: ${itemList}">
+                    <td th:text="${list.getItemCode() + list.getId()}"></td>
+                    <td th:text="${list.getItemStatus().getValue()}"></td>
+
+                    <td th:text="${list.getStorageManager()}"></td>
+                    <td th:text="${list.getStorageLocation()}"></td>
+                    <td th:text="${list.getStorageTime()}"></td>
+
+                    <td th:text="${list.getDeliveryManager()}"></td>
+                    <td th:text="${list.getDeliveryLocation()}"></td>
+                    <td th:text="${list.getDeliveryTime()}"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal">자재 상태 변경</button>
+    <div class="modal fade" id="modal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">자재 상태 변경 알림</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="statusUpdateFrm" action="#" method="post">
+                <div class="modal-body">
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-grid" viewBox="0 0 16 16">
+                                <path d="M1 2.5A1.5 1.5 0 0 1 2.5 1h3A1.5 1.5 0 0 1 7 2.5v3A1.5 1.5 0 0 1 5.5 7h-3A1.5 1.5 0 0 1 1 5.5zM2.5 2a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5zm6.5.5A1.5 1.5 0 0 1 10.5 1h3A1.5 1.5 0 0 1 15 2.5v3A1.5 1.5 0 0 1 13.5 7h-3A1.5 1.5 0 0 1 9 5.5zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5zM1 10.5A1.5 1.5 0 0 1 2.5 9h3A1.5 1.5 0 0 1 7 10.5v3A1.5 1.5 0 0 1 5.5 15h-3A1.5 1.5 0 0 1 1 13.5zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5zm6.5.5A1.5 1.5 0 0 1 10.5 9h3a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1-1.5 1.5h-3A1.5 1.5 0 0 1 9 13.5zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5z"/>
+                            </svg> 자재 선택
+                            <div class="dropdown">
+                                <a class="btn btn-secondary dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    체크 목록 확인</a>
+                                <ul id="checkList" class="dropdown-menu"></ul>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <table id="itemCodeTable" class="table table-hover" style="width: 100%;">
+                                <thead>
+                                <tr>
+                                    <th>체크</th>
+                                    <th>자재코드</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="list : ${itemList}">
+                                    <td><label><input type="checkbox" name="itemCode" th:onchange="onCheckboxChange(this, [[${list.getItemCode()}]]);"></label></td>
+                                    <td th:value="${list.getItemCode()}" th:text="${list.getItemCode()}"></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <label>입하예정 <input type="radio" name="itemStatus" th:value="0" required></label>
+                    <label>출하예정 <input type="radio" name="itemStatus" th:value="4" required></label>
+                    <br>
+
+                    <label>입고 담당자(소속-성명) <input type="text" name="storageManager" placeholder="△△운송 OO부서-홍길동"></label><br>
+                    <label>입고장소 <input type="text" name="storageLocation"></label><br>
+                    <label>입고일자 <input type="date" name="storageTime"></label><br>
+                    <br>
+
+                    <label>입고 담당자(소속-성명) <input type="text" name="deliveryManager" placeholder="△△운송 OO부서-홍길동"></label><br>
+                    <label>출고장소 <input type="text" name="deliveryLocation"></label><br>
+                    <label>출고일자 <input type="date" name="deliveryTime"></label>
+                </div>
+                <div class="modal-footer">
+                    <button id="okBtn" type="submit" class="btn btn-success">상태 적용</button>
+                    <button id="cns-Btn" type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">변경 취소</button>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!--/* TODO: 자재 상태 정보 받는 Controller, Service */-->
+    <!--/* TODO: QR Code 발급 및 스캔 */-->
+</div>
+</body>
+</html>

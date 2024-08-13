@@ -1,19 +1,21 @@
 document.addEventListener("DOMContentLoaded", function () {
     document.getElementById('findAddress').addEventListener("click", e => addresRoad());
-    document.getElementById('frmSub').addEventListener("click", e => submit(e));
+    document.getElementById('frmSub').addEventListener("submit",  function (e) {submit(e)});
 })
 
 function ajaxRequest(url, method, data, callback, err) {
     $.ajax({
         url: url,
         type: method,
-        data: data,
+        data: JSON.stringify(data),
+        contentType: 'application/json',
         success: function (r) {
             callback(r);
         }, error: function (x, e, r) {
             console.error(x);
             console.error(e);
             console.error(r);
+            err(x.responseText);
         }
     })
 }
@@ -50,14 +52,25 @@ function submit(event) {
     event.preventDefault(); // 기본 폼 제출 동작을 막음
 
     // 폼데이터 담기
-    var form = $(this);
-    var formData = new FormData(form[0]);
+    const t = event.target;
+    const data = {
+        id: 0,
+        businessNumber: t[0].value,
+        businessName: t[1].value,
+        ceo: t[2].value,
+        type: t[3].value,
+        item: t[4].value,
+        ceoTel: t[5].value,
+        address: document.querySelector("input[name='address']").value + " " + document.querySelector("input[name='detailAddress']").value,
+        fax: t[9].value
+    };
 
-    ajaxRequest(form.attr('action'), form.attr('method'), formData, function (d) {
-        alert("거래처 등록 완료")
+    ajaxRequest(t.action, t.method, data, function (d) {
+        alert("거래처 등록 완료");
         window.opener.postMessage(d, window.location.origin);
         window.close();
-    }, function () {
-        alert("거래처 등록 실패.\n잠시 후 다시 시도해주세요.");
+    }, function (msg) {
+        let errMsg = "거래처 등록 실패.\n" + msg;
+        alert(errMsg);
     })
 }

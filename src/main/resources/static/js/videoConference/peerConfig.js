@@ -8,7 +8,9 @@ let stompClient;
 const maxRetries = 3;
 let retryCount = 0;
 const existingRoomIds = [];
+
 let screenStream = null; // 화면 공유를 위한 스트림
+
 
 // 방 ID를 서버와 동기화하는 함수
 const syncRoomIdsWithServer = async () => {

@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+
+  db:
+    image: mysql:8.0
+    container_name: mysql_db
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: groupworks
+      MYSQL_USER: scott
+      MYSQL_PASSWORD: tiger
+    ports:
+      - "3306:3306"
+    volumes:
+      - db-data:/var/lib/mysql
+
+  mongo:
+    image: mongo:latest
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    command: redis-server --requirepass groupworks # Redis 서버 실행 시 비밀번호 요구 설정
+
+volumes:
+  db-data:
+  mongo-data:
+  redis-data:

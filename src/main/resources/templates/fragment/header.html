@@ -11,7 +11,7 @@
         <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
 
         <!-- kah 알람 버튼-->
-        <th:block th:replace="~{calendar/fragments/notification :: notification}">
+        <th:block th:replace="~{notification/notification :: notification}">
         </th:block>
 
         <!--/* Navbar */-->
@@ -28,7 +28,10 @@
             </li>
         </ul>
     </nav>
-    <!-- kah 알람 모달 창 -->
-    <th:block th:replace="~{calendar/fragments/notification :: notificationModal}">
+    <!-- 알람 토스트 -->
+    <th:block th:replace="~{notification/notification :: notificationToast}">
+    </th:block>
+    <!-- 알람 모달 창 -->
+    <th:block th:replace="~{notification/notification :: notificationOffcanvas}">
     </th:block>
 </th:block>

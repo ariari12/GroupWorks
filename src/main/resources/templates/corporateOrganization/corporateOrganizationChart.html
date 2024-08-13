@@ -22,6 +22,7 @@
             background-color: #f9f9f9; /* 배경색 설정 */
             cursor: pointer; /* 커서를 포인터로 설정 */
             position: relative; /* 모달 위치를 잡기 위해 추가 */
+
         }
         .employee-item:hover {
             transform: scale(1.05); /* 호버 시 살짝 확대 */
@@ -131,9 +132,11 @@
                     <a class="sendEmail" th:href="@{/mail/write(email=${employee.getEmail()})}">메일 보내기</a>
                     <a href="#">채팅 시작하기</a>
                 </div>
+
             </th:block>
             <hr style="width: 100%; border: 1px solid #212529;">
         </div>
     </div>
 </th:block>
 </html>
+

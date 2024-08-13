@@ -1,0 +1,75 @@
+#orderForm> .title-header {
+    text-align: center;
+    font-size: 62px;
+    font-weight: bolder;
+}
+
+#orderForm {
+    border: 15px solid grey;
+    padding: 60px;
+}
+
+.table-margin {
+    margin-right: 94px;
+}
+
+table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+th, td {
+    padding: 8px;
+    text-align: left;
+    position: relative;
+}
+.delete-column {
+    border: 1px solid transparent;
+}
+.delete-button {
+    border: none;
+    background: none;
+    cursor: pointer;
+}
+.delete-button i {
+    color: red;
+}
+.table-container {
+    margin: 20px auto;
+    overflow-x: auto;
+}
+.table-margin-auto {
+    width: 100%;
+    margin: auto;
+    box-sizing: border-box;
+}
+.table-input {
+    border: none;
+    box-shadow: none;
+}
+.table-input[type="number"] {
+    text-align: right;
+}
+.table-input:focus {
+    outline: none;
+}
+.currency-wrapper {
+    display: flex;
+    align-items: center;
+}
+.currency {
+    margin-left: 5px;
+    font-size: 1.1em;
+}
+
+@media print {
+    body {
+        zoom: 42.7%;
+    }
+    .none-print {
+        display: none !important;
+    }
+    @page {
+        size: A4;
+        margin: 10mm; /* 페이지 여백 모두 10mm */
+    }
+}

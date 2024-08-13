@@ -6,14 +6,12 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.servlet.http.HttpSession;
-import kr.co.groupworks.employee.dto.SessionEmployeeDTO;
 import kr.co.groupworks.workflow.dto.dto.ExampleStatusDTO;
 import kr.co.groupworks.workflow.dto.dto.OpenWorkflowVO;
 import kr.co.groupworks.workflow.dto.employee.EmployeeDTO;
 import kr.co.groupworks.workflow.service.WorkFlowService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,6 +22,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static kr.co.groupworks.workflow.control.WorkFlowRestController.getObjectResponseEntity;
 
 @Slf4j
 @Controller
@@ -40,8 +40,6 @@ public class WorkflowOpenAPI {
     @GetMapping(value = "/employee")
     public ResponseEntity<Map<String, Object>> employee() {
         List<EmployeeDTO> employeeList = workFlowService.getEmployeeAllDTOList();
-//        log.info("WorkFlowRestController - employee ok");
-
         Map<String, Object> response = new HashMap<>();
         response.put("status", "success");
         response.put("result", true);
@@ -61,17 +59,7 @@ public class WorkflowOpenAPI {
     @ApiResponse(responseCode = "500", description = "서버 에러", content = @Content(schema = @Schema(example = "500 Server Error")))
     @GetMapping(value = "/stat/{code}")
     public ResponseEntity<Object> workStatus(@PathVariable int code, HttpSession session) {
-        log.info("WorkFlowRestController - workStatus ok, param: {}", code);
-
-        SessionEmployeeDTO sessionDTO = (SessionEmployeeDTO) session.getAttribute("employee");
-        log.info("WorkFlowRestController - workStatus ok, sessionDTO: {}", sessionDTO);
-
-        Object result = workFlowService.getWorkflowStatistics(sessionDTO.getEmployeeId(), sessionDTO.getDepartment().getDepartmentId(), code);
-        if (result != null) {
-            log.info("WorkFlowRestController - workStatus ok, result: {}", result);
-            return ResponseEntity.ok().body(result);
-        }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        return getObjectResponseEntity(code, session, log, workFlowService);
     }
 
     @Operation(tags = "전자결재(Workflow) OpenAPI", summary = "사원의 결재정보 데이터", description = "사원의 발송한 결재정보 데이터와 결재한 데이터를 제공하는 API")

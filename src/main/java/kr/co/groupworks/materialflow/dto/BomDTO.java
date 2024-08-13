@@ -7,7 +7,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -16,28 +15,22 @@ import java.util.List;
 @AllArgsConstructor
 public class BomDTO {
     @Schema(description = "자재 등록 번호", defaultValue = "1")
-    private Long id;
+    private long id;
 
-    @Schema(description = "품목 코드", defaultValue = "02132454")
+    @Schema(description = "품목 코드", defaultValue = "0A2132454-0AB7-1")
     private String itemCode;
     @Schema(description = "품목 명", defaultValue = "우유")
     private String itemName;
-    @Schema(description = "수량", defaultValue = "100")
-    private Long quantity;
+    @Schema(description = "수량", defaultValue = "150")
+    private long quantity;
     @Schema(description = "단가", defaultValue = "1")
-    private String unitPrice;
-    @Schema(description = "입고장소", defaultValue = "우리집")
-    private String storageLocation;
-    @Schema(description = "입고일자", defaultValue = "1111.11.11 17:01")
-    private LocalDateTime storageTime;
-    @Schema(description = "출고장소", defaultValue = "너희집")
-    private String deliveryLocation;
-    @Schema(description = "출고일자", defaultValue = "9999.99.99 97:91")
-    private LocalDateTime deliveryTime;
-    @Schema(description = "납품 우편번호", defaultValue = "1")
-    private String zipCode;
+    private long unitPrice;
+    @Schema(description = "입고 수량", defaultValue = "100")
+    private long stockQuantity;
+    @Schema(description = "출고 수량", defaultValue = "30")
+    private long deliveryQuantity;
 
-    private List<MesDTO> mesList;
+    private List<MaterialItemDTO> itemList;
 
     public BomDTO(Bom b) {
         this
@@ -46,11 +39,9 @@ public class BomDTO {
                 .setItemName(b.getItemName())
                 .setQuantity(b.getQuantity())
                 .setUnitPrice(b.getUnitPrice())
-                .setStorageLocation(b.getStorageLocation())
-                .setStorageTime(b.getStorageTime())
-                .setDeliveryLocation(b.getDeliveryLocation())
-                .setDeliveryTime(b.getDeliveryTime())
-                .setZipCode(b.getZipCode())
+                .setStockQuantity(b.getStockQuantity())
+                .setDeliveryQuantity(b.getDeliveryQuantity())
+                .setItemList(b.getItemList() == null ? null : b.getItemList().stream().map(MaterialItemDTO::new).toList());
         ;
     }
 
@@ -61,11 +52,9 @@ public class BomDTO {
                 .itemName(this.itemName)
                 .quantity(this.quantity)
                 .unitPrice(this.unitPrice)
-                .storageLocation(this.storageLocation)
-                .storageTime(this.storageTime)
-                .deliveryLocation(this.deliveryLocation)
-                .deliveryTime(this.deliveryTime)
-                .zipCode(this.zipCode)
+                .stockQuantity(this.stockQuantity)
+                .deliveryQuantity(this.deliveryQuantity)
+                .itemList(this.itemList == null ? null : this.itemList.stream().map(MaterialItemDTO::dtoToEntity).toList())
                 .build();
     }
 }
