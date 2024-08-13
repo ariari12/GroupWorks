@@ -31,6 +31,7 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     //수신자의 모든 알림 캐싱
+    @Override
     @Cacheable(value = "notificationCache", key = "#receiverId")
     public List<NotificationDTO> getAllNotificationsByReceiverId(Long receiverId) {
         return notificationRepository.findAllByReceiverId(receiverId)
@@ -39,6 +40,7 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     // 캐싱 제거, 레디스 저장 후 전송
+    @Override
     @CacheEvict(value = "notificationCache", key = "#vacation.employee.employeeId")
     public void sendVacationApproval(Vacation vacation, Employee sender) {
         Notification notification = Notification.builder()
@@ -60,7 +62,8 @@ public class NotificationServiceImpl implements NotificationService {
 
 
     // 캐싱 제거, 레디스 저장 후 한명에게 전송
-    @CacheEvict(value = "notificationCache", key = "#notification.senderId")
+    @Override
+    @CacheEvict(value = "notificationCache", key = "#notification.receiverId")
     public void sendNotificationOne(Notification notification) {
         NotificationDTO dto = notificationMapper.toDto(
                 saveWithTTL(notification, 30L, TimeUnit.DAYS)
@@ -70,6 +73,7 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     // 캐싱 제거, 레디스 저장 후 여러명에게 전송
+    @Override
     @CacheEvict(value = "notificationCache", allEntries = true)
     public void sendNotificationList(List<Notification> notificationList) {
         List<NotificationDTO> list = notificationList.stream().map(
@@ -77,5 +81,20 @@ public class NotificationServiceImpl implements NotificationService {
         ).toList();
         log.info("sendNotificationList - list : {}",list);
         notificationSseEmitter.sendNotificationsToMultipleUsers(list);
+    }
+
+
+    @Override
+    @CacheEvict(value = "notificationCache", allEntries = true)
+    public void deleteAllNotificationsByReceiverId(Long receiverId) {
+        log.info("Deleting all notifications for receiverId: {}", receiverId);
+        notificationRepository.deleteAllByReceiverId(receiverId);
+    }
+
+    @Override
+    @CacheEvict(value = "notificationCache", key = "#receiverId")
+    public void deleteNotificationById(String notificationId, Long receiverId) {
+        log.info("Deleting notification with ID: {} for receiverId: {}", notificationId, receiverId);
+        notificationRepository.deleteByIdAndReceiverId(notificationId, receiverId);
     }
 }
