@@ -1,4 +1,4 @@
-package kr.co.groupworks.videoConference.config;
+package kr.co.groupworks.common.webSocketConfig;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
