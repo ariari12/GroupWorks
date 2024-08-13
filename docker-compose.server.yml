@@ -16,6 +16,7 @@ services:
     depends_on:
       - redis
     environment:
+      - coolsms.encryptor.key.property=${KEY_PROPERTY}
       - SPRING_PROFILES_ACTIVE=prod
       - SPRING_DATA_REDIS_HOST=redis
       - SPRING_DATA_REDIS_PORT=6379
