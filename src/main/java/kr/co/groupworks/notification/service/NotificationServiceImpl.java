@@ -34,7 +34,7 @@ public class NotificationServiceImpl implements NotificationService {
     public void sendVacationApproval(Vacation vacation, Employee sender) {
         Notification notification = Notification.builder()
                 .title("휴가 신청 알림")
-                .url("http://localhost/vacation")
+                .url("/vacation")
                 .createdDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
                 .read(false)
                 .contents("휴가 신청이 " + vacation.getStatus().getDescription() + "되었습니다.")

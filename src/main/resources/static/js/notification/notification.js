@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", function() {
     let cachedNotifications = null;
 
     // SSE 연결을 설정합니다. 서버에서 알림을 실시간으로 수신합니다.
-    const eventSource = new EventSource(`/notifications/sse`);
+    const eventSource = new EventSource('/notifications/sse');
 
     // 로컬 스토리지에서 배지 상태를 확인합니다.
     const notificationBadge = document.querySelector('.translate-middle.badge');
@@ -94,69 +94,19 @@ document.addEventListener("DOMContentLoaded", function() {
             const notificationElement = document.createElement('div');
             notificationElement.classList.add('notification-item');
             notificationElement.innerHTML = `
-                
-                <div>
-                    <span class="d-grid gap-2 d-md-flex justify-content-md-end">
-                        <button class="btn-close delete-notification" data-id="${notification.notificationId}" aria-label="Close"></button>
-                    </span>                                        
-                    <small>${notification.createdDate}</small>                    
+                <div class="d-flex justify-content-between align-items-start">
                     <div>
                         <strong>
-                            <a class="" href="${notification.url}">${notification.title}</a>
+                            <a href="${notification.url}">${notification.title}</a>
                         </strong>
-                    </div>                                               
-                                        
-                    <p>${notification.contents}</p>                                       
+                        <p>${notification.contents}</p>
+                        <small>${notification.createdDate}</small>
+                    </div>
+                    <button type="button" class="btn-close delete-notification" data-id="${notification.notificationId}" aria-label="Close"></button>
                 </div>
                 <hr>
-                
             `;
             offcanvasBody.appendChild(notificationElement);
-
-            // 개별 알림 삭제 버튼 클릭 이벤트 리스너 추가
-            notificationElement.querySelector('.delete-notification').addEventListener('click', function() {
-                const notificationId = this.getAttribute('data-id');
-                deleteNotification(notificationId, notificationElement);
-            });
-
         });
     }
-
-    // 알림 전체 삭제 버튼 클릭 이벤트 리스너 추가
-    const deleteAllButton = document.querySelector('#delete-all-notifications');
-    deleteAllButton.addEventListener('click', function() {
-        deleteAllNotifications();
-    });
-
-    // 개별 알림 삭제 함수
-    function deleteNotification(notificationId, notificationElement) {
-        fetch(`/notifications/${notificationId}`, { method: 'DELETE' })
-            .then(response => {
-                if (response.ok) {
-                    notificationElement.remove(); // 화면에서 알림 제거
-                    cachedNotifications = cachedNotifications.filter(n => n.id !== notificationId); // 캐시에서도 제거
-                } else {
-                    console.error('Failed to delete notification');
-                }
-            })
-            .catch(error => console.error('Error deleting notification:', error));
-    }
-
-    // 알림 전체 삭제 함수
-    function deleteAllNotifications() {
-        fetch(`/notifications`, { method: 'DELETE' })
-            .then(response => {
-                if (response.ok) {
-                    const offcanvasBody = document.querySelector('#notificationOffcanvasRight .offcanvas-body');
-                    offcanvasBody.innerHTML = ''; // 화면에서 모든 알림 제거
-                    cachedNotifications = []; // 캐시 초기화
-                } else {
-                    console.error('Failed to delete all notifications');
-                }
-            })
-            .catch(error => console.error('Error deleting all notifications:', error));
-    }
-
-
-
 });
