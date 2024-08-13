@@ -33,6 +33,7 @@ public class CoolSmsConfig {
     @Bean
     public AES256TextEncryptor setEncryptor(){
         encryptor = new AES256TextEncryptor();
+        System.out.println("keyProperty : " + keyProperty);
         encryptor.setPassword(keyProperty);
         return encryptor;
     }
