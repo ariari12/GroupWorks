@@ -2,7 +2,7 @@ package kr.co.groupworks.employee.entity;
 
 
 import jakarta.persistence.*;
-import kr.co.groupworks.common.BaseEntity;
+import kr.co.groupworks.BaseEntity;
 import kr.co.groupworks.department.entity.Department;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

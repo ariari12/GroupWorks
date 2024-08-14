@@ -1,4 +1,4 @@
-package kr.co.groupworks.videoConference.config;
+package kr.co.groupworks.common.webSocketConfig;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
@@ -12,7 +12,7 @@ public class WebSocketConfiguration implements WebSocketMessageBrokerConfigurer 
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
-        config.enableSimpleBroker("/topic"); // broker url 설정
+        config.enableSimpleBroker("/topic", "/queue"); // broker url 설정
         config.setApplicationDestinationPrefixes("/app"); // send url 설정
     }
 
@@ -20,6 +20,10 @@ public class WebSocketConfiguration implements WebSocketMessageBrokerConfigurer 
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/signaling")
                 .setAllowedOriginPatterns("*") // allowedOriginPatterns 사용
+                .withSockJS();
+
+        registry.addEndpoint("/ws")
+                .setAllowedOriginPatterns("*")
                 .withSockJS();
     }
 }
