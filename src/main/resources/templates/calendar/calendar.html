@@ -168,8 +168,7 @@
                     console.log(info.event.source.internalEventSource.meta);  // meta 객체를 확인
 
                     // 구글 캘린더 이벤트인지 확인하고 클릭 이벤트를 막음
-                    if (info.event.source && info.event.source.internalEventSource &&
-                        info.event.source.internalEventSource.meta &&
+                    if (info.event.source && info.event.source.internalEventSource.meta &&
                         info.event.source.internalEventSource.meta.googleCalendarId === 'ko.south_korea#holiday@group.v.calendar.google.com') {
                         info.jsEvent.preventDefault(); // 기본 동작 방지
                         return; // 아무 동작도 하지 않음
