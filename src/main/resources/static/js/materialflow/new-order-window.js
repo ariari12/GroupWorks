@@ -77,8 +77,9 @@ function chooseManagerWindow() {
             toastInfo("<span style=\"color: #bb2d3b; font-size: 16px;\">거래처를 먼저 선택해주세요.</span>");
             return;
         }
-        openWindow("/materialflow/manager-select/" + businessId, "거래처 목록", WINDOW_SIZE,
-                ev => managerReceive(ev)
+        openWindow("/materialflow/manager-select/" + businessId, "거래처 목록",
+            "width=1000, height=800, left=500, top=30",
+            ev => managerReceive(ev)
         );
     });
 }

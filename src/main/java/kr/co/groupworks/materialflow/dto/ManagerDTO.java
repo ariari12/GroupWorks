@@ -19,7 +19,8 @@ public class ManagerDTO {
 
     @Schema(description = "담당자 성명", defaultValue = "홍길동")
     private String name;
-    @Pattern(regexp = "^010-\\d{3,4}-\\d{4}$", message = "휴대폰 번호 형식이 올바르지 않습니다.")
+    /* 메시지 발송 시 반드시 01012345678 형태로 입력되어야 합니다. */
+    @Pattern(regexp = "^010-\\d{4}-\\d{4}$", message = "휴대폰 번호 형식이 올바르지 않습니다.")
     @Schema(description = "담당자 연락처", defaultValue = "010-2345-6789")
     private String phone;
     @Email(message = "이메일 형식이 올바르지 않습니다.")

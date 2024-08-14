@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns="">
+<head>
+    <meta charset="UTF-8">
+    <title>QR CODE TEST</title>
+
+    <!--/* Boot Strap 5.3.0 */-->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <!--/* Boot Strap Template CSS & JS */-->
+    <link href="/css/styles.css" rel="stylesheet" />
+
+    <style>
+        .color-palette {
+            width: 60px;
+            height: 15px;
+            margin-left: 10px;
+        }
+    </style>
+
+    <!--/* Jquery CDN */-->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <!--/* Boot Strap 5.3.0 */-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+</head>
+<body class="p-3">
+    <h1 style="margin-bottom: 30px;">QR CODE</h1>
+
+    <div id="qrPrint" class="modal-body">
+        <div style="margin-bottom: 20px;">
+            <span style="color: #c62b2b; font-weight: bolder;">※인쇄 시 배경그래픽 켜야함※</span><br/>
+            <label class="color-palette" style="background-color: #f6eb17;"></label>: 입하예정
+            <label class="color-palette" style="background-color: #011ce9;"></label>: 출하예정
+            <label class="color-palette" style="background-color: #BDBDBD;"></label>: 예정없는 자재
+        </div>
+        <div class="none-print">
+            <button type="button" id="printBtn" class="btn btn-secondary" onclick="printBtn();">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-printer" viewBox="0 0 16 16">
+                    <path d="M2.5 8a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1"/>
+                    <path d="M5 1a2 2 0 0 0-2 2v2H2a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h1v1a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-1h1a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1V3a2 2 0 0 0-2-2zM4 3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2H4zm1 5a2 2 0 0 0-2 2v1H2a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v-1a2 2 0 0 0-2-2zm7 2v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1"/>
+                </svg>인쇄
+            </button>
+            <br><br>
+        </div>
+        <div th:each="list, index : ${codeList}">
+            <div style="margin-bottom: 30%;">
+                <h3 style="font-weight: bolder" th:text="${'자재코드: ' + itemList.get(index.index).getItemCode()}"></h3>
+                <img th:src="'data:image/png;base64,'+${list}" alt="QR Code">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var prtContent;
+        var printWindow;
+
+        function printBtn () {
+            prtContent = document.getElementById("qrPrint").innerHTML;
+            printWindow = window.open('', '', 'width=1000, height=2000, left=500, top=0');
+            printWindow.document.open();
+            printWindow.document.write(`
+                <html>
+                    <head>
+                        <title>출하 QR Code 인쇄</title>
+
+                        <link href="/css/styles.css" rel="stylesheet" />
+                        <style>
+                            @media print {
+                                body {
+                                    zoom: 240%;
+                                }
+                                .none-print {
+                                    display: none;
+                                }
+                                .color-palette {
+                                    width: 60px;
+                                    height: 15px;
+                                    margin-left: 10px;
+                                }
+                                @page {
+                                    size: A4;
+                                    margin: 10mm; /* 페이지 여백 모두 10mm */
+                                }
+                            }
+                        </style>
+                    </head>
+                    </body>
+                    <body>
+                        ${prtContent}
+                    </body>
+                </html>
+            `);
+
+            printWindow.document.close();
+
+            // 인쇄 대화상자가 열리는 데 약간의 시간 지연 후 창 닫기
+            setTimeout(() => {
+                printWindow.print();
+                // 인쇄 대화상자가 열리고 인쇄 작업이 완료된 후 창 닫기
+                printWindow.close();
+            }, 100);
+        }
+    </script>
+</body>
+</html>

@@ -28,4 +28,10 @@ public interface MaterialService {
     Map<String, Object> deleteBusiness(Long businessId);
 
     Map<String, Object> updateItems(MaterialStatusUpdateDTO itemDTO);
+
+    Map<String, Object> updateItem(Long itemId, int statusCode);
+
+    Map<String, Object> orderCompleteCheck(Long bomId, int stat);
+
+    Map<String, Object> getBomSMS(Long bomId);
 }

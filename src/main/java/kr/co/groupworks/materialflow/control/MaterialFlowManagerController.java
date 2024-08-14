@@ -29,11 +29,8 @@ public class MaterialFlowManagerController {
     private final MaterialService materialService;
     private final MaterialOpenApiService materialOpenApiService;
 
-    private final String ATTR_TITLE = "title";
-    private final String ATTR_SUB_TITLE = "subtitle";
-
-    public static String receiveList = "receiveList";
-    public static String sendList = "sendList";
+    public static final String ATTR_TITLE = "title", ATTR_SUB_TITLE = "subtitle";
+    public static final String RECEIVE_LIST = "receiveList", SEND_LIST = "sendList";
 
     /* Material Flow Management API */
     /* 발주/수주 기록 */

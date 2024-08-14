@@ -56,6 +56,33 @@ public class OrderQueryDslImpl extends QuerydslRepositorySupport implements Orde
         return result != null && result > 0;
     }
 
+    @Override
+    public boolean orderCompleteCheck(Long bomId, int isStat) {
+        QBom b = QBom.bom;
+        QMaterialItem i = QMaterialItem.materialItem;
+
+        if(isStat < 1 || 2 < isStat) return false;
+        Long n = queryFactory
+                .select(b.count()).from(b)
+                .innerJoin(i).on(b.id.eq(i.bomId))
+                .where(b.id.eq(bomId).and(i.itemStatus.eq(
+                        isStat == 1 ? ItemStatus.ISSUING : ItemStatus.STOCK_ENTRY).not()))
+                .fetchJoin().fetchOne();
+        return n == null || n < 1;
+    }
+
+    @Override
+    public Order findByBomId(Long bomId) {
+        QOrder o = QOrder.order;
+        QBom b = QBom.bom;
+
+        return queryFactory
+                .select(o).from(o)
+                .innerJoin(b).on(o.id.eq(b.orderId))
+                .where(b.id.eq(bomId))
+                .fetchJoin().fetchOne();
+    }
+
     private List<Order> findByItemName(String orderCode, String itemCode, String itemName) {
         QOrder o = QOrder.order;
         QBom b = QBom.bom;

@@ -39,7 +39,15 @@ public class SecurityConfig {
 //        첫 로그인 화면 말고는 로그인 인증 되어야 함.
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/","employee/save").permitAll()
+                        .requestMatchers(
+                                "/openapi/**",
+                                "/v3/api-docs/**",
+                                "/swagger-ui/**",
+                                "/swagger-ui.html",
+                                "/materialflow/qr/receive/**",
+                                "employee/save",
+                                "/"
+                        ).permitAll()
                         .anyRequest().authenticated()
                 );
 
@@ -67,7 +75,9 @@ public class SecurityConfig {
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer(){
         return web->
-                web.ignoring().requestMatchers("/css/**","/js/**","/img/**","/fonts/**");
+                web.ignoring()
+                        .requestMatchers("/css/**","/js/**","/img/**","/fonts/**",
+                                "/*.css", "/*.png", "/*.js");
     }
 
 

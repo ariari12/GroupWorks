@@ -27,7 +27,7 @@ public class MaterialServiceImpl implements MaterialService {
     private final OrderRepository orderRepository;
     private final BusinessRepository businessRepository;
     private final BomRepository bomRepository;
-    private final MesRepository matesRepository;
+    private final MesRepository masRepository;
     private final MaterialItemRepository materialItemRepository;
 
     /* 전체 사원 정보 반환 */
@@ -104,8 +104,8 @@ public class MaterialServiceImpl implements MaterialService {
     @Override
     public Map<String, List<OrderDTO>> getOrders() {
         return Map.of(
-            MaterialFlowManagerController.receiveList, orderRepository.findByClassification(OrderClassification.RECEIVE).stream().map(OrderDTO::new).toList(),
-            MaterialFlowManagerController.sendList, orderRepository.findByClassification(OrderClassification.SEND).stream().map(OrderDTO::new).toList()
+            MaterialFlowManagerController.RECEIVE_LIST, orderRepository.findByClassification(OrderClassification.RECEIVE).stream().map(OrderDTO::new).toList(),
+            MaterialFlowManagerController.SEND_LIST, orderRepository.findByClassification(OrderClassification.SEND).stream().map(OrderDTO::new).toList()
         );
     }
 
@@ -164,7 +164,41 @@ public class MaterialServiceImpl implements MaterialService {
         return returnMessage("자재 상태 정보가 변경되었습니다.", true);
     }
 
+    @Override
+    public Map<String, Object> updateItem(Long itemId, int statusCode) {
+        MaterialItem item = materialItemRepository.findById(itemId).orElse(null);
+        if(item == null) return returnMessage("해당 자재를 찾을 수 없습니다.", false);
+        MaterialItem result = materialItemRepository.save(new MaterialItemDTO(item).setItemStatus(ItemStatus.getItemStatus(statusCode)).dtoToEntity());
+        Bom bom = bomRepository.findById(result.getBomId()).orElse(null);
+        if(bom == null) return returnMessage("Bom 정보를 찾을 수 없습니다.", false);
+        return Map.of("message", "자재 상태 정보가 성공적으로 등록되었습니다.",
+                "result", true,
+                "url", "/materialflow/item/" + bom.getId() + "/" + bom.getItemCode() + "/" + bom.getItemName()
+        );
+    }
+
+    @Override
+    public Map<String, Object> orderCompleteCheck(Long bomId, int stat) {
+        if(orderRepository.orderCompleteCheck(bomId, stat)) {
+            Order order = orderRepository.findByBomId(bomId);
+            if(order == null) return returnMessage("발주/수주 목록을 찾을 수 없습니다.", false);
+            return returnMessage(stat == 1 ? "품목 발주가 완료되었습니다." : "품목 수주가 완료되었습니다.", true);
+        }
+        return returnMessage(stat == 1 ? "품목자재가 모두 발주 되지 않았습니다." : "품목자재가 모두 수주 되지 않았습니다.", false);
+    }
+
+    @Override
+    public Map<String, Object> getBomSMS(Long bomId) {
+        Order order = orderRepository.findByBomId(bomId);
+        if(order == null) return returnMessage("발주/수주 기록을 찾을 수 없습니다.", false);
+        return Map.of("result", true, "order", new OrderDTO(order));
+    }
+
     private Map<String, Object> returnMessage(String message, boolean result) {
+        return Map.of("message", message, "result", result);
+    }
+
+    private Map<String, Object> returnMessage(String message, Object result) {
         return Map.of("message", message, "result", result);
     }
 }

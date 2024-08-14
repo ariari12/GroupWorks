@@ -10,7 +10,7 @@ function dataTableSetup() {
         paging: true,
         scrollX: true,
         scrollCollapse: true,
-        scrollY: 690,
+        scrollY: 223,
         lengthMenu: [ 10, 20, 30, 40, 50, 100 ],
         displayLength: 40,
     });

@@ -2,6 +2,8 @@ document.addEventListener('DOMContentLoaded', function (e) {
     tableSet();
     materialStatusUpdate();
     itemCodeTableSet();
+    qrPrint();
+    completeCheck();
 });
 
 function tableSet() {
@@ -24,7 +26,7 @@ function itemCodeTableSet() {
         paging: true,
         scrollX: true,
         scrollCollapse: true,
-        scrollY: 260,
+        scrollY: 300,
         lengthMenu: [ 5, 10, 15, 20, 25, 30 ],
         displayLength: 5,
     });
@@ -42,7 +44,6 @@ function materialStatusUpdate() {
         }
 
         const t = ev.target;
-
         const data = {
             itemCodeList: itemCodeList,
             item: {
@@ -57,18 +58,10 @@ function materialStatusUpdate() {
         };
 
         ajaxRequest("/materialflow/material", "put", data, function (r) {
-            console.log(r);
-            if(r.result) {
-                alert(r.message);
-            } else {
-                alert(r.message);
-            }
-            modal.hide();
-            location.href = window.location.pathname;
-        }, function (e) {
-            modal.hide();
-        });
-    })
+            alert(r.message); modal.hide(); location.href = window.location.pathname; },
+            (e) => modal.hide()
+        );
+    });
 }
 
 let itemCodeList = [];
@@ -87,11 +80,35 @@ function onCheckboxChange(checkbox, itemCode) {
     }
 }
 
+function qrPrint() {
+    document.getElementById("qrBtn").addEventListener('click', function (e) {
+        const itemCode = document.getElementById("itemCode").value;
+        const bomId = document.getElementById("bomId").value;
+        window.open("/materialflow/qr/qr-code/" + bomId, itemCode + " 자재 QR CODE", "width=1000, height=2000, left=500, top=0")
+    })
+}
+
+function completeCheck() {
+    document.getElementById("sendCompleteBtn").addEventListener('click', () =>
+        sendCompleteCheck(1, (r) => !r ? alert("발주완료는 품목 내 자재가 모두 출고되어야 합니다.") : null));
+    document.getElementById("receiveCompleteBtn").addEventListener('click', () =>
+        sendCompleteCheck(2, (r) => !r ? alert("수주완료는 품목 내 자재가 모두 입고되어야 합니다.") : null));
+}
+
+function sendCompleteCheck(stat, callback) {
+    const bomId = document.getElementById("bomId").value;
+    ajaxRequest("/materialflow/send-complete/" + bomId + "/" + stat, "get", null, (c) => {
+        alert(c.message);
+        callback(c.result);
+        if(c.result) ajaxRequest("/materialflow/send-sms/" + bomId, "post");
+    }, (e) => console.log(e));
+}
+
 function ajaxRequest(url, method, data, callback, err) {
     $.ajax({
         url: url,
         type: method,
-        data: JSON.stringify(data),
+        data: method.toUpperCase() !== 'get' ? JSON.stringify(data) : undefined, // get 요청이 아닐 때만 데이터 본문 포함
         contentType: 'application/json',
         success: function (r) {
             callback(r);

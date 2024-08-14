@@ -10,4 +10,8 @@ public interface OrderQueryDsl {
     List<Order> findByBomList();
 
     boolean orderDeleteCheck(Long orderId);
+
+    boolean orderCompleteCheck(Long bomId, int isStat);
+
+    Order findByBomId(Long bomId);
 }
