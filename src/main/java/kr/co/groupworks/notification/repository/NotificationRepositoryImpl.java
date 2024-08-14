@@ -57,4 +57,46 @@ public class NotificationRepositoryImpl implements NotificationRedis{
         return notifications;
     }
 
+    @Override
+    public void deleteAllByReceiverId(Long receiverId) {
+        // Redis에서 'notification:*' 패턴에 해당하는 모든 키를 가져옵니다.
+        Set<String> keys = redisTemplate.keys("notification:*");
+        HashOperations<String, String, Notification> hashOperations = redisTemplate.opsForHash();
+
+        if (keys != null) {
+            for (String key : keys) {
+                Map<String, Notification> entries = hashOperations.entries(key);
+                for (Map.Entry<String, Notification> entry : entries.entrySet()) {
+                    // notification의 receiverId가 주어진 receiverId와 일치하는지 확인합니다.
+                    if (entry.getValue().getReceiverId().equals(receiverId)) {
+                        // Redis에서 특정 필드만 삭제합니다.
+                        hashOperations.delete(key, entry.getKey());
+
+                        // 만약 모든 필드를 삭제했다면 키 자체도 삭제합니다.
+                        if (hashOperations.size(key) == 0) {
+                            redisTemplate.delete(key);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @Override
+    public void deleteByIdAndReceiverId(String notificationId, Long receiverId) {
+        String key = "notification:" + notificationId;
+        HashOperations<String, String, Notification> hashOperations = redisTemplate.opsForHash();
+
+        // 해당 키의 알림이 존재하는지 확인합니다.
+        Notification notification = hashOperations.get(key, notificationId);
+        if (notification != null && notification.getReceiverId().equals(receiverId)) {
+            // 알림이 존재하고 receiverId가 일치하면 해당 알림 삭제
+            hashOperations.delete(key, notificationId);
+
+            // 만약 해당 키에 더 이상 데이터가 없다면 키 자체를 삭제합니다.
+            if (hashOperations.size(key) == 0) {
+                redisTemplate.delete(key);
+            }
+        }
+    }
 }

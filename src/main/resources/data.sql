@@ -1,3 +1,4 @@
+
 INSERT INTO groupworks.department (department_id, contact_number, department_name, location)
 VALUES (1, '010-1234-5678', '기술부서', 'A동'),
        (2, '010-1234-5679', '마케팅부서', 'B동'),
@@ -9,6 +10,7 @@ VALUES (1, '010-1234-5678', '기술부서', 'A동'),
        (8, '010-1234-5685', '고객 서비스부서', 'H동'),
        (9, '010-1234-5686', '법무부서', 'I동'),
        (10, '010-1234-5687', '연구개발부서', 'J동');
+
 
 INSERT INTO groupworks.employee (is_active,rank_id,created_date,department_id,last_modified_date,salary,supervisor_id,address,email,employee_name,employee_pw,gender,phone_number,rank_name) VALUES
 	 (1,5,'2021-01-01 00:00:00',1,NULL,30000,0,'주소 1','employee1@example.com','사원1','$2a$10$Vg4CIc8WunwnKoV2.j9J.uPep8BgLAzb2VelL89I.hGiLBDNoybpO','여','010-1111-1100','부장'),
@@ -246,3 +248,4 @@ INSERT INTO groupworks.materialflow_business (address, business_name, business_n
 INSERT INTO groupworks.materialflow_business (address, business_name, business_number, ceo, ceo_tel, fax, item, type) VALUES ('경기도 이천시 부발읍 경충대로 2091', 'SK하이닉스', '130-45-67897', '이석희', '010-8901-2345', '031-890-1234', '반도체', '제조업');
 INSERT INTO groupworks.materialflow_business (address, business_name, business_number, ceo, ceo_tel, fax, item, type) VALUES ('서울특별시 중구 동호로 330', 'CJ제일제당', '131-45-67898', '강신호', '010-9012-3456', '02-901-2345', '식품', '제조업');
 INSERT INTO groupworks.materialflow_business (address, business_name, business_number, ceo, ceo_tel, fax, item, type) VALUES ('서울특별시 강서구 하늘길 77', '대한항공', '132-45-67899', '우기홍', '010-0123-4567', '02-012-3456', '항공 서비스', '운송업');
+

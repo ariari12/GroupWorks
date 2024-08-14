@@ -11,5 +11,10 @@ public interface NotificationService {
     Notification saveWithTTL(Notification notification, Long ttl, TimeUnit timeUnit);
     void sendVacationApproval(Vacation vacation, Employee employee);
     List<NotificationDTO> getAllNotificationsByReceiverId(Long employeeId);
+    void sendNotificationOne(Notification notification);
+    void sendNotificationList(List<Notification> notificationList);
 
+    void deleteAllNotificationsByReceiverId(Long employeeId);
+
+    void deleteNotificationById(String notificationId, Long employeeId);
 }

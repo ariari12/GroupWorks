@@ -53,34 +53,20 @@ public class NotificationSseEmitter {
     }
 
     // 다수 수신자에게 알림 전송
-    public void sendNotificationsToMultipleUsers(List<Long> receiverIds, NotificationDTO notificationDTO) {
-        for (Long receiverId : receiverIds) {
-            SseEmitter sseEmitter = sseEmitters.get(receiverId);
+    public void sendNotificationsToMultipleUsers(List<NotificationDTO> notificationDTOList) {
+        for (NotificationDTO notificationDTO : notificationDTOList) {
+            SseEmitter sseEmitter = sseEmitters.get(notificationDTO.getReceiverId());
 
             if (sseEmitter != null) {
                 try {
                     sseEmitter.send(notificationDTO);
                 } catch (IOException e) {
-                    sseEmitters.remove(receiverId);
-                    log.error("Failed to send notification to employee {}", receiverId, e);
+                    sseEmitters.remove(notificationDTO.getReceiverId());
+                    log.error("Failed to send notification to employee {}", notificationDTO.getReceiverId(), e);
                 }
             } else {
-                log.warn("No active SSE connection found for employee {}", receiverId);
+                log.warn("No active SSE connection found for employee {}", notificationDTO.getReceiverId());
             }
         }
-    }
-
-    // 부서 ID를 이용해 부서에 속한 모든 사용자에게 알림 전송
-    public void sendNotificationsToDepartment(Long departmentId, NotificationDTO notificationDTO) {
-        // 부서에 속한 사용자 목록 조회
-        List<Employee> employees = employeeRepository.findEmployeeByDepartment_DepartmentId(departmentId);
-
-        // 사용자 ID 목록 생성
-        List<Long> employeeIds = employees.stream()
-                .map(Employee::getEmployeeId)
-                .collect(Collectors.toList());
-
-        // 알림 전송
-        sendNotificationsToMultipleUsers(employeeIds, notificationDTO);
     }
 }

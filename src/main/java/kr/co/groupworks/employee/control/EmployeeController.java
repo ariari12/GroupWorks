@@ -26,7 +26,33 @@ public class EmployeeController {
         SessionEmployeeDTO sessionEmployeeDTO = (SessionEmployeeDTO) session.getAttribute("employee");
         EmployeeDTO employeeDTO = employeeService.findByEmployeeId(sessionEmployeeDTO.getEmployeeId());
         model.addAttribute("employee", employeeDTO);
-        return "employee/resignation";
+        return "modifyInfo";
+    }
+
+    // 마이페이지
+    @GetMapping("/mypage")
+    public String myPage(Model model, HttpSession session) {
+
+        SessionEmployeeDTO sessionEmployeeDTO = (SessionEmployeeDTO) session.getAttribute("employee");
+        EmployeeDTO employeeDTO = employeeService.findByEmployeeId(sessionEmployeeDTO.getEmployeeId());
+        log.info(employeeDTO.getEmployeeName() + "의 마이페이지");
+        log.info("사수 id" + employeeDTO.getSupervisorId());
+        if(employeeDTO.getSupervisorId() != 0L) {
+            EmployeeDTO supervisorEmployeeDTO = employeeService.findSupervisorEmployeeByEmployeeId(employeeDTO.getSupervisorId());
+            model.addAttribute("supervisorEmployee", supervisorEmployeeDTO);
+        }
+        model.addAttribute("employee", employeeDTO);
+        return "employee/myPage";
+    }
+
+    //  내정보변경
+    @GetMapping("/modifyInfo")
+    public String modifyInfoForm(HttpSession session, Model model) {
+        SessionEmployeeDTO sessionEmployeeDTO = (SessionEmployeeDTO) session.getAttribute("employee");
+        EmployeeDTO employeeDTO = employeeService.findByEmployeeId(sessionEmployeeDTO.getEmployeeId());
+        model.addAttribute("employee", employeeDTO);
+
+        return "employee/modifyInfo";
     }
 
 }

@@ -1,7 +1,7 @@
-package kr.co.groupworks.sse.connection;
+package kr.co.groupworks.notification.sse.sse.connection;
 
-import kr.co.groupworks.sse.connection.ifs.ConnectionPoolIfs;
-import kr.co.groupworks.sse.connection.model.UserSseConnection;
+import kr.co.groupworks.notification.sse.sse.connection.ifs.ConnectionPoolIfs;
+import kr.co.groupworks.notification.sse.sse.connection.model.UserSseConnection;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
