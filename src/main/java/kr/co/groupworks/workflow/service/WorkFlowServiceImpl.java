@@ -3,6 +3,7 @@ package kr.co.groupworks.workflow.service;
 import kr.co.groupworks.department.repository.DepartmentRepository;
 import kr.co.groupworks.employee.repository.EmployeeRepository;
 import kr.co.groupworks.workflow.control.WorkFlowController;
+import kr.co.groupworks.workflow.dto.ApprovalMethod;
 import kr.co.groupworks.workflow.dto.dto.ApproverDTO;
 import kr.co.groupworks.workflow.dto.dto.AttachmentFileDTO;
 import kr.co.groupworks.workflow.dto.dto.OpenWorkflowVO;
@@ -37,6 +38,8 @@ import java.util.*;
 @Transactional
 @RequiredArgsConstructor
 public class WorkFlowServiceImpl implements WorkFlowService {
+    private final WorkflowNotificationServiceFactory notifyService;
+
     private final DepartmentRepository departmentRepository;
     private final EmployeeRepository employeeRepository;
 
@@ -119,9 +122,10 @@ public class WorkFlowServiceImpl implements WorkFlowService {
                 .setStatus(0)
                 .setApprovers(approverList)
                 ;
-        workFlowDTO = WorkFlowDTO.entityToDto(workFlowRepository.save(workFlowDTO.dtoToEntity()));
-        log.info("workFlowDTO: {}", workFlowDTO);
-
+        notifyService.notifySetup(WorkFlowDTO.entityToDto(workFlowRepository.save(workFlowDTO.dtoToEntity())),
+                "workflow 전자 결재요청",
+                workFlowDTO.getEmployeeName() + "님이 전자결재를 요청했습니다."
+        );
         return true;
     }
 
@@ -188,8 +192,10 @@ public class WorkFlowServiceImpl implements WorkFlowService {
         if(approverEntity.getApproverType() == 1) {
             /* 결재자 ApproveEntity: {approvalMethod, approvalDate, approval} UPDATE */
             approverEntity.setApproval(approverDTO.getApprovalMethod() <= 4 ? 1 : 2);
-            if(approverEntity.getApprovalMethod() == 4 || approverEntity.getApprovalMethod() == 5) {
+            if(approverEntity.getApprovalMethod() == ApprovalMethod.FULL_APPROVAL.ordinal() +1 ||
+                    approverEntity.getApprovalMethod() == ApprovalMethod.REJECTION.ordinal() +1) { // 전결 또는 후결
                 workFlow.getApprovers().forEach(a -> {
+                    /* 결재 차례인 결재자인 경우 결재 적용 */
                     if(a.getApproverType() == 1 && a.getSequenceNum() > approverEntity.getSequenceNum()) {
                         a.setApprovalMethod(approverEntity.getApprovalMethod());
                     }
@@ -197,18 +203,12 @@ public class WorkFlowServiceImpl implements WorkFlowService {
                 workFlow.setStatus(approverEntity.getApproval()).setApprovalDate(approverEntity.getApprovalDate()).setApprovalCount(workFlow.getApproverCount());
             } else {
                 /* 최종 결재자이면, WorkflowEntity: {approvalDate, approval} UPDATE */
-                if(workFlow.getFinalEmployeeId() == approverEntity.getEmployeeId()) {
-                    workFlow.setStatus(approverEntity.getApproval()).setApprovalDate(approverEntity.getApprovalDate());
-                } else {
-                    workFlow.setStatus(3);
-                }
-                workFlow.setApprovalCount(workFlow.getApprovalCount() + 1); // 결재자 수 증가
+                (workFlow.getFinalEmployeeId() == approverEntity.getEmployeeId() ?
+                        workFlow.setStatus(approverEntity.getApproval()).setApprovalDate(approverEntity.getApprovalDate())
+                        : workFlow.setStatus(3)
+                ).setApprovalCount(workFlow.getApprovalCount() + 1); // 결재자 수 증가
             }
             workFlowRepository.save(workFlow.dtoToEntity());
-
-//            log.info("workFlowDTO: [approvalDate: {}, approverCnt: {}, approvalCnt: {}, status: {}]", workFlow.getApprovalDate(), workFlow.getApproverCount(), workFlow.getApprovalCount(), workFlow.getStatus());
-//            workFlow.getApprovers().forEach(a -> log.info("approval:{}, date:{}, method:{}, type:{}",
-//                    a.getApproval(), a.getApprovalDate(), a.getApprovalMethod(), a.getApproverType()));
 
             return true;
         } else if (approverEntity.getApproverType() == 2 && approverEntity.getApproval() < 1) {
