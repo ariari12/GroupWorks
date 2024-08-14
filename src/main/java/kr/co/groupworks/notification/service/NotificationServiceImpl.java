@@ -39,7 +39,7 @@ public class NotificationServiceImpl implements NotificationService {
                 .toList();
     }
 
-    // 캐싱 제거, 레디스 저장 후 전송
+    // 캐싱 제거, 레디스 휴가 저장 후 전송
     @Override
     @CacheEvict(value = "notificationCache", key = "#vacation.employee.employeeId")
     public void sendVacationApproval(Vacation vacation, Employee sender) {
@@ -69,7 +69,7 @@ public class NotificationServiceImpl implements NotificationService {
                 saveWithTTL(notification, 30L, TimeUnit.DAYS)
         );
         log.info("sendNotificationOne - dto : {}",dto.toString());
-        notificationSseEmitter.sendNotification(Long.valueOf(dto.getNotificationId()), dto);
+        notificationSseEmitter.sendNotification(dto.getReceiverId(), dto);
     }
 
     // 캐싱 제거, 레디스 저장 후 여러명에게 전송
