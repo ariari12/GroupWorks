@@ -15,35 +15,23 @@ public class ChatRoomServiceImpl implements ChatRoomService {
 
     private final ChatRoomRepository chatRoomRepository;
 
-    // 새로운 채팅방을 생성하고 데이터베이스에 저장.
+    @Override
+    public List<ChatRoom> getAllChatRooms() {
+        return chatRoomRepository.findAll();
+    }
+
     @Override
     public ChatRoom createChatRoom(ChatRoom chatRoom) {
         return chatRoomRepository.save(chatRoom);
     }
 
-    // 주어진 ID로 채팅방을 조회.
     @Override
     public ChatRoom getChatRoomById(Long id) {
         return chatRoomRepository.findById(id).orElse(null);
     }
 
-    // 주어진 사용자 ID를 포함하는 채팅방 목록을 조회하여 반환.
     @Override
     public List<ChatRoom> getChatRoomsForUser(Long userId) {
         return chatRoomRepository.findByParticipantsContaining(userId);
     }
-
-    @Override
-    public void removeParticipant(Long chatRoomId, Long participantId) {
-        // 채팅방 조회
-        ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid chat room ID"));
-
-        // 참가자 제거
-        chatRoom.removeParticipant(participantId);
-
-        // 변경사항 저장
-        chatRoomRepository.save(chatRoom);
-    }
-
 }

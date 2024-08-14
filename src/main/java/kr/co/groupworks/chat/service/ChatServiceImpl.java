@@ -20,7 +20,6 @@ public class ChatServiceImpl implements ChatService{
     private final MessageRepository messageRepository;
     private final EmployeeRepository employeeRepository;
 
-    // 새로운 메시지를 생성하고 채팅방 ID, 발신자 정보 및 메시지 내용을 설정.
     @Override
     public Message sendMessage(String chatRoomId, Long senderId, String content) {
 
@@ -38,7 +37,6 @@ public class ChatServiceImpl implements ChatService{
         return message;
     }
 
-    // 주어진 chatRoomId로 채팅방의 모든 메시지를 조회.
     @Override
     public List<MessageDTO> getMessages(String chatRoomId) {
         return messageRepository.findByChatRoomId(chatRoomId).stream()

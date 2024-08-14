@@ -6,12 +6,14 @@ import lombok.*;
 import java.util.Set;
 
 @Data
+@Setter
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class ChatRoomDTO {
 
-    private Long chatRoomId;        // 방번호
-    private String name;            // 이름
-    private Set<Long> participants; // 참여자 리스트
+    private Long chatRoomId;
+    private String name;
+    private Set<Long> participants;
 }
