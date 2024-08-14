@@ -105,7 +105,7 @@ public class EmployeeRestController {
         message.setTo(newPhoneNumber);
         String certificationNumber = request.get("certificationNumber");
 
-        message.setText("다음 번호를 입력해주세요 (" + certificationNumber + ")");
+        message.setText("Group_Workers 휴대폰 인증 : 다음 번호를 입력해주세요 (" + certificationNumber + ")");
 
         SingleMessageSentResponse response = this.messageService.sendOne(new SingleMessageSendingRequest(message));
         System.out.println(response);
