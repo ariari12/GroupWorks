@@ -3,6 +3,7 @@ package kr.co.groupworks.common.exception;
 import jakarta.persistence.EntityNotFoundException;
 import kr.co.groupworks.common.exception.exhandler.ErrorResult;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -16,7 +17,7 @@ import java.util.Map;
 
 @Slf4j
 @RestControllerAdvice
-public class ControllerAdvice {
+public class ApiControllerAdvice {
 
 
     @ExceptionHandler(RuntimeException.class)
@@ -47,9 +48,9 @@ public class ControllerAdvice {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResult);
     }
     @ExceptionHandler(MissingServletRequestPartException.class)
-    public ResponseEntity<ErrorResult> handleEntityNotFoundException(MissingServletRequestPartException ex) {
+    public ResponseEntity<ErrorResult> handleMissingServletRequestPartException(MissingServletRequestPartException ex) {
         log.error("[MissingServletRequestPartException] ex", ex);
-        ErrorResult errorResult = new ErrorResult(ex.getTitleMessageCode(), "파일 첨부는 필수 입니다.");
+        ErrorResult errorResult = new ErrorResult("MISSING_SERVLET_REQUEST_PART", "파일 첨부는 필수 입니다.");
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResult);
     }
 

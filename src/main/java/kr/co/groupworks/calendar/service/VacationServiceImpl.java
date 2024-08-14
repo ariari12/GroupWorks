@@ -64,8 +64,6 @@ public class VacationServiceImpl implements VacationService{
         }
 
 
-        log.info("employee = {}",employee);
-        log.info("vacationHistory = {}",vacationHistory);
 
         // 기간이 겹치는 휴가가 있는지 확인
         List<Vacation> overlappingVacations = vacationRepository.findOverlappingVacations(
@@ -124,8 +122,6 @@ public class VacationServiceImpl implements VacationService{
                         .findByEmployee(employee)
                         .orElseThrow(() -> new EntityNotFoundException("휴가내역을 찾을 수 없습니다 "));
 
-//        vacationHistory.updateSickDaysUsed(dto.getSickStartDate(), dto.getSickEndDate());
-//        vacationHistory = vacationHistoryRepository.save(vacationHistory);
         log.info("employee = {}",employee);
         log.info("vacationHistory = {}",vacationHistory);
 
@@ -171,18 +167,6 @@ public class VacationServiceImpl implements VacationService{
     public Long save(OtherFormDTO dto, MultipartFile[] files) {
         Employee employee = employeeRepository.findById(dto.getEmployeeId())
                 .orElseThrow(() -> new EntityNotFoundException("사원을 찾을 수 없습니다. " + dto.getEmployeeId()));
-
-
-        // 기타 휴가 일수 증가
-        VacationHistory vacationHistory =
-                vacationHistoryRepository
-                        .findByEmployee(employee)
-                        .orElseThrow(() -> new EntityNotFoundException("휴가내역을 찾을 수 없습니다 "));
-
-//        vacationHistory.updateOtherDaysUsed(dto.getOtherStartDate(), dto.getOtherEndDate());
-//        vacationHistory = vacationHistoryRepository.save(vacationHistory);
-        log.info("employee = {}",employee);
-        log.info("vacationHistory = {}",vacationHistory);
 
         // 기간이 겹치는 휴가가 있는지 확인
         List<Vacation> overlappingVacations = vacationRepository.findOverlappingVacations(
@@ -245,8 +229,8 @@ public class VacationServiceImpl implements VacationService{
 
     // 휴가 일정 검색
     @Override
-    public VacationModifyFormDTO findCalendarByIdAndEmployee(Long calendarId, Long employeeId) {
-        log.info("service {}",employeeId);
+    public VacationModifyFormDTO
+    findCalendarByIdAndEmployee(Long calendarId, Long employeeId) {
         employeeRepository.findById(employeeId)
                 .orElseThrow(() -> new EntityNotFoundException("사원을 찾을 수 없습니다. " + employeeId));
         Vacation vacation = vacationRepository.findById(calendarId)
@@ -402,7 +386,7 @@ public class VacationServiceImpl implements VacationService{
     //캡슐화
     private void vacationHistoryUpdate(Vacation vacation) {
         VacationHistory vacationHistory = vacationHistoryRepository.findByEmployee(vacation.getEmployee())
-                .orElseThrow(() -> new EntityNotFoundException("사원을 찾을 수 없습니다. " +
+                .orElseThrow(() -> new EntityNotFoundException("휴가 내역을 찾을 수 없습니다. " +
                         vacation.getEmployee().getEmployeeId()));
         if(vacationHistory.getTotalAnnual() == 0){
             throw new NotEnoughLeaveDaysException("잔여 연차가 부족합니다");
@@ -414,8 +398,5 @@ public class VacationServiceImpl implements VacationService{
         }
 
     }
-
-
-
 
 }
