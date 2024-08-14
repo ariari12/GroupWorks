@@ -127,7 +127,7 @@ public class WorkFlowRestController {
                 .setApprovalMethod(approvalMethod == null ? 0 : approvalMethod)
                 .setEmployeeId(employeeId).setApproverType(approverType).setComment(comment);
         if(workFlowService.setApprover(approverDTO)) {
-            notifyService.notifySetup(workFlowId, employeeId, approverType, "t", (w, e) -> w.getApprovers().stream()
+            notifyService.notifySetup(workFlowId, employeeId, approverType, "workflow 전자결재", (w, e) -> w.getApprovers().stream()
                     .filter(we -> we.getEmployeeId() == e.getEmployeeId())
                     .findFirst().orElse(null) != null ? approverType == 2 ?
                     e.getEmployeeName() + "님이 결재 협의안을 작성하였습니다." :
