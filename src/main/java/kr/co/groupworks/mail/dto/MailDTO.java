@@ -14,10 +14,13 @@ public class MailDTO {
     private String id;
     private String mailTitle;
     private String mailContent;
+    private Long mailSenderId;
     private String mailSender;
     private String mailSenderName;
+    private Long mailReceiverId;
     private String mailReceiver;
     private String mailReceiverName;
+    private Long mailReferrerId;
     private String mailReferrer;
     private String mailReferrerName;
     private String mailSendTime;
