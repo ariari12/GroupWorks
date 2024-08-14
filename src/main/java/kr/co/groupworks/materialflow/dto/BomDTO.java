@@ -17,6 +17,9 @@ public class BomDTO {
     @Schema(description = "자재 등록 번호", defaultValue = "1")
     private long id;
 
+    @Schema(description = "order_id", defaultValue = "1")
+    private Long orderId;
+
     @Schema(description = "품목 코드", defaultValue = "0A2132454-0AB7-1")
     private String itemCode;
     @Schema(description = "품목 명", defaultValue = "우유")
@@ -25,22 +28,20 @@ public class BomDTO {
     private long quantity;
     @Schema(description = "단가", defaultValue = "1")
     private long unitPrice;
-    @Schema(description = "입고 수량", defaultValue = "100")
-    private long stockQuantity;
-    @Schema(description = "출고 수량", defaultValue = "30")
-    private long deliveryQuantity;
+    @Schema(description = "발주/수주 완료 상태(완료:true/미완료:false)", defaultValue = "false")
+    private boolean status;
 
     private List<MaterialItemDTO> itemList;
 
     public BomDTO(Bom b) {
         this
                 .setId(b.getId())
+                .setOrderId(b.getOrderId())
                 .setItemCode(b.getItemCode())
                 .setItemName(b.getItemName())
                 .setQuantity(b.getQuantity())
                 .setUnitPrice(b.getUnitPrice())
-                .setStockQuantity(b.getStockQuantity())
-                .setDeliveryQuantity(b.getDeliveryQuantity())
+                .setStatus(b.isStatus())
                 .setItemList(b.getItemList() == null ? null : b.getItemList().stream().map(MaterialItemDTO::new).toList());
         ;
     }
@@ -48,12 +49,12 @@ public class BomDTO {
     public Bom dtoToEntity() {
         return Bom.builder()
                 .id(this.id)
+                .orderId(this.orderId)
                 .itemCode(this.itemCode)
                 .itemName(this.itemName)
                 .quantity(this.quantity)
                 .unitPrice(this.unitPrice)
-                .stockQuantity(this.stockQuantity)
-                .deliveryQuantity(this.deliveryQuantity)
+                .status(this.status)
                 .itemList(this.itemList == null ? null : this.itemList.stream().map(MaterialItemDTO::dtoToEntity).toList())
                 .build();
     }

@@ -36,9 +36,6 @@
 
                 <th>주문 수량</th>
                 <th>단가</th>
-
-                <th>입고 수량</th>
-                <th>출고 수량</th>
             </tr>
             </thead>
             <tbody>
@@ -49,10 +46,7 @@
                 <td th:text="${bom.getItemName()}"></td>
 
                 <td th:text="${bom.getQuantity()}"></td>
-                <td th:text="${bom.getUnitPrice()}"></td>
-
-                <td th:text="${bom.getStockQuantity()}"></td>
-                <td th:text="${bom.getDeliveryQuantity()}"></td>
+                <td ><span th:text="${bom.getUnitPrice()}"></span> ￦</td>
             </tr>
             </th:block>
             </tbody>

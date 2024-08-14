@@ -6,9 +6,14 @@ import kr.co.groupworks.materialflow.dto.*;
 import kr.co.groupworks.materialflow.entity.OrderClassification;
 import kr.co.groupworks.materialflow.service.MaterialOpenApiService;
 import kr.co.groupworks.materialflow.service.MaterialService;
+import kr.co.groupworks.notification.model.Notification;
+import kr.co.groupworks.notification.service.NotificationService;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.nurigo.sdk.message.exception.NurigoEmptyResponseException;
 import net.nurigo.sdk.message.exception.NurigoMessageNotReceivedException;
+import net.nurigo.sdk.message.exception.NurigoUnknownException;
 import net.nurigo.sdk.message.model.Message;
 import net.nurigo.sdk.message.response.MultipleDetailMessageSentResponse;
 import net.nurigo.sdk.message.service.DefaultMessageService;
@@ -20,6 +25,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -34,6 +41,7 @@ public class MaterialFlowManagerRestController {
     /* MaterialFlowManagement RestAPI */
     private final MaterialService materialService;
     private final MaterialOpenApiService materialOpenApiService;
+    private final NotificationService notificationService;
 
     /* 거래처 정보 등록 */
     @PostMapping("/new-business")
@@ -116,112 +124,108 @@ public class MaterialFlowManagerRestController {
         return ResponseEntity.ok().body(materialService.deleteBusiness(businessId));
     }
 
+    /* 발주/수주 완료 유효성검사 */
     @GetMapping("/send-complete/{bomId}/{stat}")
     public ResponseEntity<Object> sendComplete(@PathVariable("bomId") Long bomId, @PathVariable("stat") int stat) {
         if (bomId == null || stat < 1 || 2 < stat) return ResponseEntity.status(HttpStatus.NOT_FOUND).body(false);
         return ResponseEntity.ok().body(materialService.orderCompleteCheck(bomId, stat));
     }
 
-    private final AES256TextEncryptor textEncryptor;
-    private final DefaultMessageService messageService;
+    final AES256TextEncryptor textEncryptor;
+    final DefaultMessageService messageService;
     @Value("${test.phone}")
     private String testPhone;
     @Value("${test.receive.phone}")
     private String receivePhone;
 
-    @PostMapping("/send-sms/{bomId}")
     /* 메시지 발송 : 발주, 수주 품목이 모두 완료 되었을 때 담당자 연락처로 SMS 전송 */
-    private MultipleDetailMessageSentResponse sendSms(@PathVariable("bomId") Long bomId) {
+    @PostMapping("/send-sms/{bomId}")
+    private MultipleDetailMessageSentResponse sendSms(@PathVariable("bomId") Long bomId) throws NurigoMessageNotReceivedException, NurigoEmptyResponseException, NurigoUnknownException {
         Map<String, Object> bomSMS = materialService.getBomSMS(bomId);
-        if(!(boolean)bomSMS.get("result")) log.info("error: {}", bomSMS.get("message").toString());
+        if(!(boolean)bomSMS.get("result")) {
+            log.info("error: {}", bomSMS.get("message").toString());
+            return null;
+        }
 
         OrderDTO o = (OrderDTO) bomSMS.get("order");
         BomDTO b = o.getBomList().stream().filter(bom -> bom.getId() == bomId)
                 .reduce((bomDTO, bomDTO2) -> bomDTO).orElse(null);
 
-        log.info(b.toString());
+        /* SMS message Send SetReady */
+        NotificationAndSmsServiceFactory nsFactory = new NotificationAndSmsServiceFactory();
+        nsFactory.sendPhone = textEncryptor.decrypt(testPhone);
+        nsFactory.receivePhone = textEncryptor.decrypt(receivePhone);
 
         EmployeeDTO e = o.getEmployee();
         ManagerDTO m = o.getManager();
-        List<Message> messageList = new ArrayList<>();
-
-        String testSendPhone = textEncryptor.decrypt(testPhone);
-        String testReceivePhone = textEncryptor.decrypt(receivePhone);
-
         /* 수주일 경우 수주 담당자 : 사원 */
         if(OrderClassification.getClassification(o.getClassification()) == OrderClassification.RECEIVE) {
+            String message = "수주담당자: " + e.getName() + ",\n발주담당자: " + m.getName() + ",\n품목코드: " + b.getItemCode() + " 수주가 완료되었습니다.";
             // 수주 담당자에게 발신
-            Message message = new Message();
-            // 발신번호 및 수신번호는 반드시 01012345678 형태로 입력되어야 합니다.
-            message.setFrom(testSendPhone);  // Cool SMS 등록된 발신번호만 사용가능
-            message.setTo(testReceivePhone);  // e.getPhone().replaceAll("-", "")
-            message.setText("수주담당자: " + e.getName() + ",\n발주담당자: " + m.getPhone()
-                    + ",\n품목코드: " + b.getItemCode() + " 수주가 완료되었습니다.");
-            messageList.add(message);
+            // 발신번호 및 수신번호는 반드시 01012345678 형태로 입력되어야 합니다. Cool SMS 등록된 발신번호만 사용가능
+            // nsFactory.receivePhone = e.getPhone().replaceAll("-", "")
+            nsFactory.smsSetup(message);
+            String title = "품목코드: " + b.getItemCode() + " 수주가 완료되었습니다.";
+            nsFactory.notifySetup(notificationService, e, title, message);
 
+            message = "수주담당자: " + e.getName() + ",\n발주담당자: " + m.getName() + ",\n품목코드: " + b.getItemCode() + " 발주가 완료되었습니다.";
             // 발주 담당자에게 발신
-            message = new Message();
-            message.setFrom(testSendPhone);
-            message.setTo(testReceivePhone);  // m.getPhone().replaceAll("-", "")
-            message.setText("수주담당자: " + e.getName() + ",\n발주담당자: " + m.getPhone()
-                    + ",\n품목코드: " + b.getItemCode() + " 발주가 완료되었습니다.");
-            messageList.add(message);
+            // nsFactory.receivePhone = m.getPhone().replaceAll("-", "")
+            nsFactory.smsSetup(message);
         }
         /* 발주일 경우 발주 담당자 : 사원 */
         else if(OrderClassification.getClassification(o.getClassification()) == OrderClassification.SEND) {
+            String message = "수주담당자: " + m.getName() + ",\n발주담당자: " + e.getName() + ",\n품목코드: " + b.getItemCode() + " 수주가 완료되었습니다.";
             // 수주 담당자에게 발신
-            Message message = new Message();
-            // 발신번호 및 수신번호는 반드시 01012345678 형태로 입력되어야 합니다.
-            message.setFrom(testSendPhone);
-            message.setTo(testReceivePhone);  // e.getPhone().replaceAll("-", "")
-            message.setText("수주담당자: " + e.getName() + ",\n발주담당자: " + m.getPhone()
-                    + ",\n품목코드: " + b.getItemCode() + " 수주가 완료되었습니다.");
-            messageList.add(message);
+            // nsFactory.receivePhone = e.getPhone().replaceAll("-", "")
+            nsFactory.smsSetup(message);
 
+            message = "수주담당자: " + m.getName() + ",\n발주담당자: " + e.getName() + ",\n품목코드: " + b.getItemCode() + " 발주가 완료되었습니다.";
             // 발주 담당자에게 발신
-            message = new Message();
-            message.setFrom(testSendPhone);
-            message.setTo(testReceivePhone);  // m.getPhone().replaceAll("-", "")
-            message.setText("수주담당자: " + e.getName() + ",\n발주담당자: " + m.getPhone()
-                    + ",\n품목코드: " + b.getItemCode() + " 발주가 완료되었습니다.");
-            messageList.add(message);
+            // nsFactory.receivePhone = m.getPhone().replaceAll("-", "")
+            nsFactory.smsSetup(message);
+            String title = "품목코드: " + b.getItemCode() + " 발주가 완료되었습니다.";
+            nsFactory.notifySetup(notificationService, e, title, message);
         }
-
-        try {
-            return messageService.send(messageList, true);
-        } catch (NurigoMessageNotReceivedException exception) {
-            log.info("NurigoMessageNotReceivedException error: {}", exception.getFailedMessageList());
-            log.info("{}", exception.getMessage());
-        } catch (Exception exception) {
-            log.info("Exception error: {}", exception.getMessage());
-        }
-        return null;
-    }
-
-    private List<Message> snedMassage(String sendPhone, String receivePhone, String snedManager, String receiveManager, String message) {
-        List<Message> messageList = new ArrayList<>();
-        // 수주 담당자에게 발신
-        Message message = new Message();
-        // 발신번호 및 수신번호는 반드시 01012345678 형태로 입력되어야 합니다.
-        message.setFrom(sendPhone);
-        message.setTo(receivePhone);  // e.getPhone().replaceAll("-", "")
-        message.setText("수주담당자: " + e.getName() + ",\n발주담당자: " + m.getPhone()
-                + ",\n품목코드: " + b.getItemCode() + " 수주가 완료되었습니다.");
-        messageList.add(message);
-
-        // 발주 담당자에게 발신
-        message = new Message();
-        message.setFrom(testSendPhone);
-        message.setTo(testReceivePhone);  // m.getPhone().replaceAll("-", "")
-        message.setText("수주담당자: " + e.getName() + ",\n발주담당자: " + m.getPhone()
-                + ",\n품목코드: " + b.getItemCode() + " 발주가 완료되었습니다.");
-        messageList.add(message);
-
-        return messageList;
+        return messageService.send(nsFactory.getMessageList(), true);
     }
 }
 
 
-class NotificationsAndSmsInfo {
-    String
+class NotificationAndSmsServiceFactory {
+    String sendPhone;
+    String receivePhone;
+
+    @Getter
+    private final List<Message> messageList = new ArrayList<>();
+
+    public void smsSetup(String content) {
+        Message message = new Message();
+        message.setFrom(sendPhone);
+        message.setTo(receivePhone);
+        message.setText(content);
+        messageList.add(message);
+    }
+
+    public void smsSetup(String sendPhone, String receivePhone, String content) {
+        Message message = new Message();
+        message.setFrom(sendPhone);
+        message.setTo(receivePhone);
+        message.setText(content);
+        messageList.add(message);
+    }
+
+    public void notifySetup(NotificationService service, EmployeeDTO e, String title, String content) {
+        service.sendNotificationOne(Notification.builder()
+                .title(title)
+                .contents(content)
+                .createdDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
+                .type("BOM 자재 관리")
+                .url("/materialflow/bom")
+                .receiverId(e.getId())
+                .senderId(e.getId())
+                .senderName(e.getName())
+                .read(false)
+                .build());
+    }
 }

@@ -101,6 +101,7 @@ public class MaterialFlowManagerController {
         model.addAttribute(ATTR_SUB_TITLE, subTitle);
         model.addAttribute("itemCode", ic);
         model.addAttribute("itemName", in);
+        model.addAttribute("bomStatus", materialService.getBomStatus(bomId));
         model.addAttribute("itemList", materialService.getItemList(bomId));
         return "materialflow/window/materialRecord";
     }

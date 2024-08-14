@@ -78,7 +78,7 @@ function chooseManagerWindow() {
             return;
         }
         openWindow("/materialflow/manager-select/" + businessId, "거래처 목록",
-            "width=1000, height=800, left=500, top=30",
+            "width=1000, height=800, left=500, top=100",
             ev => managerReceive(ev)
         );
     });

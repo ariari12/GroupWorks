@@ -161,14 +161,12 @@
                             <label>출하예정 <input type="radio" name="itemStatus" th:value="3" required></label>
                             <br>
 
-                            <label>입고 담당자(소속-성명) <input type="text" name="storageManager" placeholder="△△운송 OO부서-홍길동"></label><br>
-                            <label>입고장소 <input type="text" name="storageLocation"></label><br>
-                            <label>입고일자 <input type="date" name="storageTime"></label><br>
+                            <label>입고 담당자(소속-성명) <input type="text" id="storageManager" placeholder="△△운송 OO부서-홍길동"></label><br>
+                            <label>입고장소 <input type="text" id="storageLocation"></label><br>
                             <br>
 
-                            <label>입고 담당자(소속-성명) <input type="text" name="deliveryManager" placeholder="△△운송 OO부서-홍길동"></label><br>
-                            <label>출고장소 <input type="text" name="deliveryLocation"></label><br>
-                            <label>출고일자 <input type="date" name="deliveryTime"></label>
+                            <label>입고 담당자(소속-성명) <input type="text" id="deliveryManager" placeholder="△△운송 OO부서-홍길동"></label><br>
+                            <label>출고장소 <input type="text" id="deliveryLocation"></label><br>
                         </div>
                         <div class="modal-footer">
                             <button id="okBtn" type="submit" class="btn btn-success">상태 적용</button>
@@ -179,8 +177,16 @@
             </div>
         </div>
         <button id="qrBtn" type="button" class="btn btn-danger">QR CODE 발급</button>
-        <button id="sendCompleteBtn" type="button" class="btn btn-success">품목 발주완료</button>
-        <button id="receiveCompleteBtn" type="button" class="btn btn-success">품목 수주완료</button>
+
+        <th:block th:if="${!bomStatus}">
+            <button id="sendCompleteBtn" type="button" class="btn btn-success">품목 발주완료</button>
+            <button id="receiveCompleteBtn" type="button" class="btn btn-success">품목 수주완료</button>
+        </th:block>
+
+        <th:block th:if="${bomStatus}">
+            <button type="button" class="btn btn-secondary">품목 발주완료</button>
+            <button type="button" class="btn btn-secondary">품목 수주완료</button>
+        </th:block>
     </div>
 </div>
 </body>

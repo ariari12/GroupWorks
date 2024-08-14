@@ -43,17 +43,14 @@ function materialStatusUpdate() {
             return;
         }
 
-        const t = ev.target;
         const data = {
             itemCodeList: itemCodeList,
             item: {
                 "itemStatus": parseInt(document.querySelector('#statusUpdateFrm input[name="itemStatus"]:checked').value),
-                "storageManager": t[9].value,
-                "storageLocation": t[10].value,
-                "storageTime": t[11].value,
-                "deliveryManager": t[12].value,
-                "deliveryLocation": t[13].value,
-                "deliveryTime": t[14].value
+                "storageManager": document.getElementById("storageManager").value,
+                "storageLocation": document.getElementById("storageLocation").value,
+                "deliveryManager": document.getElementById("deliveryManager").value,
+                "deliveryLocation": document.getElementById("deliveryLocation").value,
             }
         };
 

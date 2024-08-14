@@ -13,6 +13,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -61,9 +64,11 @@ public class MaterialServiceImpl implements MaterialService {
         ManagerDTO m = orderDTO.getManager();
         if(e == null) return returnMessage("사원 담당자 정보가 비어있습니다.", false);
         if(m == null) return returnMessage("거래처 담당자 정보가 비어있습니다.", false);
+
         Long eId = e.getId(), mId = m.getId();
         if(eId == null) return returnMessage("사원 담당자 정보가 비어있습니다.", false);
         if(mId == null) return returnMessage("거래처 담당자 정보가 비어있습니다.", false);
+
         Employee eE = employeeRepository.findById(eId).orElse(null);
         BusinessManager bm = managerRepository.findById(mId).orElse(null);
         if(eE == null) return returnMessage("사원 담당자 정보가 올바르지 않습니다.", false);
@@ -168,9 +173,22 @@ public class MaterialServiceImpl implements MaterialService {
     public Map<String, Object> updateItem(Long itemId, int statusCode) {
         MaterialItem item = materialItemRepository.findById(itemId).orElse(null);
         if(item == null) return returnMessage("해당 자재를 찾을 수 없습니다.", false);
-        MaterialItem result = materialItemRepository.save(new MaterialItemDTO(item).setItemStatus(ItemStatus.getItemStatus(statusCode)).dtoToEntity());
+
+        MaterialItem result = null;
+        if(ItemStatus.getItemStatus(statusCode) == ItemStatus.STOCK_ENTRY) { // 입고
+            result = materialItemRepository.save(new MaterialItemDTO(item)
+                    .setStorageTime(LocalDate.now()).setItemStatus(ItemStatus.getItemStatus(statusCode))
+                    .dtoToEntity());
+        } else if (ItemStatus.getItemStatus(statusCode) == ItemStatus.ISSUING) { // 출고
+            result = materialItemRepository.save(new MaterialItemDTO(item)
+                    .setDeliveryTime(LocalDate.now()).setItemStatus(ItemStatus.getItemStatus(statusCode))
+                    .dtoToEntity());
+        }
+        else return returnMessage("변경 상태정보가 올바르지 않습니다.", false);
+
         Bom bom = bomRepository.findById(result.getBomId()).orElse(null);
         if(bom == null) return returnMessage("Bom 정보를 찾을 수 없습니다.", false);
+        
         return Map.of("message", "자재 상태 정보가 성공적으로 등록되었습니다.",
                 "result", true,
                 "url", "/materialflow/item/" + bom.getId() + "/" + bom.getItemCode() + "/" + bom.getItemName()
@@ -189,9 +207,23 @@ public class MaterialServiceImpl implements MaterialService {
 
     @Override
     public Map<String, Object> getBomSMS(Long bomId) {
+        Bom b = bomRepository.findById(bomId).orElse(null);
+        log.info("bom; {}", b);
+
+        if(b == null) return returnMessage("품목 기록을 찾을 수 없습니다.", false);
+        bomRepository.save(new BomDTO(b).setStatus(true).dtoToEntity());
+
         Order order = orderRepository.findByBomId(bomId);
         if(order == null) return returnMessage("발주/수주 기록을 찾을 수 없습니다.", false);
+
+        order = orderRepository.save(new OrderDTO(order).setDeliveryDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern(OrderDTO.DATE_FORMAT)))
+                .dtoToEntity(employeeRepository.findById(order.getEmployee().getEmployeeId()).orElse(null)));
         return Map.of("result", true, "order", new OrderDTO(order));
+    }
+
+    @Override
+    public boolean getBomStatus(long bomId) {
+        return bomRepository.findStatusById(bomId);
     }
 
     private Map<String, Object> returnMessage(String message, boolean result) {

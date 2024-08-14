@@ -58,16 +58,14 @@ public class OrderQueryDslImpl extends QuerydslRepositorySupport implements Orde
 
     @Override
     public boolean orderCompleteCheck(Long bomId, int isStat) {
-        QBom b = QBom.bom;
         QMaterialItem i = QMaterialItem.materialItem;
 
         if(isStat < 1 || 2 < isStat) return false;
         Long n = queryFactory
-                .select(b.count()).from(b)
-                .innerJoin(i).on(b.id.eq(i.bomId))
-                .where(b.id.eq(bomId).and(i.itemStatus.eq(
-                        isStat == 1 ? ItemStatus.ISSUING : ItemStatus.STOCK_ENTRY).not()))
-                .fetchJoin().fetchOne();
+                .select(i.id.count()).from(i)
+                .where(i.bomId.eq(bomId).and(i.itemStatus.isNull().or(
+                        i.itemStatus.eq(isStat == 1 ? ItemStatus.ISSUING : ItemStatus.STOCK_ENTRY).not())))
+                .fetchOne();
         return n == null || n < 1;
     }
 

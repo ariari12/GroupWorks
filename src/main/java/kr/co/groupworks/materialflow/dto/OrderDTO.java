@@ -63,7 +63,7 @@ public class OrderDTO {
     private List<BomDTO> bomList;
     private List<MesDTO> mesList;
 
-    private static final String DATE_FORMAT = "yyyy.MM.dd";
+    public static final String DATE_FORMAT = "yyyy.MM.dd";
 
     public OrderDTO(Order o) {
         LocalDate od = o.getOrderDate(), duD = o.getDueDate(), dlD = o.getDeliveryDate();
@@ -94,7 +94,7 @@ public class OrderDTO {
         return Order.builder()
                 .id(this.id)
                 .orderCode(this.orderCode)
-                .classification(OrderClassification.getClassification(this.classification -1))
+                .classification(OrderClassification.getClassification(this.classification))
                 .totalAmount(this.totalAmount)
                 .texAmount(this.tex)
                 .orderDate(od == null ? null : LocalDate.parse(od, DateTimeFormatter.ofPattern(DATE_FORMAT)))
@@ -105,6 +105,28 @@ public class OrderDTO {
                 .zipCode(this.zipCode)
                 .employee(e)
                 .manager(bm)
+                .boms(this.bomList == null ? null : this.bomList.stream().map(BomDTO::dtoToEntity).toList())
+                .mes(this.mesList == null ? null : this.mesList.stream().map(MesDTO::dtoToEntity).toList())
+                .build();
+    }
+
+    public Order dtoToEntity(Employee e) {
+        String od = this.orderDate, duD = this.dueDate, dlD = this.deliveryDate;
+
+        return Order.builder()
+                .id(this.id)
+                .orderCode(this.orderCode)
+                .classification(OrderClassification.getClassification(this.classification))
+                .totalAmount(this.totalAmount)
+                .texAmount(this.tex)
+                .orderDate(od == null ? null : LocalDate.parse(od, DateTimeFormatter.ofPattern(DATE_FORMAT)))
+                .dueDate(duD == null ? null : LocalDate.parse(duD, DateTimeFormatter.ofPattern(DATE_FORMAT)))
+                .deliveryDate(dlD == null ? null : LocalDate.parse(dlD, DateTimeFormatter.ofPattern(DATE_FORMAT)))
+                .address(this.address)
+                .addressDetail(this.addressDetail)
+                .zipCode(this.zipCode)
+                .employee(e)
+                .manager(this.manager.dtoToEntity())
                 .boms(this.bomList == null ? null : this.bomList.stream().map(BomDTO::dtoToEntity).toList())
                 .mes(this.mesList == null ? null : this.mesList.stream().map(MesDTO::dtoToEntity).toList())
                 .build();

@@ -219,6 +219,7 @@ function frmSubmit(event) {
         ajaxRequest(t.action, t.method, orderData, function (c) {
             if(c.result) {
                 alert(c.message);
+                modal.hide();
                 location.href = "/materialflow/order-record";
             } else {
                 modal.hide();

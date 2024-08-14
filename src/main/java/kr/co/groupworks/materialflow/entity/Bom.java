@@ -30,10 +30,8 @@ public class Bom {
     private long quantity;
     @Schema(name = "단가", defaultValue = "1")
     private long unitPrice;
-    @Schema(description = "입고 수량", defaultValue = "100")
-    private long stockQuantity;
-    @Schema(description = "출고 수량", defaultValue = "30")
-    private long deliveryQuantity;
+    @Schema(description = "발주/수주 완료 상태(완료:true/미완료:false)", defaultValue = "false")
+    private boolean status;
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "bom_id")

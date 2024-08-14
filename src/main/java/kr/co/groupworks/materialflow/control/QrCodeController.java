@@ -29,7 +29,7 @@ import java.util.List;
 @Controller
 @RequestMapping(value = "/materialflow/qr")
 @RequiredArgsConstructor
-public class QRTestContoller {
+public class QrCodeController {
     static final int HEIGHT = 460, WIDTH = 460;
     private final MaterialService materialService;
 
@@ -43,9 +43,8 @@ public class QRTestContoller {
                 ItemStatus status = ItemStatus.getItemStatus(i.getItemStatus());
                 // QR Code 생성 정보를 가지는 객체 생성
                 // QR code 로 이동할 url
-                String url = "http://" + InetAddress.getLocalHost().getHostAddress()
+                String url = "https://" + InetAddress.getLocalHost().getHostAddress()
                         + "/materialflow/qr/receive/" + i.getId() + "/" + status.ordinal();
-                log.info("url: {}", url);
 
                 // QR Code - Image String List 요소 반환
                 return setQrInfo(url, status);
@@ -73,7 +72,7 @@ public class QRTestContoller {
         };
 
         // BitMatrix: qr code 정보 생성
-        BitMatrix encode = new MultiFormatWriter().encode(url, BarcodeFormat.QR_CODE, QRTestContoller.WIDTH, QRTestContoller.HEIGHT);
+        BitMatrix encode = new MultiFormatWriter().encode(url, BarcodeFormat.QR_CODE, QrCodeController.WIDTH, QrCodeController.HEIGHT);
         // QR Code - Image 생성.
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         MatrixToImageWriter.writeToStream(encode, "PNG", byteArrayOutputStream, matrixImageConfig);
