@@ -15,10 +15,10 @@ public class VacationMyHistoryDTO {
     private double annualDaysUsed;
     private int sickDaysUsed;
     private int otherDaysUsed;
-    private int totalAnnual;
+    private double totalAnnual;
 
     @QueryProjection
-    public VacationMyHistoryDTO(Long employeeId, String employeeName, String rankName, String departmentName, double annualDaysUsed, int sickDaysUsed, int otherDaysUsed, int totalAnnual) {
+    public VacationMyHistoryDTO(Long employeeId, String employeeName, String rankName, String departmentName, double annualDaysUsed, int sickDaysUsed, int otherDaysUsed, double totalAnnual) {
         this.employeeId = employeeId;
         this.employeeName = employeeName;
         this.rankName = rankName;

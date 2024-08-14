@@ -51,7 +51,13 @@
 </div>
 <script th:inline="javascript">
   $(document).ready(function() {
+    let isProcessing = false; // 요청 중 여부를 확인하기 위한 변수
+
     $('#approveBtn').click(function() {
+      if (isProcessing) return; // 요청 중이라면 클릭을 무시
+
+      isProcessing = true; // 요청 시작
+
       var calendarId = /*[[${modifyForm.calendarId}]]*/ '';
       var data = JSON.stringify({
         calendarId: calendarId,
@@ -65,17 +71,21 @@
         data: data,
         success: function(response) {
           alert('휴가가 승인되었습니다.');
-          $('#vacationModal').modal('hide');
-          // 필요시 추가 동작
+          location.reload(); // 페이지 새로고침
         },
         error: function(xhr, status, error) {
           var errorResult = JSON.parse(xhr.responseText);
           alert('오류 코드: ' + errorResult.code + '\n메시지: ' + errorResult.message);
+          isProcessing = false; // 오류 발생 시 클릭 가능하도록 변경
         }
       });
     });
 
     $('#rejectBtn').click(function() {
+      if (isProcessing) return; // 요청 중이라면 클릭을 무시
+
+      isProcessing = true; // 요청 시작
+
       var calendarId = /*[[${modifyForm.calendarId}]]*/ '';
       var data = JSON.stringify({
         calendarId: calendarId,
@@ -89,12 +99,12 @@
         data: data,
         success: function(response) {
           alert('휴가가 반려되었습니다.');
-          $('#vacationModal').modal('hide');
-          // 필요시 추가 동작
+          location.reload(); // 페이지 새로고침
         },
         error: function(xhr, status, error) {
           var errorResult = JSON.parse(xhr.responseText);
           alert('오류 코드: ' + errorResult.code + '\n메시지: ' + errorResult.message);
+          isProcessing = false; // 오류 발생 시 클릭 가능하도록 변경
         }
       });
     });

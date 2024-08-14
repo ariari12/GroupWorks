@@ -22,9 +22,8 @@ public class Notification implements Serializable {
     private String title;
     private String contents;
     private String createdDate;
-    private String type;
-    private String url;
-    private boolean read;
+    private String url; // 페이지
+    private boolean read; //true 가 읽음
     private Long receiverId; //필수 값
     private Long senderId;
     private String senderName;

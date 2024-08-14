@@ -32,26 +32,12 @@ public class VacationHistory extends BaseEntity {
     private int otherDaysUsed;
 
     @Column(name = "total_annual")
-    private int totalAnnual;
+    private double totalAnnual;
 
     @OneToOne
     @JoinColumn(name = "employee_id")
     private Employee employee;
 
-    public void updateAnnualDaysUsed(LocalDate startDate, LocalDate endDate) {
-        annualDaysUsed += ChronoUnit.DAYS.between(startDate, endDate)+1;
-    }
-
-    public void updateSickDaysUsed(LocalDate startDate, LocalDate endDate) {
-        sickDaysUsed += ChronoUnit.DAYS.between(startDate, endDate)+1;
-    }
-
-    public void updateOtherDaysUsed(LocalDate startDate, LocalDate endDate) {
-        otherDaysUsed += ChronoUnit.DAYS.between(startDate, endDate)+1;
-    }
-    public void updateHalfDaysUsed() {
-        annualDaysUsed += 0.5;
-    }
 
     //캡슐화 오직 매퍼메서드를 제외하고 이곳을 통해서만 초기화시키고싶음
     public static VacationHistory createFromEmployee(Employee employee) {
@@ -59,5 +45,10 @@ public class VacationHistory extends BaseEntity {
         vacationHistory.employee = employee;
         vacationHistory.totalAnnual = 25;
         return vacationHistory;
+    }
+
+    public void updateAnnual(double annual){
+        annualDaysUsed +=annual;
+        totalAnnual -= annual;
     }
 }
