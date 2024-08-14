@@ -128,6 +128,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     }
 
+    @Override
     //    DTO to Entity
     public Employee toEmployee(EmployeeDTO dto) {
         return Employee.builder()
@@ -153,6 +154,7 @@ public class EmployeeServiceImpl implements EmployeeService {
                 .build();
     }
 
+    @Override
     //    Entity to DTO
     public EmployeeDTO toEmployeeDTO(Employee employee) {
         return EmployeeDTO.builder()

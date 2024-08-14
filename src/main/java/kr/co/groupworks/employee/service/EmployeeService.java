@@ -30,4 +30,8 @@ public interface EmployeeService {
 
     void updateAddressByEmployee(EmployeeDTO employeeDTO);
 
+    EmployeeDTO toEmployeeDTO(Employee employee);
+
+    Employee toEmployee(EmployeeDTO employeeDTO);
+
 }

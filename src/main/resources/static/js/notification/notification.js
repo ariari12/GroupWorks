@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // SSE 연결을 설정합니다. 서버에서 알림을 실시간으로 수신합니다.
     const eventSource = new EventSource('/notifications/sse');
-
+    console.log("eventSource : " + eventSource);
     // 로컬 스토리지에서 배지 상태를 확인합니다.
     const notificationBadge = document.querySelector('.translate-middle.badge');
     if (localStorage.getItem('notificationBadgeVisible') === 'true') {

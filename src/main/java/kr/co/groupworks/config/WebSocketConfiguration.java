@@ -1,4 +1,4 @@
-package kr.co.groupworks.common.webSocketConfig;
+package kr.co.groupworks.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
