@@ -220,7 +220,6 @@ class NotificationAndSmsServiceFactory {
                 .title(title)
                 .contents(content)
                 .createdDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
-                .type("BOM 자재 관리")
                 .url("/materialflow/bom")
                 .receiverId(e.getId())
                 .senderId(e.getId())
