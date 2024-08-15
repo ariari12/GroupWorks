@@ -44,18 +44,11 @@ public class VacationController {
     @GetMapping("")
     public String vacationMain(@SessionAttribute(name = "employee")SessionEmployeeDTO sessionEmployeeDTO,
                                Model model) {
-        log.info("VacationController - vacationMain");
-
         Long employeeId = sessionEmployeeDTO.getEmployeeId();
-        log.info("세션 값 : "+employeeId);
 
-        // 휴가 신청 내역 조회
         List<VacationRequestDTO> vacationRequestList = vacationService.findAllByEmployeeId(employeeId);
-        log.info("휴가 신청 내역 조회 : {}",vacationRequestList);
 
-        // 휴가 보유 사용현황 조회
         List<VacationMyHistoryDTO> vacationHistoryList = vacationService.findVacationHistory(employeeId);
-        log.info("휴가 보유 사용현황 조회 : {}",vacationHistoryList);
 
 
         // 검증 validation th:filed 속성 추가하기 위한 dto
@@ -105,7 +98,7 @@ public class VacationController {
     @GetMapping("/delete/{calendarId}")
     public String vacationDelete(@PathVariable Long calendarId,
                                  @SessionAttribute(name = "employee")SessionEmployeeDTO sessionEmployeeDTO) {
-        log.info("VacationController - vacationDelete");
+
         vacationService.deleteRequest(calendarId, sessionEmployeeDTO.getEmployeeId());
         return "redirect:/vacation";
     }
@@ -115,14 +108,13 @@ public class VacationController {
     @GetMapping(value = "/team") //page=0 부터 시작 size 를 정하면 된다
     public String vacationTeam(Model model, @PageableDefault(size = 10) Pageable pageable,
                                @SessionAttribute(name = "employee")SessionEmployeeDTO sessionEmployeeDTO) {
-        log.info("VacationController - vacationTeam");
+
 
         Long employeeId = sessionEmployeeDTO.getEmployeeId();
-        log.info("세션 값 : "+employeeId);
 
         // 휴가 신청 내역 조회
         Page<VacationRequestDTO> vacationRequestList = vacationService.findAllTeamSearchPending(employeeId, pageable);
-        log.info("휴가 신청 내역 조회 : {}",vacationRequestList);
+
 
         // header title 넘겨주기
         model.addAttribute("title", "구성원 휴가");
@@ -134,7 +126,7 @@ public class VacationController {
     @GetMapping(value = "/team/detail")
     public String vacationTeam(Model model, @RequestParam(value = "id") Long id,
                                @SessionAttribute(name = "employee")SessionEmployeeDTO sessionEmployeeDTO) {
-        log.info("VacationController - vacationTeamDetail");
+
         Long employeeId = sessionEmployeeDTO.getEmployeeId();
 
         // 휴가 신청 내역 조회

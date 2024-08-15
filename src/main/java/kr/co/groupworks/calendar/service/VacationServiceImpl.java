@@ -365,13 +365,10 @@ public class VacationServiceImpl implements VacationService{
                 .orElseThrow(() -> new EntityNotFoundException("휴가 일정이 존재하지 않습니다."));
 
         if (vacation.getStatus().equals(VacationStatus.PENDING)) {
-            vacation.approvalStatus(status);
-//            if(status.equals(VacationStatus.APPROVED) &&
-//                    (vacation.getVacationType().equals(VacationType.ANNUAL) ||
-//                                    vacation.getVacationType().equals(VacationType.HALF))
-//            ) {
-//                vacationHistoryUpdate(vacation);
-//            }
+            Approver approver = Approver.builder().approverId(employeeId)
+                    .approverName(senderEmployee.getEmployeeName()).build();
+            vacation.approvalStatus(status,approver);
+
             if(status.equals(VacationStatus.APPROVED)) {
                 vacationHistoryUpdate(vacation);
             }
