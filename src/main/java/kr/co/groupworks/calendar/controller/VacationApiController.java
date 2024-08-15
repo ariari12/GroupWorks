@@ -42,7 +42,7 @@ public class VacationApiController {
     @ResponseBody
     @PostMapping("/sick")
     public ResponseEntity<?> vacationSick(@Validated @RequestPart("jsonData") SickFormDTO dto,
-                                          @RequestPart("sickFileUpload") MultipartFile[] files,
+                                          @RequestPart(value = "sickFileUpload", required = false) MultipartFile[] files,
                                           @SessionAttribute(name = "employee")SessionEmployeeDTO sessionEmployeeDTO){
 
         log.info("SickFormDTO ={}, fileUpload ={}",dto, files);
