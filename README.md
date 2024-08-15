@@ -71,7 +71,7 @@
     - 결재 승인 / 반려 : 사용자가 결재 해야 하는 문서 목록.
         - 결재 승인/반려 : 승인 대기 목록에서 결재 승인 및 코멘트 작성
             - 결재 종류 :  1 :선결, 2: 전결, 3:후결, 4:대결, 5:반려
-    - 결재 검토 : 협조 자로 등록된 결재의 코멘트 및 피드백 작성 가능
+    - 결재 검토 : 협조자로 등록된 결재의 코멘트 및 피드백 작성 가능
     
     <img src="https://github.com/user-attachments/assets/21fbd2a0-2da3-4c88-be09-f8d52cfece22">
     <img src="https://github.com/user-attachments/assets/caa0032b-203d-4700-9231-291297adbdf2">
