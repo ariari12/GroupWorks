@@ -17,11 +17,11 @@ public class SickFormDTO {
     private Long employeeId;
 
     @NotNull
-    @Schema(description = "병가 시작 날짜", example = "2024-08-20")
+    @Schema(description = "병가 시작 날짜", example = "2099-08-20")
     private LocalDate sickStartDate;
 
     @NotNull
-    @Schema(description = "병가 종료 날짜", example = "2024-08-22")
+    @Schema(description = "병가 종료 날짜", example = "2099-08-22")
     private LocalDate sickEndDate;
 
     @Schema(description = "병가 세부 내용", example = "질병으로 인해 병가를 신청합니다.")

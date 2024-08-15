@@ -6,6 +6,7 @@ import kr.co.groupworks.calendar.entity.*;
 import kr.co.groupworks.calendar.repository.CalendarAttachmentRepository;
 import kr.co.groupworks.calendar.repository.VacationHistoryRepository;
 import kr.co.groupworks.calendar.repository.VacationRepository;
+import kr.co.groupworks.common.exception.exhandler.MissingFileException;
 import kr.co.groupworks.common.exception.exhandler.NotEnoughLeaveDaysException;
 import kr.co.groupworks.common.exception.exhandler.VacationNotPendingException;
 import kr.co.groupworks.common.mapper.CalendarAttachmentMapper;
@@ -171,6 +172,9 @@ public class VacationServiceImpl implements VacationService{
 
         if (!overlappingVacations.isEmpty()) {
             throw new IllegalArgumentException("겹치는 휴가기간이 있습니다.");
+        }
+        if(files == null){
+            throw new MissingFileException("파일 업로드는 필수입니다.");
         }
 
 

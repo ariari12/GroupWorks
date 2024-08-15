@@ -1,5 +1,6 @@
 package kr.co.groupworks.calendar.controller;
 
+import io.swagger.v3.oas.annotations.Hidden;
 import kr.co.groupworks.calendar.dto.*;
 import kr.co.groupworks.calendar.entity.VacationStatus;
 import kr.co.groupworks.calendar.entity.VacationType;
@@ -118,6 +119,7 @@ public class VacationController {
 
         // header title 넘겨주기
         model.addAttribute("title", "구성원 휴가");
+        model.addAttribute("subtitle", sessionEmployeeDTO.getDepartment().getDepartmentName());
         model.addAttribute("vacationRequestList",vacationRequestList);
         return "calendar/vacationTeam";
     }
