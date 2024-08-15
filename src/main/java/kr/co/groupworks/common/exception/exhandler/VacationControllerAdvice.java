@@ -1,10 +1,11 @@
-package kr.co.groupworks.common.exception;
+package kr.co.groupworks.common.exception.exhandler;
 
 
-import kr.co.groupworks.common.exception.exhandler.ErrorResult;
-import kr.co.groupworks.common.exception.exhandler.MissingFileException;
-import kr.co.groupworks.common.exception.exhandler.NotEnoughLeaveDaysException;
-import kr.co.groupworks.common.exception.exhandler.VacationNotPendingException;
+import kr.co.groupworks.common.exception.custom.MissingFileException;
+import kr.co.groupworks.common.exception.custom.NotEnoughLeaveDaysException;
+import kr.co.groupworks.common.exception.custom.RankNotSufficientException;
+import kr.co.groupworks.common.exception.custom.VacationNotPendingException;
+import kr.co.groupworks.common.exception.model.ErrorResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
@@ -21,6 +22,15 @@ public class VacationControllerAdvice {
 
     @ExceptionHandler(VacationNotPendingException.class)
     public ModelAndView handleVacationNotPendingException(VacationNotPendingException ex) {
+        ModelAndView modelAndView = new ModelAndView("error/401");
+        modelAndView.setStatus(HttpStatus.UNAUTHORIZED);
+        modelAndView.addObject("message", ex.getMessage());
+        log.info(modelAndView.toString());
+        return modelAndView;
+    }
+
+    @ExceptionHandler(RankNotSufficientException.class)
+    public ModelAndView handleRankNotSufficientException(RankNotSufficientException ex) {
         ModelAndView modelAndView = new ModelAndView("error/401");
         modelAndView.setStatus(HttpStatus.UNAUTHORIZED);
         modelAndView.addObject("message", ex.getMessage());

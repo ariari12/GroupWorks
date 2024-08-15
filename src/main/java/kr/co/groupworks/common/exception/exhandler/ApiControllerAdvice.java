@@ -1,9 +1,8 @@
-package kr.co.groupworks.common.exception;
+package kr.co.groupworks.common.exception.exhandler;
 
 import jakarta.persistence.EntityNotFoundException;
-import kr.co.groupworks.common.exception.exhandler.ErrorResult;
+import kr.co.groupworks.common.exception.model.ErrorResult;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;

@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class VacationMyHistoryDTO {
+public class VacationHistoryDTO {
 
     @Schema(description = "사원 ID", example = "1")
     private Long employeeId;
@@ -34,7 +34,7 @@ public class VacationMyHistoryDTO {
     private double totalAnnual;
 
     @QueryProjection
-    public VacationMyHistoryDTO(Long employeeId, String employeeName, String rankName, String departmentName, double annualDaysUsed, int sickDaysUsed, int otherDaysUsed, double totalAnnual) {
+    public VacationHistoryDTO(Long employeeId, String employeeName, String rankName, String departmentName, double annualDaysUsed, int sickDaysUsed, int otherDaysUsed, double totalAnnual) {
         this.employeeId = employeeId;
         this.employeeName = employeeName;
         this.rankName = rankName;

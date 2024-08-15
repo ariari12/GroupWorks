@@ -1,8 +1,6 @@
 package kr.co.groupworks.calendar.controller;
 
-import io.swagger.v3.oas.annotations.Hidden;
 import kr.co.groupworks.calendar.dto.*;
-import kr.co.groupworks.calendar.entity.VacationStatus;
 import kr.co.groupworks.calendar.entity.VacationType;
 import kr.co.groupworks.calendar.entity.AmPm;
 import kr.co.groupworks.calendar.service.VacationService;
@@ -49,7 +47,7 @@ public class VacationController {
 
         List<VacationRequestDTO> vacationRequestList = vacationService.findAllByEmployeeId(employeeId);
 
-        List<VacationMyHistoryDTO> vacationHistoryList = vacationService.findVacationHistory(employeeId);
+        List<VacationHistoryDTO> vacationHistoryList = vacationService.findVacationHistory(employeeId);
 
 
         // 검증 validation th:filed 속성 추가하기 위한 dto
@@ -122,6 +120,25 @@ public class VacationController {
         model.addAttribute("subtitle", sessionEmployeeDTO.getDepartment().getDepartmentName());
         model.addAttribute("vacationRequestList",vacationRequestList);
         return "calendar/vacationTeam";
+    }
+
+    // 구성원 휴가 보유 내역
+    @GetMapping(value = "/team/history") //page=0 부터 시작 size 를 정하면 된다
+    public String vacationTeamHistory(Model model, @PageableDefault(size = 10) Pageable pageable,
+                               @SessionAttribute(name = "employee")SessionEmployeeDTO sessionEmployeeDTO) {
+        Long employeeId = sessionEmployeeDTO.getEmployeeId();
+
+
+        // 휴가 보유 내역 조회
+        Page<VacationHistoryDTO> vacationHistoryDTOPage = vacationService.findAllTeamHistory(employeeId, pageable);
+
+
+        // header title 넘겨주기
+        model.addAttribute("title", "구성원 휴가 보유 내역");
+        model.addAttribute("subtitle", sessionEmployeeDTO.getDepartment().getDepartmentName());
+        model.addAttribute("vacationHistoryDTOPage",vacationHistoryDTOPage);
+
+        return "calendar/vacationTeamHistory";
     }
 
     //휴가 신청 세부내역
