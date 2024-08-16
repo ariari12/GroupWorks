@@ -36,4 +36,6 @@ public interface MaterialService {
     Map<String, Object> getBomSMS(Long bomId);
 
     boolean getBomStatus(long bomId);
+
+    List<MesListVO> getMesList();
 }

@@ -37,7 +37,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping(value = "/materialflow")
 @RequiredArgsConstructor
-public class MaterialFlowManagerRestController {
+public abstract class MaterialFlowManagerRestController {
     /* MaterialFlowManagement RestAPI */
     private final MaterialService materialService;
     private final MaterialOpenApiService materialOpenApiService;

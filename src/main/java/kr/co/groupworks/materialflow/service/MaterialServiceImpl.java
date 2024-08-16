@@ -226,6 +226,11 @@ public class MaterialServiceImpl implements MaterialService {
         return bomRepository.findStatusById(bomId);
     }
 
+    @Override
+    public List<MesListVO> getMesList() {
+        return orderRepository.findAllMesAndOrderCode();
+    }
+
     private Map<String, Object> returnMessage(String message, boolean result) {
         return Map.of("message", message, "result", result);
     }

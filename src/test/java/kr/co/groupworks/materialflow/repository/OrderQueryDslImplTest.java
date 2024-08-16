@@ -23,4 +23,9 @@ class OrderQueryDslImplTest {
                     repository.orderDeleteCheck(o.getId()));
         });
     }
+
+    @Test @DisplayName("Mes List VO Test")
+    void findAllMesAndOrderCode() {
+        repository.findAllMesAndOrderCode().forEach(m -> log.info(m.toString()));
+    }
 }

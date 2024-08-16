@@ -1,13 +1,16 @@
 package kr.co.groupworks.materialflow.repository;
 
+import com.querydsl.core.Tuple;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
+import kr.co.groupworks.materialflow.dto.MesListVO;
 import kr.co.groupworks.materialflow.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public class OrderQueryDslImpl extends QuerydslRepositorySupport implements OrderQueryDsl {
@@ -79,6 +82,40 @@ public class OrderQueryDslImpl extends QuerydslRepositorySupport implements Orde
                 .innerJoin(b).on(o.id.eq(b.orderId))
                 .where(b.id.eq(bomId))
                 .fetchJoin().fetchOne();
+    }
+
+    @Override
+    public Map<String, Long> findIdMapByBomItemCode(String bomItemCode) {
+        QOrder o = QOrder.order;
+        QBom b = QBom.bom;
+
+        Tuple ids = queryFactory
+                .select(o.id, b.id)
+                .from(o).innerJoin(b).on(o.id.eq(b.orderId))
+                .where(b.itemCode.eq(bomItemCode))
+                .fetchJoin().fetchOne();
+        if(ids == null) return null;
+        return Map.of("oId", ids.get(0, Long.class), "bId", ids.get(1, Long.class));
+    }
+
+    @Override
+    public List<MesListVO> findAllMesAndOrderCode() {
+        QOrder o = QOrder.order;
+        QBom b = QBom.bom;
+        QMes m = QMes.mes;
+
+        return queryFactory
+                .select(b, m, o).from(b)
+                .innerJoin(m).on(b.orderId.eq(m.orderId)
+                        .and(b.itemCode.eq(m.itemCode)))
+                .innerJoin(o).on(o.id.eq(m.orderId))
+                .fetchJoin().fetch().stream().map(t -> {
+                    Bom bom = t.get(0, Bom.class);
+                    Order order = t.get(2, Order.class);
+                    int cl = order.getClassification().ordinal();
+                    return new MesListVO(order.getOrderCode(), order.getId(),
+                            cl, bom.getId(), t.get(1, Mes.class));
+                }).toList();
     }
 
     private List<Order> findByItemName(String orderCode, String itemCode, String itemName) {
