@@ -22,9 +22,10 @@ public class CalendarController {
     public String calendar(Model model,
                            @SessionAttribute(name = "employee") SessionEmployeeDTO sessionEmployeeDTO){
         Long employeeId = sessionEmployeeDTO.getEmployeeId();
+        // 개인 일정
         List<CalendarFormDTO> calendarFormDTOList = calendarService.findAllPersonalCalendar(employeeId);
+        // 휴가 일정
         List<CalendarFormDTO> vacationFormDTOList = vacationService.findAllVacation(employeeId);
-        log.info("{}",calendarFormDTOList);
         model.addAttribute("calendarFormDTO", calendarFormDTOList);
         model.addAttribute("vacationFormDTO", vacationFormDTOList);
         model.addAttribute("title","캘린더");
