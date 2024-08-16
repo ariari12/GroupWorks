@@ -96,9 +96,14 @@
                     backgroundColor: "red",
                     borderColor: "transparent",
                     className: "kr-holiday",
-                    textColor: "white"
+                    textColor: "white",
+                    eventDataTransform: function(eventData) {
+                        // href 속성을 제거하여 링크를 비활성화
+                        eventData.url = ''; // 빈 문자열로 설정하여 링크 제거
+                        return eventData;
+                    }
                 }],
-                editable: true,
+                editable: false,
 
                 //droppable을 사용할때 droppable true 드롭이벤트
                 droppable: true,
@@ -159,8 +164,19 @@
                     });
                 },
                 eventClick: function(info) {
-                    var event = info.event;
+                    // 이벤트에 대한 디버깅 정보를 콘솔에 출력
+                    console.log(info.event.source.internalEventSource.meta);  // meta 객체를 확인
 
+                    // 구글 캘린더 이벤트인지 확인하고 클릭 이벤트를 막음
+                    if (info.event.source && info.event.source.internalEventSource &&
+                        info.event.source.internalEventSource.meta &&
+                        info.event.source.internalEventSource.meta.googleCalendarId === 'ko.south_korea#holiday@group.v.calendar.google.com') {
+                        info.jsEvent.preventDefault(); // 기본 동작 방지
+                        return; // 아무 동작도 하지 않음
+                    }
+
+                    // 개인일정 이벤트 또는 일반 이벤트
+                    var event = info.event;
                     if (event.extendedProps.type === 'vacation') {
                         // 휴가 이벤트 클릭 시 조회용 모달 열기
                         $("#viewCalendarTitle").text(event.title);

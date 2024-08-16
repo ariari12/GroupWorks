@@ -59,7 +59,7 @@
                             <th:block th:if="${!#lists.isEmpty(modifyForm.getFileList())}">
                                 <th:block th:each="file : *{fileList}">
                                     <div>
-                                        <a th:href="@{|/calendar/fileDownload/${file.filePath}|}"
+                                        <a th:href="@{|/file/download/${file.filePath}|}"
                                            th:text="${file.fileName}">파일이름</a>
                                     </div>
                                 </th:block>

@@ -1,7 +1,6 @@
 package kr.co.groupworks.calendar.controller;
 
 import kr.co.groupworks.calendar.dto.*;
-import kr.co.groupworks.calendar.entity.VacationStatus;
 import kr.co.groupworks.calendar.entity.VacationType;
 import kr.co.groupworks.calendar.entity.AmPm;
 import kr.co.groupworks.calendar.service.VacationService;
@@ -44,18 +43,11 @@ public class VacationController {
     @GetMapping("")
     public String vacationMain(@SessionAttribute(name = "employee")SessionEmployeeDTO sessionEmployeeDTO,
                                Model model) {
-        log.info("VacationController - vacationMain");
-
         Long employeeId = sessionEmployeeDTO.getEmployeeId();
-        log.info("세션 값 : "+employeeId);
 
-        // 휴가 신청 내역 조회
         List<VacationRequestDTO> vacationRequestList = vacationService.findAllByEmployeeId(employeeId);
-        log.info("휴가 신청 내역 조회 : {}",vacationRequestList);
 
-        // 휴가 보유 사용현황 조회
-        List<VacationMyHistoryDTO> vacationHistoryList = vacationService.findVacationHistory(employeeId);
-        log.info("휴가 보유 사용현황 조회 : {}",vacationHistoryList);
+        List<VacationHistoryDTO> vacationHistoryList = vacationService.findVacationHistory(employeeId);
 
 
         // 검증 validation th:filed 속성 추가하기 위한 dto
@@ -105,7 +97,7 @@ public class VacationController {
     @GetMapping("/delete/{calendarId}")
     public String vacationDelete(@PathVariable Long calendarId,
                                  @SessionAttribute(name = "employee")SessionEmployeeDTO sessionEmployeeDTO) {
-        log.info("VacationController - vacationDelete");
+
         vacationService.deleteRequest(calendarId, sessionEmployeeDTO.getEmployeeId());
         return "redirect:/vacation";
     }
@@ -115,26 +107,45 @@ public class VacationController {
     @GetMapping(value = "/team") //page=0 부터 시작 size 를 정하면 된다
     public String vacationTeam(Model model, @PageableDefault(size = 10) Pageable pageable,
                                @SessionAttribute(name = "employee")SessionEmployeeDTO sessionEmployeeDTO) {
-        log.info("VacationController - vacationTeam");
+
 
         Long employeeId = sessionEmployeeDTO.getEmployeeId();
-        log.info("세션 값 : "+employeeId);
 
         // 휴가 신청 내역 조회
         Page<VacationRequestDTO> vacationRequestList = vacationService.findAllTeamSearchPending(employeeId, pageable);
-        log.info("휴가 신청 내역 조회 : {}",vacationRequestList);
+
 
         // header title 넘겨주기
         model.addAttribute("title", "구성원 휴가");
+        model.addAttribute("subtitle", sessionEmployeeDTO.getDepartment().getDepartmentName());
         model.addAttribute("vacationRequestList",vacationRequestList);
         return "calendar/vacationTeam";
+    }
+
+    // 구성원 휴가 보유 내역
+    @GetMapping(value = "/team/history") //page=0 부터 시작 size 를 정하면 된다
+    public String vacationTeamHistory(Model model, @PageableDefault(size = 10) Pageable pageable,
+                               @SessionAttribute(name = "employee")SessionEmployeeDTO sessionEmployeeDTO) {
+        Long employeeId = sessionEmployeeDTO.getEmployeeId();
+
+
+        // 휴가 보유 내역 조회
+        Page<VacationHistoryDTO> vacationHistoryDTOPage = vacationService.findAllTeamHistory(employeeId, pageable);
+
+
+        // header title 넘겨주기
+        model.addAttribute("title", "구성원 휴가 보유 내역");
+        model.addAttribute("subtitle", sessionEmployeeDTO.getDepartment().getDepartmentName());
+        model.addAttribute("vacationHistoryDTOPage",vacationHistoryDTOPage);
+
+        return "calendar/vacationTeamHistory";
     }
 
     //휴가 신청 세부내역
     @GetMapping(value = "/team/detail")
     public String vacationTeam(Model model, @RequestParam(value = "id") Long id,
                                @SessionAttribute(name = "employee")SessionEmployeeDTO sessionEmployeeDTO) {
-        log.info("VacationController - vacationTeamDetail");
+
         Long employeeId = sessionEmployeeDTO.getEmployeeId();
 
         // 휴가 신청 내역 조회

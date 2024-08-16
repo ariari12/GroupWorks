@@ -2,14 +2,14 @@ package kr.co.groupworks.calendar.service;
 
 import jakarta.persistence.EntityNotFoundException;
 import kr.co.groupworks.calendar.dto.*;
-import kr.co.groupworks.calendar.entity.CalendarAttachment;
-import kr.co.groupworks.calendar.entity.Vacation;
-import kr.co.groupworks.calendar.entity.VacationHistory;
-import kr.co.groupworks.calendar.entity.VacationStatus;
+import kr.co.groupworks.calendar.entity.*;
 import kr.co.groupworks.calendar.repository.CalendarAttachmentRepository;
 import kr.co.groupworks.calendar.repository.VacationHistoryRepository;
 import kr.co.groupworks.calendar.repository.VacationRepository;
-import kr.co.groupworks.common.exception.exhandler.VacationNotPendingException;
+import kr.co.groupworks.common.exception.custom.MissingFileException;
+import kr.co.groupworks.common.exception.custom.NotEnoughLeaveDaysException;
+import kr.co.groupworks.common.exception.custom.RankNotSufficientException;
+import kr.co.groupworks.common.exception.custom.VacationNotPendingException;
 import kr.co.groupworks.common.mapper.CalendarAttachmentMapper;
 import kr.co.groupworks.common.mapper.VacationMapper;
 import kr.co.groupworks.employee.entity.Employee;
@@ -21,11 +21,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -33,8 +31,6 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 @Slf4j
@@ -64,12 +60,10 @@ public class VacationServiceImpl implements VacationService{
                 vacationHistoryRepository
                         .findByEmployee(employee)
                         .orElseThrow(() -> new EntityNotFoundException("휴가내역을 찾을 수 없습니다 "));
-        // 연차 일수 증가
-        vacationHistory.updateAnnualDaysUsed(dto.getStartDate(), dto.getEndDate());
-        vacationHistory = vacationHistoryRepository.save(vacationHistory);
-        //employee.updateAnnualDaysUsed(dto.getStartDate(), dto.getEndDate());
-        log.info("employee = {}",employee);
-        log.info("vacationHistory = {}",vacationHistory);
+
+        if(vacationHistory.getTotalAnnual() == 0){
+            throw new NotEnoughLeaveDaysException("잔여 연차가 부족합니다");
+        }
 
         // 기간이 겹치는 휴가가 있는지 확인
         List<Vacation> overlappingVacations = vacationRepository.findOverlappingVacations(
@@ -79,11 +73,11 @@ public class VacationServiceImpl implements VacationService{
             throw new IllegalArgumentException("겹치는 휴가기간이 있습니다.");
         }
 
-        // 사원 업데이트
-        //employee = employeeRepository.save(employee);
         // 휴가 엔티티 변환
         Vacation vacation = vacationMapper.toEntity(dto,employee);
-        System.out.println("vacation.getEmployee() = " + vacation.getEmployee());
+        // 연차 일수 증가
+        vacation.updateUsedVacation(dto.getStartDate(), dto.getEndDate());
+
         return vacationRepository.save(vacation).getCalendarId();
     }
 
@@ -99,11 +93,9 @@ public class VacationServiceImpl implements VacationService{
                         .findByEmployee(employee)
                         .orElseThrow(() -> new EntityNotFoundException("휴가내역을 찾을 수 없습니다 "));
 
-        vacationHistory.updateHalfDaysUsed();
-        vacationHistory = vacationHistoryRepository.save(vacationHistory);
-        log.info("employee = {}",employee);
-        log.info("vacationHistory = {}",vacationHistory);
-
+        if(vacationHistory.getTotalAnnual() == 0){
+            throw new NotEnoughLeaveDaysException("잔여 연차가 부족합니다");
+        }
 
         // 기간이 겹치는 휴가가 있는지 확인
         List<Vacation> overlappingVacations = vacationRepository.findOverlappingVacations(
@@ -113,10 +105,9 @@ public class VacationServiceImpl implements VacationService{
             throw new IllegalArgumentException("겹치는 휴가기간이 있습니다.");
         }
 
-        //사원 업데이트
-        //employee=employeeRepository.save(employee);
         // 휴가 엔티티 변환
         Vacation vacation = vacationMapper.toEntity(dto,employee);
+        vacation.updateHalfDaysUsed(dto.getHalfStartDate());
         return vacationRepository.save(vacation).getCalendarId();
     }
 
@@ -131,10 +122,6 @@ public class VacationServiceImpl implements VacationService{
                         .findByEmployee(employee)
                         .orElseThrow(() -> new EntityNotFoundException("휴가내역을 찾을 수 없습니다 "));
 
-        vacationHistory.updateSickDaysUsed(dto.getSickStartDate(), dto.getSickEndDate());
-        vacationHistory = vacationHistoryRepository.save(vacationHistory);
-        log.info("employee = {}",employee);
-        log.info("vacationHistory = {}",vacationHistory);
 
         // 기간이 겹치는 휴가가 있는지 확인
         List<Vacation> overlappingVacations = vacationRepository.findOverlappingVacations(
@@ -148,26 +135,27 @@ public class VacationServiceImpl implements VacationService{
         if (!uploadDir.exists()) {
             uploadDir.mkdirs();
         }
-        //사원 업데이트
-        //employee=employeeRepository.save(employee);
+
         Vacation vacation = vacationMapper.toEntity(dto, employee);
+        vacation.updateUsedVacation(dto.getSickStartDate(), dto.getSickEndDate());
 
-        Arrays.asList(files).forEach(file -> {
-            String fileFullName = UUID.randomUUID().toString()+"-"+file.getOriginalFilename();
-            String filePath = uploadDir+ "/"+ fileFullName;
-            File dest = new File(filePath);
-            try {
-                file.transferTo(dest);
-                CalendarAttachment calendarAttachment =
-                        calendarAttachmentMapper.toEntity(fileFullName, file.getOriginalFilename(), vacation);
-                calendarAttachmentRepository.save(calendarAttachment);
+        if (files != null && files.length > 0) {
+            Arrays.asList(files).forEach(file -> {
+                String fileFullName = UUID.randomUUID().toString()+"-"+file.getOriginalFilename();
+                String filePath = uploadDir+ "/"+ fileFullName;
+                File dest = new File(filePath);
+                try {
+                    file.transferTo(dest);
+                    CalendarAttachment calendarAttachment =
+                            calendarAttachmentMapper.toEntity(fileFullName, file.getOriginalFilename(), vacation);
+                    calendarAttachmentRepository.save(calendarAttachment);
 
-            } catch (IOException e) {
-                log.error("파일 저장 중 오류 발생: {}", e.getMessage());
-                throw new RuntimeException("파일 저장 중 오류가 발생했습니다. 다시 시도해주세요.");
-            }
-        });
-
+                } catch (IOException e) {
+                    log.error("파일 저장 중 오류 발생: {}", e.getMessage());
+                    throw new RuntimeException("파일 저장 중 오류가 발생했습니다. 다시 시도해주세요.");
+                }
+            });
+        }
 
         return vacationRepository.save(vacation).getCalendarId();
 
@@ -179,18 +167,6 @@ public class VacationServiceImpl implements VacationService{
         Employee employee = employeeRepository.findById(dto.getEmployeeId())
                 .orElseThrow(() -> new EntityNotFoundException("사원을 찾을 수 없습니다. " + dto.getEmployeeId()));
 
-
-        // 기타 휴가 일수 증가
-        VacationHistory vacationHistory =
-                vacationHistoryRepository
-                        .findByEmployee(employee)
-                        .orElseThrow(() -> new EntityNotFoundException("휴가내역을 찾을 수 없습니다 "));
-
-        vacationHistory.updateOtherDaysUsed(dto.getOtherStartDate(), dto.getOtherEndDate());
-        vacationHistory = vacationHistoryRepository.save(vacationHistory);
-        log.info("employee = {}",employee);
-        log.info("vacationHistory = {}",vacationHistory);
-
         // 기간이 겹치는 휴가가 있는지 확인
         List<Vacation> overlappingVacations = vacationRepository.findOverlappingVacations(
                 dto.getEmployeeId(), String.valueOf(dto.getOtherStartDate()), String.valueOf(dto.getOtherEndDate()));
@@ -198,12 +174,14 @@ public class VacationServiceImpl implements VacationService{
         if (!overlappingVacations.isEmpty()) {
             throw new IllegalArgumentException("겹치는 휴가기간이 있습니다.");
         }
+        if(files == null){
+            throw new MissingFileException("파일 업로드는 필수입니다.");
+        }
 
 
 
-        // 사원 업데이트
-        //employee=employeeRepository.save(employee);
         Vacation vacation = vacationMapper.toEntity(dto, employee);
+        vacation.updateUsedVacation(dto.getOtherStartDate(), dto.getOtherEndDate());
 
         File uploadDir = new File(uploadDirectory);
         if (!uploadDir.exists()) {
@@ -230,7 +208,7 @@ public class VacationServiceImpl implements VacationService{
     }
 
     @Override
-    public List<VacationMyHistoryDTO> findVacationHistory(Long employeeId) {
+    public List<VacationHistoryDTO> findVacationHistory(Long employeeId) {
         Employee employee = employeeRepository.findById(employeeId)
                 .orElseThrow(() -> new EntityNotFoundException("사원을 찾을 수 없습니다. " + employeeId));
         return vacationHistoryRepository.findVacationMyHistoryDTO(employee.getEmployeeId());
@@ -253,8 +231,8 @@ public class VacationServiceImpl implements VacationService{
 
     // 휴가 일정 검색
     @Override
-    public VacationModifyFormDTO findCalendarByIdAndEmployee(Long calendarId, Long employeeId) {
-        log.info("service {}",employeeId);
+    public VacationModifyFormDTO
+    findCalendarByIdAndEmployee(Long calendarId, Long employeeId) {
         employeeRepository.findById(employeeId)
                 .orElseThrow(() -> new EntityNotFoundException("사원을 찾을 수 없습니다. " + employeeId));
         Vacation vacation = vacationRepository.findById(calendarId)
@@ -312,7 +290,6 @@ public class VacationServiceImpl implements VacationService{
         if (date.length == 1) {
             date = new String[] { date[0], date[0] };
         }
-        log.info("date {}", Arrays.toString(date));
 
         // 업데이트 메서드 호출
         vacation.updateVacation(dto.getVacationType(),
@@ -332,7 +309,6 @@ public class VacationServiceImpl implements VacationService{
 
     // 사원의 휴가신청 내역 모두 조회
     @Override
-    @Transactional(readOnly = true)
     public List<VacationRequestDTO> findAllByEmployeeId(Long employeeId) {
         List<Vacation> vacationList = vacationRepository.findAllByEmployeeId(employeeId);
         // 휴가 번호로 첨부파일 조회
@@ -359,10 +335,10 @@ public class VacationServiceImpl implements VacationService{
                                                              ) Pageable pageable) {
         Employee employee = employeeRepository.findById(employeeId)
                 .orElseThrow(() -> new EntityNotFoundException("사원을 찾을 수 없습니다. " + employeeId));
+        if(employee.getRankId()<3){
+            throw new RankNotSufficientException("직급이 낮아 해당 작업을 수행할 권한이 없습니다.");
+        }
         Page<Vacation> vacationList = vacationRepository.findAllTeam(employee, pageable);
-        vacationList.forEach(vacation ->
-                log.info("service = {}",vacation)
-        );
 
         // 페이징 처리하기 엔티티 dto 전환
         return vacationList
@@ -392,7 +368,13 @@ public class VacationServiceImpl implements VacationService{
                 .orElseThrow(() -> new EntityNotFoundException("휴가 일정이 존재하지 않습니다."));
 
         if (vacation.getStatus().equals(VacationStatus.PENDING)) {
-            vacation.approvalStatus(status);
+            Approver approver = Approver.builder().approverId(employeeId)
+                    .approverName(senderEmployee.getEmployeeName()).build();
+            vacation.approvalStatus(status,approver);
+
+            if(status.equals(VacationStatus.APPROVED)) {
+                vacationHistoryUpdate(vacation);
+            }
             // sse로 전달할 id
             notificationService.sendVacationApproval(vacation, senderEmployee);
         } else{
@@ -401,5 +383,31 @@ public class VacationServiceImpl implements VacationService{
         return vacation.getCalendarId();
     }
 
+    // 구성원 휴가 보유 내역 조회
+    @Override
+    public Page<VacationHistoryDTO> findAllTeamHistory(Long employeeId, Pageable pageable) {
+        Employee employee = employeeRepository.findById(employeeId)
+                .orElseThrow(() -> new EntityNotFoundException("사원을 찾을 수 없습니다. " + employeeId));
+        if(employee.getRankId()<3){
+            throw new RankNotSufficientException("직급이 낮아 해당 작업을 수행할 권한이 없습니다.");
+        }
+        return vacationHistoryRepository.findAllTeamDTO(employee, pageable);
+    }
+
+    //캡슐화
+    private void vacationHistoryUpdate(Vacation vacation) {
+        VacationHistory vacationHistory = vacationHistoryRepository.findByEmployee(vacation.getEmployee())
+                .orElseThrow(() -> new EntityNotFoundException("휴가 내역을 찾을 수 없습니다. " +
+                        vacation.getEmployee().getEmployeeId()));
+        if(vacation.getVacationType().equals(VacationType.ANNUAL)){
+            // 연차 일수 증가
+            vacationHistory.updateAnnual(vacation.getUsedVacation());
+        } else if (vacation.getVacationType().equals(VacationType.HALF)) {
+            vacationHistory.updateAnnual(vacation.getUsedVacation());
+        } else if (vacation.getVacationType().equals(VacationType.SICK)) {
+            vacationHistory.updateSick((int) vacation.getUsedVacation());
+        } else if (vacation.getVacationType().equals(VacationType.OTHER))
+            vacationHistory.updateOther((int) vacation.getUsedVacation());
+    }
 
 }

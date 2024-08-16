@@ -39,7 +39,7 @@ public class NotificationServiceImpl implements NotificationService {
                 .toList();
     }
 
-    // 캐싱 제거, 레디스 저장 후 전송
+    // 캐싱 제거, 레디스 휴가 저장 후 전송
     @Override
     @CacheEvict(value = "notificationCache", key = "#vacation.employee.employeeId")
     public void sendVacationApproval(Vacation vacation, Employee sender) {

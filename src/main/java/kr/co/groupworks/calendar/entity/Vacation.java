@@ -1,10 +1,14 @@
 package kr.co.groupworks.calendar.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Future;
+import jakarta.validation.constraints.NotNull;
+import kr.co.groupworks.employee.dto.EmployeeDTO;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
-import java.util.List;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 
 @Entity
 @Table(name="vacation")
@@ -15,7 +19,8 @@ import java.util.List;
 public class Vacation extends Calendar{
 
     // 승인하는 사람
-    private String approver;
+    @Embedded
+    private Approver approver;
     // 승인 상태
     @Enumerated(EnumType.STRING)
     private VacationStatus status;
@@ -27,6 +32,9 @@ public class Vacation extends Calendar{
     @Enumerated(EnumType.STRING)
     @Column(name = "am_pm")
     private AmPm amPm;
+
+    @Column(name = "used_vacation")
+    private double usedVacation;
 
     public Vacation updateVacation(
             VacationType vacationType, String contents, String title, String startDate, String endDate) {
@@ -40,7 +48,16 @@ public class Vacation extends Calendar{
         return this;
     }
 
-    public void approvalStatus(VacationStatus status) {
+    public void approvalStatus(VacationStatus status, Approver approver) {
         this.status=status;
+        this.approver=approver;
+    }
+
+    public void updateUsedVacation(LocalDate startDate, LocalDate endDate) {
+        usedVacation += (int) (ChronoUnit.DAYS.between(startDate, endDate)+1);
+    }
+
+    public void updateHalfDaysUsed(@Future @NotNull LocalDate halfStartDate) {
+        usedVacation += 0.5;
     }
 }

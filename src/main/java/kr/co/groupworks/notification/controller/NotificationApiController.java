@@ -1,4 +1,4 @@
-package kr.co.groupworks.notification;
+package kr.co.groupworks.notification.controller;
 
 import kr.co.groupworks.employee.dto.SessionEmployeeDTO;
 import kr.co.groupworks.notification.dto.NotificationDTO;
