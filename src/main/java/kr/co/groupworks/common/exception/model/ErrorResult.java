@@ -1,4 +1,4 @@
-package kr.co.groupworks.common.exception.exhandler;
+package kr.co.groupworks.common.exception.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

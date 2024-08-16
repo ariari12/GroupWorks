@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div class="d-flex justify-content-center align-items-stretch" th:fragment="vacationTeamHistory">
+    <div class="card mb-4 w-100 ">
+        <div class="card-header">
+            <i class="fas fa-table me-1"></i>
+            휴가 보유 내역
+        </div>
+        <div class="card-body">
+            <table id="vacationTeamRequest" class="table table-hover" style="width:100%">
+                <thead>
+                <tr>
+                    <th>이름</th>
+                    <th>사번</th>
+                    <th>직급</th>
+                    <th>연차 누적 사용 일수</th>
+                    <th>병가 사용 일수</th>
+                    <th>기타 휴가 사용 일수</th>
+                    <th>남아있는 연차 일수</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <th:block th:if="${#lists.isEmpty(vacationHistoryDTOPage)}">
+                    <tr>
+                        <td style="text-align: center">신청 내역 없음</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </th:block>
+
+                <th:block th:if="${!#lists.isEmpty(vacationHistoryDTOPage)}">
+                    <tr th:each="dto : ${vacationHistoryDTOPage}" class="vacation-row">
+                        <td th:text="${dto.employeeName}">사원 이름</td>
+                        <td th:text="${dto.employeeId}">사원 번호</td>
+                        <td th:text="${dto.rankName}">직급</td>
+                        <td th:text="${dto.annualDaysUsed}">연차 누적 사용 일수</td>
+                        <td th:text="${dto.sickDaysUsed}">병가 사용 일수</td>
+                        <td th:text="${dto.otherDaysUsed}">기타 휴가 사용 일수</td>
+                        <td th:text="${dto.totalAnnual}">남아있는 연차 일수</td>
+
+                    </tr>
+                </th:block>
+                </tbody>
+            </table>
+        </div>
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-center">
+                <!-- Previous Page Link -->
+                <li class="page-item" th:classappend="${vacationHistoryDTOPage.number == 0 || vacationHistoryDTOPage.totalPages == 0} ? 'disabled'">
+                    <a class="page-link" th:href="@{|?page=${vacationHistoryDTOPage.number - 1 > 0 ? vacationHistoryDTOPage.number - 1 : 0}|}" aria-label="Previous" th:attr="aria-disabled=${vacationHistoryDTOPage.number == 0}">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+
+                <!-- Page Numbers -->
+                <li class="page-item" th:each="i : ${#numbers.sequence(0, vacationHistoryDTOPage.totalPages > 0 ? vacationHistoryDTOPage.totalPages - 1 : 0)}" th:classappend="${i == vacationHistoryDTOPage.number} ? 'active'">
+                    <a class="page-link" th:href="@{|?page=${i}|}" th:text="${i + 1}">1</a>
+                </li>
+
+                <!-- Next Page Link -->
+                <li class="page-item" th:classappend="${vacationHistoryDTOPage.number + 1 == vacationHistoryDTOPage.totalPages || vacationHistoryDTOPage.totalPages == 0} ? 'disabled'">
+                    <a class="page-link" th:href="@{|?page=${vacationHistoryDTOPage.number + 1}|}" aria-label="Next" th:attr="aria-disabled=${vacationHistoryDTOPage.number + 1 == vacationHistoryDTOPage.totalPages}">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>

@@ -1,6 +1,7 @@
 package kr.co.groupworks.notification.sse.sse.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Parameter;
 import kr.co.groupworks.employee.dto.SessionEmployeeDTO;
 import kr.co.groupworks.notification.sse.sse.connection.SseConnectionPool;
@@ -17,6 +18,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyEmitter
 import java.util.Optional;
 
 @Slf4j
+@Hidden
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(path = "/sse", produces = MediaType.TEXT_EVENT_STREAM_VALUE)

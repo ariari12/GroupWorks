@@ -1,4 +1,4 @@
-package kr.co.groupworks.calendar.controller;
+package kr.co.groupworks.common;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,15 +17,13 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 @Slf4j
 @Controller
-@RequestMapping("/calendar")
-public class FileDownloadController {
+@RequestMapping("/file")
+public class FileController {
     @Value("${file.upload-dir}")
     private String uploadDirectory;
 
-    @GetMapping("/fileDownload/{filename}")
+    @GetMapping("/download/{filename}")
     public ResponseEntity<Resource> download(@PathVariable String filename) throws UnsupportedEncodingException {
-        log.info("FileDownloadController - download");
-        log.info("filename: {}", filename);
         File file = new File(uploadDirectory + File.separator + filename);
         // 파일이 존재하지 않는다면
         if(!file.exists()){
@@ -41,7 +39,6 @@ public class FileDownloadController {
         headers.add(HttpHeaders.CONTENT_DISPOSITION,
                 "attachment; filename=\""+ encodingFileName+"\"");
         headers.add(HttpHeaders.CONTENT_LENGTH,String.valueOf(file.length()));
-        System.out.println("resource = " + resource);
         return ResponseEntity.ok().headers(headers).body(resource);
     }
 }
