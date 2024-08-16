@@ -44,7 +44,7 @@
 
 ## 구성도 
 - ERD
-    <img style="width: 1000px;" src="https://github.com/user-attachments/assets/838ef783-56b7-4fcc-afc3-8895c164c5ef">
+    <img style="width: 1000px;" src="https://github.com/user-attachments/assets/86af34bf-11fe-4ab7-824b-aabdfd3d8eab">
 - System Architecture
     <img src="https://github.com/user-attachments/assets/6bd76005-654f-4c12-9d87-dcbfad559fb5">
 
