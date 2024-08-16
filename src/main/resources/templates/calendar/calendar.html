@@ -154,6 +154,7 @@
                                         location: 'Some location'
                                     });
                                     $("#calendarModal").modal("hide");
+                                    location.reload(true);
                                 },
                                 error: function(xhr) {
                                     console.error("Error:", xhr);

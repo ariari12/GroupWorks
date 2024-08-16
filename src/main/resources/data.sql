@@ -320,313 +320,316 @@ values  (1, 11, '2024-08-16 17:46:40.659212', 1, 1, 100, 500, '0B3760541-I931-1'
 
 -- 1~10
 INSERT INTO groupworks.calendar (created_date, employee_id, last_modified_date, dtype, contents, end_date, start_date, title)
-VALUES ('2025-03-01 10:00:00', 5, '2025-03-01 10:00:00', 'Vacation', '휴가 1', '2025-09-01', '2025-03-02', '💊 병가');
+VALUES ('2025-03-01 10:00:00', 5, '2025-03-01 10:00:00', 'Vacation', '휴가 1', '2025-03-03', '2025-03-01', '🌴 연차');
 
 INSERT INTO groupworks.calendar (created_date, employee_id, last_modified_date, dtype, contents, end_date, start_date, title)
-VALUES ('2025-03-02 10:00:00', 7, '2025-03-02 10:00:00', 'Vacation', '휴가 2', '2025-09-04', '2025-03-03', '💼 기타');
+VALUES ('2025-03-04 10:00:00', 7, '2025-03-04 10:00:00', 'Vacation', '휴가 2', NULL, '2025-03-04', '🕒 반차');
 
 INSERT INTO groupworks.calendar (created_date, employee_id, last_modified_date, dtype, contents, end_date, start_date, title)
-VALUES ('2025-03-03 10:00:00', 1, '2025-03-03 10:00:00', 'Vacation', '휴가 3', '2025-09-07', '2025-03-04', '🌴 연차');
+VALUES ('2025-03-07 10:00:00', 1, '2025-03-07 10:00:00', 'Vacation', '휴가 3', '2025-03-09', '2025-03-07', '💊 병가');
 
 INSERT INTO groupworks.calendar (created_date, employee_id, last_modified_date, dtype, contents, end_date, start_date, title)
-VALUES ('2025-03-04 10:00:00', 3, '2025-03-04 10:00:00', 'Vacation', '휴가 4', '2025-09-10', '2025-03-05', '🕒 반차');
+VALUES ('2025-03-10 10:00:00', 3, '2025-03-10 10:00:00', 'Vacation', '휴가 4', '2025-03-12', '2025-03-10', '💼 기타');
 
 INSERT INTO groupworks.calendar (created_date, employee_id, last_modified_date, dtype, contents, end_date, start_date, title)
-VALUES ('2025-03-05 10:00:00', 9, '2025-03-05 10:00:00', 'Vacation', '휴가 5', '2025-09-13', '2025-03-06', '💊 병가');
+VALUES ('2025-03-13 10:00:00', 9, '2025-03-13 10:00:00', 'Vacation', '휴가 5', '2025-03-15', '2025-03-13', '🌴 연차');
 
 INSERT INTO groupworks.calendar (created_date, employee_id, last_modified_date, dtype, contents, end_date, start_date, title)
-VALUES ('2025-03-06 10:00:00', 4, '2025-03-06 10:00:00', 'Vacation', '휴가 6', '2025-09-16', '2025-03-07', '💼 기타');
+VALUES ('2025-03-16 10:00:00', 4, '2025-03-16 10:00:00', 'Vacation', '휴가 6', NULL, '2025-03-16', '🕒 반차');
 
 INSERT INTO groupworks.calendar (created_date, employee_id, last_modified_date, dtype, contents, end_date, start_date, title)
-VALUES ('2025-03-07 10:00:00', 6, '2025-03-07 10:00:00', 'Vacation', '휴가 7', '2025-09-19', '2025-03-08', '🌴 연차');
+VALUES ('2025-03-19 10:00:00', 6, '2025-03-19 10:00:00', 'Vacation', '휴가 7', '2025-03-22', '2025-03-19', '🌴 연차');
 
 INSERT INTO groupworks.calendar (created_date, employee_id, last_modified_date, dtype, contents, end_date, start_date, title)
-VALUES ('2025-03-08 10:00:00', 10, '2025-03-08 10:00:00', 'Vacation', '휴가 8', '2025-09-22', '2025-03-09', '🕒 반차');
+VALUES ('2025-03-23 10:00:00', 10, '2025-03-23 10:00:00', 'Vacation', '휴가 8', '2025-03-26', '2025-03-23', '💊 병가');
 
 INSERT INTO groupworks.calendar (created_date, employee_id, last_modified_date, dtype, contents, end_date, start_date, title)
-VALUES ('2025-03-09 10:00:00', 8, '2025-03-09 10:00:00', 'Vacation', '휴가 9', '2025-09-25', '2025-03-10', '💊 병가');
+VALUES ('2025-03-27 10:00:00', 8, '2025-03-27 10:00:00', 'Vacation', '휴가 9', '2025-03-30', '2025-03-27', '💼 기타');
 
 INSERT INTO groupworks.calendar (created_date, employee_id, last_modified_date, dtype, contents, end_date, start_date, title)
-VALUES ('2025-03-10 10:00:00', 2, '2025-03-10 10:00:00', 'Vacation', '휴가 10', '2025-09-28', '2025-03-11', '💼 기타');
+VALUES ('2025-03-31 10:00:00', 2, '2025-03-31 10:00:00', 'Vacation', '휴가 10', '2025-03-31', '2025-03-31', '🌴 연차');
 
 -- 11~20
 INSERT INTO groupworks.calendar (created_date, employee_id, last_modified_date, dtype, contents, end_date, start_date, title)
-VALUES ('2025-03-11 10:00:00', 5, '2025-03-11 10:00:00', 'Vacation', '휴가 11', '2025-09-30', '2025-03-12', '🌴 연차');
+VALUES ('2025-04-01 10:00:00', 5, '2025-04-01 10:00:00', 'Vacation', '휴가 11', NULL, '2025-04-01', '🕒 반차');
 
 INSERT INTO groupworks.calendar (created_date, employee_id, last_modified_date, dtype, contents, end_date, start_date, title)
-VALUES ('2025-03-12 10:00:00', 7, '2025-03-12 10:00:00', 'Vacation', '휴가 12', '2025-10-03', '2025-03-13', '🕒 반차');
+VALUES ('2025-04-05 10:00:00', 7, '2025-04-05 10:00:00', 'Vacation', '휴가 12', '2025-04-07', '2025-04-05', '💊 병가');
 
 INSERT INTO groupworks.calendar (created_date, employee_id, last_modified_date, dtype, contents, end_date, start_date, title)
-VALUES ('2025-03-13 10:00:00', 1, '2025-03-13 10:00:00', 'Vacation', '휴가 13', '2025-10-06', '2025-03-14', '💊 병가');
+VALUES ('2025-04-09 10:00:00', 1, '2025-04-09 10:00:00', 'Vacation', '휴가 13', '2025-04-12', '2025-04-09', '💼 기타');
 
 INSERT INTO groupworks.calendar (created_date, employee_id, last_modified_date, dtype, contents, end_date, start_date, title)
-VALUES ('2025-03-14 10:00:00', 3, '2025-03-14 10:00:00', 'Vacation', '휴가 14', '2025-10-09', '2025-03-15', '💼 기타');
+VALUES ('2025-04-13 10:00:00', 3, '2025-04-13 10:00:00', 'Vacation', '휴가 14', '2025-04-16', '2025-04-13', '🌴 연차');
 
 INSERT INTO groupworks.calendar (created_date, employee_id, last_modified_date, dtype, contents, end_date, start_date, title)
-VALUES ('2025-03-15 10:00:00', 9, '2025-03-15 10:00:00', 'Vacation', '휴가 15', '2025-10-12', '2025-03-16', '🌴 연차');
+VALUES ('2025-04-17 10:00:00', 9, '2025-04-17 10:00:00', 'Vacation', '휴가 15', NULL, '2025-04-17', '🕒 반차');
 
 INSERT INTO groupworks.calendar (created_date, employee_id, last_modified_date, dtype, contents, end_date, start_date, title)
-VALUES ('2025-03-16 10:00:00', 4, '2025-03-16 10:00:00', 'Vacation', '휴가 16', '2025-10-15', '2025-03-17', '🕒 반차');
+VALUES ('2025-04-21 10:00:00', 4, '2025-04-21 10:00:00', 'Vacation', '휴가 16', '2025-04-23', '2025-04-21', '🌴 연차');
 
 INSERT INTO groupworks.calendar (created_date, employee_id, last_modified_date, dtype, contents, end_date, start_date, title)
-VALUES ('2025-03-17 10:00:00', 6, '2025-03-17 10:00:00', 'Vacation', '휴가 17', '2025-10-18', '2025-03-18', '💊 병가');
+VALUES ('2025-04-25 10:00:00', 6, '2025-04-25 10:00:00', 'Vacation', '휴가 17', '2025-04-27', '2025-04-25', '💊 병가');
 
 INSERT INTO groupworks.calendar (created_date, employee_id, last_modified_date, dtype, contents, end_date, start_date, title)
-VALUES ('2025-03-18 10:00:00', 10, '2025-03-18 10:00:00', 'Vacation', '휴가 18', '2025-10-21', '2025-03-19', '💼 기타');
+VALUES ('2025-04-29 10:00:00', 10, '2025-04-29 10:00:00', 'Vacation', '휴가 18', '2025-04-30', '2025-04-29', '💼 기타');
 
 INSERT INTO groupworks.calendar (created_date, employee_id, last_modified_date, dtype, contents, end_date, start_date, title)
-VALUES ('2025-03-19 10:00:00', 8, '2025-03-19 10:00:00', 'Vacation', '휴가 19', '2025-10-24', '2025-03-20', '🌴 연차');
+VALUES ('2025-05-01 10:00:00', 8, '2025-05-01 10:00:00', 'Vacation', '휴가 19', '2025-05-04', '2025-05-01', '🌴 연차');
 
 INSERT INTO groupworks.calendar (created_date, employee_id, last_modified_date, dtype, contents, end_date, start_date, title)
-VALUES ('2025-03-20 10:00:00', 2, '2025-03-20 10:00:00', 'Vacation', '휴가 20', '2025-10-27', '2025-03-21', '🕒 반차');
+VALUES ('2025-05-07 10:00:00', 2, '2025-05-07 10:00:00', 'Vacation', '휴가 20', NULL, '2025-05-07', '🕒 반차');
 
 -- 21~30
 INSERT INTO groupworks.calendar (created_date, employee_id, last_modified_date, dtype, contents, end_date, start_date, title)
-VALUES ('2025-03-21 10:00:00', 5, '2025-03-21 10:00:00', 'Vacation', '휴가 21', '2025-10-30', '2025-03-22', '💊 병가');
+VALUES ('2025-05-08 10:00:00', 5, '2025-05-08 10:00:00', 'Vacation', '휴가 21', '2025-05-10', '2025-05-08', '💊 병가');
 
 INSERT INTO groupworks.calendar (created_date, employee_id, last_modified_date, dtype, contents, end_date, start_date, title)
-VALUES ('2025-03-22 10:00:00', 7, '2025-03-22 10:00:00', 'Vacation', '휴가 22', '2025-11-02', '2025-03-23', '💼 기타');
+VALUES ('2025-05-11 10:00:00', 7, '2025-05-11 10:00:00', 'Vacation', '휴가 22', '2025-05-14', '2025-05-11', '💼 기타');
 
 INSERT INTO groupworks.calendar (created_date, employee_id, last_modified_date, dtype, contents, end_date, start_date, title)
-VALUES ('2025-03-23 10:00:00', 1, '2025-03-23 10:00:00', 'Vacation', '휴가 23', '2025-11-05', '2025-03-24', '🌴 연차');
+VALUES ('2025-05-15 10:00:00', 1, '2025-05-15 10:00:00', 'Vacation', '휴가 23', '2025-05-17', '2025-05-15', '🌴 연차');
 
 INSERT INTO groupworks.calendar (created_date, employee_id, last_modified_date, dtype, contents, end_date, start_date, title)
-VALUES ('2025-03-24 10:00:00', 3, '2025-03-24 10:00:00', 'Vacation', '휴가 24', '2025-11-08', '2025-03-25', '🕒 반차');
+VALUES ('2025-05-18 10:00:00', 3, '2025-05-18 10:00:00', 'Vacation', '휴가 24', NULL, '2025-05-18', '🕒 반차');
 
 INSERT INTO groupworks.calendar (created_date, employee_id, last_modified_date, dtype, contents, end_date, start_date, title)
-VALUES ('2025-03-25 10:00:00', 9, '2025-03-25 10:00:00', 'Vacation', '휴가 25', '2025-11-11', '2025-03-26', '💊 병가');
+VALUES ('2025-05-21 10:00:00', 9, '2025-05-21 10:00:00', 'Vacation', '휴가 25', '2025-05-23', '2025-05-21', '🌴 연차');
+
+-- 26~30
+INSERT INTO groupworks.calendar (created_date, employee_id, last_modified_date, dtype, contents, end_date, start_date, title)
+VALUES ('2025-05-01 10:00:00', 6, '2025-05-01 10:00:00', 'Vacation', '휴가 26', '2025-05-03', '2025-05-01', '💊 병가');
 
 INSERT INTO groupworks.calendar (created_date, employee_id, last_modified_date, dtype, contents, end_date, start_date, title)
-VALUES ('2025-03-26 10:00:00', 4, '2025-03-26 10:00:00', 'Vacation', '휴가 26', '2025-11-14', '2025-03-27', '💼 기타');
+VALUES ('2025-05-04 10:00:00', 7, '2025-05-04 10:00:00', 'Vacation', '휴가 27', '2025-05-07', '2025-05-04', '💼 기타');
 
 INSERT INTO groupworks.calendar (created_date, employee_id, last_modified_date, dtype, contents, end_date, start_date, title)
-VALUES ('2025-03-27 10:00:00', 6, '2025-03-27 10:00:00', 'Vacation', '휴가 27', '2025-11-17', '2025-03-28', '🌴 연차');
+VALUES ('2025-05-08 10:00:00', 1, '2025-05-08 10:00:00', 'Vacation', '휴가 28', '2025-05-10', '2025-05-08', '🌴 연차');
 
 INSERT INTO groupworks.calendar (created_date, employee_id, last_modified_date, dtype, contents, end_date, start_date, title)
-VALUES ('2025-03-28 10:00:00', 10, '2025-03-28 10:00:00', 'Vacation', '휴가 28', '2025-11-20', '2025-03-29', '🕒 반차');
+VALUES ('2025-05-11 10:00:00', 8, '2025-05-11 10:00:00', 'Vacation', '휴가 29', NULL, '2025-05-11', '🕒 반차');
 
 INSERT INTO groupworks.calendar (created_date, employee_id, last_modified_date, dtype, contents, end_date, start_date, title)
-VALUES ('2025-03-29 10:00:00', 8, '2025-03-29 10:00:00', 'Vacation', '휴가 29', '2025-11-23', '2025-03-30', '💊 병가');
+VALUES ('2025-05-14 10:00:00', 5, '2025-05-14 10:00:00', 'Vacation', '휴가 30', '2025-05-16', '2025-05-14', '🌴 연차');
+
+-- 31~35
+INSERT INTO groupworks.calendar (created_date, employee_id, last_modified_date, dtype, contents, end_date, start_date, title)
+VALUES ('2025-05-17 10:00:00', 6, '2025-05-17 10:00:00', 'Vacation', '휴가 31', '2025-05-19', '2025-05-17', '💊 병가');
 
 INSERT INTO groupworks.calendar (created_date, employee_id, last_modified_date, dtype, contents, end_date, start_date, title)
-VALUES ('2025-03-30 10:00:00', 2, '2025-03-30 10:00:00', 'Vacation', '휴가 30', '2025-11-26', '2025-03-31', '💼 기타');
-
--- 31~40
-INSERT INTO groupworks.calendar (created_date, employee_id, last_modified_date, dtype, contents, end_date, start_date, title)
-VALUES ('2025-03-31 10:00:00', 5, '2025-03-31 10:00:00', 'Vacation', '휴가 31', '2025-11-29', '2025-04-01', '🌴 연차');
+VALUES ('2025-05-20 10:00:00', 7, '2025-05-20 10:00:00', 'Vacation', '휴가 32', '2025-05-23', '2025-05-20', '💼 기타');
 
 INSERT INTO groupworks.calendar (created_date, employee_id, last_modified_date, dtype, contents, end_date, start_date, title)
-VALUES ('2025-04-01 10:00:00', 7, '2025-04-01 10:00:00', 'Vacation', '휴가 32', '2025-12-02', '2025-04-02', '🕒 반차');
+VALUES ('2025-05-24 10:00:00', 1, '2025-05-24 10:00:00', 'Vacation', '휴가 33', '2025-05-26', '2025-05-24', '🌴 연차');
 
 INSERT INTO groupworks.calendar (created_date, employee_id, last_modified_date, dtype, contents, end_date, start_date, title)
-VALUES ('2025-04-02 10:00:00', 1, '2025-04-02 10:00:00', 'Vacation', '휴가 33', '2025-12-05', '2025-04-03', '💊 병가');
+VALUES ('2025-05-27 10:00:00', 8, '2025-05-27 10:00:00', 'Vacation', '휴가 34', NULL, '2025-05-27', '🕒 반차');
 
 INSERT INTO groupworks.calendar (created_date, employee_id, last_modified_date, dtype, contents, end_date, start_date, title)
-VALUES ('2025-04-03 10:00:00', 3, '2025-04-03 10:00:00', 'Vacation', '휴가 34', '2025-12-08', '2025-04-04', '💼 기타');
+VALUES ('2025-05-30 10:00:00', 5, '2025-05-30 10:00:00', 'Vacation', '휴가 35', '2025-06-01', '2025-05-30', '🌴 연차');
+
+-- 36~40
+INSERT INTO groupworks.calendar (created_date, employee_id, last_modified_date, dtype, contents, end_date, start_date, title)
+VALUES ('2025-06-02 10:00:00', 6, '2025-06-02 10:00:00', 'Vacation', '휴가 36', '2025-06-04', '2025-06-02', '💊 병가');
 
 INSERT INTO groupworks.calendar (created_date, employee_id, last_modified_date, dtype, contents, end_date, start_date, title)
-VALUES ('2025-04-04 10:00:00', 9, '2025-04-04 10:00:00', 'Vacation', '휴가 35', '2025-12-11', '2025-04-05', '🌴 연차');
+VALUES ('2025-06-05 10:00:00', 7, '2025-06-05 10:00:00', 'Vacation', '휴가 37', '2025-06-08', '2025-06-05', '💼 기타');
 
 INSERT INTO groupworks.calendar (created_date, employee_id, last_modified_date, dtype, contents, end_date, start_date, title)
-VALUES ('2025-04-05 10:00:00', 4, '2025-04-05 10:00:00', 'Vacation', '휴가 36', '2025-12-14', '2025-04-06', '🕒 반차');
+VALUES ('2025-06-09 10:00:00', 1, '2025-06-09 10:00:00', 'Vacation', '휴가 38', '2025-06-11', '2025-06-09', '🌴 연차');
 
 INSERT INTO groupworks.calendar (created_date, employee_id, last_modified_date, dtype, contents, end_date, start_date, title)
-VALUES ('2025-04-06 10:00:00', 6, '2025-04-06 10:00:00', 'Vacation', '휴가 37', '2025-12-17', '2025-04-07', '💊 병가');
+VALUES ('2025-06-12 10:00:00', 8, '2025-06-12 10:00:00', 'Vacation', '휴가 39', NULL, '2025-06-12', '🕒 반차');
 
 INSERT INTO groupworks.calendar (created_date, employee_id, last_modified_date, dtype, contents, end_date, start_date, title)
-VALUES ('2025-04-07 10:00:00', 10, '2025-04-07 10:00:00', 'Vacation', '휴가 38', '2025-12-20', '2025-04-08', '💼 기타');
+VALUES ('2025-06-15 10:00:00', 5, '2025-06-15 10:00:00', 'Vacation', '휴가 40', '2025-06-17', '2025-06-15', '💊 병가');
+
+-- 41~45
+INSERT INTO groupworks.calendar (created_date, employee_id, last_modified_date, dtype, contents, end_date, start_date, title)
+VALUES ('2025-06-18 10:00:00', 6, '2025-06-18 10:00:00', 'Vacation', '휴가 41', '2025-06-21', '2025-06-18', '💼 기타');
 
 INSERT INTO groupworks.calendar (created_date, employee_id, last_modified_date, dtype, contents, end_date, start_date, title)
-VALUES ('2025-04-08 10:00:00', 8, '2025-04-08 10:00:00', 'Vacation', '휴가 39', '2025-12-23', '2025-04-09', '🌴 연차');
+VALUES ('2025-06-22 10:00:00', 7, '2025-06-22 10:00:00', 'Vacation', '휴가 42', '2025-06-24', '2025-06-22', '🌴 연차');
 
 INSERT INTO groupworks.calendar (created_date, employee_id, last_modified_date, dtype, contents, end_date, start_date, title)
-VALUES ('2025-04-09 10:00:00', 2, '2025-04-09 10:00:00', 'Vacation', '휴가 40', '2025-12-26', '2025-04-10', '🕒 반차');
+VALUES ('2025-06-25 10:00:00', 1, '2025-06-25 10:00:00', 'Vacation', '휴가 43', NULL, '2025-06-25', '🕒 반차');
 
--- 41~50
+-- 44~50
 INSERT INTO groupworks.calendar (created_date, employee_id, last_modified_date, dtype, contents, end_date, start_date, title)
-VALUES ('2025-04-10 10:00:00', 5, '2025-04-10 10:00:00', 'Vacation', '휴가 41', '2025-12-29', '2025-04-11', '💊 병가');
-
-INSERT INTO groupworks.calendar (created_date, employee_id, last_modified_date, dtype, contents, end_date, start_date, title)
-VALUES ('2025-04-11 10:00:00', 7, '2025-04-11 10:00:00', 'Vacation', '휴가 42', '2026-01-01', '2025-04-12', '💼 기타');
+VALUES ('2025-06-21 10:00:00', 3, '2025-06-21 10:00:00', 'Vacation', '휴가 44', '2025-06-23', '2025-06-21', '🌴 연차');
 
 INSERT INTO groupworks.calendar (created_date, employee_id, last_modified_date, dtype, contents, end_date, start_date, title)
-VALUES ('2025-04-12 10:00:00', 1, '2025-04-12 10:00:00', 'Vacation', '휴가 43', '2026-01-04', '2025-04-13', '🌴 연차');
+VALUES ('2025-06-24 10:00:00', 9, '2025-06-24 10:00:00', 'Vacation', '휴가 45', '2025-06-26', '2025-06-24', '💊 병가');
 
 INSERT INTO groupworks.calendar (created_date, employee_id, last_modified_date, dtype, contents, end_date, start_date, title)
-VALUES ('2025-04-13 10:00:00', 3, '2025-04-13 10:00:00', 'Vacation', '휴가 44', '2026-01-07', '2025-04-14', '🕒 반차');
+VALUES ('2025-06-27 10:00:00', 4, '2025-06-27 10:00:00', 'Vacation', '휴가 46', '2025-06-30', '2025-06-27', '💼 기타');
 
 INSERT INTO groupworks.calendar (created_date, employee_id, last_modified_date, dtype, contents, end_date, start_date, title)
-VALUES ('2025-04-14 10:00:00', 9, '2025-04-14 10:00:00', 'Vacation', '휴가 45', '2026-01-10', '2025-04-15', '💊 병가');
+VALUES ('2025-07-01 10:00:00', 6, '2025-07-01 10:00:00', 'Vacation', '휴가 47', '2025-07-03', '2025-07-01', '🌴 연차');
 
 INSERT INTO groupworks.calendar (created_date, employee_id, last_modified_date, dtype, contents, end_date, start_date, title)
-VALUES ('2025-04-15 10:00:00', 4, '2025-04-15 10:00:00', 'Vacation', '휴가 46', '2026-01-13', '2025-04-16', '💼 기타');
+VALUES ('2025-07-04 10:00:00', 10, '2025-07-04 10:00:00', 'Vacation', '휴가 48', NULL, '2025-07-04', '🕒 반차');
 
 INSERT INTO groupworks.calendar (created_date, employee_id, last_modified_date, dtype, contents, end_date, start_date, title)
-VALUES ('2025-04-16 10:00:00', 6, '2025-04-16 10:00:00', 'Vacation', '휴가 47', '2026-01-16', '2025-04-17', '🌴 연차');
+VALUES ('2025-07-07 10:00:00', 8, '2025-07-07 10:00:00', 'Vacation', '휴가 49', '2025-07-09', '2025-07-07', '💊 병가');
 
 INSERT INTO groupworks.calendar (created_date, employee_id, last_modified_date, dtype, contents, end_date, start_date, title)
-VALUES ('2025-04-17 10:00:00', 10, '2025-04-17 10:00:00', 'Vacation', '휴가 48', '2026-01-19', '2025-04-18', '🕒 반차');
-
-INSERT INTO groupworks.calendar (created_date, employee_id, last_modified_date, dtype, contents, end_date, start_date, title)
-VALUES ('2025-04-18 10:00:00', 8, '2025-04-18 10:00:00', 'Vacation', '휴가 49', '2026-01-22', '2025-04-19', '💊 병가');
-
-INSERT INTO groupworks.calendar (created_date, employee_id, last_modified_date, dtype, contents, end_date, start_date, title)
-VALUES ('2025-04-19 10:00:00', 2, '2025-04-19 10:00:00', 'Vacation', '휴가 50', '2026-01-25', '2025-04-20', '💼 기타');
+VALUES ('2025-07-10 10:00:00', 2, '2025-07-10 10:00:00', 'Vacation', '휴가 50', '2025-07-12', '2025-07-10', '💼 기타');
 
 -- 51~60
 INSERT INTO groupworks.calendar (created_date, employee_id, last_modified_date, dtype, contents, end_date, start_date, title)
-VALUES ('2025-04-20 10:00:00', 5, '2025-04-20 10:00:00', 'Vacation', '휴가 51', '2026-01-28', '2025-04-21', '🌴 연차');
+VALUES ('2025-08-19 10:00:00', 5, '2025-08-19 10:00:00', 'Vacation', '휴가 51', '2025-08-21', '2025-08-19', '🌴 연차');
 
 INSERT INTO groupworks.calendar (created_date, employee_id, last_modified_date, dtype, contents, end_date, start_date, title)
-VALUES ('2025-04-21 10:00:00', 7, '2025-04-21 10:00:00', 'Vacation', '휴가 52', '2026-01-31', '2025-04-22', '🕒 반차');
+VALUES ('2025-08-22 10:00:00', 7, '2025-08-22 10:00:00', 'Vacation', '휴가 52', '2025-08-24', '2025-08-22', '🕒 반차');
 
 INSERT INTO groupworks.calendar (created_date, employee_id, last_modified_date, dtype, contents, end_date, start_date, title)
-VALUES ('2025-04-22 10:00:00', 1, '2025-04-22 10:00:00', 'Vacation', '휴가 53', '2026-02-03', '2025-04-23', '💊 병가');
+VALUES ('2025-08-25 10:00:00', 1, '2025-08-25 10:00:00', 'Vacation', '휴가 53', '2025-08-27', '2025-08-25', '💊 병가');
 
 INSERT INTO groupworks.calendar (created_date, employee_id, last_modified_date, dtype, contents, end_date, start_date, title)
-VALUES ('2025-04-23 10:00:00', 3, '2025-04-23 10:00:00', 'Vacation', '휴가 54', '2026-02-06', '2025-04-24', '💼 기타');
+VALUES ('2025-08-28 10:00:00', 3, '2025-08-28 10:00:00', 'Vacation', '휴가 54', '2025-08-30', '2025-08-28', '💼 기타');
 
 INSERT INTO groupworks.calendar (created_date, employee_id, last_modified_date, dtype, contents, end_date, start_date, title)
-VALUES ('2025-04-24 10:00:00', 9, '2025-04-24 10:00:00', 'Vacation', '휴가 55', '2026-02-09', '2025-04-25', '🌴 연차');
+VALUES ('2025-09-01 10:00:00', 9, '2025-09-01 10:00:00', 'Vacation', '휴가 55', '2025-09-04', '2025-09-01', '🌴 연차');
 
 INSERT INTO groupworks.calendar (created_date, employee_id, last_modified_date, dtype, contents, end_date, start_date, title)
-VALUES ('2025-04-25 10:00:00', 4, '2025-04-25 10:00:00', 'Vacation', '휴가 56', '2026-02-12', '2025-04-26', '🕒 반차');
+VALUES ('2025-09-05 10:00:00', 4, '2025-09-05 10:00:00', 'Vacation', '휴가 56', '2025-09-07', '2025-09-05', '🕒 반차');
 
 INSERT INTO groupworks.calendar (created_date, employee_id, last_modified_date, dtype, contents, end_date, start_date, title)
-VALUES ('2025-04-26 10:00:00', 6, '2025-04-26 10:00:00', 'Vacation', '휴가 57', '2026-02-15', '2025-04-27', '💊 병가');
+VALUES ('2025-09-08 10:00:00', 6, '2025-09-08 10:00:00', 'Vacation', '휴가 57', '2025-09-10', '2025-09-08', '💊 병가');
 
 INSERT INTO groupworks.calendar (created_date, employee_id, last_modified_date, dtype, contents, end_date, start_date, title)
-VALUES ('2025-04-27 10:00:00', 10, '2025-04-27 10:00:00', 'Vacation', '휴가 58', '2026-02-18', '2025-04-28', '💼 기타');
+VALUES ('2025-09-11 10:00:00', 10, '2025-09-11 10:00:00', 'Vacation', '휴가 58', '2025-09-13', '2025-09-11', '💼 기타');
 
 INSERT INTO groupworks.calendar (created_date, employee_id, last_modified_date, dtype, contents, end_date, start_date, title)
-VALUES ('2025-04-28 10:00:00', 8, '2025-04-28 10:00:00', 'Vacation', '휴가 59', '2026-02-21', '2025-04-29', '🌴 연차');
+VALUES ('2025-09-14 10:00:00', 8, '2025-09-14 10:00:00', 'Vacation', '휴가 59', '2025-09-16', '2025-09-14', '🌴 연차');
 
 INSERT INTO groupworks.calendar (created_date, employee_id, last_modified_date, dtype, contents, end_date, start_date, title)
-VALUES ('2025-04-29 10:00:00', 2, '2025-04-29 10:00:00', 'Vacation', '휴가 60', '2026-02-24', '2025-04-30', '🕒 반차');
+VALUES ('2025-09-17 10:00:00', 2, '2025-09-17 10:00:00', 'Vacation', '휴가 60', '2025-09-19', '2025-09-17', '🕒 반차');
 
 -- 61~70
 INSERT INTO groupworks.calendar (created_date, employee_id, last_modified_date, dtype, contents, end_date, start_date, title)
-VALUES ('2025-04-30 10:00:00', 5, '2025-04-30 10:00:00', 'Vacation', '휴가 61', '2026-02-27', '2025-05-01', '💊 병가');
+VALUES ('2025-09-20 10:00:00', 5, '2025-09-20 10:00:00', 'Vacation', '휴가 61', '2025-09-22', '2025-09-20', '💊 병가');
 
 INSERT INTO groupworks.calendar (created_date, employee_id, last_modified_date, dtype, contents, end_date, start_date, title)
-VALUES ('2025-05-01 10:00:00', 7, '2025-05-01 10:00:00', 'Vacation', '휴가 62', '2026-03-01', '2025-05-02', '💼 기타');
+VALUES ('2025-09-23 10:00:00', 7, '2025-09-23 10:00:00', 'Vacation', '휴가 62', '2025-09-26', '2025-09-23', '💼 기타');
 
 INSERT INTO groupworks.calendar (created_date, employee_id, last_modified_date, dtype, contents, end_date, start_date, title)
-VALUES ('2025-05-02 10:00:00', 1, '2025-05-02 10:00:00', 'Vacation', '휴가 63', '2026-03-04', '2025-05-03', '🌴 연차');
+VALUES ('2025-09-27 10:00:00', 1, '2025-09-27 10:00:00', 'Vacation', '휴가 63', '2025-09-30', '2025-09-27', '🌴 연차');
 
 INSERT INTO groupworks.calendar (created_date, employee_id, last_modified_date, dtype, contents, end_date, start_date, title)
-VALUES ('2025-05-03 10:00:00', 3, '2025-05-03 10:00:00', 'Vacation', '휴가 64', '2026-03-07', '2025-05-04', '🕒 반차');
+VALUES ('2025-10-01 10:00:00', 3, '2025-10-01 10:00:00', 'Vacation', '휴가 64', '2025-10-03', '2025-10-01', '🕒 반차');
 
 INSERT INTO groupworks.calendar (created_date, employee_id, last_modified_date, dtype, contents, end_date, start_date, title)
-VALUES ('2025-05-04 10:00:00', 9, '2025-05-04 10:00:00', 'Vacation', '휴가 65', '2026-03-10', '2025-05-05', '💊 병가');
+VALUES ('2025-10-04 10:00:00', 9, '2025-10-04 10:00:00', 'Vacation', '휴가 65', '2025-10-07', '2025-10-04', '💊 병가');
 
 INSERT INTO groupworks.calendar (created_date, employee_id, last_modified_date, dtype, contents, end_date, start_date, title)
-VALUES ('2025-05-05 10:00:00', 4, '2025-05-05 10:00:00', 'Vacation', '휴가 66', '2026-03-13', '2025-05-06', '💼 기타');
+VALUES ('2025-10-08 10:00:00', 4, '2025-10-08 10:00:00', 'Vacation', '휴가 66', '2025-10-10', '2025-10-08', '💼 기타');
 
 INSERT INTO groupworks.calendar (created_date, employee_id, last_modified_date, dtype, contents, end_date, start_date, title)
-VALUES ('2025-05-06 10:00:00', 6, '2025-05-06 10:00:00', 'Vacation', '휴가 67', '2026-03-16', '2025-05-07', '🌴 연차');
+VALUES ('2025-10-11 10:00:00', 6, '2025-10-11 10:00:00', 'Vacation', '휴가 67', '2025-10-13', '2025-10-11', '🌴 연차');
 
 INSERT INTO groupworks.calendar (created_date, employee_id, last_modified_date, dtype, contents, end_date, start_date, title)
-VALUES ('2025-05-07 10:00:00', 10, '2025-05-07 10:00:00', 'Vacation', '휴가 68', '2026-03-19', '2025-05-08', '🕒 반차');
+VALUES ('2025-10-14 10:00:00', 10, '2025-10-14 10:00:00', 'Vacation', '휴가 68', '2025-10-17', '2025-10-14', '🕒 반차');
 
 INSERT INTO groupworks.calendar (created_date, employee_id, last_modified_date, dtype, contents, end_date, start_date, title)
-VALUES ('2025-05-08 10:00:00', 8, '2025-05-08 10:00:00', 'Vacation', '휴가 69', '2026-03-22', '2025-05-09', '💊 병가');
+VALUES ('2025-10-18 10:00:00', 8, '2025-10-18 10:00:00', 'Vacation', '휴가 69', '2025-10-21', '2025-10-18', '💊 병가');
 
 INSERT INTO groupworks.calendar (created_date, employee_id, last_modified_date, dtype, contents, end_date, start_date, title)
-VALUES ('2025-05-09 10:00:00', 2, '2025-05-09 10:00:00', 'Vacation', '휴가 70', '2026-03-25', '2025-05-10', '💼 기타');
+VALUES ('2025-10-22 10:00:00', 2, '2025-10-22 10:00:00', 'Vacation', '휴가 70', '2025-10-24', '2025-10-22', '💼 기타');
 
 -- 71~80
 INSERT INTO groupworks.calendar (created_date, employee_id, last_modified_date, dtype, contents, end_date, start_date, title)
-VALUES ('2025-05-10 10:00:00', 5, '2025-05-10 10:00:00', 'Vacation', '휴가 71', '2026-03-28', '2025-05-11', '🌴 연차');
+VALUES ('2025-10-25 10:00:00', 5, '2025-10-25 10:00:00', 'Vacation', '휴가 71', '2025-10-27', '2025-10-25', '🌴 연차');
 
 INSERT INTO groupworks.calendar (created_date, employee_id, last_modified_date, dtype, contents, end_date, start_date, title)
-VALUES ('2025-05-11 10:00:00', 7, '2025-05-11 10:00:00', 'Vacation', '휴가 72', '2026-04-01', '2025-05-12', '🕒 반차');
+VALUES ('2025-10-28 10:00:00', 7, '2025-10-28 10:00:00', 'Vacation', '휴가 72', '2025-10-30', '2025-10-28', '🕒 반차');
 
 INSERT INTO groupworks.calendar (created_date, employee_id, last_modified_date, dtype, contents, end_date, start_date, title)
-VALUES ('2025-05-12 10:00:00', 1, '2025-05-12 10:00:00', 'Vacation', '휴가 73', '2026-04-04', '2025-05-13', '💊 병가');
+VALUES ('2025-11-01 10:00:00', 1, '2025-11-01 10:00:00', 'Vacation', '휴가 73', '2025-11-04', '2025-11-01', '💊 병가');
 
 INSERT INTO groupworks.calendar (created_date, employee_id, last_modified_date, dtype, contents, end_date, start_date, title)
-VALUES ('2025-05-13 10:00:00', 3, '2025-05-13 10:00:00', 'Vacation', '휴가 74', '2026-04-07', '2025-05-14', '💼 기타');
+VALUES ('2025-11-05 10:00:00', 3, '2025-11-05 10:00:00', 'Vacation', '휴가 74', '2025-11-07', '2025-11-05', '💼 기타');
 
 INSERT INTO groupworks.calendar (created_date, employee_id, last_modified_date, dtype, contents, end_date, start_date, title)
-VALUES ('2025-05-14 10:00:00', 9, '2025-05-14 10:00:00', 'Vacation', '휴가 75', '2026-04-10', '2025-05-15', '🌴 연차');
+VALUES ('2025-11-08 10:00:00', 9, '2025-11-08 10:00:00', 'Vacation', '휴가 75', '2025-11-11', '2025-11-08', '🌴 연차');
 
 INSERT INTO groupworks.calendar (created_date, employee_id, last_modified_date, dtype, contents, end_date, start_date, title)
-VALUES ('2025-05-15 10:00:00', 4, '2025-05-15 10:00:00', 'Vacation', '휴가 76', '2026-04-13', '2025-05-16', '🕒 반차');
+VALUES ('2025-11-12 10:00:00', 4, '2025-11-12 10:00:00', 'Vacation', '휴가 76', '2025-11-14', '2025-11-12', '🕒 반차');
 
 INSERT INTO groupworks.calendar (created_date, employee_id, last_modified_date, dtype, contents, end_date, start_date, title)
-VALUES ('2025-05-16 10:00:00', 6, '2025-05-16 10:00:00', 'Vacation', '휴가 77', '2026-04-16', '2025-05-17', '💊 병가');
+VALUES ('2025-11-15 10:00:00', 6, '2025-11-15 10:00:00', 'Vacation', '휴가 77', '2025-11-17', '2025-11-15', '💊 병가');
 
 INSERT INTO groupworks.calendar (created_date, employee_id, last_modified_date, dtype, contents, end_date, start_date, title)
-VALUES ('2025-05-17 10:00:00', 10, '2025-05-17 10:00:00', 'Vacation', '휴가 78', '2026-04-19', '2025-05-18', '💼 기타');
+VALUES ('2025-11-18 10:00:00', 10, '2025-11-18 10:00:00', 'Vacation', '휴가 78', '2025-11-21', '2025-11-18', '💼 기타');
 
 INSERT INTO groupworks.calendar (created_date, employee_id, last_modified_date, dtype, contents, end_date, start_date, title)
-VALUES ('2025-05-18 10:00:00', 8, '2025-05-18 10:00:00', 'Vacation', '휴가 79', '2026-04-22', '2025-05-19', '🌴 연차');
+VALUES ('2025-11-22 10:00:00', 8, '2025-11-22 10:00:00', 'Vacation', '휴가 79', '2025-11-25', '2025-11-22', '🌴 연차');
 
 INSERT INTO groupworks.calendar (created_date, employee_id, last_modified_date, dtype, contents, end_date, start_date, title)
-VALUES ('2025-05-19 10:00:00', 2, '2025-05-19 10:00:00', 'Vacation', '휴가 80', '2026-04-25', '2025-05-20', '🕒 반차');
+VALUES ('2025-11-26 10:00:00', 2, '2025-11-26 10:00:00', 'Vacation', '휴가 80', '2025-11-28', '2025-11-26', '🕒 반차');
 
 -- 81~90
 INSERT INTO groupworks.calendar (created_date, employee_id, last_modified_date, dtype, contents, end_date, start_date, title)
-VALUES ('2025-05-20 10:00:00', 5, '2025-05-20 10:00:00', 'Vacation', '휴가 81', '2026-04-28', '2025-05-21', '💊 병가');
+VALUES ('2025-11-29 10:00:00', 5, '2025-11-29 10:00:00', 'Vacation', '휴가 81', '2025-12-01', '2025-11-29', '💊 병가');
 
 INSERT INTO groupworks.calendar (created_date, employee_id, last_modified_date, dtype, contents, end_date, start_date, title)
-VALUES ('2025-05-21 10:00:00', 7, '2025-05-21 10:00:00', 'Vacation', '휴가 82', '2026-05-01', '2025-05-22', '💼 기타');
+VALUES ('2025-12-02 10:00:00', 7, '2025-12-02 10:00:00', 'Vacation', '휴가 82', '2025-12-04', '2025-12-02', '💼 기타');
 
 INSERT INTO groupworks.calendar (created_date, employee_id, last_modified_date, dtype, contents, end_date, start_date, title)
-VALUES ('2025-05-22 10:00:00', 1, '2025-05-22 10:00:00', 'Vacation', '휴가 83', '2026-05-04', '2025-05-23', '🌴 연차');
+VALUES ('2025-12-05 10:00:00', 1, '2025-12-05 10:00:00', 'Vacation', '휴가 83', '2025-12-08', '2025-12-05', '🌴 연차');
 
 INSERT INTO groupworks.calendar (created_date, employee_id, last_modified_date, dtype, contents, end_date, start_date, title)
-VALUES ('2025-05-23 10:00:00', 3, '2025-05-23 10:00:00', 'Vacation', '휴가 84', '2026-05-07', '2025-05-24', '🕒 반차');
+VALUES ('2025-12-09 10:00:00', 3, '2025-12-09 10:00:00', 'Vacation', '휴가 84', '2025-12-11', '2025-12-09', '🕒 반차');
 
 INSERT INTO groupworks.calendar (created_date, employee_id, last_modified_date, dtype, contents, end_date, start_date, title)
-VALUES ('2025-05-24 10:00:00', 9, '2025-05-24 10:00:00', 'Vacation', '휴가 85', '2026-05-10', '2025-05-25', '💊 병가');
+VALUES ('2025-12-12 10:00:00', 9, '2025-12-12 10:00:00', 'Vacation', '휴가 85', '2025-12-15', '2025-12-12', '💊 병가');
 
 INSERT INTO groupworks.calendar (created_date, employee_id, last_modified_date, dtype, contents, end_date, start_date, title)
-VALUES ('2025-05-25 10:00:00', 4, '2025-05-25 10:00:00', 'Vacation', '휴가 86', '2026-05-13', '2025-05-26', '💼 기타');
+VALUES ('2025-12-16 10:00:00', 4, '2025-12-16 10:00:00', 'Vacation', '휴가 86', '2025-12-18', '2025-12-16', '💼 기타');
 
 INSERT INTO groupworks.calendar (created_date, employee_id, last_modified_date, dtype, contents, end_date, start_date, title)
-VALUES ('2025-05-26 10:00:00', 6, '2025-05-26 10:00:00', 'Vacation', '휴가 87', '2026-05-16', '2025-05-27', '🌴 연차');
+VALUES ('2025-12-19 10:00:00', 6, '2025-12-19 10:00:00', 'Vacation', '휴가 87', '2025-12-21', '2025-12-19', '🌴 연차');
 
 INSERT INTO groupworks.calendar (created_date, employee_id, last_modified_date, dtype, contents, end_date, start_date, title)
-VALUES ('2025-05-27 10:00:00', 10, '2025-05-27 10:00:00', 'Vacation', '휴가 88', '2026-05-19', '2025-05-28', '🕒 반차');
+VALUES ('2025-12-22 10:00:00', 10, '2025-12-22 10:00:00', 'Vacation', '휴가 88', '2025-12-24', '2025-12-22', '🕒 반차');
 
 INSERT INTO groupworks.calendar (created_date, employee_id, last_modified_date, dtype, contents, end_date, start_date, title)
-VALUES ('2025-05-28 10:00:00', 8, '2025-05-28 10:00:00', 'Vacation', '휴가 89', '2026-05-22', '2025-05-29', '💊 병가');
+VALUES ('2025-12-26 10:00:00', 8, '2025-12-26 10:00:00', 'Vacation', '휴가 89', '2025-12-29', '2025-12-26', '💊 병가');
 
 INSERT INTO groupworks.calendar (created_date, employee_id, last_modified_date, dtype, contents, end_date, start_date, title)
-VALUES ('2025-05-29 10:00:00', 2, '2025-05-29 10:00:00', 'Vacation', '휴가 90', '2026-05-25', '2025-05-30', '💼 기타');
+VALUES ('2025-12-30 10:00:00', 2, '2025-12-30 10:00:00', 'Vacation', '휴가 90', '2025-12-31', '2025-12-30', '💼 기타');
 
 -- 91~100
 INSERT INTO groupworks.calendar (created_date, employee_id, last_modified_date, dtype, contents, end_date, start_date, title)
-VALUES ('2025-05-30 10:00:00', 5, '2025-05-30 10:00:00', 'Vacation', '휴가 91', '2026-05-28', '2025-05-31', '🌴 연차');
+VALUES ('2026-01-02 10:00:00', 5, '2026-01-02 10:00:00', 'Vacation', '휴가 91', '2026-01-04', '2026-01-02', '🌴 연차');
 
 INSERT INTO groupworks.calendar (created_date, employee_id, last_modified_date, dtype, contents, end_date, start_date, title)
-VALUES ('2025-05-31 10:00:00', 7, '2025-05-31 10:00:00', 'Vacation', '휴가 92', '2026-06-01', '2025-06-01', '🕒 반차');
+VALUES ('2026-01-05 10:00:00', 7, '2026-01-05 10:00:00', 'Vacation', '휴가 92', '2026-01-07', '2026-01-05', '🕒 반차');
 
 INSERT INTO groupworks.calendar (created_date, employee_id, last_modified_date, dtype, contents, end_date, start_date, title)
-VALUES ('2025-06-01 10:00:00', 1, '2025-06-01 10:00:00', 'Vacation', '휴가 93', '2026-06-04', '2025-06-02', '💊 병가');
+VALUES ('2026-01-08 10:00:00', 1, '2026-01-08 10:00:00', 'Vacation', '휴가 93', '2026-01-10', '2026-01-08', '💊 병가');
 
 INSERT INTO groupworks.calendar (created_date, employee_id, last_modified_date, dtype, contents, end_date, start_date, title)
-VALUES ('2025-06-02 10:00:00', 3, '2025-06-02 10:00:00', 'Vacation', '휴가 94', '2026-06-07', '2025-06-03', '💼 기타');
+VALUES ('2026-01-11 10:00:00', 3, '2026-01-11 10:00:00', 'Vacation', '휴가 94', '2026-01-13', '2026-01-11', '💼 기타');
 
 INSERT INTO groupworks.calendar (created_date, employee_id, last_modified_date, dtype, contents, end_date, start_date, title)
-VALUES ('2025-06-03 10:00:00', 9, '2025-06-03 10:00:00', 'Vacation', '휴가 95', '2026-06-10', '2025-06-04', '🌴 연차');
+VALUES ('2026-01-14 10:00:00', 9, '2026-01-14 10:00:00', 'Vacation', '휴가 95', '2026-01-16', '2026-01-14', '🌴 연차');
 
 INSERT INTO groupworks.calendar (created_date, employee_id, last_modified_date, dtype, contents, end_date, start_date, title)
-VALUES ('2025-06-04 10:00:00', 4, '2025-06-04 10:00:00', 'Vacation', '휴가 96', '2026-06-13', '2025-06-05', '🕒 반차');
+VALUES ('2026-01-17 10:00:00', 4, '2026-01-17 10:00:00', 'Vacation', '휴가 96', '2026-01-19', '2026-01-17', '🕒 반차');
 
 INSERT INTO groupworks.calendar (created_date, employee_id, last_modified_date, dtype, contents, end_date, start_date, title)
-VALUES ('2025-06-05 10:00:00', 6, '2025-06-05 10:00:00', 'Vacation', '휴가 97', '2026-06-16', '2025-06-06', '💊 병가');
+VALUES ('2026-01-20 10:00:00', 6, '2026-01-20 10:00:00', 'Vacation', '휴가 97', '2026-01-22', '2026-01-20', '💊 병가');
 
 INSERT INTO groupworks.calendar (created_date, employee_id, last_modified_date, dtype, contents, end_date, start_date, title)
-VALUES ('2025-06-06 10:00:00', 10, '2025-06-06 10:00:00', 'Vacation', '휴가 98', '2026-06-19', '2025-06-07', '💼 기타');
+VALUES ('2026-01-23 10:00:00', 10, '2026-01-23 10:00:00', 'Vacation', '휴가 98', '2026-01-25', '2026-01-23', '💼 기타');
 
 INSERT INTO groupworks.calendar (created_date, employee_id, last_modified_date, dtype, contents, end_date, start_date, title)
-VALUES ('2025-06-07 10:00:00', 8, '2025-06-07 10:00:00', 'Vacation', '휴가 99', '2026-06-22', '2025-06-08', '🌴 연차');
+VALUES ('2026-01-26 10:00:00', 8, '2026-01-26 10:00:00', 'Vacation', '휴가 99', '2026-01-29', '2026-01-26', '🌴 연차');
 
 INSERT INTO groupworks.calendar (created_date, employee_id, last_modified_date, dtype, contents, end_date, start_date, title)
-VALUES ('2025-06-08 10:00:00', 2, '2025-06-08 10:00:00', 'Vacation', '휴가 100', '2026-06-25', '2025-06-09', '🕒 반차');
+VALUES ('2026-01-30 10:00:00', 2, '2026-01-30 10:00:00', 'Vacation', '휴가 100', '2026-02-01', '2026-01-30', '🕒 반차');
 
 
 
