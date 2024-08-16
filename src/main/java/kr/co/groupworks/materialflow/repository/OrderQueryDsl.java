@@ -3,6 +3,7 @@ package kr.co.groupworks.materialflow.repository;
 import kr.co.groupworks.materialflow.dto.MesListVO;
 import kr.co.groupworks.materialflow.entity.Order;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -20,4 +21,6 @@ public interface OrderQueryDsl {
     Map<String, Long> findIdMapByBomItemCode(String bomItemCode);
 
     List<MesListVO> findAllMesAndOrderCode();
+
+    Long calculat(LocalDate start, LocalDate end);
 }

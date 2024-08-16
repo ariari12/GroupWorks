@@ -14,135 +14,137 @@
 </th:block>
 
 <th:block layout:fragment="content">
-<div class="description mb-2">
-    <span>날짜를 지정하고 계산하기를 클릭하면 발주서 / 수주서 / MES 생산기록을 통해 예산을 산출합니다.<br/>
-        계산이 종료되면 해당 날짜에 속하는 발주서 / 수주서 / MES 생산기록이 나타납니다.</span>
-</div>
-<div class="card mb-4">
-    <div class="card-header">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calculator" viewBox="0 0 16 16">
-            <path d="M12 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM4 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>
-            <path d="M4 2.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.5.5h-7a.5.5 0 0 1-.5-.5zm0 4a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm0 3a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm0 3a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm3-6a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm0 3a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm0 3a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm3-6a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm0 3a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5z"/>
-        </svg> 영업 이익 산출
+    <div class="description mb-2">
+        <span>날짜를 지정하고 계산하기를 클릭하면 발주서 / 수주서 / MES 생산기록을 통해 예산을 산출합니다.<br/>
+            계산이 종료되면 해당 날짜에 속하는 발주서 / 수주서 / MES 생산기록이 나타납니다.</span>
     </div>
-    <div class="card-body">
-        <table class="table table-hover" style="width: 100%">
-            <tr>
-                <th>계산 시작 일</th>
-                <td><input type="date"></td>
-                <th>계산 종료 일</th>
-                <td><input type="date"></td>
-            </tr>
-            <tr>
-                <th>예산 금액</th>
-                <td><input type="text" readonly></td>
-                <td><button type="button">예산 금액 산출하기</button></td>
-                <td></td>
-            </tr>
-        </table>
+    <div class="card mb-4">
+        <div class="card-header">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calculator" viewBox="0 0 16 16">
+                <path d="M12 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM4 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>
+                <path d="M4 2.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.5.5h-7a.5.5 0 0 1-.5-.5zm0 4a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm0 3a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm0 3a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm3-6a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm0 3a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm0 3a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm3-6a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm0 3a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5z"/>
+            </svg> 영업 이익 산출
+        </div>
+        <div class="card-body">
+            <form id="calculate"  action="/materialflow/sales-calculi" method="get">
+            <table class="table table-hover" style="width: 100%">
+                <tr>
+                    <th>계산 시작 일</th>
+                    <td><input id="start" type="date" required></td>
+                    <th>계산 종료 일</th>
+                    <td><input id="end" type="date" required></td>
+                </tr>
+                <tr>
+                    <th>예산 금액</th>
+                    <td><input type="text" th:if="${total != null}" th:value="${total}" readonly> ￦</td>
+                    <td><button type="submit">예산 금액 산출하기</button></td>
+                    <td></td>
+                </tr>
+            </table>
+            </form>
+        </div>
     </div>
-</div>
-<div class="card mb-4">
-    <div class="card-header">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-truck" viewBox="0 0 16 16">
-            <path d="M0 3.5A1.5 1.5 0 0 1 1.5 2h9A1.5 1.5 0 0 1 12 3.5V5h1.02a1.5 1.5 0 0 1 1.17.563l1.481 1.85a1.5 1.5 0 0 1 .329.938V10.5a1.5 1.5 0 0 1-1.5 1.5H14a2 2 0 1 1-4 0H5a2 2 0 1 1-3.998-.085A1.5 1.5 0 0 1 0 10.5zm1.294 7.456A2 2 0 0 1 4.732 11h5.536a2 2 0 0 1 .732-.732V3.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5v7a.5.5 0 0 0 .294.456M12 10a2 2 0 0 1 1.732 1h.768a.5.5 0 0 0 .5-.5V8.35a.5.5 0 0 0-.11-.312l-1.48-1.85A.5.5 0 0 0 13.02 6H12zm-9 1a1 1 0 1 0 0 2 1 1 0 0 0 0-2m9 0a1 1 0 1 0 0 2 1 1 0 0 0 0-2"/>
-        </svg> 수주 목록
+
+    <th:block th:if="${orderList != null && !orderList.isEmpty()}">
+    <div class="card mb-4">
+        <div class="card-header">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-truck" viewBox="0 0 16 16">
+                <path d="M0 3.5A1.5 1.5 0 0 1 1.5 2h9A1.5 1.5 0 0 1 12 3.5V5h1.02a1.5 1.5 0 0 1 1.17.563l1.481 1.85a1.5 1.5 0 0 1 .329.938V10.5a1.5 1.5 0 0 1-1.5 1.5H14a2 2 0 1 1-4 0H5a2 2 0 1 1-3.998-.085A1.5 1.5 0 0 1 0 10.5zm1.294 7.456A2 2 0 0 1 4.732 11h5.536a2 2 0 0 1 .732-.732V3.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5v7a.5.5 0 0 0 .294.456M12 10a2 2 0 0 1 1.732 1h.768a.5.5 0 0 0 .5-.5V8.35a.5.5 0 0 0-.11-.312l-1.48-1.85A.5.5 0 0 0 13.02 6H12zm-9 1a1 1 0 1 0 0 2 1 1 0 0 0 0-2m9 0a1 1 0 1 0 0 2 1 1 0 0 0 0-2"/>
+            </svg> 주문 목록
+        </div>
+        <div class="card-body">
+            <table id="table1" class="table table-hover" style="width: 100%;">
+                <thead>
+                <tr>
+                    <th>주문 코드</th>
+                    <th>주문 구분</th>
+                    <th>거래처 상호</th>
+                    <th>발주 담당자</th>
+                    <th>발주 일자</th>
+
+                    <th>납품 수주담당자</th>
+                    <th>납기 예정 일자</th>
+                    <th>납품 주소</th>
+
+                    <th>납기 일자</th>
+                    <th>총 액수</th>
+                    <th>세 율</th>
+                </tr>
+                </thead>
+                <tbody>
+                <!--/*@thymesVar id="approval" type="kr.co.groupworks.workflow.dto.dto.WorkFlowDTO"*/-->
+                <tr th:onclick="load([[${list.id}]], [[${list.classification +1}]])" th:each="list : ${orderList}">
+                    <!--/*@thymesVar id="list" type="kr.co.groupworks.materialflow.dto.OrderDTO"*/-->
+                    <td th:text="${list.getOrderCode()}"></td>
+                    <td th:if="${list.getClassification() == 0}">수주</td>
+                    <td th:if="${list.getClassification() == 1}">발주</td>
+                    <!--/* 거래처 정보 */-->
+                    <td th:text="${list.getManager().getBusiness().getBusinessName()}"></td>
+                    <td th:text="${list.getManager().getName()}"></td>
+                    <!--/* 발주 정보 */-->
+                    <td th:text="${list.getOrderDate()}"></td>
+
+                    <!--/* 납품 정보 */-->
+                    <td th:text="${list.getEmployee().getName()}"></td>
+                    <td th:text="${list.getDueDate()}"></td>
+                    <td th:text="${list.getAddress()}"></td>
+                    <td th:text="${list.getDeliveryDate()}"></td>
+
+                    <!--/* 총 액수 */-->
+                    <td th:text="${list.getTotalAmount()}"></td>
+                    <td th:text="${list.getTex()}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
-    <div class="card-body">
-        <table id="table1" class="table table-hover" style="width: 100%;">
-            <thead>
-            <tr>
-                <th>수주 번호</th>
-                <th>거래처 상호</th>
-                <th>발주 담당자</th>
-                <th>발주 일자</th>
+    </th:block>
 
-                <th>납품 수주담당자</th>
-                <th>납기 예정 일자</th>
-                <th>납품 주소</th>
+    <th:block th:if="${mesList != null && !mesList.isEmpty()}">
+    <div class="card mb-4">
+        <div class="card-header">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-list-task" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M2 2.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5V3a.5.5 0 0 0-.5-.5zM3 3H2v1h1z"/>
+                <path d="M5 3.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5M5.5 7a.5.5 0 0 0 0 1h9a.5.5 0 0 0 0-1zm0 4a.5.5 0 0 0 0 1h9a.5.5 0 0 0 0-1z"/>
+                <path fill-rule="evenodd" d="M1.5 7a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H2a.5.5 0 0 1-.5-.5zM2 7h1v1H2zm0 3.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm1 .5H2v1h1z"/>
+            </svg> MES 생산기록
+        </div>
+        <div class="card-body">
+            <table id="table2" class="table table-hover" style="width: 100%">
+                <thead>
+                <tr>
+                    <th>품목 코드</th>
+                    <th>품목 명</th>
 
-                <th>납기 일자</th>
-                <th>총 액수</th>
-                <th>세 율</th>
-            </tr>
-            </thead>
-            <tbody>
-            <!--/*@thymesVar id="approval" type="kr.co.groupworks.workflow.dto.dto.WorkFlowDTO"*/-->
-            <tr th:onclick="load([[${list.id}]], [[${list.classification +1}]])" th:each="list : ${receiveList}">
-                <!--/*@thymesVar id="list" type="kr.co.groupworks.materialflow.dto.OrderDTO"*/-->
-                <td th:text="${list.getOrderCode()}"></td>
-                <!--/* 거래처 정보 */-->
-                <td th:text="${list.getManager().getBusiness().getBusinessName()}"></td>
-                <td th:text="${list.getManager().getName()}"></td>
-                <!--/* 발주 정보 */-->
-                <td th:text="${list.getOrderDate()}"></td>
+                    <th>공정 장소</th>
 
-                <!--/* 납품 정보 */-->
-                <td th:text="${list.getEmployee().getName()}"></td>
-                <td th:text="${list.getDueDate()}"></td>
-                <td th:text="${list.getAddress()}"></td>
-                <td th:text="${list.getDeliveryDate()}"></td>
+                    <th>생산 수량</th>
+                    <th>불량 수량</th>
+                    <th>단가</th>
+                    <th>제조 기록 일자</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="list : ${mesList}">
+                    <td th:text="${list.getItemCode()}"></td>
+                    <td th:text="${list.getItemCode()}"></td>
 
-                <!--/* 총 액수 */-->
-                <td th:text="${list.getTotalAmount()}"></td>
-                <td th:text="${list.getTex()}"></td>
-            </tr>
-            </tbody>
-        </table>
+                    <td th:text="${list.getProcessLocation()}"></td>
+
+                    <td th:text="${list.getQuantity()}"></td>
+                    <td th:text="${list.getDefectsNum()}"></td>
+                    <td ><span th:text="${list.getUnitPrice()}"></span> ￦</td>
+                    <td th:text="${list.getManufactureDate()}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
-</div>
-
-<div class="card mb-4">
-    <div class="card-header">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-truck" viewBox="0 0 16 16">
-            <path d="M0 3.5A1.5 1.5 0 0 1 1.5 2h9A1.5 1.5 0 0 1 12 3.5V5h1.02a1.5 1.5 0 0 1 1.17.563l1.481 1.85a1.5 1.5 0 0 1 .329.938V10.5a1.5 1.5 0 0 1-1.5 1.5H14a2 2 0 1 1-4 0H5a2 2 0 1 1-3.998-.085A1.5 1.5 0 0 1 0 10.5zm1.294 7.456A2 2 0 0 1 4.732 11h5.536a2 2 0 0 1 .732-.732V3.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5v7a.5.5 0 0 0 .294.456M12 10a2 2 0 0 1 1.732 1h.768a.5.5 0 0 0 .5-.5V8.35a.5.5 0 0 0-.11-.312l-1.48-1.85A.5.5 0 0 0 13.02 6H12zm-9 1a1 1 0 1 0 0 2 1 1 0 0 0 0-2m9 0a1 1 0 1 0 0 2 1 1 0 0 0 0-2"/>
-        </svg> 수주 목록
-    </div>
-    <div class="card-body">
-        <table id="table2" class="table table-hover" style="width: 100%;">
-            <thead>
-            <tr>
-                <th>수주 번호</th>
-                <th>거래처 상호</th>
-                <th>발주 담당자</th>
-                <th>발주 일자</th>
-
-                <th>납품 수주담당자</th>
-                <th>납기 예정 일자</th>
-                <th>납품 주소</th>
-
-                <th>납기 일자</th>
-                <th>총 액수</th>
-                <th>세 율</th>
-            </tr>
-            </thead>
-            <tbody>
-            <!--/*@thymesVar id="approval" type="kr.co.groupworks.workflow.dto.dto.WorkFlowDTO"*/-->
-            <tr th:onclick="load([[${list.id}]], [[${list.classification +1}]])" th:each="list : ${receiveList}">
-                <!--/*@thymesVar id="list" type="kr.co.groupworks.materialflow.dto.OrderDTO"*/-->
-                <td th:text="${list.getOrderCode()}"></td>
-                <!--/* 거래처 정보 */-->
-                <td th:text="${list.getManager().getBusiness().getBusinessName()}"></td>
-                <td th:text="${list.getManager().getName()}"></td>
-                <!--/* 발주 정보 */-->
-                <td th:text="${list.getOrderDate()}"></td>
-
-                <!--/* 납품 정보 */-->
-                <td th:text="${list.getEmployee().getName()}"></td>
-                <td th:text="${list.getDueDate()}"></td>
-                <td th:text="${list.getAddress()}"></td>
-                <td th:text="${list.getDeliveryDate()}"></td>
-
-                <!--/* 총 액수 */-->
-                <td th:text="${list.getTotalAmount()}"></td>
-                <td th:text="${list.getTex()}"></td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
-</div>
+    </th:block>
 </th:block>
 
 <th:block layout:fragment="javascript">
+    <script src="/js/materialflow/tables.js"></script>
+    <script src="/js/materialflow/salse-calculi.js"></script>
 </th:block>
 </html>

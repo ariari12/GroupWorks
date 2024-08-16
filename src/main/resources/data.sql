@@ -282,6 +282,8 @@ INSERT INTO groupworks.materialflow_item (delivery_time, storage_time, bom_id, m
 INSERT INTO groupworks.materialflow_item (delivery_time, storage_time, bom_id, mes_id, delivery_manager, storage_manager, delivery_location, item_code, item_status, storage_location) VALUES ('2024-08-14', null, 4, null, 'SS택배-ㅁㅁㅁ', '', 'B번 9출하장', '0A6653603-X773-3212', '출고', '');
 INSERT INTO groupworks.materialflow_item (delivery_time, storage_time, bom_id, mes_id, delivery_manager, storage_manager, delivery_location, item_code, item_status, storage_location) VALUES ('2024-08-14', null, 4, null, 'SS택배-ㅁㅁㅁ', '', 'B번 9출하장', '0A6653603-X773-3313', '출고', '');
 
+INSERT INTO groupworks.materialflow_mes (bom_id, defects_num, manufacture_date, order_id, quantity, unit_price, item_code, item_name, process_location) VALUES (1, 11, '2024-08-16 17:46:40.659212', 1, 100, 500, '0B3760541-I931-1', 'A4', '공장1 A4 제조 공정');
+
 /* Material flow End */
 
 

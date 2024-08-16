@@ -2,6 +2,9 @@ package kr.co.groupworks.materialflow.entity;
 
 import lombok.Getter;
 
+import java.util.Arrays;
+import java.util.Objects;
+
 @Getter
 public enum OrderClassification {
     SEND("발주"),
@@ -18,5 +21,11 @@ public enum OrderClassification {
             throw new IllegalArgumentException("Invalid index: " + i);
         }
         return OrderClassification.values()[i];
+    }
+
+    public static OrderClassification getClassification(String label) {
+        return Arrays.stream(OrderClassification.values())
+                .filter(c -> Objects.equals(c.getLabel(), label)).findFirst()
+                .orElse(null);
     }
 }

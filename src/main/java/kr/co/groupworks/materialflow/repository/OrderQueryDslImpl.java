@@ -1,6 +1,8 @@
 package kr.co.groupworks.materialflow.repository;
 
 import com.querydsl.core.Tuple;
+import com.querydsl.core.types.dsl.CaseBuilder;
+import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import kr.co.groupworks.materialflow.dto.MesListVO;
@@ -9,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -116,6 +119,30 @@ public class OrderQueryDslImpl extends QuerydslRepositorySupport implements Orde
                     return new MesListVO(order.getOrderCode(), order.getId(),
                             cl, bom.getId(), t.get(1, Mes.class));
                 }).toList();
+    }
+
+    @Override
+    public Long calculat(LocalDate start, LocalDate end) {
+        QOrder o = QOrder.order;
+
+        // NumberExpression<Long>으로 연산 수행
+        NumberExpression<Long> adjustedAmount = o.totalAmount
+                .multiply(o.texAmount.add(-100L))
+                .divide(100L);
+
+        // CASE 문을 Long 타입으로 정의
+        NumberExpression<Long> resultExpression = new CaseBuilder()
+                .when(o.classification.eq(OrderClassification.getClassification("발주"))).then(adjustedAmount)
+                .when(o.classification.eq(OrderClassification.getClassification("수주"))).then(adjustedAmount.multiply(-1L))
+                .otherwise(0L);
+
+        // 최종 계산 결과를 Long 타입으로 반환
+        Long result = queryFactory
+                .select(resultExpression.sum())
+                .from(o)
+                .where(o.orderDate.between(start, end))
+                .fetchOne();
+        return result != null ? result : 0L;  // null 체크 후 0L 반환
     }
 
     private List<Order> findByItemName(String orderCode, String itemCode, String itemName) {
