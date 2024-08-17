@@ -53,9 +53,25 @@
                     </a>
                 </li>
 
+                <!-- First Page Link -->
+                <li class="page-item" th:if="${vacationRequestList.totalPages > 1 && vacationRequestList.number > 3}">
+                    <a class="page-link" th:href="@{|?page=0|}">1</a>
+                </li>
+                <li class="page-item disabled" th:if="${vacationRequestList.number > 3}">
+                    <span class="page-link">...</span>
+                </li>
+
                 <!-- Page Numbers -->
-                <li class="page-item" th:each="i : ${#numbers.sequence(0, vacationRequestList.totalPages > 0 ? vacationRequestList.totalPages - 1 : 0)}" th:classappend="${i == vacationRequestList.number} ? 'active'">
+                <li class="page-item" th:each="i : ${#numbers.sequence(vacationRequestList.number - 2 < 0 ? 0 : vacationRequestList.number - 2, vacationRequestList.number + 2 >= vacationRequestList.totalPages ? vacationRequestList.totalPages - 1 : vacationRequestList.number + 2)}" th:classappend="${i == vacationRequestList.number} ? 'active'">
                     <a class="page-link" th:href="@{|?page=${i}|}" th:text="${i + 1}">1</a>
+                </li>
+
+                <!-- Last Page Link -->
+                <li class="page-item disabled" th:if="${vacationRequestList.number < vacationRequestList.totalPages - 4}">
+                    <span class="page-link">...</span>
+                </li>
+                <li class="page-item" th:if="${vacationRequestList.totalPages > 1 && vacationRequestList.number < vacationRequestList.totalPages - 3}">
+                    <a class="page-link" th:href="@{|?page=${vacationRequestList.totalPages - 1}|}" th:text="${vacationRequestList.totalPages}">Last</a>
                 </li>
 
                 <!-- Next Page Link -->

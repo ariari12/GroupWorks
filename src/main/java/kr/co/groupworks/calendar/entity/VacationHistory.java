@@ -34,7 +34,7 @@ public class VacationHistory extends BaseEntity {
     @Column(name = "total_annual")
     private double totalAnnual;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "employee_id")
     private Employee employee;
 
