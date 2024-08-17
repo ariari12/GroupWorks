@@ -13,11 +13,11 @@ import java.time.LocalDateTime;
 @Builder
 public class MessageDTO {
 
-    private String chatRoomId;
-    private Long senderId;
-    private String senderName;
-    private String senderDepartment;
-    private String senderRank;
-    private String content;
-    private LocalDateTime timestamp;
+    private String chatRoomId;          // 방번호
+    private Long senderId;              // 보낸 사람 ID
+    private String senderName;          // 보낸 사람 이름
+    private String senderDepartment;    // 보낸 사람 부서
+    private String senderRank;          // 보낸 사람 직급
+    private String content;             // 보낸 내용
+    private LocalDateTime timestamp;    // 보낸 시간
 }

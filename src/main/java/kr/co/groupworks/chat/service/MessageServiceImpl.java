@@ -16,11 +16,13 @@ public class MessageServiceImpl implements MessageService{
 
     private final MessageRepository messageRepository;
 
+    // 주어진 Message 객체를 데이터베이스에 저장.
     @Override
     public void saveMessage(Message message) {
         messageRepository.save(message);
     }
 
+    // 주어진 chatRoomId를 사용하여 해당 채팅방의 모든 메시지를 조회.
     @Override
     public List<Message> getMessagesByChatRoomId(String chatRoomId) {
         return messageRepository.findByChatRoomId(chatRoomId);
