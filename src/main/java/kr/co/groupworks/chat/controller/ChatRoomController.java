@@ -18,26 +18,31 @@ public class ChatRoomController {
 
     private final ChatRoomService chatRoomService;
 
-    @GetMapping
-    public List<ChatRoom> getAllChatRooms() {
-        return chatRoomService.getAllChatRooms();
+    // 새로운 채팅방을 생성하는 메서드
+    @PostMapping("/create")
+    public ResponseEntity<ChatRoom> createChatRoom(@RequestBody ChatRoomDTO chatRoomDTO) {
+        // ChatRoomDTO에서 ChatRoom 엔티티로 변환
+        ChatRoom chatRoom = new ChatRoom();
+        chatRoom.setName(chatRoomDTO.getName());
+        chatRoom.setParticipants(chatRoomDTO.getParticipants());
+
+        // 채팅방 생성
+        ChatRoom createdChatRoom = chatRoomService.createChatRoom(chatRoom);
+        return ResponseEntity.ok(createdChatRoom);
     }
 
-    @PostMapping
-    public ResponseEntity<ChatRoom> createChatRoom(@RequestBody ChatRoom chatRoom) {
-        ChatRoom createChatRoom = chatRoomService.createChatRoom(chatRoom);
-        return ResponseEntity.ok(createChatRoom);
-    }
-
+    // 특정 ID를 기반으로 채팅방을 가져오는 메서드
     @GetMapping("/{id}")
     public ResponseEntity<ChatRoom> getChatRoom(@PathVariable Long id) {
         ChatRoom chatRoom = chatRoomService.getChatRoomById(id);
         return ResponseEntity.ok(chatRoom);
     }
 
+    // 사용자가 소속된 채팅방만 가져오는 메서드
     @GetMapping("/user/{userId}")
     public List<ChatRoom> getChatRoomsForUser(@PathVariable Long userId) {
         return chatRoomService.getChatRoomsForUser(userId);
     }
+
 
 }
