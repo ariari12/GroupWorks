@@ -31,6 +31,7 @@ public class CalendarServiceImpl implements CalendarService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<CalendarFormDTO> findAllPersonalCalendar(Long employeeId) {
         Employee employee = employeeRepository.findById(employeeId)
                 .orElseThrow(() -> new EntityNotFoundException("사원을 찾을 수 없습니다. " + employeeId));

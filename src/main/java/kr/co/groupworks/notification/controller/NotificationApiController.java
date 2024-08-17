@@ -1,5 +1,6 @@
 package kr.co.groupworks.notification;
 
+import io.swagger.v3.oas.annotations.Hidden;
 import kr.co.groupworks.employee.dto.SessionEmployeeDTO;
 import kr.co.groupworks.notification.dto.NotificationDTO;
 import kr.co.groupworks.notification.service.NotificationService;
@@ -13,6 +14,7 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import java.util.List;
 
 @Slf4j
+@Hidden
 @RestController
 @RequestMapping("/notifications")
 @RequiredArgsConstructor
