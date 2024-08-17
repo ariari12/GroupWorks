@@ -17,8 +17,21 @@ public class PerformanceAspect {
         String packageName = joinPoint.getSignature().getDeclaringTypeName();
 
         String[] packageParts = packageName.split("\\.");
-        String domain = packageParts[3];  // 도메인 추출 (예: calendar, notification 등)
-        String layer = packageParts[4];   // 계층 추출 (예: controller, service, repository)
+
+        String domain = "unknownDomain";
+        String layer = "unknownLayer";
+
+        if (packageParts.length >= 4) {
+            domain = packageParts[3];  // 도메인 추출 (예: calendar, notification 등)
+        } else {
+            log.warn("패키지 경로가 예상보다 짧습니다: " + packageName);
+        }
+
+        if (packageParts.length >= 5) {
+            layer = packageParts[4];   // 계층 추출 (예: controller, service, repository)
+        } else {
+            log.warn("패키지 경로가 예상보다 짧습니다: " + packageName);
+        }
 
         return logExecutionTime(joinPoint, domain, layer);
     }
