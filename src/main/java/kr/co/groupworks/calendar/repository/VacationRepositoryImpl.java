@@ -3,14 +3,18 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import kr.co.groupworks.calendar.dto.CalendarFormDTO;
+import kr.co.groupworks.calendar.entity.QCalendar;
+import kr.co.groupworks.calendar.entity.QCalendarAttachment;
 import kr.co.groupworks.calendar.entity.Vacation;
 import kr.co.groupworks.employee.entity.Employee;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.support.PageableExecutionUtils;
 import java.util.List;
 
+import static kr.co.groupworks.calendar.entity.QCalendar.*;
 import static kr.co.groupworks.calendar.entity.QCalendarAttachment.calendarAttachment;
 import static kr.co.groupworks.calendar.entity.QVacation.*;
 import static kr.co.groupworks.department.entity.QDepartment.*;
@@ -68,6 +72,18 @@ public class VacationRepositoryImpl implements VacationQueryDsl{
 
         return PageableExecutionUtils.getPage(contents, pageable, countQuery::fetchOne);
     }
+
+    @Override
+    public List<Vacation> findAllByEmployeeId(Long employeeId) {
+        return queryFactory.selectFrom(vacation)
+                .join(vacation.employee, employee)
+                .leftJoin(vacation.attachmentList, calendarAttachment).fetchJoin()
+                .where(employee.employeeId.eq(employeeId))
+                .fetch();
+    }
+
+//    @Query("SELECT v FROM Vacation v JOIN v.employee e " +
+//            "left join CalendarAttachment ca ON ca.calendar.calendarId = v.calendarId WHERE e.employeeId = :employeeId")
 
 //    SELECT DISTINCT v.*
 //    FROM vacation v
