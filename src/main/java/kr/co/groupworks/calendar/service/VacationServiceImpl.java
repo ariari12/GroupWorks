@@ -231,6 +231,7 @@ public class VacationServiceImpl implements VacationService{
 
     // 휴가 일정 검색
     @Override
+    @Transactional(readOnly = true)
     public VacationModifyFormDTO
     findCalendarByIdAndEmployee(Long calendarId, Long employeeId) {
         employeeRepository.findById(employeeId)
@@ -300,6 +301,7 @@ public class VacationServiceImpl implements VacationService{
 
     // 사원의 휴가신청 내역 모두 조회 DTO 다름
     @Override
+    @Transactional(readOnly = true)
     public List<CalendarFormDTO> findAllVacation(Long employeeId) {
         Employee employee = employeeRepository.findById(employeeId)
                 .orElseThrow(() -> new EntityNotFoundException("사원을 찾을 수 없습니다. " + employeeId));
@@ -309,6 +311,7 @@ public class VacationServiceImpl implements VacationService{
 
     // 사원의 휴가신청 내역 모두 조회
     @Override
+    @Transactional(readOnly = true)
     public List<VacationRequestDTO> findAllByEmployeeId(Long employeeId) {
         List<Vacation> vacationList = vacationRepository.findAllByEmployeeId(employeeId);
         // 휴가 번호로 첨부파일 조회
@@ -328,6 +331,7 @@ public class VacationServiceImpl implements VacationService{
 
     // 구성원 휴가 신청 내역 모두 조회
     @Override
+    @Transactional(readOnly = true)
     public Page<VacationRequestDTO> findAllTeamSearchPending(Long employeeId,
                                                              @PageableDefault(
                                                                      sort = {"createdDate","startDate"},
@@ -385,6 +389,7 @@ public class VacationServiceImpl implements VacationService{
 
     // 구성원 휴가 보유 내역 조회
     @Override
+    @Transactional(readOnly = true)
     public Page<VacationHistoryDTO> findAllTeamHistory(Long employeeId, Pageable pageable) {
         Employee employee = employeeRepository.findById(employeeId)
                 .orElseThrow(() -> new EntityNotFoundException("사원을 찾을 수 없습니다. " + employeeId));
