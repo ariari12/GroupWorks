@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
-
+    disableEnterSubmit();
 })
 
 /* 엔터 키 전송 막기 */
@@ -7,6 +7,29 @@ function disableEnterSubmit() {
     $('.prevent-enter-submit').on('keydown', function(event) {
         if (event.key === 'Enter') { event.preventDefault(); }
     });
+}
+
+/* 등록 취소 */
+function canselOrder(pk, c) {
+    $.ajax({
+        url: "/materialflow/order-detail/" + pk,
+        type: "delete",
+        success: (r) => {
+            console.log(r);
+            if(r.result) {
+                alert(r.message);
+                location.href = "/materialflow/order-record";
+            } else {
+                alert(r.message);
+                location.href = "/materialflow/order-detail/" + pk + "/" + c;
+            }
+        },
+        error: (x, r, c) => {
+            console.error(x);
+            console.error(r);
+            console.error(c);
+        }
+    })
 }
 
 /* 인쇄 */

@@ -9,6 +9,9 @@ const maxRetries = 3;
 let retryCount = 0;
 const existingRoomIds = [];
 
+let screenStream = null; // 화면 공유를 위한 스트림
+
+
 // 방 ID를 서버와 동기화하는 함수
 const syncRoomIdsWithServer = async () => {
     try {
@@ -437,5 +440,51 @@ document.querySelector('#toggleMicBtn').addEventListener('click', () => {
         localStream.getAudioTracks()[0].enabled = !localStream.getAudioTracks()[0].enabled;
         document.querySelector('#toggleMicBtn').textContent =
             localStream.getAudioTracks()[0].enabled ? '마이크 끄기' : '마이크 켜기';
+    }
+});
+
+// 화면 공유를 시작하는 함수
+const startScreenShare = async () => {
+    try {
+        screenStream = await navigator.mediaDevices.getDisplayMedia({ video: true });
+        console.log('Screen share started');
+        // 화면 공유 트랙을 PeerConnection에 추가
+        screenStream.getTracks().forEach(track => {
+            pcListMap.forEach(pc => {
+                pc.addTrack(track, screenStream);
+            });
+        });
+
+        // 화면 공유 비디오를 로컬 화면에 표시
+        localStreamElement.srcObject = screenStream;
+        localStreamElement.style.display = 'block';
+    } catch (error) {
+        console.error("Error starting screen share:", error);
+        alert("화면 공유를 시작할 수 없습니다.");
+    }
+};
+
+// 화면 공유를 종료하는 함수
+const stopScreenShare = () => {
+    if (screenStream) {
+        screenStream.getTracks().forEach(track => track.stop());
+        screenStream = null;
+        console.log('Screen share stopped');
+
+        // 화면 공유 종료 후, 기존 웹캠 비디오를 로컬 화면에 다시 표시
+        localStreamElement.srcObject = localStream;
+        localStreamElement.style.display = 'block';
+    }
+};
+
+// 화면 공유 버튼 이벤트 리스너
+document.querySelector('#toggleScreenShareBtn').addEventListener('click', () => {
+    if (screenStream) {
+        stopScreenShare();
+        document.querySelector('#toggleScreenShareBtn').textContent = '화면 공유 키기';
+    } else {
+        startScreenShare().then(() => {
+            document.querySelector('#toggleScreenShareBtn').textContent = '화면 공유 끄기';
+        });
     }
 });

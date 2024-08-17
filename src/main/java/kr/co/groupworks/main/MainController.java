@@ -60,14 +60,5 @@ public class MainController {
         return "redirect:/main";
     }
 
-// 마이페이지
-    @GetMapping("/mypage")
-    public String myPage(Model model, HttpSession session) {
 
-        SessionEmployeeDTO sessionEmployeeDTO = (SessionEmployeeDTO) session.getAttribute("employee");
-        EmployeeDTO employeeDTO = employeeService.findByEmployeeId(sessionEmployeeDTO.getEmployeeId());
-        log.info(employeeDTO.getEmployeeName() + "의 마이페이지");
-        model.addAttribute("employee", employeeDTO);
-        return "employee/myPage";
-    }
 }

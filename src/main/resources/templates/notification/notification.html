@@ -10,21 +10,34 @@
         </span>
     </button>
 </th:block>
-<th:block th:fragment="notificationModal">
+<th:block th:fragment="notificationOffcanvas">
     <!-- 오프캔버스 -->
     <div class="offcanvas offcanvas-end" tabindex="-1" id="notificationOffcanvasRight" aria-labelledby="offcanvasRightLabel">
         <div class="offcanvas-header">
             <h3 class="offcanvas-title" id="offcanvasRightLabel">📢 전체 알림</h3>
-            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            <button type="button" class="btn-close btn-close-black" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+            <button class="btn btn-outline-danger me-md-2">전체 삭제</button>
         </div>
         <hr>
-
-        <div class="offcanvas-body">
-            ...
+        <div class="offcanvas-body d-flex flex-column" style="padding-top: 0px;">
+            <!-- 알림 리스트가 여기에 표시됩니다. -->
+            <div id="notification-list" class="flex-grow-1 overflow-auto">
+                <!-- 알림 항목들이 여기에 추가됩니다 -->
+            </div>
         </div>
     </div>
-
 </th:block>
+<!--notification.js 파일과 연결되어있음-->
+<th:block th:fragment="notificationToast">
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div id="toast-container">
+
+        </div>
+    </div>
+</th:block>
+</html>
 
 
 

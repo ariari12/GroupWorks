@@ -5,9 +5,14 @@ import kr.co.groupworks.materialflow.entity.OrderClassification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Long>, OrderQueryDsl {
     List<Order> findByClassification(OrderClassification classification);
+
+    List<Order> findByManagerId(Long mId);
+
+    List<Order> findByOrderDateGreaterThanEqualAndOrderDateLessThanEqual(LocalDate start, LocalDate end);
 }

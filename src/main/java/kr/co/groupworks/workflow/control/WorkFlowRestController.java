@@ -7,6 +7,7 @@ import kr.co.groupworks.employee.dto.SessionEmployeeDTO;
 import kr.co.groupworks.workflow.dto.dto.ApproverDTO;
 import kr.co.groupworks.workflow.dto.dto.WorkFlowDTO;
 import kr.co.groupworks.workflow.service.WorkFlowService;
+import kr.co.groupworks.workflow.service.WorkflowNotificationServiceFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -30,6 +31,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class WorkFlowRestController {
     private final WorkFlowService workFlowService;
+    private final WorkflowNotificationServiceFactory notifyService;
 
     private static final String WORKFLOW_URL = "work-flow";
     private static final String APPROVAL_HISTORY = "/approval-history";
@@ -125,6 +127,12 @@ public class WorkFlowRestController {
                 .setApprovalMethod(approvalMethod == null ? 0 : approvalMethod)
                 .setEmployeeId(employeeId).setApproverType(approverType).setComment(comment);
         if(workFlowService.setApprover(approverDTO)) {
+            notifyService.notifySetup(workFlowId, employeeId, approverType, "workflow 전자결재", (w, e) -> w.getApprovers().stream()
+                    .filter(we -> we.getEmployeeId() == e.getEmployeeId())
+                    .findFirst().orElse(null) != null ? approverType == 2 ?
+                    e.getEmployeeName() + "님이 결재 협의안을 작성하였습니다." :
+                    e.getEmployeeName() + "님이 결재를 처리하였습니다." : ""
+            );
             String detail = "/detail/";
             response.put("status", "success");
             response.put("url", SEPARATOR + WORKFLOW_URL + detail + workFlowId);
@@ -192,6 +200,4 @@ public class WorkFlowRestController {
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
-
-
 }

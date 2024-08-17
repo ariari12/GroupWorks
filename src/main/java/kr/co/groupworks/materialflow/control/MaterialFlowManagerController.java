@@ -14,6 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -29,11 +30,8 @@ public class MaterialFlowManagerController {
     private final MaterialService materialService;
     private final MaterialOpenApiService materialOpenApiService;
 
-    private String ATTR_TITLE = "title";
-    private String ATTR_SUB_TITLE = "subtitle";
-
-    public static String receiveList = "receiveList";
-    public static String sendList = "sendList";
+    public static final String ATTR_TITLE = "title", ATTR_SUB_TITLE = "subtitle";
+    public static final String RECEIVE_LIST = "receiveList", SEND_LIST = "sendList";
 
     /* Material Flow Management API */
     /* 발주/수주 기록 */
@@ -99,11 +97,12 @@ public class MaterialFlowManagerController {
     /* BOM 자재 품목에 속하는 자재 목록 조회 */
     @GetMapping(value = "/item/{bomId}/{itemCode}/{itemName}")
     public String bom(@PathVariable("bomId") long bomId, @PathVariable("itemCode") String ic, @PathVariable("itemName") String in, Model model) {
-        String title = "BOM", subTitle = "자재 현황";
+        String title = "BOM 자재 현황", subTitle = "자재 관리";
         model.addAttribute(ATTR_TITLE, title);
         model.addAttribute(ATTR_SUB_TITLE, subTitle);
         model.addAttribute("itemCode", ic);
         model.addAttribute("itemName", in);
+        model.addAttribute("bomStatus", materialService.getBomStatus(bomId));
         model.addAttribute("itemList", materialService.getItemList(bomId));
         return "materialflow/window/materialRecord";
     }
@@ -111,19 +110,25 @@ public class MaterialFlowManagerController {
     /* MES 생산 현황 */
     @GetMapping(value = "/mes")
     public String mes(Model model) {
-        log.info("mes");
-        model.addAttribute(ATTR_TITLE, "수주/발주 기록");
-        model.addAttribute(ATTR_SUB_TITLE, "수주/발주");
-        return "materialflow/mes";
+        String title = "생산 현황", subTitle = "생산 재고 현황";
+        model.addAttribute(ATTR_TITLE, title);
+        model.addAttribute(ATTR_SUB_TITLE, subTitle);
+        model.addAttribute("mesList", materialService.getMesList());
+        return "materialflow/mesRecord";
     }
 
     /* 매출액 산출 */
-    @GetMapping(value = "/take-summation")
-    public String takeSummation(Model model) {
-        log.info("take-summation");
-        model.addAttribute(ATTR_TITLE, "수주/발주 기록");
-        model.addAttribute(ATTR_SUB_TITLE, "수주/발주");
-        return "materialflow/takeSummation";
+    @GetMapping(value = "/sales-calculi")
+    public String salesCalculi(@RequestParam(value = "start", required = false) String start, @RequestParam(value = "end", required = false) String end, Model model) {
+        String title = "매출액 산출", subTitle = "영업 손익 계산";
+        model.addAttribute(ATTR_TITLE, title);
+        model.addAttribute(ATTR_SUB_TITLE, subTitle);
+
+        log.info("start: {}, end: {}", start, end);
+
+        if (start != null && end != null)
+            materialService.seles(start, end).forEach(model::addAttribute);
+        return "materialflow/salesCalculi";
     }
 
     /* 신규 거래처 등록 창 */
@@ -177,7 +182,8 @@ public class MaterialFlowManagerController {
         /*
          * 고유 번호: (발주:0A, 수주 0B) + 작성시각 (ms),분,초
          * 랜덤코드: 정수와 영문 대문자 포함 랜덤3자리
-         * 고유 주문 번호: 작성날짜 + "-" + 고유 번호 + "-" + 랜덤코드 + "품목개수"
+         * 주문코드: 고유 번호 + "-" + 랜덤코드 + "품목개수"
+         * 고유 주문 번호: 작성날짜 + "-" + 주문코드
          * example: 20120618-0A13733178-3AB7
          */
         return code + "-" + (f == 1 ? "0A" : "0B")

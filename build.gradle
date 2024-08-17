@@ -28,7 +28,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-validation'
 
     implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
-
+    implementation 'net.nurigo:sdk:4.3.0'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
@@ -37,9 +37,8 @@ dependencies {
     // https://mvnrepository.com/artifact/io.lettuce/lettuce-core
     implementation 'io.lettuce:lettuce-core:6.4.0.RELEASE'
 
-    // https://mvnrepository.com/artifact/com.github.ulisesbocchio/jasypt-spring-boot-starter
+//     https://mvnrepository.com/artifact/com.github.ulisesbocchio/jasypt-spring-boot-starter
     implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.5'
-
     testImplementation 'org.springframework.security:spring-security-test'
 
     // https://mvnrepository.com/artifact/com.googlecode.json-simple/json-simple
@@ -50,6 +49,9 @@ dependencies {
     // QR Code - zxing
     implementation group: 'com.google.zxing', name: 'javase', version: '3.5.0'
     implementation group: 'com.google.zxing', name: 'core', version: '3.5.0'
+
+    // Coolsms SMS send
+    implementation 'net.nurigo:sdk:4.3.0'
 
     //Querydsl 추가
     implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
@@ -72,6 +74,9 @@ dependencies {
     testCompileOnly 'org.projectlombok:lombok'
     testAnnotationProcessor 'org.projectlombok:lombok'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    // https://mvnrepository.com/artifact/com.github.ulisesbocchio/jasypt-spring-boot-starter
+    implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.5'
 }
 
 tasks.named('test') {

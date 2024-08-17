@@ -9,4 +9,6 @@ import java.util.List;
 @Repository
 public interface MaterialItemRepository extends JpaRepository<MaterialItem, Long> {
     List<MaterialItem> findByBomId(Long bomId);
+
+    List<MaterialItem> findByItemCodeIn(List<String> itemCodes);
 }

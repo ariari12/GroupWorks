@@ -7,12 +7,9 @@
 //import kr.co.groupworks.workflow.dto.dto.ApproverDTO;
 //import kr.co.groupworks.workflow.dto.dto.OpenWorkflowVO;
 //import kr.co.groupworks.workflow.dto.employee.EmployeeDTO;
-//
 //import lombok.extern.slf4j.Slf4j;
-//
 //import org.junit.jupiter.api.DisplayName;
 //import org.junit.jupiter.api.Test;
-//
 //import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.boot.test.context.SpringBootTest;
 //import org.springframework.mock.web.MockMultipartFile;
@@ -22,7 +19,6 @@
 //
 //import java.time.LocalDateTime;
 //import java.time.format.DateTimeFormatter;
-//
 //import java.util.ArrayList;
 //import java.util.HashMap;
 //import java.util.List;
@@ -120,6 +116,7 @@
 //                .phoneNumber("010-1111-111" + (i % 10)) // phoneNumber: 사원 전화번호 (010-1111-1110, 010-1111-1111, ..., 010-1111-1119 반복)
 //                .address("주소 " + i) // address: 사원 주소 (주소 1, 주소 2, ..., 주소 100)
 //                .gender((i % 2 == 0) ? "남" : "여") // gender: 사원 성별 (남 또는 여, 홀수는 여, 짝수는 남)
+//                .createdDate(LocalDateTime.now().minusDays(i)) // joinDate: 입사일 (현재 날짜에서 i일 전)
 //                .salary((3000L + i) * 10L) // salary: 사원 급여 (3000부터 시작, i에 따라 증가)
 //                .supervisorId(i > 10 ? (long) ((i % 10) + 1) : 0) // supervisorId: 상사 ID (1부터 10까지 반복)
 //                .build()

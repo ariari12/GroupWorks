@@ -35,16 +35,16 @@
 //    public void insertDepartment() {
 //        // 샘플 부서 데이터
 //        List<Department> departments = List.of(
-//                new Department(0L, "기술부서", "010-1234-5678", "A동"),
-//                new Department(1L, "마케팅부서", "010-1234-5679", "B동"),
-//                new Department(2L, "영업부서", "010-1234-5680", "C동"),
-//                new Department(3L, "인사부서", "010-1234-5681", "D동"),
-//                new Department(4L, "재무부서", "010-1234-5682", "E동"),
-//                new Department(5L, "IT 지원부서", "010-1234-5683", "F동"),
-//                new Department(6L, "제품 관리부서", "010-1234-5684", "G동"),
-//                new Department(7L, "고객 서비스부서", "010-1234-5685", "H동"),
-//                new Department(8L, "법무부서", "010-1234-5686", "I동"),
-//                new Department(9L, "연구개발부서", "010-1234-5687", "J동")
+//                new Department(1L, "기술부서", "010-1234-5678", "A동"),
+//                new Department(2L, "마케팅부서", "010-1234-5679", "B동"),
+//                new Department(3L, "영업부서", "010-1234-5680", "C동"),
+//                new Department(4L, "인사부서", "010-1234-5681", "D동"),
+//                new Department(5L, "재무부서", "010-1234-5682", "E동"),
+//                new Department(6L, "IT 지원부서", "010-1234-5683", "F동"),
+//                new Department(7L, "제품 관리부서", "010-1234-5684", "G동"),
+//                new Department(8L, "고객 서비스부서", "010-1234-5685", "H동"),
+//                new Department(9L, "법무부서", "010-1234-5686", "I동"),
+//                new Department(10L, "연구개발부서", "010-1234-5687", "J동")
 //        );
 //        // 부서 데이터 생성 및 저장
 //        departmentRepository.saveAll(departments);

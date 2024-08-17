@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface BusinessManagerRepository extends JpaRepository<BusinessManager, Long> {
-    List<BusinessManager> findByBusiness_Id(Long businessId);
+    List<BusinessManager> findByBusinessId(Long businessId);
 }

@@ -2,7 +2,7 @@ let currentWindow = null; // 공용 창 변수
 let currentListener = null; // 공용 리스너 변수
 let preUrl = null; // 현재 열려있는 창에 URL
 
-const WINDOW_SIZE = "width=1400, height=1200, left=300, top=30";
+const WINDOW_SIZE = "width=1800, height=1200, left=300, top=30";
 
 document.addEventListener("DOMContentLoaded", function () {
     registerWindow();
@@ -77,8 +77,9 @@ function chooseManagerWindow() {
             toastInfo("<span style=\"color: #bb2d3b; font-size: 16px;\">거래처를 먼저 선택해주세요.</span>");
             return;
         }
-        openWindow("/materialflow/manager-select/" + businessId, "거래처 목록", WINDOW_SIZE,
-                ev => managerReceive(ev)
+        openWindow("/materialflow/manager-select/" + businessId, "거래처 목록",
+            "width=1000, height=800, left=500, top=100",
+            ev => managerReceive(ev)
         );
     });
 }
