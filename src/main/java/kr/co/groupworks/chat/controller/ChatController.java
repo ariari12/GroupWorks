@@ -16,6 +16,7 @@ public class ChatController {
 
     private final ChatService chatService;
 
+    // 메시지를 전송하는 엔드포인트.
     @PostMapping("/send")
     ResponseEntity<Void> sendMessage(@RequestBody MessageDTO messageDTO) {
         chatService.sendMessage(
@@ -26,6 +27,7 @@ public class ChatController {
         return ResponseEntity.ok().build();
     }
 
+    // 특정 채팅방의 메시지 목록을 가져오는 엔드포인트.
     @GetMapping("/messages")
     public ResponseEntity<List<MessageDTO>> getMessages(@RequestParam String chatRoomId) {
         List<MessageDTO> messages = chatService.getMessages(chatRoomId).stream()
@@ -42,5 +44,4 @@ public class ChatController {
                 .toList();
         return ResponseEntity.ok(messages);
     }
-
 }

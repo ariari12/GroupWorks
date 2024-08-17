@@ -7,5 +7,7 @@ import java.util.List;
 
 
 public interface ChatRoomRepository extends JpaRepository<ChatRoom, Long> {
+
+    // participantId를 포함하는 채팅방 목록 조회.
     List<ChatRoom> findByParticipantsContaining(Long participantId);
 }
