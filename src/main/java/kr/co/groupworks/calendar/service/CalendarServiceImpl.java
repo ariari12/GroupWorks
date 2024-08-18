@@ -8,6 +8,9 @@ import kr.co.groupworks.common.mapper.CalendarMapper;
 import kr.co.groupworks.employee.entity.Employee;
 import kr.co.groupworks.employee.repository.EmployeeRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,7 +23,9 @@ public class CalendarServiceImpl implements CalendarService {
     private final CalendarRepository calendarRepository;
     private final EmployeeRepository employeeRepository;
     private final CalendarMapper calendarMapper;
+
     @Override
+    @CacheEvict(value = "personalCalendarCache", key = "#employeeId")
     public Long saveCalendar(CalendarFormDTO calendarFormDTO, Long employeeId) {
         Employee employee = employeeRepository.findById(employeeId)
                 .orElseThrow(() -> new EntityNotFoundException("사원을 찾을 수 없습니다. " + employeeId));
@@ -32,6 +37,7 @@ public class CalendarServiceImpl implements CalendarService {
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable(value = "personalCalendarCache", key = "#employeeId", cacheManager = "cacheManager")
     public List<CalendarFormDTO> findAllPersonalCalendar(Long employeeId) {
         Employee employee = employeeRepository.findById(employeeId)
                 .orElseThrow(() -> new EntityNotFoundException("사원을 찾을 수 없습니다. " + employeeId));
@@ -41,6 +47,7 @@ public class CalendarServiceImpl implements CalendarService {
     }
 
     @Override
+    @CacheEvict(value = "personalCalendarCache", key = "#employeeId")
     public Long deleteCalendar(Long calendarId, Long employeeId) {
         Employee employee = employeeRepository.findById(employeeId)
                 .orElseThrow(() -> new EntityNotFoundException("사원을 찾을 수 없습니다. " + employeeId));
@@ -51,6 +58,7 @@ public class CalendarServiceImpl implements CalendarService {
     }
 
     @Override
+    @CacheEvict(value = "personalCalendarCache", key = "#employeeId")
     public Long modifyCalendar(CalendarFormDTO calendarFormDTO, Long employeeId) {
         Calendar calendar = calendarRepository.findById(calendarFormDTO.getCalendarId())
                 .orElseThrow(() -> new EntityNotFoundException("일정을 찾을 수 없습니다. "
