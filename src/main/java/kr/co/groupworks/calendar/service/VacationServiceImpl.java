@@ -18,6 +18,7 @@ import kr.co.groupworks.notification.service.NotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -299,8 +300,9 @@ public class VacationServiceImpl implements VacationService{
 
     }
 
-    // 사원의 휴가신청 내역 모두 조회 DTO 다름
+    // 캘린더 페이지 사원의 휴가신청 내역 모두 조회 DTO 다름 (첨부파일 조회 안함)
     @Override
+    @Cacheable(value = "vacationRequestCache", key = "#employeeId", cacheManager = "cacheManager")
     @Transactional(readOnly = true)
     public List<CalendarFormDTO> findAllVacation(Long employeeId) {
         Employee employee = employeeRepository.findById(employeeId)
