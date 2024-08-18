@@ -230,9 +230,9 @@ VALUES (0, 0, 0, 25, 1),
 
 /* ====== workflow start ======== */
 
-insert into groupworks.workflow (approval_count, approver_count, status, work_flow_type, approval_date, cost, department_id, draft_date, employee_id, final_employee_id, workflow_id, description, code, department, email, employee_name, employee_rank, final_approval_department, final_approval_name, final_approval_rank, phone, title)
-values  (2, 2, 3, 1, null, 0, 1, '2024-08-19 13:19:00.000000', 1, 0, 1, 'test test', '11 - 1 - ', '기술부서', 'employee1@example.com', '사원1', '부장', '기술부서', '사원4', '과장', '010-1111-1100', 'test'),
-        (1, 1, 1, 1, null, 0, 1, '2024-08-18 13:35:00.000000', 1, 0, 2, 'test test', '11 - 1 - 202408181335', '기술부서', 'employee1@example.com', '사원1', '부장', '기술부서', '사원2', '차장', '010-1111-1100', 'test 입니다~')
+insert into groupworks.workflow (approval_count, approver_count, status, work_flow_type, approval_date, cost, department_id, draft_date, employee_id, final_employee_id, description, code, department, email, employee_name, employee_rank, final_approval_department, final_approval_name, final_approval_rank, phone, title)
+values  (2, 2, 3, 1, null, 0, 1, '2024-08-19 13:19:00.000000', 1, 0, 'test test', '11 - 1 - ', '기술부서', 'employee1@example.com', '사원1', '부장', '기술부서', '사원4', '과장', '010-1111-1100', 'test'),
+        (1, 1, 1, 1, null, 0, 1, '2024-08-18 13:35:00.000000', 1, 0, 'test test', '11 - 1 - 202408181335', '기술부서', 'employee1@example.com', '사원1', '부장', '기술부서', '사원2', '차장', '010-1111-1100', 'test 입니다~')
         ;
 
 insert into groupworks.workflow_approver (approval, approval_method, approver_type, sequence_num, approval_date, approver_id, employee_id, workflow_id, approver_email, approver_name, approver_phone, approver_rank, comment, department)
