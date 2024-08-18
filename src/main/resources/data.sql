@@ -228,63 +228,94 @@ VALUES (0, 0, 0, 25, 1),
 
 
 
+/* ====== workflow start ======== */
 
-/* Material flow Start */
-INSERT INTO groupworks.materialflow_business (address, business_name, business_number, ceo, ceo_tel, fax, item, type) VALUES ('서울특별시 강남구 테헤란로 123번지 45층', '중앙HTA', '123-45-67900', '최기리', '010-5678-1234', '02-1234-5678', 'IT 교육, 국비훈련', '교육 서비스업');
-INSERT INTO groupworks.materialflow_business (address, business_name, business_number, ceo, ceo_tel, fax, item, type) VALUES ('경기도 이천시 이천동 2000번지 2000-1', '◎◎제약™', '123-45-67890', '홍길동', '010-1234-1325', '031-123-1325', '유제품', '제조업');
-INSERT INTO groupworks.materialflow_business (address, business_name, business_number, ceo, ceo_tel, fax, item, type) VALUES ('서울특별시 강남구 테헤란로 123', '◇◇식품', '124-45-67891', '김영희', '010-5678-1325', '02-567-1325', '음료수', '식품업');
-INSERT INTO groupworks.materialflow_business (address, business_name, business_number, ceo, ceo_tel, fax, item, type) VALUES ('부산광역시 해운대구 우동 1234', '☆☆유통', '125-45-67892', '이철수', '010-8765-4321', '051-876-4321', '가전제품', '유통업');
-INSERT INTO groupworks.materialflow_business (address, business_name, business_number, ceo, ceo_tel, fax, item, type) VALUES ('대구광역시 달서구 상인동 987', '▲▲무역', '126-45-67893', '박영수', '010-4567-7890', '053-456-7890', '자동차 부품', '무역업');
-INSERT INTO groupworks.materialflow_business (address, business_name, business_number, ceo, ceo_tel, fax, item, type) VALUES ('울산광역시 남구 삼산동 456', '♤♤화학', '127-45-67894', '최지우', '010-2345-6789', '052-234-6789', '화학물질', '화학업');
-INSERT INTO groupworks.materialflow_business (address, business_name, business_number, ceo, ceo_tel, fax, item, type) VALUES ('전라북도 전주시 완산구 서노송동 789', '◆◆농산', '128-45-67895', '김민수', '010-3456-7891', '063-345-7891', '농산물', '농업');
-INSERT INTO groupworks.materialflow_business (address, business_name, business_number, ceo, ceo_tel, fax, item, type) VALUES ('경상남도 창원시 마산합포구 중앙동 123', '◇◇기계', '129-45-67896', '이성민', '010-4567-8912', '055-456-8912', '기계부품', '기계업');
-INSERT INTO groupworks.materialflow_business (address, business_name, business_number, ceo, ceo_tel, fax, item, type) VALUES ('경기도 수원시 팔달구 매산로 456', '○○전자', '130-45-67897', '박현준', '010-5678-9123', '031-567-9123', '전자제품', '전자업');
-INSERT INTO groupworks.materialflow_business (address, business_name, business_number, ceo, ceo_tel, fax, item, type) VALUES ('서울특별시 마포구 서교동 789', '△△의료', '131-45-67898', '최예진', '010-6789-1234', '02-678-1234', '의료기기', '의료업');
-INSERT INTO groupworks.materialflow_business (address, business_name, business_number, ceo, ceo_tel, fax, item, type) VALUES ('서울특별시 강남구 테헤란로 123번지 45층', '중앙HTA', '123-45-67900', '최기리', '010-5678-1234', '02-1234-5678', 'IT 교육, 국비훈련', '교육 서비스업');
-INSERT INTO groupworks.materialflow_business (address, business_name, business_number, ceo, ceo_tel, fax, item, type) VALUES ('대전광역시 중구 은행동 123', '▣▣섬유', '132-45-67899', '홍석현', '010-7891-2345', '042-789-2345', '섬유제품', '섬유업');
-INSERT INTO groupworks.materialflow_business (address, business_name, business_number, ceo, ceo_tel, fax, item, type) VALUES ('서울특별시 강남구 서초동 123-45', '삼성전자', '123-45-67890', '이재용', '010-1234-5678', '02-123-4567', '전자제품', '제조업');
-INSERT INTO groupworks.materialflow_business (address, business_name, business_number, ceo, ceo_tel, fax, item, type) VALUES ('서울특별시 영등포구 여의도동 234-56', 'LG화학', '124-45-67891', '신학철', '010-2345-6789', '02-234-5678', '화학물질', '화학업');
-INSERT INTO groupworks.materialflow_business (address, business_name, business_number, ceo, ceo_tel, fax, item, type) VALUES ('서울특별시 서초구 양재동 345-67', '현대자동차', '125-45-67892', '정의선', '010-3456-7890', '02-345-6789', '자동차', '제조업');
-INSERT INTO groupworks.materialflow_business (address, business_name, business_number, ceo, ceo_tel, fax, item, type) VALUES ('경기도 성남시 분당구 불정로 6', '네이버', '126-45-67893', '최수연', '010-4567-8901', '031-456-7890', '인터넷 서비스', '서비스업');
-INSERT INTO groupworks.materialflow_business (address, business_name, business_number, ceo, ceo_tel, fax, item, type) VALUES ('경기도 성남시 분당구 대왕판교로 645번길 16', '카카오', '127-45-67894', '홍은택', '010-5678-9012', '031-567-8901', '모바일 서비스', '정보통신업');
-INSERT INTO groupworks.materialflow_business (address, business_name, business_number, ceo, ceo_tel, fax, item, type) VALUES ('서울특별시 용산구 한강대로 100', '아모레퍼시픽', '128-45-67895', '서경배', '010-6789-0123', '02-678-9012', '화장품', '제조업');
-INSERT INTO groupworks.materialflow_business (address, business_name, business_number, ceo, ceo_tel, fax, item, type) VALUES ('서울특별시 강남구 테헤란로 152', '하이트진로', '129-45-67896', '김인규', '010-7890-1234', '02-789-0123', '음료', '제조업');
-INSERT INTO groupworks.materialflow_business (address, business_name, business_number, ceo, ceo_tel, fax, item, type) VALUES ('경기도 이천시 부발읍 경충대로 2091', 'SK하이닉스', '130-45-67897', '이석희', '010-8901-2345', '031-890-1234', '반도체', '제조업');
-INSERT INTO groupworks.materialflow_business (address, business_name, business_number, ceo, ceo_tel, fax, item, type) VALUES ('서울특별시 중구 동호로 330', 'CJ제일제당', '131-45-67898', '강신호', '010-9012-3456', '02-901-2345', '식품', '제조업');
-INSERT INTO groupworks.materialflow_business (address, business_name, business_number, ceo, ceo_tel, fax, item, type) VALUES ('서울특별시 강서구 하늘길 77', '대한항공', '132-45-67899', '우기홍', '010-0123-4567', '02-012-3456', '항공 서비스', '운송업');
-INSERT INTO groupworks.materialflow_business (address, business_name, business_number, ceo, ceo_tel, fax, item, type) VALUES ('test test', '페이퍼컴퍼니', '000-00-00001', '나대표', '010-0000-0000', '00-000-000', '종이', '제조업');
+insert into groupworks.workflow (approval_count, approver_count, status, work_flow_type, approval_date, cost, department_id, draft_date, employee_id, final_employee_id, workflow_id, description, code, department, email, employee_name, employee_rank, final_approval_department, final_approval_name, final_approval_rank, phone, title)
+values  (2, 2, 3, 1, null, 0, 1, '2024-08-19 13:19:00.000000', 1, 0, 1, 'test test', '11 - 1 - ', '기술부서', 'employee1@example.com', '사원1', '부장', '기술부서', '사원4', '과장', '010-1111-1100', 'test'),
+        (1, 1, 1, 1, null, 0, 1, '2024-08-18 13:35:00.000000', 1, 0, 2, 'test test', '11 - 1 - 202408181335', '기술부서', 'employee1@example.com', '사원1', '부장', '기술부서', '사원2', '차장', '010-1111-1100', 'test 입니다~')
+        ;
 
-INSERT INTO groupworks.material_business_manager (business_id, email, name, phone) VALUES (23, 'manager01@test.com', '담당자1', '010-0000-0000');
-INSERT INTO groupworks.material_business_manager (business_id, email, name, phone) VALUES (23, 'manager02@test.com', '담당자2', '010-0000-0001');
-INSERT INTO groupworks.material_business_manager (business_id, email, name, phone) VALUES (23, 'manager03@test.com', '담당자3', '010-0000-0003');
-INSERT INTO groupworks.material_business_manager (business_id, email, name, phone) VALUES (23, 'manager04@test.com', '담당자4', '010-0000-0004');
-INSERT INTO groupworks.material_business_manager (business_id, email, name, phone) VALUES (23, 'manager05@test.com', '담당자5', '010-0000-0005');
+insert into groupworks.workflow_approver (approval, approval_method, approver_type, sequence_num, approval_date, approver_id, employee_id, workflow_id, approver_email, approver_name, approver_phone, approver_rank, comment, department)
+values
+        /* workflow id: 1 */
+        (1, 1, 1, 1, '2024-08-18 13:20:00.000000', 1, 2, 1, 'employee2@example.com', '사원2', '010-1111-1101', '차장', 'dd', '기술부서'),
+        (1, 1, 1, 2, '2024-08-18 13:22:00.000000', 2, 4, 1, 'employee4@example.com', '사원4', '010-1111-1103', '과장', 'test 완료', '기술부서'),
+        (1, 0, 2, 1, '2024-08-18 13:21:00.000000', 3, 3, 1, 'employee3@example.com', '사원3', '010-1111-1102', '과장', 'dddd', '기술부서'),
+        /* workflow id: 2 */
+        (1, 4, 1, 1, '2024-08-18 13:37:00.000000', 4, 2, 2, 'employee2@example.com', '사원2', '010-1111-1101', '차장', '결재 test 완료', '기술부서'),
+        (1, 0, 2, 1, '2024-08-18 13:37:00.000000', 5, 3, 2, 'employee3@example.com', '사원3', '010-1111-1102', '과장', '협의 test 완료', '기술부서');
 
-INSERT INTO groupworks.materialflow_order (delivery_date, due_date, order_date, zip_code, employee_id, manager_id, tex_amount, total_amount, address, address_detail, classification, order_code) VALUES ('2024-08-14', '2024-08-29', '2024-08-07', '00112', 1, 2, 10, 2000, 'test', 'test', '수주', '2024081412-0B3760541-I931');
-INSERT INTO groupworks.materialflow_order (delivery_date, due_date, order_date, zip_code, employee_id, manager_id, tex_amount, total_amount, address, address_detail, classification, order_code) VALUES ('2024-08-14', '2024-08-22', '2024-08-14', '00002', 1, 3, 10, 17500, 'test', 'test', '발주', '2024081414-0A6653603-X773');
+/* ====== workflow end ======== */
 
-INSERT INTO groupworks.materialflow_bom (order_id, quantity, unit_price, item_code, item_name, status) VALUES (1, 2, 1000, '0B3760541-I931-1', 'A4-200', true);
-INSERT INTO groupworks.materialflow_bom (order_id, quantity, unit_price, item_code, item_name, status) VALUES (2, 5, 980, '0A6653603-X773-1', 'A4-300', false);
-INSERT INTO groupworks.materialflow_bom (order_id, quantity, unit_price, item_code, item_name, status) VALUES (2, 3, 1200, '0A6653603-X773-2', 'A3-200', false);
-INSERT INTO groupworks.materialflow_bom (order_id, quantity, unit_price, item_code, item_name, status) VALUES (2, 3, 3000, '0A6653603-X773-3', 'B3-300', true);
 
-INSERT INTO groupworks.materialflow_item (delivery_time, storage_time, bom_id, mes_id, delivery_manager, storage_manager, delivery_location, item_code, item_status, storage_location) VALUES (null, '2024-08-15', 1, null, '', 'test-a', '', '0B3760541-I931-115602', '입고', 'test-b');
-INSERT INTO groupworks.materialflow_item (delivery_time, storage_time, bom_id, mes_id, delivery_manager, storage_manager, delivery_location, item_code, item_status, storage_location) VALUES (null, '2024-08-15', 1, null, '', 'test-a', '', '0B3760541-I931-125603', '입고', 'test-b');
-INSERT INTO groupworks.materialflow_item (delivery_time, storage_time, bom_id, mes_id, delivery_manager, storage_manager, delivery_location, item_code, item_status, storage_location) VALUES (null, null, 2, null, null, null, null, '0A6653603-X773-113', null, null);
-INSERT INTO groupworks.materialflow_item (delivery_time, storage_time, bom_id, mes_id, delivery_manager, storage_manager, delivery_location, item_code, item_status, storage_location) VALUES (null, null, 2, null, null, null, null, '0A6653603-X773-124', null, null);
-INSERT INTO groupworks.materialflow_item (delivery_time, storage_time, bom_id, mes_id, delivery_manager, storage_manager, delivery_location, item_code, item_status, storage_location) VALUES (null, null, 2, null, null, null, null, '0A6653603-X773-135', null, null);
-INSERT INTO groupworks.materialflow_item (delivery_time, storage_time, bom_id, mes_id, delivery_manager, storage_manager, delivery_location, item_code, item_status, storage_location) VALUES (null, null, 2, null, null, null, null, '0A6653603-X773-146', null, null);
-INSERT INTO groupworks.materialflow_item (delivery_time, storage_time, bom_id, mes_id, delivery_manager, storage_manager, delivery_location, item_code, item_status, storage_location) VALUES (null, null, 2, null, null, null, null, '0A6653603-X773-157', null, null);
-INSERT INTO groupworks.materialflow_item (delivery_time, storage_time, bom_id, mes_id, delivery_manager, storage_manager, delivery_location, item_code, item_status, storage_location) VALUES (null, null, 3, null, null, null, null, '0A6653603-X773-218', null, null);
-INSERT INTO groupworks.materialflow_item (delivery_time, storage_time, bom_id, mes_id, delivery_manager, storage_manager, delivery_location, item_code, item_status, storage_location) VALUES (null, null, 3, null, null, null, null, '0A6653603-X773-229', null, null);
-INSERT INTO groupworks.materialflow_item (delivery_time, storage_time, bom_id, mes_id, delivery_manager, storage_manager, delivery_location, item_code, item_status, storage_location) VALUES (null, null, 3, null, null, null, null, '0A6653603-X773-2310', null, null);
-INSERT INTO groupworks.materialflow_item (delivery_time, storage_time, bom_id, mes_id, delivery_manager, storage_manager, delivery_location, item_code, item_status, storage_location) VALUES ('2024-08-14', null, 4, null, 'SS택배-ㅁㅁㅁ', '', 'B번 9출하장', '0A6653603-X773-3111', '출고', '');
-INSERT INTO groupworks.materialflow_item (delivery_time, storage_time, bom_id, mes_id, delivery_manager, storage_manager, delivery_location, item_code, item_status, storage_location) VALUES ('2024-08-14', null, 4, null, 'SS택배-ㅁㅁㅁ', '', 'B번 9출하장', '0A6653603-X773-3212', '출고', '');
-INSERT INTO groupworks.materialflow_item (delivery_time, storage_time, bom_id, mes_id, delivery_manager, storage_manager, delivery_location, item_code, item_status, storage_location) VALUES ('2024-08-14', null, 4, null, 'SS택배-ㅁㅁㅁ', '', 'B번 9출하장', '0A6653603-X773-3313', '출고', '');
+/* ====== Material flow Start ======== */
 
-INSERT INTO groupworks.materialflow_mes (bom_id, defects_num, manufacture_date, order_id, quantity, unit_price, item_code, item_name, process_location) VALUES (1, 11, '2024-08-16 17:46:40.659212', 1, 100, 500, '0B3760541-I931-1', 'A4', '공장1 A4 제조 공정');
+insert into groupworks.materialflow_business (business_id, address, business_name, business_number, ceo, ceo_tel, fax, item, type)
+values  (1, '서울특별시 강남구 테헤란로 123번지 45층', '중앙HTA', '123-45-67900', '최기리', '010-5678-1234', '02-1234-5678', 'IT 교육, 국비훈련', '교육 서비스업'),
+        (2, '경기도 이천시 이천동 2000번지 2000-1', '◎◎제약™', '123-45-67890', '홍길동', '010-1234-1325', '031-123-1325', '유제품', '제조업'),
+        (3, '서울특별시 강남구 테헤란로 123', '◇◇식품', '124-45-67891', '김영희', '010-5678-1325', '02-567-1325', '음료수', '식품업'),
+        (4, '부산광역시 해운대구 우동 1234', '☆☆유통', '125-45-67892', '이철수', '010-8765-4321', '051-876-4321', '가전제품', '유통업'),
+        (5, '대구광역시 달서구 상인동 987', '▲▲무역', '126-45-67893', '박영수', '010-4567-7890', '053-456-7890', '자동차 부품', '무역업'),
+        (6, '울산광역시 남구 삼산동 456', '♤♤화학', '127-45-67894', '최지우', '010-2345-6789', '052-234-6789', '화학물질', '화학업'),
+        (7, '전라북도 전주시 완산구 서노송동 789', '◆◆농산', '128-45-67895', '김민수', '010-3456-7891', '063-345-7891', '농산물', '농업'),
+        (8, '경상남도 창원시 마산합포구 중앙동 123', '◇◇기계', '129-45-67896', '이성민', '010-4567-8912', '055-456-8912', '기계부품', '기계업'),
+        (9, '경기도 수원시 팔달구 매산로 456', '○○전자', '130-45-67897', '박현준', '010-5678-9123', '031-567-9123', '전자제품', '전자업'),
+        (10, '서울특별시 마포구 서교동 789', '△△의료', '131-45-67898', '최예진', '010-6789-1234', '02-678-1234', '의료기기', '의료업'),
+        (11, '서울특별시 강남구 테헤란로 123번지 45층', '중앙HTA', '123-45-67900', '최기리', '010-5678-1234', '02-1234-5678', 'IT 교육, 국비훈련', '교육 서비스업'),
+        (12, '대전광역시 중구 은행동 123', '▣▣섬유', '132-45-67899', '홍석현', '010-7891-2345', '042-789-2345', '섬유제품', '섬유업'),
+        (13, '서울특별시 강남구 서초동 123-45', '삼성전자', '123-45-67890', '이재용', '010-1234-5678', '02-123-4567', '전자제품', '제조업'),
+        (14, '서울특별시 영등포구 여의도동 234-56', 'LG화학', '124-45-67891', '신학철', '010-2345-6789', '02-234-5678', '화학물질', '화학업'),
+        (15, '서울특별시 서초구 양재동 345-67', '현대자동차', '125-45-67892', '정의선', '010-3456-7890', '02-345-6789', '자동차', '제조업'),
+        (16, '경기도 성남시 분당구 불정로 6', '네이버', '126-45-67893', '최수연', '010-4567-8901', '031-456-7890', '인터넷 서비스', '서비스업'),
+        (17, '경기도 성남시 분당구 대왕판교로 645번길 16', '카카오', '127-45-67894', '홍은택', '010-5678-9012', '031-567-8901', '모바일 서비스', '정보통신업'),
+        (18, '서울특별시 용산구 한강대로 100', '아모레퍼시픽', '128-45-67895', '서경배', '010-6789-0123', '02-678-9012', '화장품', '제조업'),
+        (19, '서울특별시 강남구 테헤란로 152', '하이트진로', '129-45-67896', '김인규', '010-7890-1234', '02-789-0123', '음료', '제조업'),
+        (20, '경기도 이천시 부발읍 경충대로 2091', 'SK하이닉스', '130-45-67897', '이석희', '010-8901-2345', '031-890-1234', '반도체', '제조업'),
+        (21, '서울특별시 중구 동호로 330', 'CJ제일제당', '131-45-67898', '강신호', '010-9012-3456', '02-901-2345', '식품', '제조업'),
+        (22, '서울특별시 강서구 하늘길 77', '대한항공', '132-45-67899', '우기홍', '010-0123-4567', '02-012-3456', '항공 서비스', '운송업'),
+        (23, 'test test', '페이퍼컴퍼니', '000-00-00001', '나대표', '010-0000-0000', '00-000-000', '종이', '제조업')
+        ;
 
-/* Material flow End */
+insert into groupworks.material_business_manager (business_id, manager_id, email, name, phone)
+values  (23, 1, 'manager01@test.com', '담당자1', '010-0000-0000'),
+        (23, 2, 'manager02@test.com', '담당자2', '010-0000-0001'),
+        (23, 3, 'manager03@test.com', '담당자3', '010-0000-0003'),
+        (23, 4, 'manager04@test.com', '담당자4', '010-0000-0004'),
+        (23, 5, 'manager05@test.com', '담당자5', '010-0000-0005')
+        ;
+
+insert into groupworks.materialflow_order (delivery_date, due_date, order_date, zip_code, employee_id, manager_id, order_id, tex_amount, total_amount, address, address_detail, classification, order_code)
+values  ('2024-08-14', '2024-08-29', '2024-08-07', '00112', 1, 2, 1, 10, 2000, 'test', 'test', '수주', '2024081412-0B3760541-I931'),
+        ('2024-08-14', '2024-08-22', '2024-08-14', '00002', 1, 3, 2, 10, 17500, 'test', 'test', '발주', '2024081414-0A6653603-X773')
+        ;
+
+insert into groupworks.materialflow_bom (status, bom_id, order_id, quantity, unit_price, item_code, item_name)
+values  (true, 1, 1, 2, 1000, '0B3760541-I931-1', 'A4-200'),
+        (false, 2, 2, 5, 980, '0A6653603-X773-1', 'A4-300'),
+        (false, 3, 2, 3, 1200, '0A6653603-X773-2', 'A3-200'),
+        (true, 4, 2, 3, 3000, '0A6653603-X773-3', 'B3-300')
+        ;
+
+insert into groupworks.materialflow_item (delivery_time, storage_time, bom_id, item_id, mes_id, delivery_manager, storage_manager, delivery_location, item_code, item_status, storage_location)
+values  (null, '2024-08-15', 1, 1, null, '', 'test-a', '', '0B3760541-I931-115602', '입고', 'test-b'),
+        (null, '2024-08-15', 1, 2, null, '', 'test-a', '', '0B3760541-I931-125603', '입고', 'test-b'),
+        (null, null, 2, 3, null, null, null, null, '0A6653603-X773-113', null, null),
+        (null, null, 2, 4, null, null, null, null, '0A6653603-X773-124', null, null),
+        (null, null, 2, 5, null, null, null, null, '0A6653603-X773-135', null, null),
+        (null, null, 2, 6, null, null, null, null, '0A6653603-X773-146', null, null),
+        (null, null, 2, 7, null, null, null, null, '0A6653603-X773-157', null, null),
+        (null, null, 3, 8, null, null, null, null, '0A6653603-X773-218', null, null),
+        (null, null, 3, 9, null, null, null, null, '0A6653603-X773-229', null, null),
+        (null, null, 3, 10, null, null, null, null, '0A6653603-X773-2310', null, null),
+        ('2024-08-14', null, 4, 11, null, 'SS택배-ㅁㅁㅁ', '', 'B번 9출하장', '0A6653603-X773-3111', '출고', ''),
+        ('2024-08-14', null, 4, 12, null, 'SS택배-ㅁㅁㅁ', '', 'B번 9출하장', '0A6653603-X773-3212', '출고', ''),
+        ('2024-08-14', null, 4, 13, null, 'SS택배-ㅁㅁㅁ', '', 'B번 9출하장', '0A6653603-X773-3313', '출고', '')
+        ;
+
+insert into groupworks.materialflow_mes (bom_id, defects_num, manufacture_date, mes_id, order_id, quantity, unit_price, item_code, item_name, process_location)
+values  (1, 11, '2024-08-16 17:46:40.659212', 1, 1, 100, 500, '0B3760541-I931-1', 'A4', '공장1 A4 제조 공정');
+
+/* ====== Material flow End ======== */
 
 
 -- 1~10

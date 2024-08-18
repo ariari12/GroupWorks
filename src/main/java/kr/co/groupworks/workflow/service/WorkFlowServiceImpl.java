@@ -145,8 +145,8 @@ public class WorkFlowServiceImpl implements WorkFlowService {
                     for (MultipartFile mlpFile : files) {
                         String fileName = mlpFile.getOriginalFilename();
                         String filePath = fileUploadDir + File.separator + fileName;
-                        log.info("filePath: " + filePath);
-                        log.info("fileName: " + fileName);
+                        log.info("filePath: {}", filePath);
+                        log.info("fileName: {}", fileName);
 
                         mlpFile.transferTo(new File(filePath));
                         attachmentFileList.add( new AttachmentFileDTO().setWorkFlowId(workflowId).setFileName(fileName).setSavePath(filePath) );
@@ -193,7 +193,7 @@ public class WorkFlowServiceImpl implements WorkFlowService {
             /* 결재자 ApproveEntity: {approvalMethod, approvalDate, approval} UPDATE */
             approverEntity.setApproval(approverDTO.getApprovalMethod() <= 4 ? 1 : 2);
             if(approverEntity.getApprovalMethod() == ApprovalMethod.FULL_APPROVAL.ordinal() +1 ||
-                    approverEntity.getApprovalMethod() == ApprovalMethod.REJECTION.ordinal() +1) { // 전결 또는 후결
+                        approverEntity.getApprovalMethod() == ApprovalMethod.REJECTION.ordinal() +1) { // 전결 또는 후결
                 workFlow.getApprovers().forEach(a -> {
                     /* 결재 차례인 결재자인 경우 결재 적용 */
                     if(a.getApproverType() == 1 && a.getSequenceNum() > approverEntity.getSequenceNum()) {

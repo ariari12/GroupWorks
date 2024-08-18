@@ -50,24 +50,24 @@ public class WorkFlowRestController {
     /* WorkFlow Request Receive 결재 요청 받기 */
     @PostMapping(SEPARATOR + WORKFLOW_URL + APPROVAL_REQUEST)
     public ResponseEntity<Map<String, Object>> requestOk(@Valid WorkFlowDTO workFlowDTO, BindingResult bindingResult) {
-        Map<String, Object> response = new HashMap<>();
         title = "Approval Request";
-//        log.info("WorkFlowRestController - request ok, workFlowDTO: {}", workFlowDTO);
+        Map<String, Object> response = new HashMap<>();
+        boolean valid = false;
 
         if (bindingResult.hasErrors()) {
             // 필수 입력항목의 유효성 결과 실패 시
             for (FieldError fieldError : bindingResult.getFieldErrors()) {
                 log.info("WorkFlowRestController - request Fail! Error: {}", fieldError);
             }
-            response.put("valid", false);
             response.put("errors", bindingResult.getAllErrors());
         }
         else {
             // 데이터 저장 로직
             long id = workFlowService.setWorkFlowDTO(workFlowDTO);
-            response.put("valid", true);
+            valid = true;
             response.put("primaryKey", id);
         }
+        response.put("valid", valid);
         return ResponseEntity.ok().body(response);
     }
 
@@ -100,14 +100,13 @@ public class WorkFlowRestController {
         if (bindingResult.hasErrors()) {
             response.put("result", "fail");
             for (FieldError fieldError : bindingResult.getFieldErrors()) {
-                log.info("WorkFlowRestController - approverSend Field! Error: {}", fieldError);
+                log.error("WorkFlowRestController - approverSend Field! Error: {}", fieldError);
             }
         }
         else if(!workFlowService.setApproverDTOList(approverDTOS)) { // Service Logic
-            log.info("WorkFlowRestController - approverSend, Service Fail");
+            log.error("WorkFlowRestController - approverSend, Service Fail");
             response.put("result", "fail");
         } else {
-//            log.info("WorkFlowRestController - approverSend, success");
             response.put("result", "success");
             response.put("url", SEPARATOR + WORKFLOW_URL + WORK_STATUS);
         }
@@ -120,19 +119,19 @@ public class WorkFlowRestController {
     public ResponseEntity<Map<String, Object>> approval(
             @PathVariable long workFlowId, @PathVariable long employeeId, @PathVariable int approverType,
             @RequestParam(required = false) Integer approvalMethod, @RequestParam(required = false) String comment) {
-//        log.info("WorkFlowRestController - approval ok, param: {}, {}, {}, {}, {}", workFlowId, employeeId, approverType, approvalMethod, comment);
         Map<String, Object> response = new HashMap<>();
-
-        ApproverDTO approverDTO = new ApproverDTO().setWorkFlowId(workFlowId)
-                .setApprovalMethod(approvalMethod == null ? 0 : approvalMethod)
+        ApproverDTO approverDTO = new ApproverDTO().setWorkFlowId(workFlowId).setApprovalMethod(approvalMethod == null ? 0 : approvalMethod)
                 .setEmployeeId(employeeId).setApproverType(approverType).setComment(comment);
+
         if(workFlowService.setApprover(approverDTO)) {
-            notifyService.notifySetup(workFlowId, employeeId, approverType, "workflow 전자결재", (w, e) -> w.getApprovers().stream()
-                    .filter(we -> we.getEmployeeId() == e.getEmployeeId())
-                    .findFirst().orElse(null) != null ? approverType == 2 ?
-                    e.getEmployeeName() + "님이 결재 협의안을 작성하였습니다." :
-                    e.getEmployeeName() + "님이 결재를 처리하였습니다." : ""
-            );
+            Map<String, Object> notifySetup = notifyService.notifySetup(workFlowId, employeeId, "workflow 전자결재", e ->
+                    approverType == 2 ? e.getEmployeeName() + "님이 결재 협의안을 작성하였습니다." : e.getEmployeeName() + "님이 결재를 처리하였습니다.");
+            if(!(boolean) notifySetup.get("result")) {
+                log.error("WorkFlowRestController - notifyService, notifySetup Fail");
+                log.error("WorkFlowRestController - notifyService: {}}", notifySetup.get("message"));
+                response.put("status", "fail");
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+            }
             String detail = "/detail/";
             response.put("status", "success");
             response.put("url", SEPARATOR + WORKFLOW_URL + detail + workFlowId);
@@ -151,11 +150,8 @@ public class WorkFlowRestController {
     /* Approval Request Cansel 결재 취소 */
     @DeleteMapping(value = SEPARATOR + WORKFLOW_URL + APPROVAL)
     public ResponseEntity<Map<String, String>> approvalCansel(@RequestParam long workFlowId, @RequestParam int status) {
-//        log.info("WorkFlowRestController - approval cansel, param: {}, {}", workFlowId, status);
         Map<String, String> response = new HashMap<>();
-
         if(status == 0) { /* 결재가 진행 중인 경우만 발송 취소 가능 */
-            /* 발송 취소 로직 처리 */
             if(workFlowService.removeWorkflow(workFlowId)) {
                 response.put("status", "success");
                 response.put("url", SEPARATOR + WORKFLOW_URL + APPROVAL_HISTORY);
@@ -169,8 +165,6 @@ public class WorkFlowRestController {
     /* Approve Attachment File Download 결재 첨부파일 다운로드 */
     @GetMapping(value = SEPARATOR + WORKFLOW_URL + FILE_RECEIVE + SEPARATOR + "{fileId}")
     public ResponseEntity<Resource> fileReceive(@PathVariable long fileId) {
-//        log.info("WorkFlowRestController - file-receive ok, id: {}", fileId);
-
         Map<String, Object> result = workFlowService.getAttachmentFile(fileId);
         if (result != null || (boolean)result.get("result")) {
             HttpHeaders headers = new HttpHeaders();
@@ -185,7 +179,6 @@ public class WorkFlowRestController {
     /* 전자결재 통계 */
     @GetMapping(value = "/work-flow/stat/{code}")
     public ResponseEntity<Object> workStatus(@PathVariable int code, HttpSession session) {
-//        log.info("WorkFlowRestController - workStatus ok, param: {}", code);
         return getObjectResponseEntity(code, session, log, workFlowService);
     }
 

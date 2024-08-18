@@ -12,6 +12,7 @@ import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
 
@@ -122,12 +123,16 @@ public class OrderQueryDslImpl extends QuerydslRepositorySupport implements Orde
     }
 
     @Override
-    public Long calculat(LocalDate start, LocalDate end) {
+    public Long calculate(LocalDate start, LocalDate end) {
         QOrder o = QOrder.order;
+        QMes m = QMes.mes;
+
+        // materialflow_mes 테이블의 계산된 합산값
+        NumberExpression<Long> minus = m.quantity.multiply(m.unitPrice).sum().multiply(-1L);
 
         // NumberExpression<Long>으로 연산 수행
         NumberExpression<Long> adjustedAmount = o.totalAmount
-                .multiply(o.texAmount.add(-100L))
+                .multiply(o.texAmount.add(-100L).multiply(-1L))
                 .divide(100L);
 
         // CASE 문을 Long 타입으로 정의
@@ -136,10 +141,11 @@ public class OrderQueryDslImpl extends QuerydslRepositorySupport implements Orde
                 .when(o.classification.eq(OrderClassification.getClassification("수주"))).then(adjustedAmount.multiply(-1L))
                 .otherwise(0L);
 
-        // 최종 계산 결과를 Long 타입으로 반환
+        // 최종 합산 결과 계산
         Long result = queryFactory
-                .select(resultExpression.sum())
+                .select(resultExpression.sum().add(minus))
                 .from(o)
+                .innerJoin(m).on(m.manufactureDate.between(start.atStartOfDay(), end.atTime(LocalTime.MAX)))
                 .where(o.orderDate.between(start, end))
                 .fetchOne();
         return result != null ? result : 0L;  // null 체크 후 0L 반환
