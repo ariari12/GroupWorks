@@ -1,20 +1,16 @@
 package kr.co.groupworks.calendar.repository;
+import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import kr.co.groupworks.calendar.dto.CalendarFormDTO;
-import kr.co.groupworks.calendar.entity.QCalendar;
-import kr.co.groupworks.calendar.entity.QCalendarAttachment;
 import kr.co.groupworks.calendar.entity.Vacation;
 import kr.co.groupworks.employee.entity.Employee;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.support.PageableExecutionUtils;
 import java.util.List;
-
-import static kr.co.groupworks.calendar.entity.QCalendar.*;
 import static kr.co.groupworks.calendar.entity.QCalendarAttachment.calendarAttachment;
 import static kr.co.groupworks.calendar.entity.QVacation.*;
 import static kr.co.groupworks.department.entity.QDepartment.*;
@@ -43,7 +39,14 @@ public class VacationRepositoryImpl implements VacationQueryDsl{
     }
 
     @Override
-    public Page<Vacation> findAllTeam(Employee emp, Pageable pageable) {
+    public Page<Vacation> findAllTeamSearchName(Employee emp, Pageable pageable, String searchName) {
+
+        BooleanBuilder whereClause = new BooleanBuilder();
+        whereClause.and(employee.rankId.loe(emp.getRankId()).and(department.eq(emp.getDepartment())));
+
+        if (searchName != null && !searchName.isEmpty()) {
+            whereClause.and(employee.employeeName.like("%"+searchName+"%"));
+        }
 
         List<Vacation> contents = queryFactory
                 .select(vacation).distinct()
@@ -51,12 +54,7 @@ public class VacationRepositoryImpl implements VacationQueryDsl{
                 .join(vacation.employee, employee)
                 .leftJoin(vacation.attachmentList, calendarAttachment)
                 .leftJoin(employee.department, department)
-                .where(employee.rankId
-                        .loe(emp.getRankId())
-                        .and(
-                            department.eq(emp.getDepartment())
-                        )
-                )
+                .where(whereClause)
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();

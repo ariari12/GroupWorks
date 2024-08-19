@@ -5,6 +5,9 @@
         <div class="card-header">
             <i class="fas fa-table me-1"></i>
             휴가 신청 내역
+            <span class="input-group justify-content-end" style="width: 30%; float: right">
+                <input type="text" class="form-control" id="searchKeyword" placeholder="사원의 이름 검색" style="width: 60%;">
+            </span>
         </div>
         <div class="card-body">
             <table id="vacationTeamRequest" class="table table-hover" style="width:100%">
@@ -94,18 +97,25 @@
                     </ul>
                 </nav>
             </div>
+            <div id="modalContainer"></div>
 
-    <div id="modalContainer"></div>
-
-    <script>
-        $(document).ready(function () {
-            $('.vacation-row').on('click', function () {
-                const id = $(this).data('id');
-                $.get('team/detail', {id: id}, function (data) {
-                    $('#modalContainer').html(data);
-                    $('#vacationModal').modal('show');
+            <script>
+                $(document).ready(function () {
+                    $('.vacation-row').on('click', function () {
+                        const id = $(this).data('id');
+                        $.get('team/detail', {id: id}, function (data) {
+                            $('#modalContainer').html(data);
+                            $('#vacationModal').modal('show');
+                        });
+                    });
+                    $('#searchKeyword').keypress(function (e) {
+                        if (e.keyCode == 13) {
+                            let keyword = $('#searchKeyword').val();
+                            location.href="./team?search=" + keyword;
+                        }
+                    })
                 });
-            });
-        });
-    </script>
+            </script>
+        </div>
+    </div>
 </div>

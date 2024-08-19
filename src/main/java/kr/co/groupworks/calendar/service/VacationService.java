@@ -30,7 +30,7 @@ public interface VacationService {
 
     List<CalendarFormDTO> findAllVacation(Long employeeId);
 
-    Page<VacationRequestDTO> findAllTeamSearchPending(Long employeeId, Pageable pageable);
+    Page<VacationRequestDTO> findAllTeamSearchPending(Long employeeId, Pageable pageable, String search);
 
     Long approvalVacation(Long calendarId, VacationStatus status, Long employeeId);
 

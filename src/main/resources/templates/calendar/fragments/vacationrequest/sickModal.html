@@ -11,18 +11,21 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
+                    <h6>사용한 병가</h6>
+                    <div th:text="|${vacationHistoryDTO.sickDaysUsed} 일|">6일</div>
+                    <br>
 
-                    <h5>병가 일정</h5>
+                    <h6>병가 일정</h6>
                     <input type="text" id="vSickDate" placeholder="Select Date.." class="form-control vacationDate">
                     <input type="hidden" th:field="*{sickStartDate}">
                     <input type="hidden" th:field="*{sickEndDate}">
                     <br>
 
-                    <h5>상세 사유</h5>
+                    <h6>상세 사유</h6>
                     <textarea class="form-control" th:field="*{sickContents}" placeholder="병가 사유 입력"></textarea>
 
                     <br>
-                    <h5>첨부 파일</h5>
+                    <h6>첨부 파일</h6>
                     <td><input type="file" id="sickFileUpload" name="sickFileUpload" class="form-control" multiple></td>
                 </div>
                 <div class="modal-footer">

@@ -105,14 +105,15 @@ public class VacationController {
 
     // 구성원 휴가 신청 내역
     @GetMapping(value = "/team") //page=0 부터 시작 size 를 정하면 된다
-    public String vacationTeam(Model model, @PageableDefault(size = 10) Pageable pageable,
+    public String vacationTeam(Model model, @RequestParam(name = "search", required = false) String search,
+                               @PageableDefault(size = 10) Pageable pageable,
                                @SessionAttribute(name = "employee")SessionEmployeeDTO sessionEmployeeDTO) {
 
 
         Long employeeId = sessionEmployeeDTO.getEmployeeId();
 
         // 휴가 신청 내역 조회
-        Page<VacationRequestDTO> vacationRequestList = vacationService.findAllTeamSearchPending(employeeId, pageable);
+        Page<VacationRequestDTO> vacationRequestList = vacationService.findAllTeamSearchPending(employeeId, pageable,search);
 
 
         // header title 넘겨주기

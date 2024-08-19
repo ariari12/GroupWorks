@@ -31,7 +31,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -340,13 +339,13 @@ public class VacationServiceImpl implements VacationService{
                                                              @PageableDefault(
                                                                      sort = {"createdDate","startDate"},
                                                                      direction = Sort.Direction.DESC
-                                                             ) Pageable pageable) {
+                                                             ) Pageable pageable, String search) {
         Employee employee = employeeRepository.findById(employeeId)
                 .orElseThrow(() -> new EntityNotFoundException("사원을 찾을 수 없습니다. " + employeeId));
         if(employee.getRankId()<3){
             throw new RankNotSufficientException("직급이 낮아 해당 작업을 수행할 권한이 없습니다.");
         }
-        Page<Vacation> vacationList = vacationRepository.findAllTeam(employee, pageable);
+        Page<Vacation> vacationList = vacationRepository.findAllTeamSearchName(employee, pageable, search);
 
         // 페이징 처리하기 엔티티 dto 전환
         return vacationList
