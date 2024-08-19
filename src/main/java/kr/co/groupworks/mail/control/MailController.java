@@ -153,7 +153,7 @@ public class MailController {
         mailPage =
                 mailService.getTrashEmailListTrashByReceiverEmail(receiverEmail, pageable);
 
-        log.info(receiverEmail + "의 휴디통 메일 목록");
+        log.info(receiverEmail + "의 휴지통 메일 목록");
         log.info(mailPage.toString());
         model.addAttribute("mailList", mailPage);
         return "mail/trash";
@@ -177,7 +177,7 @@ public class MailController {
         mailDTO.setMailSenderName(employeeDTO.getEmployeeName());
 
 //        받는 사람 이메일에 해당하는 사람의 이름과 employeeId
-        EmployeeDTO receiveEmployeeDTO = employeeService.toEmployeeDTO(employeeService.findByEmployeeEmail(mailDTO.getMailReceiver()));
+        EmployeeDTO receiveEmployeeDTO = employeeService.findByEmployeeEmail(mailDTO.getMailReceiver()).toEmployeeDTO();
         try {
             mailDTO.setMailReceiverId(receiveEmployeeDTO.getEmployeeId());
             mailDTO.setMailReceiverName(receiveEmployeeDTO.getEmployeeName());
@@ -191,7 +191,7 @@ public class MailController {
 
         //        참조되는 사람 이메일에 해당하는 사람의 이름
         try {
-            EmployeeDTO referrerEmployeeDTO = employeeService.toEmployeeDTO(employeeService.findByEmployeeEmail(mailDTO.getMailReferrer()));
+            EmployeeDTO referrerEmployeeDTO = employeeService.findByEmployeeEmail(mailDTO.getMailReferrer()).toEmployeeDTO();
             mailDTO.setMailReferrerId(referrerEmployeeDTO.getEmployeeId());
             mailDTO.setMailReferrerName(referrerEmployeeDTO.getEmployeeName());
 
@@ -219,6 +219,7 @@ public class MailController {
         return "redirect:/mail/send";
     }
 
+//    메일 수신 시 알람뜨게 설정
     public void sendNotification(Long mailReceiverId, String mailId) {
 
         Notification notification = Notification.builder()

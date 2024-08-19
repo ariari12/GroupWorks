@@ -1,6 +1,7 @@
 package kr.co.groupworks.department.entity;
 
 import jakarta.persistence.*;
+import kr.co.groupworks.department.dto.DepartmentDTO;
 import lombok.*;
 
 @Entity
@@ -22,4 +23,14 @@ public class Department {
     // 4, 부서 지역
     @Column(name = "location", nullable = false)
     private String location;
+
+    //  Entity to Dto
+    public DepartmentDTO toDTO() {
+        return DepartmentDTO.builder()
+                .departmentId(this.getDepartmentId())
+                .departmentName(this.getDepartmentName())
+                .contactNumber(this.getContactNumber())
+                .location(this.getLocation())
+                .build();
+    }
 }
