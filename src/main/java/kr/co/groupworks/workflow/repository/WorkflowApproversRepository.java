@@ -1,5 +1,6 @@
 package kr.co.groupworks.workflow.repository;
 
+import kr.co.groupworks.workflow.dto.vo.WorkflowListVO;
 import kr.co.groupworks.workflow.entity.WorkFlowEntity;
 
 import java.util.List;
@@ -14,6 +15,5 @@ public interface WorkflowApproversRepository {
 
     List<WorkFlowEntity> employeeWorkflowStat(Integer c, Long e);
 
-
-    List<WorkFlowEntity> recentWorkflowList(Long employeeId);
+    List<WorkflowListVO> recentWorkflowList(Long employeeId);
 }

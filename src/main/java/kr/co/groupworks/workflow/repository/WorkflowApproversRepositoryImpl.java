@@ -4,6 +4,7 @@ import com.querydsl.core.Tuple;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import kr.co.groupworks.department.entity.QDepartment;
+import kr.co.groupworks.workflow.dto.vo.WorkflowListVO;
 import kr.co.groupworks.workflow.entity.QApproverEntity;
 import kr.co.groupworks.workflow.entity.QWorkFlowEntity;
 import kr.co.groupworks.workflow.entity.WorkFlowEntity;
@@ -173,16 +174,16 @@ public class WorkflowApproversRepositoryImpl extends QuerydslRepositorySupport i
     }
 
     @Override
-    public List<WorkFlowEntity> recentWorkflowList(Long employeeId) {
+    public List<WorkflowListVO> recentWorkflowList(Long employeeId) {
         QWorkFlowEntity w = QWorkFlowEntity.workFlowEntity;
         QApproverEntity a = QApproverEntity.approverEntity;
         if (employeeId == null || employeeId < 1) return new ArrayList<>();
 
         return queryFactory
-                .select(w)
-                .from(w).innerJoin(a).on(a.workFlowId.eq(w.id))
+                .select(w).distinct().from(w)
+                .innerJoin(a).on(a.workFlowId.eq(w.id))
                 .where(w.employeeId.eq(employeeId).or(a.employeeId.eq(employeeId)))
-                .orderBy(w.draftDate.desc())
-                .fetchJoin().fetch();
+                .orderBy(w.draftDate.desc()).limit(5)
+                .fetch().stream().map(WorkflowListVO::new).toList();
     }
 }
