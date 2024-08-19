@@ -31,6 +31,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -209,10 +210,11 @@ public class VacationServiceImpl implements VacationService{
     }
 
     @Override
-    public List<VacationHistoryDTO> findVacationHistory(Long employeeId) {
+    public VacationHistoryDTO findVacationHistory(Long employeeId) {
         Employee employee = employeeRepository.findById(employeeId)
                 .orElseThrow(() -> new EntityNotFoundException("사원을 찾을 수 없습니다. " + employeeId));
-        return vacationHistoryRepository.findVacationMyHistoryDTO(employee.getEmployeeId());
+        return vacationHistoryRepository.findVacationMyHistoryDTO(employee.getEmployeeId())
+                .orElseThrow(() -> new EntityNotFoundException("휴가 내역을 찾을 수 없습니다. "));
     }
 
     // 휴가신청 삭제

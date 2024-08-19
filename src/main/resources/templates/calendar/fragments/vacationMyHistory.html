@@ -25,20 +25,6 @@
 
 
             <tbody>
-            <!--/* 상세 보기 이동 시 onclick 이벤트 핸들러로 Javascript 함수 추가 */-->
-            <th:block th:if="${vacationHistoryList == null} or ${vacationHistoryList.size() == 0}">
-                <tr>
-                    <td style="text-align: center">신청 내역 없음</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-            </th:block>
-
-            <th:block th:unless="${vacationHistoryList == null} or ${vacationHistoryList.size() == 0}">
 
                 <tr th:each="dto : ${vacationHistoryList}">
                     <td th:text="${dto.employeeName}">사원 이름</td>
@@ -50,7 +36,6 @@
                     <td th:text="${dto.sickDaysUsed}">병가 사용 일수</td>
                     <td th:text="${dto.otherDaysUsed}">기타 사용 일수</td>
                 </tr>
-            </th:block>
             </tbody>
         </table>
     </div>

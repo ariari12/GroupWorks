@@ -47,7 +47,7 @@ public class VacationController {
 
         List<VacationRequestDTO> vacationRequestList = vacationService.findAllByEmployeeId(employeeId);
 
-        List<VacationHistoryDTO> vacationHistoryList = vacationService.findVacationHistory(employeeId);
+        VacationHistoryDTO vacationHistoryDTO = vacationService.findVacationHistory(employeeId);
 
 
         // 검증 validation th:filed 속성 추가하기 위한 dto
@@ -56,7 +56,7 @@ public class VacationController {
         model.addAttribute("otherForm",new OtherFormDTO());
         model.addAttribute("sickForm",new SickFormDTO());
         model.addAttribute("vacationRequestList",vacationRequestList);
-        model.addAttribute("vacationHistoryList",vacationHistoryList);
+        model.addAttribute("vacationHistoryDTO",vacationHistoryDTO);
         // header title 넘겨주기
         model.addAttribute("title", "내 휴가");
         model.addAttribute("subtitle", "휴가 신청내역");
