@@ -16,16 +16,18 @@
                 내 휴가 관리
             </a>
 
-            <a class="nav-link collapsed" data-bs-toggle="collapse" data-bs-target="#vacationTeam" aria-expanded="false" aria-controls="pagesCollapseAuth">
-                구성원 휴가 관리
-                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-            </a>
-            <div class="collapse" id="vacationTeam" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
-                <nav class="sb-sidenav-menu-nested nav">
-                    <a class="nav-link" href="/vacation/team">휴가 신청 내역</a>
-                    <a class="nav-link" href="/vacation/team/history">휴가 보유 내역</a>
-                </nav>
-            </div>
+            <th:block th:if="${session.employee.employeeId}">
+                <a class="nav-link collapsed" data-bs-toggle="collapse" data-bs-target="#vacationTeam" aria-expanded="false" aria-controls="pagesCollapseAuth">
+                    구성원 휴가 관리
+                    <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                </a>
+                <div class="collapse" id="vacationTeam" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
+                    <nav class="sb-sidenav-menu-nested nav">
+                        <a class="nav-link" href="/vacation/team">휴가 신청 내역</a>
+                        <a class="nav-link" href="/vacation/team/history">휴가 보유 내역</a>
+                    </nav>
+                </div>
+            </th:block>
         </nav>
     </div>
 

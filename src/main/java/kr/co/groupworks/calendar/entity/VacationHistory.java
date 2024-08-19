@@ -8,9 +8,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
-
 @Entity
 @Table(name="vacation_history")
 @Getter
@@ -64,4 +61,11 @@ public class VacationHistory extends BaseEntity {
     public void updateOther(int annual){
         otherDaysUsed += annual;
     }
+
+    public void resetAnnual(){
+        this.annualDaysUsed = 0;
+        this.sickDaysUsed = 0;
+        this.otherDaysUsed=0;
+        this.totalAnnual = 25;
+    };
 }

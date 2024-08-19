@@ -23,6 +23,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -48,6 +49,14 @@ public class VacationServiceImpl implements VacationService{
     private final VacationMapper vacationMapper;
     private final NotificationService notificationService;
 
+    // 매년 1월 1일에 휴가 내역 초기화
+    @Scheduled(cron = "0 0 0 1 1 *")
+    public void resetVacationHistoryAnnually() {
+        List<VacationHistory> all = vacationHistoryRepository.findAll();
+        for (VacationHistory history : all) {
+            history.resetAnnual();
+        }
+    }
 
 
 
