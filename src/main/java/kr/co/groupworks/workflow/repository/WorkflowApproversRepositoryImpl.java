@@ -50,20 +50,19 @@ public class WorkflowApproversRepositoryImpl extends QuerydslRepositorySupport i
         List<Tuple> list = queryFactory
                 .select(
                         workFlow.status
+                                .when(0).then(1L)
+                                .when(3).then(1L)
+                                .otherwise(0L)
+                                .sum(),
+                        workFlow.status
                                 .when(1).then(1L)
                                 .otherwise(0L)
                                 .sum(),
                         workFlow.status
                                 .when(2).then(1L)
                                 .otherwise(0L)
-                                .sum(),
-                        workFlow.status
-                                .when(0).then(1L)
-                                .when(3).then(1L)
-                                .otherwise(0L)
-                                .sum().as("test03")
-                )
-                .from(department)
+                                .sum()
+                ).from(department)
                 .leftJoin(workFlow).on(workFlow.departmentId.eq(department.departmentId))
                 .groupBy(department.departmentId)
                 .fetch();

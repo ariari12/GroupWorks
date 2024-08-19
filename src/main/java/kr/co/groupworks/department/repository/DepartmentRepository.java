@@ -10,6 +10,6 @@ import java.util.List;
 @Repository
 public interface DepartmentRepository extends JpaRepository<Department, Long> {
 
-    @Query(value = "select d.departmentName from Department d order by 1 asc ")
+    @Query(value = "select d.departmentName from Department d order by d.departmentId asc ")
     List<Object> getDepartments();
 }
