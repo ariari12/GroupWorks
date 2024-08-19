@@ -130,7 +130,7 @@
                 <span class="employee-item" th:utext="${employee.getEmployeeName()} + '<br>' + ${employee.getRankName()}"></span>
                 <div class="modal">
                     <a class="sendEmail" th:href="@{/mail/write(email=${employee.getEmail()})}">메일 보내기</a>
-                    <a href="#">채팅 시작하기</a>
+                    <a href="/chat/list">채팅 시작하기</a>
                 </div>
 
             </th:block>
