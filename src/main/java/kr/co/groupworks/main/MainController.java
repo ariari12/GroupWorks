@@ -23,7 +23,7 @@ public class MainController {
 
     private final EmployeeService employeeService;
 
-    private final WorkFlowRepository workFlowRepository
+    private final WorkFlowRepository workFlowRepository;
 
 //    로그인 창 이외에는 싹 권한 필요함 첫 화면은 로그인
     @GetMapping("/")
