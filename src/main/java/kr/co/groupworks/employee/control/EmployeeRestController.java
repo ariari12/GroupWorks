@@ -8,12 +8,12 @@ import kr.co.groupworks.employee.entity.Employee;
 import kr.co.groupworks.employee.service.EmployeeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.nurigo.sdk.NurigoApp;
 import net.nurigo.sdk.message.model.Message;
 import net.nurigo.sdk.message.request.SingleMessageSendingRequest;
 import net.nurigo.sdk.message.response.SingleMessageSentResponse;
 import net.nurigo.sdk.message.service.DefaultMessageService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.jasypt.util.text.AES256TextEncryptor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -29,18 +29,18 @@ import java.util.Map;
 @Slf4j
 public class EmployeeRestController {
 
-    @Autowired
-    private  EmployeeService employeeService;
+
+    private final EmployeeService employeeService;
 
     private final DefaultMessageService messageService;
 
-    @Autowired
-    private  BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
+    private final AES256TextEncryptor encryptor;
 
-    public EmployeeRestController() {
-        this.messageService = NurigoApp.INSTANCE.initialize("NCS5YXRIXQPF7INV", "FPPRUKWMCG6N3S9SNWSNQG05QOX49WVR", "https://api.coolsms.co.kr");
-    }
+    @Value("${test.phone}")
+    String fromNumber;
+
 //    사원 저장
     @PostMapping("/save")
     public ResponseEntity<EmployeeDTO> addEmployee(@RequestBody EmployeeDTO employeeDTO) {
@@ -100,8 +100,7 @@ public class EmployeeRestController {
         String newPhoneNumber = request.get("phoneNumber").replaceAll("-","");
         log.info("새로운 핸드폰 번호 : " + newPhoneNumber);
         Message message = new Message();
-        // 발신번호 및 수신번호는 반드시 01012345678 형태로 입력되어야 합니다.
-        message.setFrom("01065639503");
+        message.setFrom(encryptor.decrypt(fromNumber));
         message.setTo(newPhoneNumber);
         String certificationNumber = request.get("certificationNumber");
 
