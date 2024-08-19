@@ -54,7 +54,7 @@ public class Vacation extends Calendar{
         usedVacation += (int) (ChronoUnit.DAYS.between(startDate, endDate)+1);
     }
 
-    public void updateHalfDaysUsed(LocalDate halfStartDate) {
+    public void updateHalfDaysUsed() {
         usedVacation += 0.5;
     }
 }

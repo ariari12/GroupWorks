@@ -117,7 +117,7 @@ public class VacationServiceImpl implements VacationService{
 
         // 휴가 엔티티 변환
         Vacation vacation = vacationMapper.toEntity(dto,employee);
-        vacation.updateHalfDaysUsed(dto.getHalfStartDate());
+        vacation.updateHalfDaysUsed();
         return vacationRepository.save(vacation).getCalendarId();
     }
 

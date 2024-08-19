@@ -49,11 +49,6 @@ public class VacationHistory extends BaseEntity {
         totalAnnual -= annual;
     }
 
-    public void updateAnnual(double annual){
-        annualDaysUsed +=annual;
-        totalAnnual -= annual;
-    }
-
     public void updateSick(int annual){
         sickDaysUsed += annual;
     }
