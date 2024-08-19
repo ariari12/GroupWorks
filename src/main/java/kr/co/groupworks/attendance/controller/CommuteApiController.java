@@ -86,4 +86,33 @@ public class CommuteApiController {
         }
     }
 
+    // 근태 추가
+    @PostMapping("/add-requests")
+    public ResponseEntity<?> addRequests(@SessionAttribute("employee") SessionEmployeeDTO sessionEmployeeDTO) {
+
+        return ResponseEntity.badRequest().body("null");
+    }
+
+    // 근태 수정
+    @PutMapping("/edit-requests")
+    public ResponseEntity<?> editRequests(@SessionAttribute("employee") SessionEmployeeDTO sessionEmployeeDTO) {
+
+        return ResponseEntity.badRequest().body("null");
+    }
+
+    // 근태 요청 리스트
+    @GetMapping("/view-requests")
+    public ResponseEntity<?> viewCommuteRequests(@SessionAttribute("employee") SessionEmployeeDTO sessionEmployeeDTO) {
+
+        return ResponseEntity.badRequest().body("null");
+    }
+
+    // 근태 요청 처리
+    @PutMapping("/manage-requests")
+    public ResponseEntity<?> manageCommuteRequests(@SessionAttribute("employee") SessionEmployeeDTO sessionEmployeeDTO) {
+
+        return ResponseEntity.badRequest().body("null");
+    }
+
+
 }
