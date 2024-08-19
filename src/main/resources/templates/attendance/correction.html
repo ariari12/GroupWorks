@@ -41,7 +41,6 @@
                     }
                 });
 
-
                 function attendanceData() {
                     let date = $('#monthYearPicker').val();
                     $.ajax({
@@ -89,14 +88,65 @@
             });
 
             // 수정 시작시간.
-            flatpickr("#datetimepicker", {
+            flatpickr("#startTimepicker", {
                 locale: "ko",                    // 한국어 설정,
                 enableTime: true,                // 시간 선택 활성화
                 dateFormat: "Y-m-d H:i",         // 날짜 및 시간 형식 설정
                 time_24hr: true,                 // 24시간 형식 사용 (12시간 형식을 원하면 false로 설정)
                 minuteIncrement: 1               // 분 선택 간격 설정 (1분 단위로 선택 가능)
             });
+
+            // 수정 종료 시간.
+            flatpickr("#endTimepicker", {
+                locale: "ko",                    // 한국어 설정,
+                enableTime: true,                // 시간 선택 활성화
+                dateFormat: "Y-m-d H:i",         // 날짜 및 시간 형식 설정
+                time_24hr: true,                 // 24시간 형식 사용 (12시간 형식을 원하면 false로 설정)
+                minuteIncrement: 1               // 분 선택 간격 설정 (1분 단위로 선택 가능)
+            });
+
+            // 근무추가 버튼 클릭.
+            $("#addWork").on('click', function () {
+
+                // 입력된 근태 시각.
+                let startDate = $("#startTimepicker").val()
+                let endDate = $("#endTimepicker").val()
+
+                // 유효성 검사.
+                if (!startDate || !startDate.trim()) {
+                    alert("근무 시작 시간을 입력해주세요.");
+                    return;
+                } else if (!endDate || !endDate.trim()) {
+                    alert("근무 종료 시간을 입력해주세요.");
+                    return;
+                } else if (startDate >= endDate) {
+                    alert("근무 종료 시간이 근무 시작시간보다 빠름니다.");
+                    return;
+                }
+
+                // 서버에 전송될 데이터.
+                const requestData = {
+                    'startDate': startDate,  // 시작 시간
+                    'endDate': endDate       // 종료 시간
+                };
+
+                // 근태 추가 신청.
+                $.ajax({
+                    url: '/api/commute/add-requests',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(requestData),
+                    success: function (response) {
+                        alert("근태 추가 신청이 성공적으로 완료되었습니다.");
+                        console.log(response);
+                    },
+                    error: function (xhr, status, error) {
+                        alert(`문제가 발생했습니다: ${xhr.responseText || error}`);
+                    }
+                }); // end ajax
+            });
         });
+
 
     </script>
 </th:block>
@@ -126,15 +176,15 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">근무 추가</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <input type="text" id="datetimepicker" />
+                        <div style="margin: 5px;"><span>⏰ 출근시각 </span><input type="text" class="w-100%" id="startTimepicker"/></div>
+                        <div style="margin: 5px;"><span>🕔 퇴근시각 </span><input type="text" class="w-100%" id="endTimepicker"/></div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Save changes</button>
+                        <button type="button" id="addWork" class="btn btn-primary">추가</button>
                     </div>
                 </div>
             </div>
