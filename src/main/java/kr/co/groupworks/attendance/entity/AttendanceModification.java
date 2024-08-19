@@ -2,10 +2,12 @@ package kr.co.groupworks.attendance.entity;
 
 import jakarta.persistence.*;
 import kr.co.groupworks.employee.entity.Employee;
+import lombok.Data;
 
 import java.time.LocalDateTime;
 
 @Entity
+@Data
 @Table(name = "attendance_modification")
 public class AttendanceModification {
 

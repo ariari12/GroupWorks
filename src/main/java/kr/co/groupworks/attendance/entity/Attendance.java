@@ -2,10 +2,14 @@ package kr.co.groupworks.attendance.entity;
 
 import jakarta.persistence.*;
 import kr.co.groupworks.employee.entity.Employee;
+import lombok.Builder;
+import lombok.Data;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 
 @Entity
+@Data
 @Table(name = "attendance")
 public class Attendance {
 
@@ -35,4 +39,15 @@ public class Attendance {
 
     @Column(name = "status")
     private String status;
+
+
+    public void updateAttendance (LocalDateTime clockOutTime) {
+        this.clockOutTime = clockOutTime;
+        this.status = "\uD83C\uDF1F 출퇴근 완료"; // 🌟
+
+        Duration duration = Duration.between(this.clockInTime, clockOutTime);
+        int workTime = (int) duration.toMinutes();
+        this.workHours = workTime;
+        this.overtimeHours = workTime >= 540 ? workTime - 540 : 0;
+    }
 }

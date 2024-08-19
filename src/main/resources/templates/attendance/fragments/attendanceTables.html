@@ -5,7 +5,6 @@
     <div class="card-header">
         <i class="fas fa-table me-1"></i>
         7월 출근 데이터
-
         <div class="container mt-3">
             <div class="row">
                 <form id="dataForm" method="post">
@@ -34,8 +33,7 @@
             </thead>
 
             <tbody>
-            <!--/* 상세 보기 이동 시 onclick 이벤트 핸들러로 Javascript 함수 추가 */-->
-            <tr onclick="" th:each="i : ${#numbers.sequence(1, 31)}" th:data-bs-toggle="modal" th:data-bs-target="'#exampleModal' + ${i}">
+            <tr th:each="i : ${#numbers.sequence(1, 31)}" th:data-bs-toggle="modal" th:data-bs-target="'#exampleModal' + ${i}">
                 <td th:text="'2024-07-'+${i}"></td>
                 <td th:text="'2024-07-'+${i}+' 09:00'"></td>
                 <td th:text="'2024-07-'+${i}+' 18:00'"></td>
@@ -47,25 +45,6 @@
                     <span th:case="2">✅ 승인</span>
                     <span th:case="3">❌ 미승인</span>
                 </td>
-
-                <div class="modal fade" th:id="'exampleModal' + ${i}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel" th:text="'📅2024-07-'+${i}+' 근무 기록 수정'"></h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                <strong>⏰출근시각</strong><input type="time" class="form-control">
-                                <strong>🕔퇴근시각</strong><input type="time" class="form-control">
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <button type="button" class="btn btn-primary">Save changes</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </tr>
             </tbody>
         </table>
