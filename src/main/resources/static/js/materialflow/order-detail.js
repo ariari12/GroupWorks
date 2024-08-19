@@ -24,10 +24,10 @@ function canselOrder(pk, c) {
                 location.href = "/materialflow/order-detail/" + pk + "/" + c;
             }
         },
-        error: (x, r, c) => {
+        error: (x, r, d) => {
             console.error(x);
             console.error(r);
-            console.error(c);
+            console.error(d);
         }
     })
 }
