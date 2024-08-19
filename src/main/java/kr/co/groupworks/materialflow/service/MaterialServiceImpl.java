@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +33,7 @@ public class MaterialServiceImpl implements MaterialService {
     private final BomRepository bomRepository;
     private final MesRepository masRepository;
     private final MaterialItemRepository materialItemRepository;
+    private final MesRepository mesRepository;
 
     /* 전체 사원 정보 반환 */
     @Override
@@ -224,6 +226,28 @@ public class MaterialServiceImpl implements MaterialService {
     @Override
     public boolean getBomStatus(long bomId) {
         return bomRepository.findStatusById(bomId);
+    }
+
+    @Override
+    public List<MesListVO> getMesList() {
+        return orderRepository.findAllMesAndOrderCode();
+    }
+
+    @Override
+    public Map<String, Object> seles(String start, String end) {
+        DateTimeFormatter datePettern = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+        LocalDate startLD = LocalDate.parse(start, datePettern), endLD = LocalDate.parse(end, datePettern);
+        List<Order> ol = orderRepository.findByOrderDateGreaterThanEqualAndOrderDateLessThanEqual(startLD, endLD);
+
+        LocalDateTime startLDT = startLD.atStartOfDay(), endLDT = endLD.atTime(LocalTime.MAX);
+        List<Mes> ml = mesRepository.findByManufactureDateGreaterThanEqualAndManufactureDateLessThanEqual(startLDT, endLDT);
+
+        return Map.of(
+                "total", orderRepository.calculate(startLD, endLD),
+                "orderList", ol.stream().map(OrderDTO::new).toList(),
+                "mesList", ml.stream().map(MesDTO::new).toList()
+        );
     }
 
     private Map<String, Object> returnMessage(String message, boolean result) {

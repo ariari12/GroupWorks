@@ -10,20 +10,29 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class MaterialOpenApiServiceImpl implements MaterialOpenApiService {
-    private final BusinessManagerRepository managerRepository;
     private final BusinessRepository businessRepository;
+    private final BusinessManagerRepository managerRepository;
     private final OrderRepository orderRepository;
     private final BomRepository bomRepository;
-    private final MesRepository MesRepository;
+    private final MesRepository mesRepository;
 
-    /* 거래처 정보 반환 */
+
+    @Override
+    public boolean setBusinessList(List<Business> businessList) {
+        if (businessList == null) return false;
+        businessRepository.saveAll(businessList);
+        return true;
+    }
+
     @Override
     public Object getBusiness(Long businessId) {
         /* 거래처 정보 반환 id:1 = 본사 정보 */
@@ -33,10 +42,8 @@ public class MaterialOpenApiServiceImpl implements MaterialOpenApiService {
     }
 
     @Override
-    public boolean setBusinessList(List<Business> businessList) {
-        if (businessList == null) return false;
-        businessRepository.saveAll(businessList);
-        return true;
+    public void setManagers(List<ManagerDTO> managerList) {
+        managerRepository.saveAll(managerList.stream().map(ManagerDTO::dtoToEntity).toList());
     }
 
     @Override
@@ -56,8 +63,10 @@ public class MaterialOpenApiServiceImpl implements MaterialOpenApiService {
     }
 
     @Override
-    public void setManagers(List<ManagerDTO> managerList) {
-        managerRepository.saveAll(managerList.stream().map(ManagerDTO::dtoToEntity).toList());
+    public OrderDTO getOrder(Long orderId) {
+        Order o = orderRepository.findById(orderId).orElse(null);
+        if(o == null) return null;
+        return new OrderDTO(o);
     }
 
     @Override
@@ -67,21 +76,30 @@ public class MaterialOpenApiServiceImpl implements MaterialOpenApiService {
     }
 
     @Override
-    public List<MesDTO> setMesList(List<MesDTO> mesList) {
-        return MesRepository.saveAll(mesList.stream().map(MesDTO::dtoToEntity).toList())
-                .stream().map(MesDTO::new).toList();
-    }
-
-    @Override
-    public OrderDTO getOrder(Long orderId) {
-        Order o = orderRepository.findById(orderId).orElse(null);
-        if(o == null) return null;
-        return new OrderDTO(o);
-    }
-
-    @Override
     public List<BomDTO> getBomList() {
         return bomRepository.findAll().stream().map(BomDTO::new).toList();
+    }
+
+    @Override
+    public Map<String, Object> setMes(MesOpenApiDTO mesDTO) {
+        if(mesDTO == null || mesDTO.getItemCode() == null) return Map.of("result", false, "message", "ItemList is empty");
+        Map<String, Long> ids = orderRepository.findIdMapByBomItemCode(mesDTO.getItemCode());
+
+        if(ids == null) return Map.of("result", false, "message", "BOM 품목을 찾을 수 없습니다.");
+        return Map.of("result", true, "mes", new MesDTO(mesRepository.save(mesDTO.toMesDTO()
+                .setOrderId(ids.get("oId")).setBomId(ids.get("bId")).dtoToEntity())));
+    }
+
+    @Override
+    public Map<String, Object> setMesList(List<MesOpenApiDTO> mesList) {
+        List<MesDTO> mesDTOList = new ArrayList<>();
+        for (MesOpenApiDTO m : mesList) {
+            Map<String, Object> res = setMes(m);
+            if(!(boolean) res.get("result"))
+                return Map.of("result", false, "message", "MmesSaveList: " + mesDTOList);
+            mesDTOList.add((MesDTO) res.get("mes"));
+        }
+        return Map.of("result", true, "message", "MmesSaveList: " + mesDTOList);
     }
 
 }

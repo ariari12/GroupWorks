@@ -28,6 +28,14 @@ public class MaterialOpenAPI {
     private final String RESPONSE_CODE = "200";
 
 
+    @Operation(tags = TAGS, summary = "거래처 정보 목록 입력 API", description = "거래처 데이터 입력 시 거래처 목록 추가")
+    @ApiResponse(responseCode = RESPONSE_CODE, content = @Content(schema = @Schema(implementation = Boolean.class)))
+    @PostMapping(value = "/business")
+    public ResponseEntity<Object> addBusiness(@RequestBody List<BusinessDTO> businessList) {
+        return businessList.isEmpty() ? ResponseEntity.status(HttpStatus.NOT_FOUND).body("[businessList]가 비어있습니다.")
+                : ResponseEntity.ok().body(materialOpenApiService.setBusinessList(businessList.stream().map(BusinessDTO::dtoToEntity).toList()));
+    }
+
     @Operation(tags = TAGS, summary = "거래처 데이터 제공 API", description = "거래처 등록번호에 따른 거래처 데이터 제공")
     @Parameter(name = "businessId", example = "1", description = "해당 거래처 등록번호에 따른 거래처 데이터 제공 (*생략 시 전체 거래처 데이터 제공, 1:본사)")
     @ApiResponse(responseCode = RESPONSE_CODE, content = @Content(schema = @Schema(implementation = Business.class)))
@@ -38,12 +46,15 @@ public class MaterialOpenAPI {
                 : ResponseEntity.ok().body(materialOpenApiService.getBusiness(businessId));
     }
 
-    @Operation(tags = TAGS, summary = "거래처 정보 목록 입력 API", description = "거래처 데이터 입력 시 거래처 목록 추가")
+    @Operation(tags = TAGS, summary = "거래처 담당자 정보 등록 API", description = "거래처 담당자 데이터 등록")
     @ApiResponse(responseCode = RESPONSE_CODE, content = @Content(schema = @Schema(implementation = Boolean.class)))
-    @PostMapping(value = "/business")
-    public ResponseEntity<Object> addBusiness(@RequestBody List<BusinessDTO> businessList) {
-        return businessList.isEmpty() ? ResponseEntity.status(HttpStatus.NOT_FOUND).body("[businessList]가 비어있습니다.")
-                : ResponseEntity.ok().body(materialOpenApiService.setBusinessList(businessList.stream().map(BusinessDTO::dtoToEntity).toList()));
+    @PostMapping(value = "/business-manager")
+    public ResponseEntity<Object> getBusinessManager(@RequestBody(required = false) List<ManagerDTO> managerList) {
+        if(managerList.size() > 1) {
+            materialOpenApiService.setManagers(managerList);
+            return ResponseEntity.ok().body(true);
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(false);
     }
 
     @Operation(tags = TAGS, summary = "거래처 담당자 정보 제공 API", description = "거래처 담당자 등록번호 혹은 거래 업체에 따른 거래처 담당자 데이터 제공  (* businessId 생략 시 거래처 담당자 등록번호에 따른 데이터 제공, 파라미터가 없을 시 전체 거래처 담당자 데이터 제공)")
@@ -56,17 +67,6 @@ public class MaterialOpenAPI {
         if(managerId == null) return ResponseEntity.ok().body(materialOpenApiService.getAllManager());
         ManagerDTO b = materialOpenApiService.getManager(managerId);
         return b == null ? ResponseEntity.status(HttpStatus.NOT_FOUND).body(null) : ResponseEntity.ok().body(b);
-    }
-
-    @Operation(tags = TAGS, summary = "거래처 담당자 정보 등록 API", description = "거래처 담당자 데이터 등록")
-    @ApiResponse(responseCode = RESPONSE_CODE, content = @Content(schema = @Schema(implementation = Boolean.class)))
-    @PostMapping(value = "/business-manager")
-    public ResponseEntity<Object> getBusinessManager(@RequestBody(required = false) List<ManagerDTO> managerList) {
-        if(managerList.size() > 1) {
-            materialOpenApiService.setManagers(managerList);
-            return ResponseEntity.ok().body(true);
-        }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(false);
     }
 
     @Operation(tags = TAGS, summary = "발주/수주 주문기록 정보 제공 API", description = "발주/수주 주문기록 정보 제공 API 모든 Parameter 가 포함된 데이터 반환")
@@ -88,13 +88,20 @@ public class MaterialOpenAPI {
         return ResponseEntity.ok().body(materialOpenApiService.getBomList());
     }
 
-    @Operation(tags = TAGS, summary = "MES연동 데이터 등록 API", description = "MES와 연동하여 MES로 부터 데이터 전달받는 API")
-    @ApiResponse(responseCode = RESPONSE_CODE, content = @Content(schema = @Schema(implementation = MesDTO.class)))
-    @PostMapping(value = "/mes")
-    public ResponseEntity<Object> getMes(@RequestBody(required = false) List<MesDTO> mesList) {
+    @Operation(tags = TAGS, summary = "MES연동 생산기록 단일 등록 API", description = "생산기록 단일 데이터 등록 API")
+    @ApiResponse(responseCode = RESPONSE_CODE, content = @Content(schema = @Schema(implementation = MesOpenApiDTO.class)))
+    @PostMapping(value = "/mes-one")
+    public ResponseEntity<Object> setMesOne(@RequestBody(required = false) MesOpenApiDTO mesDTO) {
+        if(mesDTO == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).body(false);
+        return ResponseEntity.ok().body(materialOpenApiService.setMes(mesDTO));
+    }
+
+    @Operation(tags = TAGS, summary = "MES연동 생산기록 복수 등록 API", description = "생산기록 리스트(여러 개) 데이터 등록 API")
+    @ApiResponse(responseCode = RESPONSE_CODE, content = @Content(schema = @Schema(implementation = MesOpenApiDTO.class)))
+    @PostMapping(value = "/mes-list")
+    public ResponseEntity<Object> setMesList(@RequestBody(required = false) List<MesOpenApiDTO> mesList) {
         if(mesList.size() > 1) return ResponseEntity.status(HttpStatus.NOT_FOUND).body(false);
         return ResponseEntity.ok().body(materialOpenApiService.setMesList(mesList));
     }
-
 
 }

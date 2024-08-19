@@ -8,12 +8,12 @@ import kr.co.groupworks.employee.entity.Employee;
 import kr.co.groupworks.employee.service.EmployeeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.nurigo.sdk.NurigoApp;
 import net.nurigo.sdk.message.model.Message;
 import net.nurigo.sdk.message.request.SingleMessageSendingRequest;
 import net.nurigo.sdk.message.response.SingleMessageSentResponse;
 import net.nurigo.sdk.message.service.DefaultMessageService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.jasypt.util.text.AES256TextEncryptor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -29,18 +29,10 @@ import java.util.Map;
 @Slf4j
 public class EmployeeRestController {
 
-    @Autowired
-    private  EmployeeService employeeService;
 
-    private final DefaultMessageService messageService;
+    private final EmployeeService employeeService;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    @Autowired
-    private  BCryptPasswordEncoder bCryptPasswordEncoder;
-
-
-    public EmployeeRestController() {
-        this.messageService = NurigoApp.INSTANCE.initialize("NCS5YXRIXQPF7INV", "FPPRUKWMCG6N3S9SNWSNQG05QOX49WVR", "https://api.coolsms.co.kr");
-    }
 //    사원 저장
     @PostMapping("/save")
     public ResponseEntity<EmployeeDTO> addEmployee(@RequestBody EmployeeDTO employeeDTO) {
@@ -94,23 +86,23 @@ public class EmployeeRestController {
         }
     }
 
+    private final DefaultMessageService messageService;
+    private final AES256TextEncryptor encryptor;
+    @Value("${test.phone}")
+    String fromNumber;
 //    핸드폰 변경 시 문자 인증 로직
     @PostMapping("/send-one")
     public SingleMessageSentResponse sendOne(@RequestBody Map<String, String> request) {
         String newPhoneNumber = request.get("phoneNumber").replaceAll("-","");
         log.info("새로운 핸드폰 번호 : " + newPhoneNumber);
         Message message = new Message();
-        // 발신번호 및 수신번호는 반드시 01012345678 형태로 입력되어야 합니다.
-        message.setFrom("01065639503");
+        message.setFrom(encryptor.decrypt(fromNumber));
         message.setTo(newPhoneNumber);
         String certificationNumber = request.get("certificationNumber");
 
-        message.setText("다음 번호를 입력해주세요 (" + certificationNumber + ")");
+        message.setText("Group_Workers 휴대폰 인증 : 다음 번호를 입력해주세요 (" + certificationNumber + ")");
 
-        SingleMessageSentResponse response = this.messageService.sendOne(new SingleMessageSendingRequest(message));
-        System.out.println(response);
-
-        return response;
+        return messageService.sendOne(new SingleMessageSendingRequest(message));
     }
 
 //    핸드폰 번호 변경 로직

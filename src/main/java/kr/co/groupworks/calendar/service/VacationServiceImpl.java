@@ -23,6 +23,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -48,6 +49,14 @@ public class VacationServiceImpl implements VacationService{
     private final VacationMapper vacationMapper;
     private final NotificationService notificationService;
 
+    // 매년 1월 1일에 휴가 내역 초기화
+    @Scheduled(cron = "0 0 0 1 1 *")
+    public void resetVacationHistoryAnnually() {
+        List<VacationHistory> all = vacationHistoryRepository.findAll();
+        for (VacationHistory history : all) {
+            history.resetAnnual();
+        }
+    }
 
 
 
@@ -108,7 +117,7 @@ public class VacationServiceImpl implements VacationService{
 
         // 휴가 엔티티 변환
         Vacation vacation = vacationMapper.toEntity(dto,employee);
-        vacation.updateHalfDaysUsed(dto.getHalfStartDate());
+        vacation.updateHalfDaysUsed();
         return vacationRepository.save(vacation).getCalendarId();
     }
 
@@ -209,10 +218,11 @@ public class VacationServiceImpl implements VacationService{
     }
 
     @Override
-    public List<VacationHistoryDTO> findVacationHistory(Long employeeId) {
+    public VacationHistoryDTO findVacationHistory(Long employeeId) {
         Employee employee = employeeRepository.findById(employeeId)
                 .orElseThrow(() -> new EntityNotFoundException("사원을 찾을 수 없습니다. " + employeeId));
-        return vacationHistoryRepository.findVacationMyHistoryDTO(employee.getEmployeeId());
+        return vacationHistoryRepository.findVacationMyHistoryDTO(employee.getEmployeeId())
+                .orElseThrow(() -> new EntityNotFoundException("휴가 내역을 찾을 수 없습니다. "));
     }
 
     // 휴가신청 삭제
@@ -338,13 +348,13 @@ public class VacationServiceImpl implements VacationService{
                                                              @PageableDefault(
                                                                      sort = {"createdDate","startDate"},
                                                                      direction = Sort.Direction.DESC
-                                                             ) Pageable pageable) {
+                                                             ) Pageable pageable, String search) {
         Employee employee = employeeRepository.findById(employeeId)
                 .orElseThrow(() -> new EntityNotFoundException("사원을 찾을 수 없습니다. " + employeeId));
         if(employee.getRankId()<3){
             throw new RankNotSufficientException("직급이 낮아 해당 작업을 수행할 권한이 없습니다.");
         }
-        Page<Vacation> vacationList = vacationRepository.findAllTeam(employee, pageable);
+        Page<Vacation> vacationList = vacationRepository.findAllTeamSearchName(employee, pageable, search);
 
         // 페이징 처리하기 엔티티 dto 전환
         return vacationList

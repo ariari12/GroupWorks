@@ -19,8 +19,7 @@ import java.time.temporal.ChronoUnit;
 public class Vacation extends Calendar{
 
     // 승인하는 사람
-    @Embedded
-    private Approver approver;
+    private String approver;
     // 승인 상태
     @Enumerated(EnumType.STRING)
     private VacationStatus status;
@@ -50,14 +49,13 @@ public class Vacation extends Calendar{
 
     public void approvalStatus(VacationStatus status, Approver approver) {
         this.status=status;
-        this.approver=approver;
     }
 
     public void updateUsedVacation(LocalDate startDate, LocalDate endDate) {
         usedVacation += (int) (ChronoUnit.DAYS.between(startDate, endDate)+1);
     }
 
-    public void updateHalfDaysUsed(LocalDate halfStartDate) {
+    public void updateHalfDaysUsed() {
         usedVacation += 0.5;
     }
 }

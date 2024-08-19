@@ -35,4 +35,5 @@ public interface MailService {
 
     void restoreMailById(List<String> restoreMailList);
 
+    List<Mail> latestMails(String email);
 }

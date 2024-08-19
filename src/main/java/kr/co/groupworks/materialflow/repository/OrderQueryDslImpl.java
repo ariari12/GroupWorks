@@ -1,13 +1,20 @@
 package kr.co.groupworks.materialflow.repository;
 
+import com.querydsl.core.Tuple;
+import com.querydsl.core.types.dsl.CaseBuilder;
+import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
+import kr.co.groupworks.materialflow.dto.MesListVO;
 import kr.co.groupworks.materialflow.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public class OrderQueryDslImpl extends QuerydslRepositorySupport implements OrderQueryDsl {
@@ -79,6 +86,69 @@ public class OrderQueryDslImpl extends QuerydslRepositorySupport implements Orde
                 .innerJoin(b).on(o.id.eq(b.orderId))
                 .where(b.id.eq(bomId))
                 .fetchJoin().fetchOne();
+    }
+
+    @Override
+    public Map<String, Long> findIdMapByBomItemCode(String bomItemCode) {
+        QOrder o = QOrder.order;
+        QBom b = QBom.bom;
+
+        Tuple ids = queryFactory
+                .select(o.id, b.id)
+                .from(o).innerJoin(b).on(o.id.eq(b.orderId))
+                .where(b.itemCode.eq(bomItemCode))
+                .fetchJoin().fetchOne();
+        if(ids == null) return null;
+        return Map.of("oId", ids.get(0, Long.class), "bId", ids.get(1, Long.class));
+    }
+
+    @Override
+    public List<MesListVO> findAllMesAndOrderCode() {
+        QOrder o = QOrder.order;
+        QBom b = QBom.bom;
+        QMes m = QMes.mes;
+
+        return queryFactory
+                .select(b, m, o).from(b)
+                .innerJoin(m).on(b.orderId.eq(m.orderId)
+                        .and(b.itemCode.eq(m.itemCode)))
+                .innerJoin(o).on(o.id.eq(m.orderId))
+                .fetchJoin().fetch().stream().map(t -> {
+                    Bom bom = t.get(0, Bom.class);
+                    Order order = t.get(2, Order.class);
+                    int cl = order.getClassification().ordinal();
+                    return new MesListVO(order.getOrderCode(), order.getId(),
+                            cl, bom.getId(), t.get(1, Mes.class));
+                }).toList();
+    }
+
+    @Override
+    public Long calculate(LocalDate start, LocalDate end) {
+        QOrder o = QOrder.order;
+        QMes m = QMes.mes;
+
+        // materialflow_mes 테이블의 계산된 합산값
+        NumberExpression<Long> minus = m.defectsNum.multiply(m.unitPrice).sum().multiply(-1L);
+
+        // NumberExpression<Long>으로 연산 수행
+        NumberExpression<Long> adjustedAmount = o.totalAmount
+                .multiply(o.texAmount.add(-100L).multiply(-1L))
+                .divide(100L);
+
+        // CASE 문을 Long 타입으로 정의
+        NumberExpression<Long> resultExpression = new CaseBuilder()
+                .when(o.classification.eq(OrderClassification.getClassification("발주"))).then(adjustedAmount)
+                .when(o.classification.eq(OrderClassification.getClassification("수주"))).then(o.texAmount.multiply(-1L))
+                .otherwise(0L);
+
+        // 최종 합산 결과 계산
+        Long result = queryFactory
+                .select(resultExpression.sum().add(minus))
+                .from(o)
+                .innerJoin(m).on(m.manufactureDate.between(start.atStartOfDay(), end.atTime(LocalTime.MAX)))
+                .where(o.orderDate.between(start, end))
+                .fetchOne();
+        return result != null ? result : 0L;  // null 체크 후 0L 반환
     }
 
     private List<Order> findByItemName(String orderCode, String itemCode, String itemName) {

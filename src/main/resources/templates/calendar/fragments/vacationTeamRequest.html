@@ -5,6 +5,9 @@
         <div class="card-header">
             <i class="fas fa-table me-1"></i>
             휴가 신청 내역
+            <span class="input-group justify-content-end" style="width: 30%; float: right">
+                <input type="text" class="form-control" id="searchKeyword" placeholder="사원의 이름 검색" style="width: 60%;">
+            </span>
         </div>
         <div class="card-body">
             <table id="vacationTeamRequest" class="table table-hover" style="width:100%">
@@ -43,58 +46,76 @@
                 </th:block>
                 </tbody>
             </table>
-        </div>
-        <nav aria-label="Page navigation example">
-            <ul class="pagination justify-content-center">
-                <!-- Previous Page Link -->
-                <li class="page-item" th:classappend="${vacationRequestList.number == 0 || vacationRequestList.totalPages == 0} ? 'disabled'">
-                    <a class="page-link" th:href="@{|?page=${vacationRequestList.number - 1 > 0 ? vacationRequestList.number - 1 : 0}|}" aria-label="Previous" th:attr="aria-disabled=${vacationRequestList.number == 0}">
-                        <span aria-hidden="true">&laquo;</span>
-                    </a>
-                </li>
+            <div th:if="${vacationRequestList.totalPages > 0}">
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination justify-content-center">
+                        <!-- Previous Page Link -->
+                        <li class="page-item" th:classappend="${vacationRequestList.number == 0 || vacationRequestList.totalPages == 0} ? 'disabled'">
+                            <a class="page-link" th:href="@{|?page=${vacationRequestList.number - 1 > 0 ? vacationRequestList.number - 1 : 0}|}" aria-label="Previous" th:attr="aria-disabled=${vacationRequestList.number == 0}">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
 
-                <!-- First Page Link -->
-                <li class="page-item" th:if="${vacationRequestList.totalPages > 1 && vacationRequestList.number > 3}">
-                    <a class="page-link" th:href="@{|?page=0|}">1</a>
-                </li>
-                <li class="page-item disabled" th:if="${vacationRequestList.number > 3}">
-                    <span class="page-link">...</span>
-                </li>
+                        <!-- First Page Link -->
+                        <li class="page-item" th:if="${vacationRequestList.totalPages > 1 && vacationRequestList.number > 3}">
+                            <a class="page-link" th:href="@{|?page=0|}">1</a>
+                        </li>
+                        <li class="page-item disabled" th:if="${vacationRequestList.number > 3}">
+                            <span class="page-link">...</span>
+                        </li>
 
-                <!-- Page Numbers -->
-                <li class="page-item" th:each="i : ${#numbers.sequence(vacationRequestList.number - 2 < 0 ? 0 : vacationRequestList.number - 2, vacationRequestList.number + 2 >= vacationRequestList.totalPages ? vacationRequestList.totalPages - 1 : vacationRequestList.number + 2)}" th:classappend="${i == vacationRequestList.number} ? 'active'">
-                    <a class="page-link" th:href="@{|?page=${i}|}" th:text="${i + 1}">1</a>
-                </li>
+                        <!-- Page Numbers -->
+                        <li class="page-item" th:each="i : ${#numbers.sequence(vacationRequestList.number - 2 < 0 ? 0 : vacationRequestList.number - 2, vacationRequestList.number + 2 >= vacationRequestList.totalPages ? vacationRequestList.totalPages - 1 : vacationRequestList.number + 2)}" th:classappend="${i == vacationRequestList.number} ? 'active'">
+                            <a class="page-link" th:href="@{|?page=${i}|}" th:text="${i + 1}">1</a>
+                        </li>
 
-                <!-- Last Page Link -->
-                <li class="page-item disabled" th:if="${vacationRequestList.number < vacationRequestList.totalPages - 4}">
-                    <span class="page-link">...</span>
-                </li>
-                <li class="page-item" th:if="${vacationRequestList.totalPages > 1 && vacationRequestList.number < vacationRequestList.totalPages - 3}">
-                    <a class="page-link" th:href="@{|?page=${vacationRequestList.totalPages - 1}|}" th:text="${vacationRequestList.totalPages}">Last</a>
-                </li>
+                        <!-- Last Page Link -->
+                        <li class="page-item disabled" th:if="${vacationRequestList.number < vacationRequestList.totalPages - 4}">
+                            <span class="page-link">...</span>
+                        </li>
+                        <li class="page-item" th:if="${vacationRequestList.totalPages > 1 && vacationRequestList.number < vacationRequestList.totalPages - 3}">
+                            <a class="page-link" th:href="@{|?page=${vacationRequestList.totalPages - 1}|}" th:text="${vacationRequestList.totalPages}">Last</a>
+                        </li>
 
-                <!-- Next Page Link -->
-                <li class="page-item" th:classappend="${vacationRequestList.number + 1 == vacationRequestList.totalPages || vacationRequestList.totalPages == 0} ? 'disabled'">
-                    <a class="page-link" th:href="@{|?page=${vacationRequestList.number + 1}|}" aria-label="Next" th:attr="aria-disabled=${vacationRequestList.number + 1 == vacationRequestList.totalPages}">
-                        <span aria-hidden="true">&raquo;</span>
-                    </a>
-                </li>
-            </ul>
-        </nav>
-    </div>
+                        <!-- Next Page Link -->
+                        <li class="page-item" th:classappend="${vacationRequestList.number + 1 == vacationRequestList.totalPages || vacationRequestList.totalPages == 0} ? 'disabled'">
+                            <a class="page-link" th:href="@{|?page=${vacationRequestList.number + 1}|}" aria-label="Next" th:attr="aria-disabled=${vacationRequestList.number + 1 == vacationRequestList.totalPages}">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
 
-    <div id="modalContainer"></div>
+            <!-- Handling when there's no data -->
+            <div th:if="${vacationRequestList.totalPages == 0}">
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item active">
+                            <a class="page-link" th:href="@{|?page=0|}">1</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+            <div id="modalContainer"></div>
 
-    <script>
-        $(document).ready(function () {
-            $('.vacation-row').on('click', function () {
-                const id = $(this).data('id');
-                $.get('team/detail', {id: id}, function (data) {
-                    $('#modalContainer').html(data);
-                    $('#vacationModal').modal('show');
+            <script>
+                $(document).ready(function () {
+                    $('.vacation-row').on('click', function () {
+                        const id = $(this).data('id');
+                        $.get('team/detail', {id: id}, function (data) {
+                            $('#modalContainer').html(data);
+                            $('#vacationModal').modal('show');
+                        });
+                    });
+                    $('#searchKeyword').keypress(function (e) {
+                        if (e.keyCode == 13) {
+                            let keyword = $('#searchKeyword').val();
+                            location.href="./team?search=" + keyword;
+                        }
+                    })
                 });
-            });
-        });
-    </script>
+            </script>
+        </div>
+    </div>
 </div>

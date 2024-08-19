@@ -22,9 +22,8 @@ public class AppoverUpdateServiceImpl implements AppoverUpdateService {
 
     @Observed
     public boolean setApproverUpdate(Employee employee) {
+        /* 결재가 진행 중인 경우에만 결재자들 변경 정보 업데이트 */
         List<ApproverEntity> approvalList = approverRepository.findByEmployeeIdAndApprovalMethodAndApproval(employee.getEmployeeId(), 0, 0);
-//        approvalList.forEach(a -> {log.info("{}", ApproverDTO.entityToDto(a));});
-
         List<ApproverEntity> updateList = new ArrayList<>();
         if (!approvalList.isEmpty()) {
             approvalList.forEach(approver -> {
@@ -33,12 +32,10 @@ public class AppoverUpdateServiceImpl implements AppoverUpdateService {
                         .setApproverEmail(employee.getEmail())
                         .setApproverPhone(employee.getPhoneNumber())
                         .setApproverRank(approver.getApproverRank() + " -> " + employee.getRankName())
-//                        .setDepartment(approver.getDepartment() + " -> " + employee.getDepartmentName())
+                        .setDepartment(approver.getDepartment() + " -> " + employee.getDepartment().getDepartmentName())
                         .dtoToEntity()
                 );
             });
-//            updateList.forEach(a -> {log.info("{}", ApproverDTO.entityToDto(a));});
-
             approverRepository.saveAll(updateList);
             return true;
         } else {

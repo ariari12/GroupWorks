@@ -2,15 +2,19 @@ package kr.co.groupworks.mail.control;
 
 import io.swagger.v3.oas.annotations.Hidden;
 import jakarta.servlet.http.HttpSession;
+import kr.co.groupworks.employee.dto.EmployeeDTO;
 import kr.co.groupworks.employee.dto.SessionEmployeeDTO;
 import kr.co.groupworks.employee.service.EmployeeService;
 import kr.co.groupworks.mail.dto.MailDTO;
 import kr.co.groupworks.mail.entity.Mail;
 import kr.co.groupworks.mail.service.MailService;
+import kr.co.groupworks.notification.model.Notification;
+import kr.co.groupworks.notification.service.NotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -23,14 +27,15 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
-
-import org.springframework.core.io.Resource;
-
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 
 @Hidden
@@ -42,6 +47,7 @@ public class MailController {
 
     private final MailService mailService;
     private final EmployeeService employeeService;
+    private final NotificationService notificationService;
 
     private final int PAGE_SIZE = 10;
 
@@ -147,7 +153,7 @@ public class MailController {
         mailPage =
                 mailService.getTrashEmailListTrashByReceiverEmail(receiverEmail, pageable);
 
-        log.info(receiverEmail + "의 휴디통 메일 목록");
+        log.info(receiverEmail + "의 휴지통 메일 목록");
         log.info(mailPage.toString());
         model.addAttribute("mailList", mailPage);
         return "mail/trash";
@@ -166,23 +172,30 @@ public class MailController {
     public String writePost(@ModelAttribute MailDTO mailDTO, MultipartHttpServletRequest request, HttpSession session) {
         SessionEmployeeDTO employeeDTO = (SessionEmployeeDTO) session.getAttribute("employee");
 
-
+        mailDTO.setMailSenderId(employeeDTO.getEmployeeId());
         mailDTO.setMailSender(employeeService.findByEmployeeId(employeeDTO.getEmployeeId()).getEmail());
-        mailDTO.setMailSenderName(employeeService.findByEmployeeId(employeeDTO.getEmployeeId()).getEmployeeName());
+        mailDTO.setMailSenderName(employeeDTO.getEmployeeName());
 
-//        받는 사람 이메일에 해당하는 사람의 이름
+//        받는 사람 이메일에 해당하는 사람의 이름과 employeeId
+        EmployeeDTO receiveEmployeeDTO = employeeService.findByEmployeeEmail(mailDTO.getMailReceiver()).toEmployeeDTO();
         try {
-            mailDTO.setMailReceiverName(employeeService.findByEmployeeEmail(mailDTO.getMailReceiver()).getEmployeeName());
+            mailDTO.setMailReceiverId(receiveEmployeeDTO.getEmployeeId());
+            mailDTO.setMailReceiverName(receiveEmployeeDTO.getEmployeeName());
+            log.info("mailDTO.getMailReceiverId() : " + mailDTO.getMailReceiverId());
+
         }catch(Exception e) {
             e.printStackTrace();
             log.info("받는 사람 이메일 설정이 잘못되었습니다.");
         }
 
-//        참조되는 사람 이메일에 해당하는 사람의 이름
+
+        //        참조되는 사람 이메일에 해당하는 사람의 이름
         try {
-            mailDTO.setMailReferrerName(employeeService.findByEmployeeEmail(mailDTO.getMailReferrer()).getEmployeeName());
+            EmployeeDTO referrerEmployeeDTO = employeeService.findByEmployeeEmail(mailDTO.getMailReferrer()).toEmployeeDTO();
+            mailDTO.setMailReferrerId(referrerEmployeeDTO.getEmployeeId());
+            mailDTO.setMailReferrerName(referrerEmployeeDTO.getEmployeeName());
+
         }catch(Exception e) {
-            e.printStackTrace();
             log.info("참조되는 사람 이메일 설정이 잘못되었습니다.");
         }
 
@@ -198,7 +211,27 @@ public class MailController {
 
         log.info("메일 작성 : " + mailDTO.toString());
 
+        sendNotification(mailDTO.getMailReceiverId(),mailDTO.getId());
+        if(mailDTO.getMailReferrerId() != null){
+            sendNotification(mailDTO.getMailReferrerId(),mailDTO.getId());
+        }
+
         return "redirect:/mail/send";
+    }
+
+//    메일 수신 시 알람뜨게 설정
+    public void sendNotification(Long mailReceiverId, String mailId) {
+
+        Notification notification = Notification.builder()
+                .receiverId(mailReceiverId)
+                .title("메일이 도착했습니다.")
+                .contents("확인하지 않은 메일이 있습니다.")
+                .createdDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
+                .url("/mail/detail/" + mailId)
+                .build();
+
+        log.info(">>>>>>>>>>>>>>>>>>> notification: {} " , notification.toString());
+        notificationService.sendNotificationOne(notification);
     }
 
     //    휴지통 메일 지우기

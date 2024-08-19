@@ -11,7 +11,7 @@
                 </div>
                 <div class="modal-body container" >
                     <h6>사용 가능 연차</h6>
-                    <div>6일</div>
+                    <div th:text="|${vacationHistoryDTO.totalAnnual}일 |">6일</div>
                     <br>
                     <label>휴일 일정</label>
                     <input type="text" name="" placeholder="Select Date.." class="form-control vacationDate" id="vDate">

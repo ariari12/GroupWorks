@@ -1,4 +1,4 @@
-package kr.co.groupworks.notification.controller;
+package kr.co.groupworks.notification;
 
 import io.swagger.v3.oas.annotations.Hidden;
 import kr.co.groupworks.employee.dto.SessionEmployeeDTO;

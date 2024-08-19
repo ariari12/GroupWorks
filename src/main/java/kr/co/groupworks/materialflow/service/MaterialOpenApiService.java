@@ -1,29 +1,32 @@
 package kr.co.groupworks.materialflow.service;
 
-import kr.co.groupworks.materialflow.dto.BomDTO;
-import kr.co.groupworks.materialflow.dto.ManagerDTO;
-import kr.co.groupworks.materialflow.dto.MesDTO;
-import kr.co.groupworks.materialflow.dto.OrderDTO;
+import kr.co.groupworks.materialflow.dto.*;
 import kr.co.groupworks.materialflow.entity.Business;
 
 import java.util.List;
+import java.util.Map;
 
 public interface MaterialOpenApiService {
-    Object getBusiness(Long businessId);
-
     boolean setBusinessList(List<Business> businessList);
 
-    ManagerDTO getManager(Long managerId);
-    List<ManagerDTO> getAllManager();
-    List<ManagerDTO> getManagersByBusiness(Long businessId);
+    Object getBusiness(Long businessId);
 
     void setManagers(List<ManagerDTO> managerList);
 
-    List<OrderDTO> getOrderList(String orderCode, String itemCode, String itemName);
+    ManagerDTO getManager(Long managerId);
 
-    List<MesDTO> setMesList(List<MesDTO> mesList);
+    List<ManagerDTO> getAllManager();
+
+    List<ManagerDTO> getManagersByBusiness(Long businessId);
 
     OrderDTO getOrder(Long orderId);
 
+    List<OrderDTO> getOrderList(String orderCode, String itemCode, String itemName);
+
     List<BomDTO> getBomList();
+
+    Map<String, Object> setMes(MesOpenApiDTO mesDTO);
+
+    Map<String, Object> setMesList(List<MesOpenApiDTO> mesList);
+
 }

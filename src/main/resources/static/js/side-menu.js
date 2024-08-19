@@ -20,12 +20,9 @@ window.addEventListener('DOMContentLoaded', event => {
     /* Communication */
     sideMenu('boardPages');
     sideMenu('mailPages');
-    sideMenu('videoChattingPage');
 
     /* 그룹 소 제목 : Material Flow Management */
     sideMenu('materialFlowMenu');
-
-
 
     randomGreetings();
 });
