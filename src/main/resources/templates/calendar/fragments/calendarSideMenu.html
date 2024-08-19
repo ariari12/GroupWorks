@@ -16,7 +16,7 @@
                 내 휴가 관리
             </a>
 
-            <th:block th:if="${session.employee.employeeId}">
+            <th:block th:if="${session.employee.getRankId()>3}">
                 <a class="nav-link collapsed" data-bs-toggle="collapse" data-bs-target="#vacationTeam" aria-expanded="false" aria-controls="pagesCollapseAuth">
                     구성원 휴가 관리
                     <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
