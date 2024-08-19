@@ -25,16 +25,15 @@
 
 
             <tbody>
-
-                <tr th:each="dto : ${vacationHistoryList}">
-                    <td th:text="${dto.employeeName}">사원 이름</td>
-                    <td th:text="${dto.employeeId}">사번</td>
-                    <td th:text="${dto.departmentName}">부서</td>
-                    <td th:text="${dto.rankName}">직급</td>
-                    <td th:text="${dto.totalAnnual}">잔여 연차</td>
-                    <td th:text="${dto.annualDaysUsed}">연차 사용 일수</td>
-                    <td th:text="${dto.sickDaysUsed}">병가 사용 일수</td>
-                    <td th:text="${dto.otherDaysUsed}">기타 사용 일수</td>
+                <tr>
+                    <td th:text="${vacationHistoryDTO.employeeName}">사원 이름</td>
+                    <td th:text="${vacationHistoryDTO.employeeId}">사번</td>
+                    <td th:text="${vacationHistoryDTO.departmentName}">부서</td>
+                    <td th:text="${vacationHistoryDTO.rankName}">직급</td>
+                    <td th:text="${vacationHistoryDTO.totalAnnual}">잔여 연차</td>
+                    <td th:text="${vacationHistoryDTO.annualDaysUsed}">연차 사용 일수</td>
+                    <td th:text="${vacationHistoryDTO.sickDaysUsed}">병가 사용 일수</td>
+                    <td th:text="${vacationHistoryDTO.otherDaysUsed}">기타 사용 일수</td>
                 </tr>
             </tbody>
         </table>
