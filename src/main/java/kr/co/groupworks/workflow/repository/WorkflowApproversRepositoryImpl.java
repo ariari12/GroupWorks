@@ -171,4 +171,18 @@ public class WorkflowApproversRepositoryImpl extends QuerydslRepositorySupport i
             default -> null;
         };
     }
+
+    @Override
+    public List<WorkFlowEntity> recentWorkflowList(Long employeeId) {
+        QWorkFlowEntity w = QWorkFlowEntity.workFlowEntity;
+        QApproverEntity a = QApproverEntity.approverEntity;
+        if (employeeId == null || employeeId < 1) return new ArrayList<>();
+
+        return queryFactory
+                .select(w)
+                .from(w).innerJoin(a).on(a.workFlowId.eq(w.id))
+                .where(w.employeeId.eq(employeeId).or(a.employeeId.eq(employeeId)))
+                .orderBy(w.draftDate.desc())
+                .fetchJoin().fetch();
+    }
 }

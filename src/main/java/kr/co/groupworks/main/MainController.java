@@ -6,6 +6,7 @@ import kr.co.groupworks.employee.dto.EmployeeDTO;
 import kr.co.groupworks.employee.dto.SessionEmployeeDTO;
 import kr.co.groupworks.common.security.CustomUserDetails;
 import kr.co.groupworks.employee.service.EmployeeService;
+import kr.co.groupworks.workflow.repository.WorkFlowRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -21,6 +22,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class MainController {
 
     private final EmployeeService employeeService;
+
+    private final WorkFlowRepository workFlowRepository
 
 //    로그인 창 이외에는 싹 권한 필요함 첫 화면은 로그인
     @GetMapping("/")
@@ -50,6 +53,7 @@ public class MainController {
         log.info("employee" + sessionEmployeeDTO);
         model.addAttribute("title", "MAIN");
         model.addAttribute("subtitle", "SUBMAIN");
+        model.addAttribute("workflowList", workFlowRepository.recentWorkflowList(sessionEmployeeDTO.getEmployeeId()));
         return "main";
     }
 
