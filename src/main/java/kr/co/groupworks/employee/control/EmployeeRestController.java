@@ -31,15 +31,7 @@ public class EmployeeRestController {
 
 
     private final EmployeeService employeeService;
-
-    private final DefaultMessageService messageService;
-
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
-
-    private final AES256TextEncryptor encryptor;
-
-    @Value("${test.phone}")
-    String fromNumber;
 
 //    사원 저장
     @PostMapping("/save")
@@ -94,6 +86,10 @@ public class EmployeeRestController {
         }
     }
 
+    private final DefaultMessageService messageService;
+    private final AES256TextEncryptor encryptor;
+    @Value("${test.phone}")
+    String fromNumber;
 //    핸드폰 변경 시 문자 인증 로직
     @PostMapping("/send-one")
     public SingleMessageSentResponse sendOne(@RequestBody Map<String, String> request) {
@@ -106,10 +102,7 @@ public class EmployeeRestController {
 
         message.setText("Group_Workers 휴대폰 인증 : 다음 번호를 입력해주세요 (" + certificationNumber + ")");
 
-        SingleMessageSentResponse response = this.messageService.sendOne(new SingleMessageSendingRequest(message));
-        System.out.println(response);
-
-        return response;
+        return messageService.sendOne(new SingleMessageSendingRequest(message));
     }
 
 //    핸드폰 번호 변경 로직

@@ -23,17 +23,20 @@ public class CoolSmsConfig {
     private AES256TextEncryptor encryptor;
 
     @Bean
+    public AES256TextEncryptor setEncryptor(){
+        encryptor = new AES256TextEncryptor();
+        encryptor.setPassword(keyProperty);
+        return encryptor;
+    }
+
+    @Bean
     public DefaultMessageService encodeApiKeyCreateMessageService() {
+        setEncryptor();
         String key = encryptor.decrypt(apiKey);
         String secret = encryptor.decrypt(apiSecretKey);
 
         return NurigoApp.INSTANCE.initialize(key, secret, smsApiDomain);
     }
 
-    @Bean
-    public AES256TextEncryptor setEncryptor(){
-        encryptor = new AES256TextEncryptor();
-        encryptor.setPassword(keyProperty);
-        return encryptor;
-    }
+
 }
