@@ -1,15 +1,15 @@
 package kr.co.groupworks.mail.entity;
 
-
 import jakarta.persistence.Id;
 import kr.co.groupworks.mail.dto.MailAttachmentFile;
+import kr.co.groupworks.mail.dto.MailDTO;
 import lombok.*;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.List;
 
-@Document(collection = "mail")
+@Document(collection = "this")
 @Getter
 @AllArgsConstructor @NoArgsConstructor
 @Builder @ToString
@@ -51,5 +51,24 @@ public class Mail {
     @Field(name = "mail_attachment_fileList")
     private List<MailAttachmentFile> mailAttachmentFiles;
 
-
+    //    entity to dto
+    public MailDTO toDTO() {
+        return MailDTO.builder()
+                .id(this.getId())
+                .mailTitle(this.getMailTitle())
+                .mailContent(this.getMailContent())
+                .mailSenderId(this.getMailSenderId())
+                .mailSender(this.getMailSender())
+                .mailSenderName(this.getMailSenderName())
+                .mailReceiverId(this.getMailReceiverId())
+                .mailReceiver(this.getMailReceiver())
+                .mailReceiverName(this.getMailReceiverName())
+                .mailReferrer(this.getMailReferrer())
+                .mailReferrerName(this.getMailReferrerName())
+                .mailSendTime(this.getMailSendTime())
+                .mailIsRead(this.getMailIsRead())
+                .mailStatus(this.getMailStatus())
+                .mailAttachmentFiles(this.getMailAttachmentFiles())
+                .build();
+    }
 }
