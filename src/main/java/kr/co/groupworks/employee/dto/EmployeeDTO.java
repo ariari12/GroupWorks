@@ -69,5 +69,18 @@ public class EmployeeDTO {
                 .isActive(this.getIsActive())
                 .build();
     }
+
+    //    session builder
+    public SessionEmployeeDTO toSessionEmployee() {
+        return SessionEmployeeDTO.builder()
+                .employeeId(this.getEmployeeId())
+                .employeeName(this.getEmployeeName())
+                .rankId(this.getRankId())
+                .rankName(this.getRankName())
+                .email(this.getEmail())
+                .phoneNumber(this.getPhoneNumber())
+                .department(this.department)
+                .build();
+    }
 }
 

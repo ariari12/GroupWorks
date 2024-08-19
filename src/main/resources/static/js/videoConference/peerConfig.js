@@ -11,52 +11,18 @@ const existingRoomIds = [];
 
 let screenStream = null; // 화면 공유를 위한 스트림
 
+document.addEventListener('DOMContentLoaded', async ()=>{
+    roomId = document.querySelector('#roomId').value;
 
-// 방 ID를 서버와 동기화하는 함수
-const syncRoomIdsWithServer = async () => {
-    try {
-        // 서버에서 방 ID 목록을 가져오는 API 호출
-        const response = await fetch('/videoConference/rooms');
-        const data = await response.json();
-        existingRoomIds.length = 0;  // 기존 방 ID 목록 초기화
-        existingRoomIds.push(...data);
-    } catch (error) {
-        console.error("Failed to sync room IDs with server:", error);
-    }
-};
+    // 카메라 시작
+    await startCam();
 
-// 방 ID를 서버에 저장하는 함수
-const saveRoomIdToServer = async (roomId) => {
-    try {
-        await fetch('/videoConference/rooms', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ roomId })  // 수정된 부분
-        });
-    } catch (error) {
-        console.error("Failed to save room ID to server:", error);
-    }
-};
+    // 소켓 연결 시작
+    await connectSocket();
 
-// 방 ID를 서버에서 확인하는 함수
-const checkRoomIdFromServer = async (roomId) => {
-    try {
-        // 서버에서 방 ID 확인하는 API 호출
-        const response = await fetch(`/videoConference/rooms/${roomId}`);
-        if (response.ok) {
-            const data = await response.json();
-            return data;  // 서버에서 받은 boolean 값을 반환
-        } else {
-            return false;
-        }
-    } catch (error) {
-        console.error("Failed to check room ID from server:", error);
-        return false;
-    }
-};
+    await startConferenceHandler()
 
+})
 // 카메라 시작 함수
 const startCam = async () => {
     try {
@@ -70,6 +36,21 @@ const startCam = async () => {
         console.error("Error accessing media devices:", error);
         handleMediaError(error);
     }
+};
+
+const startConferenceHandler = async () => {
+    console.log('Starting conference');
+    stompClient.send(`/app/call/key`, {}, {});
+    setTimeout(() => {
+        otherKeyList.forEach((key) => {
+            if (!pcListMap.has(key)) {
+                pcListMap.set(key, createPeerConnection(key));
+                sendOffer(pcListMap.get(key), key);
+            } else {
+                sendOffer(pcListMap.get(key), key);
+            }
+        });
+    }, 1000);
 };
 
 // 미디어 오류 처리 함수
@@ -277,12 +258,6 @@ const setLocalAndSendMessage = (pc, sessionDescription) => {
     });
 };
 
-const toggleStartEndButton = (buttonSelector, endText, endHandler) => {
-    const button = document.querySelector(buttonSelector);
-    button.textContent = endText;
-    button.removeEventListener('click', startConferenceHandler); // startConferenceHandler를 정의했기 때문에 사용
-    button.addEventListener('click', endHandler);
-};
 
 function disconnect(){
     if(stompClient !== null){
@@ -297,6 +272,7 @@ const sendEndConferenceMessage = () => {
         content: "GoodBye!"
     }));
 };
+
 // 화상회의 종료 함수
 const handleEndConference = async () => {
     console.log('Sending end conference message');
@@ -310,108 +286,6 @@ const handleEndConference = async () => {
     window.location.href = '/main';
 };
 
-// UUID 생성 함수
-function generateUUID() {
-    return 'xxxx-xxxx-xxxx-xxxx'.replace(/[xy]/g, function(c) {
-        const r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
-        return v.toString(16);
-    });
-}
-
-// 페이지 로드 시 createRoomIdInput에 UUID 설정
-document.addEventListener('DOMContentLoaded', async (event) => {
-    await syncRoomIdsWithServer(); // 방 ID를 서버와 동기화
-    const newRoomId = generateUUID(); // 새로운 UUID 생성
-    document.querySelector('#createRoomIdInput').value = newRoomId; // 생성된 UUID를 input 박스에 설정
-    existingRoomIds.push(newRoomId); // 새로 생성된 방 ID를 배열에 추가
-});
-
-// 방만들기 버튼 이벤트 리스너
-document.querySelector('#createEnterRoomBtn').addEventListener('click', async () => {
-    await startCam();
-    roomId = document.querySelector('#createRoomIdInput').value;
-    console.log(`Entered room: ${roomId}`);
-    document.querySelector('#createRoomIdInput').disabled = true;
-    document.querySelector('#createEnterRoomBtn').disabled = true;
-    document.querySelector('#joinRoomIdInput').disabled = true;
-    document.querySelector('#joinEnterRoomBtn').disabled = true;
-    await connectSocket();
-    document.querySelector('#createStartStreamsBtn').style.display = 'block';
-    await saveRoomIdToServer(roomId); // 방 ID를 서버에 저장
-});
-
-// 참여하기 버튼 이벤트 리스너
-document.querySelector('#joinEnterRoomBtn').addEventListener('click', async () => {
-    await startCam();
-    roomId = document.querySelector('#joinRoomIdInput').value;
-    console.log(`Entered room: ${roomId}`);
-    document.querySelector('#joinRoomIdInput').disabled = true;
-    document.querySelector('#joinEnterRoomBtn').disabled = true;
-    document.querySelector('#createRoomIdInput').disabled = true;
-    document.querySelector('#createEnterRoomBtn').disabled = true;
-    await connectSocket();
-    document.querySelector('#joinStartStreamsBtn').style.display = 'block';
-});
-
-// 방 만들기 후 시작하기 버튼 이벤트 리스너
-document.querySelector('#createStartStreamsBtn').addEventListener('click', async () => {
-    console.log('Start button clicked');
-    await startConferenceHandler(); // 방 시작하기 핸들러 호출
-    document.querySelector('#createStartStreamsBtn').style.display = 'none'; // 시작하기 버튼 숨기기
-    // 종료하기 및 카메라끄기 버튼 표시
-    document.getElementById('controlButtons').style.display = 'block';
-});
-
-const startConferenceHandler = async () => {
-    console.log('Starting conference');
-    stompClient.send(`/app/call/key`, {}, {});
-    setTimeout(() => {
-        otherKeyList.forEach((key) => {
-            if (!pcListMap.has(key)) {
-                pcListMap.set(key, createPeerConnection(key));
-                sendOffer(pcListMap.get(key), key);
-            } else {
-                sendOffer(pcListMap.get(key), key);
-            }
-        });
-    }, 1000);
-};
-
-// 참여하기 후 시작하기 버튼 이벤트 리스너
-document.querySelector('#joinStartStreamsBtn').addEventListener('click', async () => {
-    roomId = document.querySelector('#joinRoomIdInput').value;
-    const roomExists = await checkRoomIdFromServer(roomId); // 서버에서 방 ID 확인
-    if (!roomExists) {
-        alert('채팅방 ID를 확인해주세요.');
-        // 컴포넌트 다시 활성화
-        document.querySelector('#joinRoomIdInput').disabled = false;
-        document.querySelector('#joinEnterRoomBtn').disabled = false;
-        document.querySelector('#createRoomIdInput').disabled = false;
-        document.querySelector('#createEnterRoomBtn').disabled = false;
-
-        // 시작하기 버튼과 카메라 화면 숨기기
-        document.querySelector('#joinStartStreamsBtn').style.display = 'none';
-        localStreamElement.style.display = 'none';
-        localStreamElement.srcObject = null;
-
-        return;
-    }
-    document.querySelector('#joinStartStreamsBtn').style.display = 'none'; // 시작하기 버튼 숨기기
-    stompClient.send(`/app/call/key`, {}, {});
-    setTimeout(() => {
-        otherKeyList.forEach((key) => {
-            if (!pcListMap.has(key)) {
-                pcListMap.set(key, createPeerConnection(key));
-                sendOffer(pcListMap.get(key), key);
-            } else {
-                sendOffer(pcListMap.get(key), key);
-            }
-        });
-    }, 1000);
-
-    // 종료하기 및 카메라끄기 버튼 표시
-    document.getElementById('controlButtons').style.display = 'block';
-});
 
 // 종료하기 버튼 이벤트 리스너를 새로운 종료하기 버튼에 추가
 document.querySelector('#endConferenceBtn').addEventListener('click', async () => {
@@ -516,3 +390,6 @@ document.querySelector('#toggleScreenShareBtn').addEventListener('click', () => 
         });
     }
 });
+
+// 종료하기 및 카메라끄기 버튼 표시
+document.getElementById('controlButtons').style.display = 'block';
