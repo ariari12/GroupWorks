@@ -128,7 +128,7 @@ public class OrderQueryDslImpl extends QuerydslRepositorySupport implements Orde
         QMes m = QMes.mes;
 
         // materialflow_mes 테이블의 계산된 합산값
-        NumberExpression<Long> minus = m.quantity.multiply(m.unitPrice).sum().multiply(-1L);
+        NumberExpression<Long> minus = m.defectsNum.multiply(m.unitPrice).sum().multiply(-1L);
 
         // NumberExpression<Long>으로 연산 수행
         NumberExpression<Long> adjustedAmount = o.totalAmount
@@ -138,7 +138,7 @@ public class OrderQueryDslImpl extends QuerydslRepositorySupport implements Orde
         // CASE 문을 Long 타입으로 정의
         NumberExpression<Long> resultExpression = new CaseBuilder()
                 .when(o.classification.eq(OrderClassification.getClassification("발주"))).then(adjustedAmount)
-                .when(o.classification.eq(OrderClassification.getClassification("수주"))).then(adjustedAmount.multiply(-1L))
+                .when(o.classification.eq(OrderClassification.getClassification("수주"))).then(o.texAmount.multiply(-1L))
                 .otherwise(0L);
 
         // 최종 합산 결과 계산
