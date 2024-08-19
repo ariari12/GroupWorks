@@ -1,5 +1,6 @@
 package kr.co.groupworks.mail.service;
 
+import jakarta.persistence.EntityNotFoundException;
 import kr.co.groupworks.mail.dto.MailDTO;
 import kr.co.groupworks.mail.entity.Mail;
 import kr.co.groupworks.mail.dto.MailAttachmentFile;
@@ -31,7 +32,7 @@ public class MailServiceImpl implements MailService{
     @Override
     public void saveOne(MailDTO mailDTO, List<MultipartFile> files) {
 
-        Mail mail = toEntity(mailDTO);
+        Mail mail = mailDTO.toEntity();
         mailRepository.save(mail);
         mailDTO.setId(mail.getId());
         String fileUploadDir = uploadDir + "/mail-files/" + mail.getId();
@@ -71,7 +72,7 @@ public class MailServiceImpl implements MailService{
 
         mailDTO.setMailAttachmentFiles(mailAttachmentFiles);
 
-        mail = toEntity(mailDTO);
+        mail = mailDTO.toEntity();
         mailRepository.save(mail);
 
     }
@@ -132,10 +133,10 @@ public class MailServiceImpl implements MailService{
 //        존재하면
         if (optionalMail.isPresent()) {
 
-            MailDTO mailDTO = toDTO(optionalMail.get());
+            MailDTO mailDTO = optionalMail.get().toDTO();
             mailDTO.setMailStatus(mailStatus);
 
-            Mail mail = toEntity(mailDTO);
+            Mail mail = mailDTO.toEntity();
 
             mailRepository.save(mail);
             return true;
@@ -153,14 +154,15 @@ public class MailServiceImpl implements MailService{
 //    메일 상세보기
     @Override
     public MailDTO getEmailById(String id) {
-        Mail mail = mailRepository.findById(id).get();
+        Mail mail = mailRepository.findById(id).
+                orElseThrow(() -> new EntityNotFoundException("메일을 찾을 수 없습니다. "));
 
-        MailDTO mailDTO = toDTO(mail);
+        MailDTO mailDTO = mail.toDTO();
 
         //  만약 isRead가 0이면 1로 변경한 후 document에 저장
         if(mailDTO.getMailIsRead() == 0){
             mailDTO.setMailIsRead(1);
-            mail = toEntity(mailDTO);
+            mail = mailDTO.toEntity();
             mailRepository.save(mail);
         }
         return mailDTO;
@@ -178,56 +180,13 @@ public class MailServiceImpl implements MailService{
     @Override
     public void restoreMailById(List<String> restoreMailList) {
         for(String mailId : restoreMailList){
-            Mail mail = mailRepository.findById(mailId).get();
-            MailDTO mailDTO = toDTO(mail);
+            Mail mail = mailRepository.findById(mailId).
+                    orElseThrow(() -> new EntityNotFoundException("복구 메일을 찾을 수 없습니다. " + mailId));
+            MailDTO mailDTO = mail.toDTO();
             mailDTO.setMailStatus(0);
-            mail = toEntity(mailDTO);
+            mail = mailDTO.toEntity();
             mailRepository.save(mail);
         }
     }
 
-
-//    ========================================================================================================
-
-//    dto to entity
-    public Mail toEntity(MailDTO mailDTO) {
-        return Mail.builder()
-                .id(mailDTO.getId())
-                .mailTitle(mailDTO.getMailTitle())
-                .mailContent(mailDTO.getMailContent())
-                .mailSenderId(mailDTO.getMailSenderId())
-                .mailSender(mailDTO.getMailSender())
-                .mailSenderName(mailDTO.getMailSenderName())
-                .mailReceiverId(mailDTO.getMailReceiverId())
-                .mailReceiver(mailDTO.getMailReceiver())
-                .mailReceiverName(mailDTO.getMailReceiverName())
-                .mailReferrer(mailDTO.getMailReferrer())
-                .mailReferrerName(mailDTO.getMailReferrerName())
-                .mailSendTime(mailDTO.getMailSendTime())
-                .mailIsRead(mailDTO.getMailIsRead())
-                .mailStatus(mailDTO.getMailStatus())
-                .mailAttachmentFiles(mailDTO.getMailAttachmentFiles())
-                .build();
-    }
-
-//    entity to dto
-    public MailDTO toDTO(Mail mail) {
-        return MailDTO.builder()
-                .id(mail.getId())
-                .mailTitle(mail.getMailTitle())
-                .mailContent(mail.getMailContent())
-                .mailSenderId(mail.getMailSenderId())
-                .mailSender(mail.getMailSender())
-                .mailSenderName(mail.getMailSenderName())
-                .mailReceiverId(mail.getMailReceiverId())
-                .mailReceiver(mail.getMailReceiver())
-                .mailReceiverName(mail.getMailReceiverName())
-                .mailReferrer(mail.getMailReferrer())
-                .mailReferrerName(mail.getMailReferrerName())
-                .mailSendTime(mail.getMailSendTime())
-                .mailIsRead(mail.getMailIsRead())
-                .mailStatus(mail.getMailStatus())
-                .mailAttachmentFiles(mail.getMailAttachmentFiles())
-                .build();
-    }
 }

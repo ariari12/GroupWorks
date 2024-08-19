@@ -509,7 +509,7 @@ const stopScreenShare = () => {
 document.querySelector('#toggleScreenShareBtn').addEventListener('click', () => {
     if (screenStream) {
         stopScreenShare();
-        document.querySelector('#toggleScreenShareBtn').textContent = '화면 공유 키기';
+        document.querySelector('#toggleScreenShareBtn').textContent = '화면 공유 켜기';
     } else {
         startScreenShare().then(() => {
             document.querySelector('#toggleScreenShareBtn').textContent = '화면 공유 끄기';

@@ -2,8 +2,6 @@ package kr.co.groupworks.employee.service;
 
 import kr.co.groupworks.calendar.entity.VacationHistory;
 import kr.co.groupworks.calendar.repository.VacationHistoryRepository;
-import kr.co.groupworks.department.dto.DepartmentDTO;
-import kr.co.groupworks.department.entity.Department;
 import kr.co.groupworks.employee.dto.EmployeeDTO;
 import kr.co.groupworks.employee.entity.Employee;
 import kr.co.groupworks.employee.repository.EmployeeRepository;
@@ -28,8 +26,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     //    사원 저장 서비스
     public void saveEmployee(EmployeeDTO employeeDTO) {
-        Employee employee = toEmployee(employeeDTO);
-
+        Employee employee = employeeDTO.toEmployee();
         employee = employeeRepository.save(employee);
         //휴가 내역 초기화
         VacationHistory vacationHistory = VacationHistory.createFromEmployee(employee);
@@ -46,7 +43,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public EmployeeDTO findByEmployeeId(Long employeeId) {
         Employee employee = employeeRepository.findById(employeeId).get();
-        EmployeeDTO employeeDTO = toEmployeeDTO(employee);
+        EmployeeDTO employeeDTO = employee.toEmployeeDTO();
 
         return employeeDTO;
     }
@@ -90,7 +87,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         List<EmployeeDTO> employeeDTOList = new ArrayList<>();
         for(Employee employee : employeeList)
         {
-            EmployeeDTO employeeDTO = toEmployeeDTO(employee);
+            EmployeeDTO employeeDTO = employee.toEmployeeDTO();
             employeeDTOList.add(employeeDTO);
         }
         return employeeDTOList;
@@ -107,7 +104,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public EmployeeDTO findSupervisorEmployeeByEmployeeId(Long employeeId) {
         Employee employee = employeeRepository.findSupervisorEmployeeByEmployeeId(employeeId);
-        EmployeeDTO employeeDTO = toEmployeeDTO(employee);
+        EmployeeDTO employeeDTO = employee.toEmployeeDTO();
         return employeeDTO;
     }
 
@@ -128,55 +125,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     }
 
-    @Override
-    //    DTO to Entity
-    public Employee toEmployee(EmployeeDTO dto) {
-        return Employee.builder()
-                .employeeId(dto.getEmployeeId())
-                .employeePW(dto.getEmployeePW())
-                .employeeName(dto.getEmployeeName())
-                .rankId(dto.getRankId())
-                .rankName(dto.getRankName())
-                .department(Department.builder()
-                        .departmentId(dto.getDepartment().getDepartmentId())
-                        .departmentName(dto.getDepartment().getDepartmentName())
-                        .contactNumber(dto.getDepartment().getContactNumber())
-                        .location(dto.getDepartment().getLocation())
-                        .build())
-                .email(dto.getEmail())
-                .createdDate(dto.getJoinDate())
-                .phoneNumber(dto.getPhoneNumber())
-                .address(dto.getAddress())
-                .gender(dto.getGender())
-                .salary(dto.getSalary())
-                .supervisorId(dto.getSupervisorId())
-                .isActive(dto.getIsActive())
-                .build();
-    }
 
-    @Override
-    //    Entity to DTO
-    public EmployeeDTO toEmployeeDTO(Employee employee) {
-        return EmployeeDTO.builder()
-                .employeeId(employee.getEmployeeId())
-                .employeePW(employee.getEmployeePW())
-                .employeeName(employee.getEmployeeName())
-                .rankId(employee.getRankId())
-                .rankName(employee.getRankName())
-                .department(DepartmentDTO.builder()
-                        .departmentId(employee.getDepartment().getDepartmentId())
-                        .departmentName(employee.getDepartment().getDepartmentName())
-                        .contactNumber(employee.getDepartment().getContactNumber())
-                        .location(employee.getDepartment().getLocation())
-                        .build())
-                .email(employee.getEmail())
-                .joinDate(employee.getCreatedDate())
-                .phoneNumber(employee.getPhoneNumber())
-                .address(employee.getAddress())
-                .gender(employee.getGender())
-                .salary(employee.getSalary())
-                .supervisorId(employee.getSupervisorId())
-                .isActive(employee.getIsActive())
-                .build();
-    }
+
+
+
 }
