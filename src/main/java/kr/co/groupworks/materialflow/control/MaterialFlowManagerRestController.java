@@ -37,7 +37,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping(value = "/materialflow")
 @RequiredArgsConstructor
-public abstract class MaterialFlowManagerRestController {
+public class MaterialFlowManagerRestController {
     /* MaterialFlowManagement RestAPI */
     private final MaterialService materialService;
     private final MaterialOpenApiService materialOpenApiService;
@@ -104,7 +104,8 @@ public abstract class MaterialFlowManagerRestController {
 
     /* 발주서/수주서 작성 취소 (단, 발주서/수주서 담당자 기록이 없어야 함) */
     @DeleteMapping("/order-detail/{orderId}")
-    public ResponseEntity<Object> requestOrderDelete(@PathVariable Long orderId) {
+    public ResponseEntity<Object> requestOrderDelete(@PathVariable("orderId") Long orderId) {
+        log.info("oId: {}", orderId);
         if(orderId == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).body(false);
         return ResponseEntity.ok().body(materialService.deleteOrder(orderId));
     }
