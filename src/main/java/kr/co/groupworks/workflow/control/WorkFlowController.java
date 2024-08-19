@@ -40,7 +40,7 @@ public class WorkFlowController {
     private static final String WORK_WAIT = "/wait";
     private static final String WORK_REFERR = "/referr";
     private static final String SEPARATOR = "/";
-    private static final String DIRECTORY = "/workflow";
+    private static final String DIRECTORY = "workflow";
 
     @Getter
     public enum AttributeName {
