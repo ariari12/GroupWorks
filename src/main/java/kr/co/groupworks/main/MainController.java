@@ -2,12 +2,14 @@ package kr.co.groupworks.main;
 
 import io.swagger.v3.oas.annotations.Hidden;
 import jakarta.servlet.http.HttpSession;
+import kr.co.groupworks.common.security.CustomUserDetails;
 import kr.co.groupworks.employee.dto.EmployeeDTO;
 import kr.co.groupworks.employee.dto.SessionEmployeeDTO;
-import kr.co.groupworks.common.security.CustomUserDetails;
 import kr.co.groupworks.employee.service.EmployeeService;
+import kr.co.groupworks.mail.repository.MailRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -21,6 +23,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class MainController {
 
     private final EmployeeService employeeService;
+    private final MailRepository mailRepository;
+
+
 
 //    로그인 창 이외에는 싹 권한 필요함 첫 화면은 로그인
     @GetMapping("/")
@@ -36,16 +41,13 @@ public class MainController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         CustomUserDetails user = (CustomUserDetails) authentication.getPrincipal();
 
-        EmployeeDTO employee = employeeService.findByEmployeeId(Long.valueOf(user.getUsername()));
-        System.out.println("로그인 employee : " + employee);
+        EmployeeDTO employeeDTO = employeeService.findByEmployeeId(Long.valueOf(user.getUsername()));
+        System.out.println("로그인 employee : " + employeeDTO);
 
-        SessionEmployeeDTO sessionEmployeeDTO = new SessionEmployeeDTO();
+        SessionEmployeeDTO sessionEmployeeDTO = employeeDTO.toSessionEmployee();
 
-        sessionEmployeeDTO.setEmployeeId(employee.getEmployeeId());
-        sessionEmployeeDTO.setEmployeeName(employee.getEmployeeName());
-        sessionEmployeeDTO.setEmail(employee.getEmail());
-        sessionEmployeeDTO.setDepartment(employee.getDepartment());
-
+//        발신, 수신 여부 상관없이 최신순 5개 메일 가져오기
+        mailRepository.findLatestMails(sessionEmployeeDTO.getEmail(), PageRequest.of(0, 5));
         session.setAttribute("employee", sessionEmployeeDTO);
         log.info("employee" + sessionEmployeeDTO);
         model.addAttribute("title", "MAIN");

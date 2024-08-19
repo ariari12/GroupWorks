@@ -26,4 +26,15 @@ public class SessionEmployeeDTO {
     //  부서 번호 fk
     @Schema(description = "부서 정보", implementation = DepartmentDTO.class, example = "{ \"departmentId\": 1, \"departmentName\": \"기술부서\", \"contactNumber\": \"010-1234-5678\", \"location\": \"A동\" }")
     private DepartmentDTO department;
+    // 직급 ID
+    @Schema(description = "직급 고유 식별자", example = "2")
+    private Integer rankId;
+    // 직급명
+    @Schema(description = "직급명", example = "대리")
+    private String rankName;
+    // 핸드폰 번호
+    @Schema(description = "핸드폰번호", example = "010-1111-2222")
+    private String phoneNumber;
+
+
 }
