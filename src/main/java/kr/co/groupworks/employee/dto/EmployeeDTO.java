@@ -44,6 +44,8 @@ public class EmployeeDTO {
     private Long supervisorId;
     //  활동중인지
     private Integer isActive;
+    //  직책
+    private String ruleName;
 
     //    DTO to Entity
     public Employee toEmployee() {
@@ -67,6 +69,7 @@ public class EmployeeDTO {
                 .salary(this.getSalary())
                 .supervisorId(this.getSupervisorId())
                 .isActive(this.getIsActive())
+                .ruleName(this.getRuleName())
                 .build();
     }
 
@@ -79,7 +82,8 @@ public class EmployeeDTO {
                 .rankName(this.getRankName())
                 .email(this.getEmail())
                 .phoneNumber(this.getPhoneNumber())
-                .department(this.department)
+                .department(this.getDepartment())
+                .ruleName(this.getRuleName())
                 .build();
     }
 }

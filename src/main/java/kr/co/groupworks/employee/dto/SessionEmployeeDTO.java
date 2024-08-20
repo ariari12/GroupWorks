@@ -35,6 +35,8 @@ public class SessionEmployeeDTO {
     // 핸드폰 번호
     @Schema(description = "핸드폰번호", example = "010-1111-2222")
     private String phoneNumber;
-
+    // 직책
+    @Schema(description = "직책명", example = "인사팀장")
+    private String ruleName;
 
 }
