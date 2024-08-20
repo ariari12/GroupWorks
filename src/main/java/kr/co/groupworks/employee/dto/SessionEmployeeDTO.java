@@ -19,25 +19,25 @@ public class SessionEmployeeDTO {
     @Schema(description = "사원 고유 식별자", example = "1")
     private Long employeeId;
     //  사원명
-    @Schema(description = "사원 이름", example = "사원1")
+    @Schema(description = "사원 이름", example = "이정민")
     private String employeeName;
     //  이메일
-    @Schema(description = "사원 이메일", example = "employee1@example.com")
+    @Schema(description = "사원 이메일", example = "ljm@gw.com")
     private String email;
     //  부서 번호 fk
     @Schema(description = "부서 정보", implementation = DepartmentDTO.class, example = "{ \"departmentId\": 1, \"departmentName\": \"기술부서\", \"contactNumber\": \"010-1234-5678\", \"location\": \"A동\" }")
     private DepartmentDTO department;
     // 직급 ID
-    @Schema(description = "직급 고유 식별자", example = "2")
+    @Schema(description = "직급 고유 식별자", example = "5")
     private Integer rankId;
     // 직급명
-    @Schema(description = "직급명", example = "대리")
+    @Schema(description = "직급명", example = "부장")
     private String rankName;
     // 핸드폰 번호
-    @Schema(description = "핸드폰번호", example = "010-1111-2222")
+    @Schema(description = "핸드폰번호", example = "010-1234-5600")
     private String phoneNumber;
     // 직책
-    @Schema(description = "직책명", example = "인사팀장")
+    @Schema(description = "직책명", example = "MANAGER")
     private Role role;
 
 }
