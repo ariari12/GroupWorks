@@ -4,6 +4,7 @@ import kr.co.groupworks.chat.dto.ChatRoomDTO;
 import kr.co.groupworks.chat.entity.ChatRoom;
 import kr.co.groupworks.chat.service.ChatRoomService;
 import kr.co.groupworks.employee.dto.EmployeeDTO;
+import kr.co.groupworks.employee.dto.SessionEmployeeDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -44,5 +45,11 @@ public class ChatRoomController {
         return chatRoomService.getChatRoomsForUser(userId);
     }
 
+    // 방나가기
+    @DeleteMapping("/{chatRoomId}/participants/{participantId}")
+    public ResponseEntity<Void> leaveChatRoom(@PathVariable Long chatRoomId, @PathVariable Long participantId) {
+        chatRoomService.removeParticipant(chatRoomId, participantId);
+        return ResponseEntity.ok().build();
+    }
 
 }
