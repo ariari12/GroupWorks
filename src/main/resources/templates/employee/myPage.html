@@ -104,15 +104,20 @@
 
                         </div>
 
-                        <div class="col-sm-6">
+                        <div class="col-md-4">
                             <label for="departmentName" class="form-label">부서이름</label>
                             <input type="text" class="form-control" id="departmentName" placeholder="" th:value="${employee.department.getDepartmentName()}" required>
 
                         </div>
 
-                        <div class="col-sm-6">
+                        <div class="col-md-4">
                             <label for="rankName" class="form-label">직급</label>
                             <input type="text" class="form-control" id="rankName" placeholder="" th:value="${employee.getRankName()}" required>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label for="rankName" class="form-label">직책</label>
+                            <input type="text" class="form-control" id="roleName" placeholder="" th:value="${employee.getRole().getName()}" required>
                         </div>
 
                         <div class="col-12">

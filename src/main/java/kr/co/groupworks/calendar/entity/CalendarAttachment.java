@@ -23,7 +23,7 @@ public class CalendarAttachment extends BaseEntity {
     // 실제 저장 파일 경로
     @Column(name = "file_path")
     private String filePath;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "calendar_id")
     private Calendar calendar;
 

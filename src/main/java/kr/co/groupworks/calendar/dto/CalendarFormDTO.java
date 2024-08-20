@@ -7,11 +7,13 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CalendarFormDTO {
+public class CalendarFormDTO implements Serializable {
     @Schema(description = "캘린더 고유 식별자", example = "100")
     private Long calendarId;
 

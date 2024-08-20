@@ -2,6 +2,7 @@ package kr.co.groupworks.employee.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import kr.co.groupworks.department.dto.DepartmentDTO;
+import kr.co.groupworks.employee.entity.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -35,6 +36,8 @@ public class SessionEmployeeDTO {
     // 핸드폰 번호
     @Schema(description = "핸드폰번호", example = "010-1111-2222")
     private String phoneNumber;
-
+    // 직책
+    @Schema(description = "직책명", example = "인사팀장")
+    private Role role;
 
 }

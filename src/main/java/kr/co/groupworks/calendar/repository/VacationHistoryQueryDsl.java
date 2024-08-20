@@ -7,9 +7,10 @@ import org.springframework.data.domain.Pageable;
 
 
 import java.util.List;
+import java.util.Optional;
 
 public interface VacationHistoryQueryDsl {
-    List<VacationHistoryDTO> findVacationMyHistoryDTO(Long employeeId);
+    Optional<VacationHistoryDTO> findVacationMyHistoryDTO(Long employeeId);
 
     Page<VacationHistoryDTO> findAllTeamDTO(Employee employee, Pageable pageable);
 }

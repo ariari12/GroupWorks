@@ -62,6 +62,9 @@ public class Employee extends BaseEntity {
     @Column(name = "is_active")
     private Integer isActive;
 
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
     //    Entity to DTO
     public EmployeeDTO toEmployeeDTO() {
         return EmployeeDTO.builder()
@@ -84,6 +87,7 @@ public class Employee extends BaseEntity {
                 .salary(this.getSalary())
                 .supervisorId(this.getSupervisorId())
                 .isActive(this.getIsActive())
+                .role(this.getRole())
                 .build();
     }
 }

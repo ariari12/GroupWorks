@@ -3,7 +3,6 @@ package kr.co.groupworks.calendar.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotNull;
-import kr.co.groupworks.employee.dto.EmployeeDTO;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
@@ -50,14 +49,13 @@ public class Vacation extends Calendar{
 
     public void approvalStatus(VacationStatus status, Approver approver) {
         this.status=status;
-        this.approver=approver;
     }
 
     public void updateUsedVacation(LocalDate startDate, LocalDate endDate) {
         usedVacation += (int) (ChronoUnit.DAYS.between(startDate, endDate)+1);
     }
 
-    public void updateHalfDaysUsed(@Future @NotNull LocalDate halfStartDate) {
+    public void updateHalfDaysUsed() {
         usedVacation += 0.5;
     }
 }
