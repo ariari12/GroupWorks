@@ -10,9 +10,11 @@
         <!--/* Sidebar Toggle */-->
         <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
 
-        <span th:text="'사원번호 : ' + ${session.employee.employeeId}" style="color:white; margin-left: 65%"></span>
-        &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
-        <span th:text="'이름 : ' + ${session.employee.employeeName}" style="color:white;"></span>
+        <div style="width: 1000px;margin-left: 1455px;">
+            <span class="col-md-1" th:text="'사원번호 : ' + ${session.employee.employeeId}" style="color:white;"></span><br>
+            <span class="col-md-1" th:text="'이름 : ' + ${session.employee.employeeName}" style="color:white;"></span>
+        </div>
+
 
         <!-- kah 알람 버튼-->
         <th:block th:replace="~{notification/notification :: notification}">
