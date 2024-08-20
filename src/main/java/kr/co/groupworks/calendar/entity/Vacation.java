@@ -18,7 +18,8 @@ import java.time.temporal.ChronoUnit;
 public class Vacation extends Calendar{
 
     // 승인하는 사람
-    private String approver;
+    @Embedded
+    private Approver approver;
     // 승인 상태
     @Enumerated(EnumType.STRING)
     private VacationStatus status;
