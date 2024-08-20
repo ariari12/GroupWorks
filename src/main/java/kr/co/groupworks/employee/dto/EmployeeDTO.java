@@ -1,6 +1,9 @@
 package kr.co.groupworks.employee.dto;
 
 import kr.co.groupworks.department.dto.DepartmentDTO;
+import kr.co.groupworks.department.entity.Department;
+import kr.co.groupworks.employee.entity.Employee;
+import kr.co.groupworks.employee.entity.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -42,7 +45,47 @@ public class EmployeeDTO {
     private Long supervisorId;
     //  활동중인지
     private Integer isActive;
+    //  직책 enum
+    private Role role;
 
+    //    DTO to Entity
+    public Employee toEmployee() {
+        return Employee.builder()
+                .employeeId(this.getEmployeeId())
+                .employeePW(this.getEmployeePW())
+                .employeeName(this.getEmployeeName())
+                .rankId(this.getRankId())
+                .rankName(this.getRankName())
+                .department(Department.builder()
+                        .departmentId(this.getDepartment().getDepartmentId())
+                        .departmentName(this.getDepartment().getDepartmentName())
+                        .contactNumber(this.getDepartment().getContactNumber())
+                        .location(this.getDepartment().getLocation())
+                        .build())
+                .email(this.getEmail())
+                .createdDate(this.getJoinDate())
+                .phoneNumber(this.getPhoneNumber())
+                .address(this.getAddress())
+                .gender(this.getGender())
+                .salary(this.getSalary())
+                .supervisorId(this.getSupervisorId())
+                .isActive(this.getIsActive())
+                .role(this.getRole())
+                .build();
+    }
 
+    //    session builder
+    public SessionEmployeeDTO toSessionEmployee() {
+        return SessionEmployeeDTO.builder()
+                .employeeId(this.getEmployeeId())
+                .employeeName(this.getEmployeeName())
+                .rankId(this.getRankId())
+                .rankName(this.getRankName())
+                .email(this.getEmail())
+                .phoneNumber(this.getPhoneNumber())
+                .department(this.getDepartment())
+                .role(this.getRole())
+                .build();
+    }
 }
 

@@ -1,5 +1,6 @@
 package kr.co.groupworks.workflow.dto.vo;
 
+import io.swagger.v3.oas.annotations.Hidden;
 import kr.co.groupworks.workflow.dto.ApprovalMethod;
 import kr.co.groupworks.workflow.dto.dto.ApproverDTO;
 import kr.co.groupworks.workflow.entity.ApproverEntity;
@@ -11,6 +12,7 @@ import lombok.experimental.Accessors;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+@Hidden
 @Getter @Setter
 @ToString
 @Accessors(chain = true)

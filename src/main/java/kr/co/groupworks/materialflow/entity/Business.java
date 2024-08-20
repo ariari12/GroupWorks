@@ -1,9 +1,11 @@
 package kr.co.groupworks.materialflow.entity;
 
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.*;
 
+@Hidden
 @Entity
 @Table(name = "materialflow_business")
 @Builder

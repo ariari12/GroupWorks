@@ -12,8 +12,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 
 import java.util.List;
+import java.util.Optional;
 
-import static kr.co.groupworks.calendar.entity.QVacation.vacation;
+
 import static kr.co.groupworks.calendar.entity.QVacationHistory.*;
 import static kr.co.groupworks.department.entity.QDepartment.department;
 import static kr.co.groupworks.employee.entity.QEmployee.employee;
@@ -25,10 +26,9 @@ public class VacationHistoryRepositoryImpl implements VacationHistoryQueryDsl {
     private final JPAQueryFactory queryFactory;
 
 
-    public List<VacationHistoryDTO> findVacationMyHistoryDTO(Long employeeId){
-
-        return queryFactory.select(new QVacationHistoryDTO(employee.employeeId, employee.employeeName,
-                        employee.rankName, department.departmentName, vacationHistory.annualDaysUsed,
+    public Optional<VacationHistoryDTO> findVacationMyHistoryDTO(Long employeeId){
+        return Optional.ofNullable(queryFactory.select(new QVacationHistoryDTO(employee.employeeId, employee.employeeName,
+                        employee.role, employee.rankName, department.departmentName, vacationHistory.annualDaysUsed,
                         vacationHistory.sickDaysUsed, vacationHistory.otherDaysUsed, vacationHistory.totalAnnual))
                 .from(vacationHistory)
                 .join(vacationHistory.employee, employee)
@@ -36,13 +36,14 @@ public class VacationHistoryRepositoryImpl implements VacationHistoryQueryDsl {
                 .where(
                         employee.employeeId.eq(employeeId)
                 )
-                .fetch();
+                .fetchOne());
     }
 
     @Override
     public Page<VacationHistoryDTO> findAllTeamDTO(Employee emp, Pageable pageable) {
-        List<VacationHistoryDTO> contents = queryFactory.select(new QVacationHistoryDTO(employee.employeeId, employee.employeeName,
-                        employee.rankName, department.departmentName, vacationHistory.annualDaysUsed,
+        List<VacationHistoryDTO> contents = queryFactory.select(
+                new QVacationHistoryDTO(employee.employeeId, employee.employeeName,
+                        employee.role, employee.rankName, department.departmentName, vacationHistory.annualDaysUsed,
                         vacationHistory.sickDaysUsed, vacationHistory.otherDaysUsed, vacationHistory.totalAnnual))
                 .from(vacationHistory)
                 .join(vacationHistory.employee, employee)

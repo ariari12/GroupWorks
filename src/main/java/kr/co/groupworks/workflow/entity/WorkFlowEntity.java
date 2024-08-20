@@ -36,7 +36,7 @@ public class WorkFlowEntity {
 
     // 9, 결재 기안 코드
     private String code;
-    // 10, 결재 요청 분류
+    // 10, 결재 요청 분류 1:업무, 2:재무, 3:예산, 4:구매, 5:보고, 6:특별
     private int workFlowType;
     // 11, 결재 명
     private String title;
@@ -63,7 +63,7 @@ public class WorkFlowEntity {
     private int approvalCount;
     // 21, 비용 청구
     private long cost;
-    // 22, 최종 승인여부 0:진행, 1:승인, 2:반려
+    // 22, 최종 승인여부 0|3:진행, 1:승인, 2:반려
     private int status;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)

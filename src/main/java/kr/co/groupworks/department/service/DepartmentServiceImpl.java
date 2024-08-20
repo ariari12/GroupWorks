@@ -22,30 +22,9 @@ public class DepartmentServiceImpl implements DepartmentService {
         List<Department> departmentList = departmentRepository.findAll();
         List<DepartmentDTO> departmentDTOList = new ArrayList<>();
         for (Department department : departmentList) {
-            toDTO(department);
-            departmentDTOList.add(toDTO(department));
+            departmentDTOList.add(department.toDTO());
         }
         return departmentDTOList;
     }
-//    ========================================================================================================
 
-    //    dto to entity
-    public Department toEntity(DepartmentDTO departmentDTO) {
-        return Department.builder()
-                .departmentId(departmentDTO.getDepartmentId())
-                .departmentName(departmentDTO.getDepartmentName())
-                .location(departmentDTO.getLocation())
-                .contactNumber(departmentDTO.getContactNumber())
-                .build();
-    }
-
-    //  Entity to Dto
-    public DepartmentDTO toDTO(Department department) {
-        return DepartmentDTO.builder()
-                .departmentId(department.getDepartmentId())
-                .departmentName(department.getDepartmentName())
-                .contactNumber(department.getContactNumber())
-                .location(department.getLocation())
-                .build();
-    }
 }

@@ -243,11 +243,8 @@ public class MaterialServiceImpl implements MaterialService {
         LocalDateTime startLDT = startLD.atStartOfDay(), endLDT = endLD.atTime(LocalTime.MAX);
         List<Mes> ml = mesRepository.findByManufactureDateGreaterThanEqualAndManufactureDateLessThanEqual(startLDT, endLDT);
 
-        log.info("start:{}", startLD);
-        log.info("end:{}", endLD);
-
         return Map.of(
-                "total", orderRepository.calculat(startLD, endLD),
+                "total", orderRepository.calculate(startLD, endLD),
                 "orderList", ol.stream().map(OrderDTO::new).toList(),
                 "mesList", ml.stream().map(MesDTO::new).toList()
         );

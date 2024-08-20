@@ -39,7 +39,7 @@ public class WorkflowNotificationServiceFactory {
                 .toList());
     }
 
-    public Map<String, Object> notifySetup(Long wid, Long eId, Integer aType, String title, NotifyContent content) {
+    public Map<String, Object> notifySetup(Long wid, Long eId, String title, NotifyContent content) {
         WorkFlowEntity wf = wr.findById(wid).orElse(null);
         if(wf == null) return returnMessage("not found workflowId: " + wid, false);
 
@@ -49,7 +49,7 @@ public class WorkflowNotificationServiceFactory {
         List<Notification> notifyList = new ArrayList<>();
         wf.getApprovers().forEach(a -> notifyList.add(Notification.builder()
                 .title(title)
-                .contents(content.getContent(wf, e))
+                .contents(content.getContent(e))
                 .createdDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
                 .receiverId(a.getEmployeeId())
                 .senderId(e.getEmployeeId())
@@ -59,7 +59,7 @@ public class WorkflowNotificationServiceFactory {
         ));
         notifyList.add(Notification.builder()
                 .title(title)
-                .contents(content.getContent(wf, e))
+                .contents(content.getContent(e))
                 .createdDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
                 .receiverId(wf.getEmployeeId())
                 .senderId(e.getEmployeeId())
@@ -67,7 +67,7 @@ public class WorkflowNotificationServiceFactory {
                 .url("/work-flow/stat")
                 .build());
         service.sendNotificationList(notifyList);
-        return null;
+        return returnMessage("successful notification", true);
     }
 
     private Map<String, Object> returnMessage(String message, boolean result) {

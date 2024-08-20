@@ -29,6 +29,9 @@ public class SignalingController {
         modelAndView.setViewName("videoConference/videoConferenceMenu.html");
         return modelAndView;
     }
+
+
+
     // 방 생성 엔드포인트
     @PostMapping("/rooms")
     public ResponseEntity<Void> createRoom(@RequestBody Map<String, String> request) {

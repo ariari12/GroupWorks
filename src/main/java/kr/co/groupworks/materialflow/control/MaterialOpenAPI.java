@@ -93,7 +93,6 @@ public class MaterialOpenAPI {
     @PostMapping(value = "/mes-one")
     public ResponseEntity<Object> setMesOne(@RequestBody(required = false) MesOpenApiDTO mesDTO) {
         if(mesDTO == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).body(false);
-        log.info("OpenAPI log - mes: {}", mesDTO);
         return ResponseEntity.ok().body(materialOpenApiService.setMes(mesDTO));
     }
 
@@ -102,7 +101,6 @@ public class MaterialOpenAPI {
     @PostMapping(value = "/mes-list")
     public ResponseEntity<Object> setMesList(@RequestBody(required = false) List<MesOpenApiDTO> mesList) {
         if(mesList.size() > 1) return ResponseEntity.status(HttpStatus.NOT_FOUND).body(false);
-        mesList.forEach(m -> log.info("OpenAPI log - mes: {}", m));
         return ResponseEntity.ok().body(materialOpenApiService.setMesList(mesList));
     }
 

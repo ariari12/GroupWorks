@@ -50,7 +50,6 @@ public class MaterialItemDTO {
         this
                 .setId(mi.getId())
                 .setBomId(mi.getBomId())
-                .setMesId(mi.getMesId())
 
                 .setItemStatus(mi.getItemStatus())
                 .setItemCode(mi.getItemCode())
@@ -69,7 +68,6 @@ public class MaterialItemDTO {
         return MaterialItem.builder()
                 .id(this.getId())
                 .bomId(this.getBomId())
-                .mesId(this.getMesId())
 
                 .itemStatus(this.getItemStatus())
                 .itemCode(this.getItemCode())

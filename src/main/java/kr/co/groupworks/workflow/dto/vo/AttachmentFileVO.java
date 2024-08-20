@@ -1,5 +1,6 @@
 package kr.co.groupworks.workflow.dto.vo;
 
+import io.swagger.v3.oas.annotations.Hidden;
 import kr.co.groupworks.workflow.entity.AttachmentFileEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 @Data
+@Hidden
 @Accessors(chain = true)
 @NoArgsConstructor
 @AllArgsConstructor

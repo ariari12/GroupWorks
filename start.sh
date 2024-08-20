@@ -16,7 +16,6 @@
   docker build -t ${image_name} -f Dockerfile .
 
   echo "==> Run container"
-#  docker run -d -p ${port}:${port} -e coolsms.encryptor.key.property=${KEY_PROPERTY} --name ${container_name} ${image_name}
 
 
 # Remove previous containers

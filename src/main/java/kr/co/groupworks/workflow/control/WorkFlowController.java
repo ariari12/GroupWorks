@@ -40,7 +40,7 @@ public class WorkFlowController {
     private static final String WORK_WAIT = "/wait";
     private static final String WORK_REFERR = "/referr";
     private static final String SEPARATOR = "/";
-    private static final String DIRECTORY = "/workflow";
+    private static final String DIRECTORY = "workflow";
 
     @Getter
     public enum AttributeName {
@@ -77,7 +77,6 @@ public class WorkFlowController {
         WorkFlowDTO workFlowDTO = workFlowService.getWorkflowDTO(getEmployeeId(session));
         title = "Approval Request";
         subtitle = "전자결재 발송";
-//        log.info("WorkFlowController - request title: {}, setDto: {}", title, workFlowDTO);
 
         model.addAttribute(AttributeName.TITLE.getStatus(), title);
         model.addAttribute(AttributeName.SUB_TITLE.getStatus(), subtitle);
@@ -91,7 +90,6 @@ public class WorkFlowController {
     public String approvalHistory(Model model, HttpSession session) {
         title = "Approval History";
         subtitle = "전자결재 발송 내역";
-//        log.info("WorkFlowController - approval history");
 
         Map<String, List<WorkflowListVO>> result = workFlowService.getMyWorkFlowDTOList(getEmployeeId(session));
         model.addAttribute(AttributeName.TITLE.getStatus(), title);
@@ -107,7 +105,6 @@ public class WorkFlowController {
     public String detail( HttpSession session, Model model, @PathVariable int workflowId) {
         title = "Approval Detail History";
         subtitle = "전자결재 발송 상세내역";
-//        log.info("WorkFlowController - approval detail, id: {}, title: {}", workflowId, title);
 
         model.addAttribute(AttributeName.TITLE.getStatus(), title);
         model.addAttribute(AttributeName.SUB_TITLE.getStatus(), subtitle);
@@ -115,8 +112,6 @@ public class WorkFlowController {
                 .forEach((k, v) -> {
                     if (k.equals("listMap")) {
                         ((Map<String, List<ApproverVO>>) v).forEach(model::addAttribute);
-                    } else if (k.equals(AttributeName.WORK_FLOW_DTO.getStatus())) {
-                        model.addAttribute(k, v);
                     } else {
                         model.addAttribute(k, v);
                     }
@@ -131,7 +126,6 @@ public class WorkFlowController {
     public String workStat(Model model, HttpSession session) {
         title = "WorkFlow Status Board";
         subtitle = "전자결재 현황";
-//        log.info("WorkFlowController - stat title: {}", title);
 
         model.addAttribute(AttributeName.TITLE.getStatus(), title);
         model.addAttribute(AttributeName.SUB_TITLE.getStatus(), subtitle);
@@ -146,7 +140,6 @@ public class WorkFlowController {
         title = "WorkFlow Approve Wait List";
         subtitle = "결재 승인대기 목록";
         long employeeId = getEmployeeId(session);
-//        log.info("WorkFlowController - wait, id: {}, title: {}", employeeId, title);
 
         model.addAttribute(AttributeName.TITLE.getStatus(), title);
         model.addAttribute(AttributeName.SUB_TITLE.getStatus(), subtitle);
@@ -161,7 +154,6 @@ public class WorkFlowController {
         title = "WorkFlow Referer / Collaborator List";
         subtitle = "결재 참조 / 협조 목록";
         long employeeId = getEmployeeId(session);
-//        log.info("WorkFlowController - wait");
 
         model.addAttribute(AttributeName.TITLE.getStatus(), title);
         model.addAttribute(AttributeName.SUB_TITLE.getStatus(), subtitle);

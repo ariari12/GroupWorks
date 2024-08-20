@@ -22,5 +22,5 @@ public interface OrderQueryDsl {
 
     List<MesListVO> findAllMesAndOrderCode();
 
-    Long calculat(LocalDate start, LocalDate end);
+    Long calculate(LocalDate start, LocalDate end);
 }

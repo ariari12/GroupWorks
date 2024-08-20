@@ -3,7 +3,9 @@ package kr.co.groupworks.employee.entity;
 
 import jakarta.persistence.*;
 import kr.co.groupworks.common.BaseEntity;
+import kr.co.groupworks.department.dto.DepartmentDTO;
 import kr.co.groupworks.department.entity.Department;
+import kr.co.groupworks.employee.dto.EmployeeDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -60,4 +62,32 @@ public class Employee extends BaseEntity {
     @Column(name = "is_active")
     private Integer isActive;
 
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
+    //    Entity to DTO
+    public EmployeeDTO toEmployeeDTO() {
+        return EmployeeDTO.builder()
+                .employeeId(this.getEmployeeId())
+                .employeePW(this.getEmployeePW())
+                .employeeName(this.getEmployeeName())
+                .rankId(this.getRankId())
+                .rankName(this.getRankName())
+                .department(DepartmentDTO.builder()
+                        .departmentId(this.getDepartment().getDepartmentId())
+                        .departmentName(this.getDepartment().getDepartmentName())
+                        .contactNumber(this.getDepartment().getContactNumber())
+                        .location(this.getDepartment().getLocation())
+                        .build())
+                .email(this.getEmail())
+                .joinDate(this.getCreatedDate())
+                .phoneNumber(this.getPhoneNumber())
+                .address(this.getAddress())
+                .gender(this.getGender())
+                .salary(this.getSalary())
+                .supervisorId(this.getSupervisorId())
+                .isActive(this.getIsActive())
+                .role(this.getRole())
+                .build();
+    }
 }

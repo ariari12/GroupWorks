@@ -1,5 +1,6 @@
 package kr.co.groupworks.workflow.dto.vo;
 
+import io.swagger.v3.oas.annotations.Hidden;
 import kr.co.groupworks.workflow.dto.WorkFlowType;
 import kr.co.groupworks.workflow.entity.WorkFlowEntity;
 import lombok.Getter;
@@ -11,6 +12,7 @@ import lombok.experimental.Accessors;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+@Hidden
 @Getter @Setter @ToString
 @Accessors(chain = true)
 @NoArgsConstructor

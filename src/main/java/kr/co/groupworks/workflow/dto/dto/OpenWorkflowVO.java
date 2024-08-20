@@ -1,5 +1,6 @@
 package kr.co.groupworks.workflow.dto.dto;
 
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -14,6 +15,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
+@Hidden
 @Getter
 @ToString
 public class OpenWorkflowVO {

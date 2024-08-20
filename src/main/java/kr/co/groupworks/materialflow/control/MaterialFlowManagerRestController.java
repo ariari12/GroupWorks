@@ -37,7 +37,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping(value = "/materialflow")
 @RequiredArgsConstructor
-public abstract class MaterialFlowManagerRestController {
+public class MaterialFlowManagerRestController {
     /* MaterialFlowManagement RestAPI */
     private final MaterialService materialService;
     private final MaterialOpenApiService materialOpenApiService;
@@ -76,7 +76,6 @@ public abstract class MaterialFlowManagerRestController {
     /* 발주서, 수주서 작성 등록 */
     @PostMapping("/new-order")
     public ResponseEntity<Object> requestOrder(@Valid @RequestBody OrderDTO orderDTO, BindingResult bindingResult) {
-//        log.info("request, OrderDTO: {}", orderDTO);
         if(orderDTO == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).body(false);
         if(bindingResult.hasErrors()) {
             // 검증 오류 메시지를 수집하여 반환
@@ -105,7 +104,8 @@ public abstract class MaterialFlowManagerRestController {
 
     /* 발주서/수주서 작성 취소 (단, 발주서/수주서 담당자 기록이 없어야 함) */
     @DeleteMapping("/order-detail/{orderId}")
-    public ResponseEntity<Object> requestOrderDelete(@PathVariable Long orderId) {
+    public ResponseEntity<Object> requestOrderDelete(@PathVariable("orderId") Long orderId) {
+        log.info("oId: {}", orderId);
         if(orderId == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).body(false);
         return ResponseEntity.ok().body(materialService.deleteOrder(orderId));
     }
@@ -184,7 +184,7 @@ public abstract class MaterialFlowManagerRestController {
             // 발주 담당자에게 발신
             // nsFactory.receivePhone = m.getPhone().replaceAll("-", "")
             nsFactory.smsSetup(message);
-            String title = "품목코드: " + b.getItemCode() + " 발주가 완료되었습니다.";
+            String title = "품목코드: " + b.getItemCode() + "\n발주가 완료되었습니다.";
             nsFactory.notifySetup(notificationService, e, title, message);
         }
         return messageService.send(nsFactory.getMessageList(), true);

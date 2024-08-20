@@ -1,5 +1,6 @@
 package kr.co.groupworks.workflow.dto.dto;
 
+import io.swagger.v3.oas.annotations.Hidden;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
@@ -16,6 +17,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+@Hidden
 @Getter @Setter @ToString
 @Accessors(chain = true)
 @NoArgsConstructor

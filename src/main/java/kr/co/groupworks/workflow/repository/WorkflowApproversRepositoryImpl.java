@@ -1,9 +1,11 @@
 package kr.co.groupworks.workflow.repository;
 
 import com.querydsl.core.Tuple;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import kr.co.groupworks.department.entity.QDepartment;
+import kr.co.groupworks.workflow.dto.vo.WorkflowListVO;
 import kr.co.groupworks.workflow.entity.QApproverEntity;
 import kr.co.groupworks.workflow.entity.QWorkFlowEntity;
 import kr.co.groupworks.workflow.entity.WorkFlowEntity;
@@ -44,27 +46,22 @@ public class WorkflowApproversRepositoryImpl extends QuerydslRepositorySupport i
 
     @Override
     public Map<String, List<Long>> workflowDepartmentStatistics() {
-        QWorkFlowEntity workFlow = QWorkFlowEntity.workFlowEntity;
+        QWorkFlowEntity workflow = QWorkFlowEntity.workFlowEntity;
         QDepartment department = QDepartment.department;
 
         List<Tuple> list = queryFactory
                 .select(
-                        workFlow.status
-                                .when(1).then(1L)
-                                .otherwise(0L)
-                                .sum(),
-                        workFlow.status
-                                .when(2).then(1L)
-                                .otherwise(0L)
-                                .sum(),
-                        workFlow.status
-                                .when(0).then(1L)
-                                .when(3).then(1L)
-                                .otherwise(0L)
-                                .sum().as("test03")
-                )
-                .from(department)
-                .leftJoin(workFlow).on(workFlow.departmentId.eq(department.departmentId))
+                        Expressions.cases()
+                                .when(workflow.status.in(0, 1, 2, 3)).then(1L)
+                                .otherwise(0L).sum(),
+                        Expressions.cases()
+                                .when(workflow.status.eq(1)).then(1L)
+                                .otherwise(0L).sum(),
+                        Expressions.cases()
+                                .when(workflow.status.eq(2)).then(1L)
+                                .otherwise(0L).sum()
+                ).from(department)
+                .leftJoin(workflow).on(workflow.departmentId.eq(department.departmentId))
                 .groupBy(department.departmentId)
                 .fetch();
 
@@ -171,5 +168,19 @@ public class WorkflowApproversRepositoryImpl extends QuerydslRepositorySupport i
                     ).fetch();
             default -> null;
         };
+    }
+
+    @Override
+    public List<WorkflowListVO> recentWorkflowList(Long employeeId) {
+        QWorkFlowEntity w = QWorkFlowEntity.workFlowEntity;
+        QApproverEntity a = QApproverEntity.approverEntity;
+        if (employeeId == null || employeeId < 1) return new ArrayList<>();
+
+        return queryFactory
+                .select(w).distinct().from(w)
+                .innerJoin(a).on(a.workFlowId.eq(w.id))
+                .where(w.employeeId.eq(employeeId).or(a.employeeId.eq(employeeId)))
+                .orderBy(w.draftDate.desc()).limit(5)
+                .fetch().stream().map(WorkflowListVO::new).toList();
     }
 }

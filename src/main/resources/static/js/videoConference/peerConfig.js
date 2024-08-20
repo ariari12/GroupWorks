@@ -448,16 +448,25 @@ const startScreenShare = async () => {
     try {
         screenStream = await navigator.mediaDevices.getDisplayMedia({ video: true });
         console.log('Screen share started');
-        // 화면 공유 트랙을 PeerConnection에 추가
-        screenStream.getTracks().forEach(track => {
-            pcListMap.forEach(pc => {
-                pc.addTrack(track, screenStream);
-            });
-        });
 
         // 화면 공유 비디오를 로컬 화면에 표시
         localStreamElement.srcObject = screenStream;
         localStreamElement.style.display = 'block';
+
+        // 기존 비디오 트랙을 화면 공유 트랙으로 교체
+        pcListMap.forEach(pc => {
+            const videoSender = pc.getSenders().find(sender => sender.track && sender.track.kind === 'video');
+            if (videoSender) {
+                screenStream.getTracks().forEach(track => {
+                    videoSender.replaceTrack(track);
+                });
+            } else {
+                screenStream.getTracks().forEach(track => {
+                    pc.addTrack(track, screenStream);
+                });
+            }
+        });
+
     } catch (error) {
         console.error("Error starting screen share:", error);
         alert("화면 공유를 시작할 수 없습니다.");
@@ -471,9 +480,27 @@ const stopScreenShare = () => {
         screenStream = null;
         console.log('Screen share stopped');
 
-        // 화면 공유 종료 후, 기존 웹캠 비디오를 로컬 화면에 다시 표시
+        // 기존 웹캠 비디오를 로컬 화면에 다시 표시
         localStreamElement.srcObject = localStream;
         localStreamElement.style.display = 'block';
+
+        // 기존의 비디오 트랙 복구
+        pcListMap.forEach(pc => {
+            const videoSender = pc.getSenders().find(sender => sender.track && sender.track.kind === 'video');
+            if (videoSender) {
+                localStream.getTracks().forEach(track => {
+                    if (track.kind === 'video') {
+                        videoSender.replaceTrack(track);
+                    }
+                });
+            } else {
+                localStream.getTracks().forEach(track => {
+                    if (track.kind === 'video') {
+                        pc.addTrack(track, localStream);
+                    }
+                });
+            }
+        });
     }
 };
 
@@ -481,7 +508,7 @@ const stopScreenShare = () => {
 document.querySelector('#toggleScreenShareBtn').addEventListener('click', () => {
     if (screenStream) {
         stopScreenShare();
-        document.querySelector('#toggleScreenShareBtn').textContent = '화면 공유 키기';
+        document.querySelector('#toggleScreenShareBtn').textContent = '화면 공유 켜기';
     } else {
         startScreenShare().then(() => {
             document.querySelector('#toggleScreenShareBtn').textContent = '화면 공유 끄기';
