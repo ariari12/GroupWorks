@@ -2,6 +2,7 @@ package kr.co.groupworks.calendar.dto;
 
 import com.querydsl.core.annotations.QueryProjection;
 import io.swagger.v3.oas.annotations.media.Schema;
+import kr.co.groupworks.employee.entity.Role;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -14,6 +15,9 @@ public class VacationHistoryDTO {
 
     @Schema(description = "사원 이름", example = "사원1")
     private String employeeName;
+
+    @Schema(description = "사원 직책", example = "MANAGER")
+    private Role role;
 
     @Schema(description = "직급", example = "과장")
     private String rankName;
@@ -34,9 +38,10 @@ public class VacationHistoryDTO {
     private double totalAnnual;
 
     @QueryProjection
-    public VacationHistoryDTO(Long employeeId, String employeeName, String rankName, String departmentName, double annualDaysUsed, int sickDaysUsed, int otherDaysUsed, double totalAnnual) {
+    public VacationHistoryDTO(Long employeeId, String employeeName, Role role, String rankName, String departmentName, double annualDaysUsed, int sickDaysUsed, int otherDaysUsed, double totalAnnual) {
         this.employeeId = employeeId;
         this.employeeName = employeeName;
+        this.role = role;
         this.rankName = rankName;
         this.departmentName = departmentName;
         this.annualDaysUsed = annualDaysUsed;

@@ -24,7 +24,7 @@ INSERT INTO groupworks.employee (is_active,rank_id,created_date,department_id,la
 	 (1,1,'2024-01-01 00:00:00',1,NULL,30000,6,'주소 9','mjh@gw.com','마정하','$2a$10$Vg4CIc8WunwnKoV2.j9J.uPep8BgLAzb2VelL89I.hGiLBDNoybpO','남','010-1234-5608','사원'),
 	 (1,1,'2024-01-01 00:00:00',1,NULL,30000,6,'주소 10','pcy@gw.com','박채윤','$2a$10$Vg4CIc8WunwnKoV2.j9J.uPep8BgLAzb2VelL89I.hGiLBDNoybpO','여','010-1234-5609','사원');
 INSERT INTO groupworks.employee (is_active,rank_id,created_date,department_id,last_modified_date,salary,supervisor_id,address,email,employee_name,employee_pw,gender,phone_number,rank_name) VALUES
-	 (1,5,'2021-01-01 00:00:00',2,NULL,30100,0,'주소 56','employee56@gw.com','사원56','$2a$10$Vg4CIc8WunwnKoV2.j9J.uPep8BgLAzb2VelL89I.hGiLBDNoybpO','여','010-1234-5610','부장'),
+	 (1,5,'2021-01-01 00:00:00',2,NULL,30100,0,'주소 11','employee11@gw.com','사원11','$2a$10$Vg4CIc8WunwnKoV2.j9J.uPep8BgLAzb2VelL89I.hGiLBDNoybpO','여','010-1234-5610','부장'),
 	 (1,4,'2022-01-01 00:00:00',2,NULL,30560,56,'주소 12','employee12@gw.com','사원12','$2a$10$Vg4CIc8WunwnKoV2.j9J.uPep8BgLAzb2VelL89I.hGiLBDNoybpO','남','010-1234-5611','차장'),
 	 (1,3,'2023-01-01 00:00:00',2,NULL,30120,12,'주소 13','employee13@gw.com','사원13','$2a$10$Vg4CIc8WunwnKoV2.j9J.uPep8BgLAzb2VelL89I.hGiLBDNoybpO','여','010-1234-5612','과장'),
 	 (1,3,'2023-01-01 00:00:00',2,NULL,30130,12,'주소 14','employee14@gw.com','사원14','$2a$10$Vg4CIc8WunwnKoV2.j9J.uPep8BgLAzb2VelL89I.hGiLBDNoybpO','남','010-1234-5613','과장'),

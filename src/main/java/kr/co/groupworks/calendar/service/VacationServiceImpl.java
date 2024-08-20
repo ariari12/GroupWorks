@@ -364,6 +364,7 @@ public class VacationServiceImpl implements VacationService{
                                 .employeeId(vacation.getEmployee().getEmployeeId())
                                 .name(vacation.getEmployee().getEmployeeName())
                                 .role(vacation.getEmployee().getRole())
+                                .rankName(vacation.getEmployee().getRankName())
                                 .startDate(vacation.getStartDate())
                                 .endDate(vacation.getEndDate() != null ? vacation.getEndDate() : vacation.getStartDate())
                                 .vacationType(vacation.getVacationType())
@@ -406,8 +407,8 @@ public class VacationServiceImpl implements VacationService{
     public Page<VacationHistoryDTO> findAllTeamHistory(Long employeeId, Pageable pageable) {
         Employee employee = employeeRepository.findById(employeeId)
                 .orElseThrow(() -> new EntityNotFoundException("사원을 찾을 수 없습니다. " + employeeId));
-        if(employee.getRankId()<3){
-            throw new RankNotSufficientException("직급이 낮아 해당 작업을 수행할 권한이 없습니다.");
+        if(employee.getRole().getGrade()<3){
+            throw new RankNotSufficientException("직책이 낮아 해당 작업을 수행할 권한이 없습니다.");
         }
         return vacationHistoryRepository.findAllTeamDTO(employee, pageable);
     }

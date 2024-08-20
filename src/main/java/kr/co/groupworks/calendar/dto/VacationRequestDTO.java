@@ -26,6 +26,9 @@ public class VacationRequestDTO {
     @Schema(description = "사원 직책", example = "MANAGER")
     private Role role;
 
+    @Schema(description = "직급", example = "부장")
+    private String rankName;
+
     @Schema(description = "휴가 시작 날짜", example = "2024-08-15")
     private String startDate;
 
