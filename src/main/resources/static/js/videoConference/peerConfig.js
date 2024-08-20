@@ -11,18 +11,37 @@ const existingRoomIds = [];
 
 let screenStream = null; // 화면 공유를 위한 스트림
 
-document.addEventListener('DOMContentLoaded', async ()=>{
-    roomId = document.querySelector('#roomId').value;
+let allClientsReady = false;
+let connectedClients = [];
 
-    // 카메라 시작
-    await startCam();
+document.addEventListener('DOMContentLoaded', async () => {
+    console.log("DOMContentLoaded event fired");
+    try {
+        console.log("Script Initialization Started");
+        roomId = document.querySelector('#roomId').value;
+        await startCam();
+        await connectSocket(); // WebSocket 연결 시작
+        console.log("Script Initialization Completed");
+    } catch (error) {
+        console.error("Error during initialization:", error);
+    }
+});
 
-    // 소켓 연결 시작
-    await connectSocket();
+// 방에 입장한 클라이언트가 모두 준비되었는지 확인
+const checkIfAllClientsReady = () => {
+    if (connectedClients.length >= 2) {  // 최소 두 명의 클라이언트가 준비되었는지 확인
+        allClientsReady = true;
+        startConferenceHandler();  // WebRTC 연결 시작
+    }
+};
 
-    await startConferenceHandler()
+// 클라이언트가 방에 입장했음을 서버에 알림
+const notifyServerOfEntry = () => {
+    stompClient.send(`/app/peer/entered/${roomId}`, {}, JSON.stringify({
+        key: myKey
+    }));
+};
 
-})
 // 카메라 시작 함수
 const startCam = async () => {
     try {
@@ -38,19 +57,18 @@ const startCam = async () => {
     }
 };
 
+// WebRTC 연결 시작 함수
 const startConferenceHandler = async () => {
-    console.log('Starting conference');
-    stompClient.send(`/app/call/key`, {}, {});
-    setTimeout(() => {
-        otherKeyList.forEach((key) => {
-            if (!pcListMap.has(key)) {
-                pcListMap.set(key, createPeerConnection(key));
-                sendOffer(pcListMap.get(key), key);
-            } else {
-                sendOffer(pcListMap.get(key), key);
+    if (allClientsReady) {
+        if (!pcListMap.has(myKey)) {
+            // 첫 번째 클라이언트가 Offer를 보냄
+            if (connectedClients[0] === myKey) {
+                console.log('Sending initial offer');
+                pcListMap.set(myKey, createPeerConnection(myKey));
+                sendOffer(pcListMap.get(myKey), connectedClients[1]);
             }
-        });
-    }, 1000);
+        }
+    }
 };
 
 // 미디어 오류 처리 함수
@@ -67,40 +85,45 @@ const displayBlackScreen = () => {
 
 // 소켓 연결 함수
 const connectSocket = async () => {
-    const socket = new SockJS('/signaling');
-    stompClient = Stomp.over(socket);
-    stompClient.debug = (str) => {
-        console.log('STOMP: ' + str);
-    };
+    return new Promise((resolve, reject) => {
+        const socket = new SockJS('/signaling');
+        stompClient = Stomp.over(socket);
+        stompClient.debug = (str) => {
+            console.log('STOMP: ' + str);
+        };
 
-    const onConnect = () => {
-        console.log('Connected to WebRTC server');
-        retryCount = 0; // Reset retry count on successful connection
-        setupSubscriptions();
-    };
+        const onConnect = () => {
+            console.log('Connected to WebRTC server');
+            retryCount = 0; // Reset retry count on successful connection
+            setupSubscriptions();
+            notifyServerOfEntry();  // 연결 후 notifyServerOfEntry 호출
+            resolve();
+        };
 
-    const onError = (error) => {
-        console.error('Connection error:', error);
-        if (retryCount < maxRetries) {
-            retryCount++;
-            console.log(`Reconnecting... Attempt ${retryCount}/${maxRetries}`);
-            setTimeout(connectSocket, 2000); // Retry connection after 2 seconds
-        } else {
-            console.error('Max retry attempts reached. Could not connect to WebRTC server.');
+        const onError = (error) => {
+            console.error('Connection error:', error);
+            if (retryCount < maxRetries) {
+                retryCount++;
+                console.log(`Reconnecting... Attempt ${retryCount}/${maxRetries}`);
+                setTimeout(connectSocket, 2000); // Retry connection after 2 seconds
+            } else {
+                console.error('Max retry attempts reached. Could not connect to WebRTC server.');
+                alert('화상회의가 종료되었습니다.');
+                window.location.href = '/main'; // 모든 사용자 리다이렉트
+                reject(error);
+            }
+        };
+
+        const onDisconnect = () => {
             alert('화상회의가 종료되었습니다.');
             window.location.href = '/main'; // 모든 사용자 리다이렉트
-        }
-    };
+        };
 
-    const onDisconnect = () => {
-        alert('화상회의가 종료되었습니다.');
-        window.location.href = '/main'; // 모든 사용자 리다이렉트
-    };
+        stompClient.connect({}, onConnect, onError);
 
-    stompClient.connect({}, onConnect, onError);
-
-    // STOMP 연결이 끊어질 때 호출되는 함수 설정
-    stompClient.onclose = onDisconnect;
+        // STOMP 연결이 끊어질 때 호출되는 함수 설정
+        stompClient.onclose = onDisconnect;
+    });
 };
 
 // WebSocket 구독 설정 함수
@@ -110,7 +133,9 @@ const setupSubscriptions = () => {
         const message = JSON.parse(candidate.body).body;
         console.log(`Received ICE candidate from ${key}:`, message);
         if (pcListMap.has(key)) {
-            pcListMap.get(key).addIceCandidate(new RTCIceCandidate(message)).catch(error => {
+            pcListMap.get(key).addIceCandidate(new RTCIceCandidate(message)).then(() => {
+                console.log(`ICE candidate added from ${key}`);
+            }).catch(error => {
                 console.error('Error adding received ICE candidate:', error);
             });
         } else {
@@ -127,6 +152,7 @@ const setupSubscriptions = () => {
         }
         pcListMap.get(key).setRemoteDescription(new RTCSessionDescription(message)).then(() => {
             sendAnswer(pcListMap.get(key), key);
+            console.log(`Sent answer to ${key}`);
         }).catch(error => {
             console.error('Error setting remote description:', error);
         });
@@ -159,10 +185,17 @@ const setupSubscriptions = () => {
         }
     });
 
+    stompClient.subscribe(`/topic/peer/entered/${roomId}`, message => {
+        const key = JSON.parse(message.body).key;
+        if (!connectedClients.includes(key)) {
+            connectedClients.push(key);
+            checkIfAllClientsReady();
+        }
+    });
+
     // 종료 메시지를 수신하여 처리하는 부분
     stompClient.subscribe(`/topic/peer/endConference/${roomId}`, message => {
         console.log('Received end conference message:', message);
-        // 상대방이 종료했을 때 remoteStreamDiv 숨기기
         document.querySelector('#remoteStreamDiv').style.display = 'none';
         alert('상대방이 화상회의를 종료했습니다.');
         window.location.href = '/main'; // 모든 사용자 리다이렉트
@@ -181,11 +214,10 @@ let onTrack = (event, otherKey) => {
         video.controls = true;
         video.id = otherKey;
         video.srcObject = event.streams[0];
-        video.style.width = '640px';   // 크기 설정
-        video.style.height = '360px';  // 크기 설정
+        video.style.width = '640px';
+        video.style.height = '360px';
         document.getElementById('remoteStreamDiv').appendChild(video);
     }
-
 };
 
 // PeerConnection 생성 함수
@@ -258,14 +290,14 @@ const setLocalAndSendMessage = (pc, sessionDescription) => {
     });
 };
 
-
-function disconnect(){
-    if(stompClient !== null){
-        stompClient.disconnect(function (){
+function disconnect() {
+    if (stompClient !== null) {
+        stompClient.disconnect(function () {
             console.log("Disconnected");
-        })
+        });
     }
 }
+
 // 종료 메시지를 보내는 함수
 const sendEndConferenceMessage = () => {
     stompClient.send(`/app/peer/endConference/${roomId}`, {}, JSON.stringify({
@@ -286,19 +318,19 @@ const handleEndConference = async () => {
     window.location.href = '/main';
 };
 
-
-// 종료하기 버튼 이벤트 리스너를 새로운 종료하기 버튼에 추가
+// 종료하기 버튼 이벤트 리스너 추가
 document.querySelector('#endConferenceBtn').addEventListener('click', async () => {
     handleEndConference();
     sendEndConferenceMessage(); // 종료 메시지를 보냄
-    if(localStream.getVideoTracks()[0].enabled){
+    if (localStream.getVideoTracks()[0].enabled) {
         localStream.getVideoTracks()[0].enabled = !localStream.getVideoTracks()[0].enabled;
     }
-    if(localStream.getAudioTracks()[0].enabled){
+    if (localStream.getAudioTracks()[0].enabled) {
         localStream.getAudioTracks()[0].enabled = !localStream.getAudioTracks()[0].enabled;
     }
-    document.querySelector('#localStream').style.display = 'none'; // 내 video 컴포넌트를 숨김
+    document.querySelector('#localStream').style.display = 'none';
 });
+
 // 카메라 끄기/켜기 버튼 이벤트 리스너
 document.querySelector('#toggleCameraBtn').addEventListener('click', () => {
     if (localStream) {
