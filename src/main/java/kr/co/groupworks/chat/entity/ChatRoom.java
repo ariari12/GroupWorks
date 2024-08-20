@@ -31,4 +31,10 @@ public class ChatRoom {
         this.participants.add(participantId);
         return this;
     }
+
+    // 참가자를 채팅방에서 제거
+    public ChatRoom removeParticipant(Long participantId) {
+        this.participants.remove(participantId);
+        return this;
+    }
 }

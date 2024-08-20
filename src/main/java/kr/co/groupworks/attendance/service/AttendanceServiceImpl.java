@@ -60,8 +60,8 @@ public class AttendanceServiceImpl implements AttendanceService {
         LocalDateTime startOfDay = date.atStartOfDay();
         LocalDateTime endOfDay = date.atTime(23, 59, 59, 999999999);
 
-        Optional<Attendance> attendance = attendanceRepository.findClockOutRecordForToday(employeeId, startOfDay, endOfDay);
-        return attendance.isPresent();
+        List<Attendance> attendances = attendanceRepository.findClockOutRecordsForToday(employeeId, startOfDay, endOfDay);
+        return !attendances.isEmpty();
     }
 
     @Override
