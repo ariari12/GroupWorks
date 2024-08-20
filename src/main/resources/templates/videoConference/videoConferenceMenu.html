@@ -23,27 +23,35 @@
             <!-- 룸 아이디 번호를 입력하는 input -->
             <input type="text" class="roomIdInput" id="createRoomIdInput" readonly/>
             <!-- 룸 아이디를 입력후 클릭하는 button -->
-            <button type="button" class="enterRoomBtn" id="createEnterRoomBtn">채팅방 만들기</button>
+            <button type="button" class="btn btn-secondary" id="createEnterRoomBtn">채팅방 만들기</button>
             <!-- enterRoomBtn 클릭시 나타남, Streams 정보를 담은 Peer 를 웹소켓 ( 시그널링 )   -->
-            <button type="button" class="startStreamsBtn" id="createStartStreamsBtn" style="display: none;">시작하기</button>
+            <button type="button" class="btn btn-secondary" id="createStartStreamsBtn" style="display: none;">시작하기</button>
         </div>
 
         <h2 style="margin-top: 50px">화상회의 참여하기</h2>
         <hr>
         <div class="btn-container">
             <input type="text" class="roomIdInput" id="joinRoomIdInput"/>
-            <button type="button" class="enterRoomBtn" id="joinEnterRoomBtn">채팅방 참여하기</button>
+            <button type="button" class="btn btn-secondary" id="joinEnterRoomBtn">채팅방 참여하기</button>
             <!-- enterRoomBtn 클릭시 나타남, Streams 정보를 담은 Peer 를 웹소켓 ( 시그널링 )   -->
-            <button type="button" class="startStreamsBtn" id="joinStartStreamsBtn" style="display: none;">시작하기</button>
+            <button type="button" class="btn btn-secondary" id="joinStartStreamsBtn" style="display: none;">시작하기</button>
         </div>
 
         <br><br>
         <!-- 종료하기 및 카메라끄기 버튼을 담을 div 추가 -->
-        <div id="controlButtons" style="display: none; text-align: center; width: 640px">
-            <button type="button" id="endConferenceBtn">종료하기</button>
-            <button type="button" id="toggleCameraBtn">카메라 끄기</button>
-            <button type="button" id="toggleMicBtn">마이크 끄기</button>
-            <button type="button" id="toggleScreenShareBtn">화면 공유 키기</button>
+        <div id="controlButtons" class="btn-group" role="group" aria-label="Basic checkbox toggle button group" style="display: none; text-align: center; width: 640px">
+            <input type="checkbox" class="btn-check" id="endConferenceBtn" autocomplete="off">
+            <label class="btn btn-outline-primary" for="endConferenceBtn">종료하기</label>
+<!--            <button type="button" class="btn btn-primary" id="endConferenceBtn">종료하기</button>-->
+            <input type="checkbox" class="btn-check" id="toggleCameraBtn" autocomplete="on">
+            <label class="btn btn-outline-primary" for="toggleCameraBtn">카메라</label>
+<!--            <button type="button" class="btn btn-primary" id="toggleCameraBtn">카메라 끄기</button>-->
+            <input type="checkbox" class="btn-check" id="toggleMicBtn" autocomplete="on">
+            <label class="btn btn-outline-primary" for="toggleMicBtn">마이크</label>
+<!--            <button type="button" class="btn btn-primary" id="toggleMicBtn">마이크 끄기</button>-->
+            <input type="checkbox" class="btn-check" id="toggleScreenShareBtn" autocomplete="on">
+            <label class="btn btn-outline-primary" for="toggleScreenShareBtn">화면공유</label>
+<!--            <button type="button" class="btn btn-primary" id="toggleScreenShareBtn">화면 공유 키기</button>-->
         </div>
 
         <!-- 내 웹캠 화면을 보여주는 video html -->

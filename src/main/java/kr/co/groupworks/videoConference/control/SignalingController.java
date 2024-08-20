@@ -26,31 +26,11 @@ public class SignalingController {
     @RequestMapping("")
     public ModelAndView videoConference() {
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("videoConference/.html");
+        modelAndView.setViewName("videoConference/videoConferenceMenu.html");
         return modelAndView;
     }
 
-    @RequestMapping("/createroom")
-    public ModelAndView createRoom() {
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("videoConference/videoConferenceCreateRoom.html");
-        return modelAndView;
-    }
 
-    @RequestMapping("/enterroom")
-    public ModelAndView enterRoom() {
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("videoConference/videoConferenceEnterRoom.html");
-        return modelAndView;
-    }
-
-    @RequestMapping("/room")
-    public ModelAndView room(@RequestParam("roomId") String roomId) {
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("videoConference/videoConferenceRoom.html");
-        modelAndView.addObject("roomId", roomId);  // roomId를 모델에 추가
-        return modelAndView;
-    }
 
     // 방 생성 엔드포인트
     @PostMapping("/rooms")
