@@ -124,6 +124,74 @@ INSERT INTO groupworks.employee (is_active,rank_id,created_date,department_id,la
 	 (1,1,'2024-01-01 00:00:00',10,NULL,30990,96,'주소 100','employee100@gw.com','사원100','$2a$10$Vg4CIc8WunwnKoV2.j9J.uPep8BgLAzb2VelL89I.hGiLBDNoybpO','남','010-1111-1199','사원');
 
 
+-- Department 1: IT 관련 직무
+UPDATE groupworks.employee
+SET rule_name = CASE
+                    WHEN rank_id = 5 THEN '시스템 아키텍트'
+                    WHEN rank_id = 4 THEN '데브옵스 엔지니어'
+                    ELSE '소프트웨어 엔지니어'
+    END
+WHERE department_id = 1 AND rank_id >= 3;
+
+-- Department 2: 마케팅 관련 직무
+UPDATE groupworks.employee
+SET rule_name = CASE
+                    WHEN rank_id = 5 THEN '브랜드 매니저'
+                    WHEN rank_id = 4 THEN '마케팅 매니저'
+                    ELSE '디지털 마케팅전문가'
+    END
+WHERE department_id = 2 AND rank_id >= 3;
+
+-- Department 3: 영업 관련 직무
+UPDATE groupworks.employee
+SET rule_name = CASE
+                    WHEN rank_id = 5 THEN '영업 관리자'
+                    WHEN rank_id = 4 THEN '영업 기획자'
+                    ELSE '영업 지원 담당자'
+    END
+WHERE department_id = 3 AND rank_id >= 3;
+
+-- Department 4: 인사 관련 직무
+UPDATE groupworks.employee
+SET rule_name = CASE
+                    WHEN rank_id = 5 THEN '인사 관리자'
+                    WHEN rank_id = 4 THEN '채용 담당자'
+                    ELSE '교육 및 개발 관리자'
+    END
+WHERE department_id = 4 AND rank_id >= 3;
+
+-- Department 5: 재무 관련 직무
+UPDATE groupworks.employee
+SET rule_name = CASE
+                    WHEN rank_id = 5 THEN '재무 분석가'
+                    WHEN rank_id = 4 THEN '회계사'
+                    ELSE '자금 관리자'
+    END
+WHERE department_id = 5 AND rank_id >= 3;
+
+-- Department 6: IT 지원 관련 직무
+UPDATE groupworks.employee
+SET rule_name = CASE
+                    WHEN rank_id = 5 THEN 'IT 지원 엔지니어'
+                    WHEN rank_id = 4 THEN '네트워크 관리자'
+    END
+WHERE department_id = 6 AND rank_id >= 3;
+
+-- Department 7: 제품 관련 직무
+UPDATE groupworks.employee
+SET rule_name = '제품 관리자'
+WHERE department_id = 7 AND rank_id >= 3;
+
+-- Department 8: 고객 지원 관련 직무
+UPDATE groupworks.employee
+SET rule_name = '고객 지원 매니저'
+WHERE department_id = 8 AND rank_id >= 3;
+
+-- Department 9: 법무 관련 직무
+UPDATE groupworks.employee
+SET rule_name = '법무 자문가'
+WHERE department_id = 9 AND rank_id >= 3;
+
 INSERT INTO groupworks.vacation_history (annual_days_used, sick_days_used, other_days_used, total_annual, employee_id)
 VALUES (0, 0, 0, 25, 1),
        (0, 0, 0, 25, 2),
