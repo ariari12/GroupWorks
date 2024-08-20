@@ -449,25 +449,24 @@ const startScreenShare = async () => {
         screenStream = await navigator.mediaDevices.getDisplayMedia({ video: true });
         console.log('Screen share started');
 
-        // 기존 비디오 트랙을 화면 공유 트랙으로 교체
-        pcListMap.forEach(pc => {
-            // 기존의 모든 비디오 트랙 제거
-            const senders = pc.getSenders();
-            senders.forEach(sender => {
-                if (sender.track && sender.track.kind === 'video') {
-                    pc.removeTrack(sender);
-                }
-            });
-
-            // 화면 공유 트랙 추가
-            screenStream.getTracks().forEach(track => {
-                pc.addTrack(track, screenStream);
-            });
-        });
-
         // 화면 공유 비디오를 로컬 화면에 표시
         localStreamElement.srcObject = screenStream;
         localStreamElement.style.display = 'block';
+
+        // 기존 비디오 트랙을 화면 공유 트랙으로 교체
+        pcListMap.forEach(pc => {
+            const videoSender = pc.getSenders().find(sender => sender.track && sender.track.kind === 'video');
+            if (videoSender) {
+                screenStream.getTracks().forEach(track => {
+                    videoSender.replaceTrack(track);
+                });
+            } else {
+                screenStream.getTracks().forEach(track => {
+                    pc.addTrack(track, screenStream);
+                });
+            }
+        });
+
     } catch (error) {
         console.error("Error starting screen share:", error);
         alert("화면 공유를 시작할 수 없습니다.");
@@ -481,27 +480,27 @@ const stopScreenShare = () => {
         screenStream = null;
         console.log('Screen share stopped');
 
-        // 기존의 비디오 트랙 복구
-        pcListMap.forEach(pc => {
-            // 기존의 모든 비디오 트랙 제거
-            const senders = pc.getSenders();
-            senders.forEach(sender => {
-                if (sender.track && sender.track.kind === 'video') {
-                    pc.removeTrack(sender);
-                }
-            });
-
-            // 로컬 비디오 트랙 추가
-            localStream.getTracks().forEach(track => {
-                if (track.kind === 'video') {
-                    pc.addTrack(track, localStream);
-                }
-            });
-        });
-
         // 기존 웹캠 비디오를 로컬 화면에 다시 표시
         localStreamElement.srcObject = localStream;
         localStreamElement.style.display = 'block';
+
+        // 기존의 비디오 트랙 복구
+        pcListMap.forEach(pc => {
+            const videoSender = pc.getSenders().find(sender => sender.track && sender.track.kind === 'video');
+            if (videoSender) {
+                localStream.getTracks().forEach(track => {
+                    if (track.kind === 'video') {
+                        videoSender.replaceTrack(track);
+                    }
+                });
+            } else {
+                localStream.getTracks().forEach(track => {
+                    if (track.kind === 'video') {
+                        pc.addTrack(track, localStream);
+                    }
+                });
+            }
+        });
     }
 };
 
