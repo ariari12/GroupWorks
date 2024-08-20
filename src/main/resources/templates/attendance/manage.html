@@ -5,59 +5,166 @@
 
 <th:block layout:fragment="css">
     <style>
-        /* CSS style */
+        table.dataTable td, table.dataTable th {
+            text-align: center;
+        }
     </style>
 </th:block>
 
 <th:block layout:fragment="javascript">
     <script src="/js/attendance/datatables.js?v=<%=System.currentTimeMillis() %>"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            flatpickr("#monthYearPicker", {
-                locale: "ko", // 한국어 설정
-                plugins: [
-                    new monthSelectPlugin({
-                        shorthand: true, // 월을 짧게 표시
-                        dateFormat: "Y-m", // 형식 YYYY-MM
-                        altFormat: "Y년 F", // 표시 형식 Month YYYY
-                    })
-                ]
+        $(document).ready(function () {
+            $.ajax({
+                url: '/api/commute/view-requests',
+                success: function(data) {
+                    var tbody = $('#datatablesCommute tbody');
+                    tbody.empty(); // 기존 데이터를 지우고 새 데이터로 채움
+
+                    data.forEach(function(item) {
+                        var row = `<tr data-reason="${item.reason}"
+                                       data-modify-id="${item.modifyId}"
+                                       data-attendance-id="${item.attendanceId}"
+                                       data-requested-clock-in="${item.requestedClockIn}"
+                                       data-requested-clock-out="${item.requestedClockOut}"
+                                       data-work-hours="${item.workHours}"
+                                       data-overtime-hours="${item.overtimeHours}">
+                            <td>${item.formattedRequestDate}</td>
+                            <td>${item.employeeName}</td>
+                            <td>${item.formattedRequestedClockIn}</td>
+                            <td>${item.formattedRequestedClockOut}</td>
+                            <td>${item.workHour}</td>
+                            <td>${item.overtimeHour}</td>
+                        </tr>`;
+                        tbody.append(row);
+                    });
+
+                    // 행 클릭 시 모달 표시
+                    $('#datatablesCommute').on('click', 'tr', function() {
+                        var reason = $(this).data('reason');
+                        $('#reasonText').text(reason);
+                        var myModal = new bootstrap.Modal(document.getElementById('reasonModal'));
+                        myModal.show();
+                    });
+                },
+                error: function(xhr, status, error) {
+                    console.error("데이터 로드 실패:", status, error);
+                }
             });
 
-            document.getElementById('monthYearPicker').addEventListener('change', function(e) {
-                filterDataByMonthYear(e.target.value);
+
+            $('#datatablesCommute').on('click', 'tr', function() {
+                // 데이터를 가져와서 모달에 저장
+                let data = {
+                    modifyId: $(this).data('modify-id'),
+                    attendanceId: $(this).data('attendance-id'),
+                    requestedClockIn: $(this).data('requested-clock-in'),
+                    requestedClockOut: $(this).data('requested-clock-out'),
+                    workHours: $(this).data('work-hours'),
+                    overtimeHours: $(this).data('overtime-hours')
+                };
+
+                $('#reasonModal').data('data-item', data);
+
+
+                var myModal = new bootstrap.Modal(document.getElementById('reasonModal'));
+                myModal.show();
             });
 
-            function filterDataByMonthYear(selectedDate) {
-                console.log("선택된 날짜:", selectedDate); // YYYY-MM 형식
+            // 승인 클릭 시 처리
+            $('#reasonModal').on('click', '.btn-success', function () {
+                let data = $('#reasonModal').data('data-item');
+                processRequest(data, 'approve');
+            });
+
+            // 거부 클릭 시 처리
+            $('#reasonModal').on('click', '.btn-danger', function () {
+                let data = $('#reasonModal').data('data-item');
+                processRequest(data, 'reject');
+            });
+
+            //
+            function processRequest(data, type) {
+                if (type === 'approve') {
+                    data.status = '✅ 승인';
+                } else {
+                    data.status = '❌ 반려';
+                }
+                $.ajax({
+                    url: '/api/commute/edit-requests',
+                    type: 'PUT',
+                    contentType: 'application/json',
+                    data: JSON.stringify(data),
+                    success: function (response) {
+                        location.reload(true);
+                    },
+                    error: function (xhr, status, error) {
+                        alert(`문제가 발생했습니다: ${xhr.responseText || error}`);
+                        return;
+                    }
+                }); // end ajax
+
+                var myModal = bootstrap.Modal.getInstance(document.getElementById('reasonModal'));
+                myModal.hide();
+
+                // 백드롭 강제 제거
+                $('.modal-backdrop').remove();
+
+                // Body 요소의 스타일 초기화 (모달 닫힐 때 발생할 수 있는 이슈 방지)
+                $('body').removeClass('modal-open');
+                $('body').css('overflow', 'auto');
+
             }
 
-            function filterData() {
-                const selectedDate = document.getElementById('monthYearPicker').value;
-                filterDataByMonthYear(selectedDate);
-            }
-        });
-    </script>
-
-    <script>
-        $(document).ready(function() {
-            $('#dataForm').on('submit', function(event) {
-                var monthYearPickerValue = $('#monthYearPicker').val();
-                var formAction = 'commute/' + monthYearPickerValue;
-                $(this).attr('action', formAction);
-            });
         });
     </script>
 </th:block>
 
 <th:block layout:fragment="content">
 
-    <div class="row">
-        <h5>근태 현황</h5>
-        <hr>
+    <!--/* Section: Tables */-->
+    <div class="card mb-4" th:fragment="tables">
+        <div class="card-header">
+            <i class="fas fa-table me-1"></i>
+            수정 요청 데이터
+        </div>
+
+        <div class="card-body">
+            <table id="datatablesCommute" class="table table-hover" style="width:100%">
+                <thead>
+                <tr>
+                    <th>📅요청날짜</th>
+                    <th>요청자</th>
+                    <th>⏰출근시각</th>
+                    <th>🕔퇴근시각</th>
+                    <th>⏳근무시간</th>
+                    <th>⏱️초과근무시간</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                </tbody>
+            </table>
+        </div>
     </div>
 
-    <th:block th:replace="~{attendance/fragments/attendanceTables.html::tables}">
-    </th:block>
+    <!-- 사유 모달 -->
+    <div class="modal fade" id="reasonModal" tabindex="-1" aria-labelledby="reasonModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="reasonModalLabel">사유</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p id="reasonText"></p>
+                </div>
+                <div class="modal-footer">
+                    <input type="button" style="margin: 0px 2px 0px 2px;" class="btn btn-success" value="승인">
+                    <input type="button" style="margin: 0px 2px 0px 2px;" class="btn btn-danger" value="반려">
+                </div>
+            </div>
+        </div>
+    </div>
 
 </th:block>

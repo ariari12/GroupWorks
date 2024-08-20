@@ -24,6 +24,8 @@
                         var tbody = $('#datatablesCommute tbody');
                         tbody.empty(); // 기존 데이터를 지우고 새 데이터로 채움
 
+                        $('#monthText').text(month + " 출근 데이터");
+
                         data.forEach(function(item) {
                             var row = `<tr>
                                 <td>${item.formattedDate}</td>
@@ -91,7 +93,7 @@
             flatpickr("#startTimepicker", {
                 locale: "ko",                    // 한국어 설정,
                 enableTime: true,                // 시간 선택 활성화
-                dateFormat: "Y-m-d H:i",         // 날짜 및 시간 형식 설정
+                dateFormat: "Y-m-d\\TH:i:S",     // 날짜 및 시간 형식 설정
                 time_24hr: true,                 // 24시간 형식 사용 (12시간 형식을 원하면 false로 설정)
                 minuteIncrement: 1               // 분 선택 간격 설정 (1분 단위로 선택 가능)
             });
@@ -100,7 +102,7 @@
             flatpickr("#endTimepicker", {
                 locale: "ko",                    // 한국어 설정,
                 enableTime: true,                // 시간 선택 활성화
-                dateFormat: "Y-m-d H:i",         // 날짜 및 시간 형식 설정
+                dateFormat: "Y-m-d\\TH:i:S",     // 날짜 및 시간 형식 설정
                 time_24hr: true,                 // 24시간 형식 사용 (12시간 형식을 원하면 false로 설정)
                 minuteIncrement: 1               // 분 선택 간격 설정 (1분 단위로 선택 가능)
             });
@@ -109,8 +111,9 @@
             $("#addWork").on('click', function () {
 
                 // 입력된 근태 시각.
-                let startDate = $("#startTimepicker").val()
-                let endDate = $("#endTimepicker").val()
+                let startDate = $("#startTimepicker").val();
+                let endDate = $("#endTimepicker").val();
+                let reason = $("#reason").val();
 
                 // 유효성 검사.
                 if (!startDate || !startDate.trim()) {
@@ -126,8 +129,10 @@
 
                 // 서버에 전송될 데이터.
                 const requestData = {
-                    'startDate': startDate,  // 시작 시간
-                    'endDate': endDate       // 종료 시간
+                    'date': startDate,          // 적용일
+                    'clockInTime': startDate,   // 시작 시간
+                    'clockOutTime': endDate,    // 종료 시간
+                    'reason': reason            // 사유
                 };
 
                 // 근태 추가 신청.
@@ -138,7 +143,7 @@
                     data: JSON.stringify(requestData),
                     success: function (response) {
                         alert("근태 추가 신청이 성공적으로 완료되었습니다.");
-                        console.log(response);
+                        location.reload(true);
                     },
                     error: function (xhr, status, error) {
                         alert(`문제가 발생했습니다: ${xhr.responseText || error}`);
@@ -155,18 +160,16 @@
     <div class="card mb-4" th:fragment="tables">
         <div class="card-header">
             <i class="fas fa-table me-1"></i>
-            7월 출근 데이터
+            <span id="monthText">출근 데이터</span>
             <div class="container mt-3">
                 <div class="row">
-                    <form id="dataForm" method="post">
-                        <div class="col-md-4">
-                            <label for="monthYearPicker">데이터조회 : </label>
-                            <input type="text" id="monthYearPicker" class="form-control"/>
-                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                                근무추가
-                            </button>
-                        </div>
-                    </form>
+                    <div class="d-flex align-items-center">
+                        <label for="monthYearPicker" class="me-2">데이터조회 : </label>
+                        <input type="text" id="monthYearPicker" class="form-control me-2" style="width: auto;"/>
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                            근무추가
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -180,8 +183,12 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <div style="margin: 5px;"><span>⏰ 출근시각 </span><input type="text" class="w-100%" id="startTimepicker"/></div>
-                        <div style="margin: 5px;"><span>🕔 퇴근시각 </span><input type="text" class="w-100%" id="endTimepicker"/></div>
+                        <div style="margin: 10px;"><span>⏰ 출근시각 </span><input type="text" class="w-100%" id="startTimepicker"/></div>
+                        <div style="margin: 10px;"><span>🕔 퇴근시각 </span><input type="text" class="w-100%" id="endTimepicker"/></div>
+                        <div style="margin: 10px;">
+                            <p>사유</p>
+                            <textarea id="reason" cols="34" rows="5" style="margin-top: -10px;"></textarea>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" id="addWork" class="btn btn-primary">추가</button>
@@ -203,7 +210,6 @@
                     <th>📃상태</th>
                 </tr>
                 </thead>
-
                 <tbody>
 
                 </tbody>

@@ -2,14 +2,19 @@ package kr.co.groupworks.attendance.entity;
 
 import jakarta.persistence.*;
 import kr.co.groupworks.employee.entity.Employee;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
 
+@Builder
 @Entity
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "attendance")
 public class Attendance {
 
@@ -49,5 +54,9 @@ public class Attendance {
         int workTime = (int) duration.toMinutes();
         this.workHours = workTime;
         this.overtimeHours = workTime >= 540 ? workTime - 540 : 0;
+    }
+
+    public void updateStatus (String status) {
+        this.status = status;
     }
 }

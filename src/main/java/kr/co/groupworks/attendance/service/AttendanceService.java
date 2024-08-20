@@ -3,7 +3,6 @@ package kr.co.groupworks.attendance.service;
 import kr.co.groupworks.attendance.dto.AttendanceDTO;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.util.List;
 
@@ -14,4 +13,6 @@ public interface AttendanceService {
 
     void clockIn(Long employeeId);
     void clockOut(Long employeeId);
+
+    void addAttendance(AttendanceDTO dto);
 }

@@ -19,6 +19,7 @@ public class AttendanceDTO {
     private LocalDateTime date;
     private LocalDateTime clockInTime;
     private LocalDateTime clockOutTime;
+    private String reason;
     private int workHours;
     private int overtimeHours;
     private String status;
@@ -38,7 +39,7 @@ public class AttendanceDTO {
         return clockOutTime != null ? clockOutTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")) : "";
     }
 
-    // 더미 데이터 예시 (근무시간 및 초과근무시간)
+    // 근무시간
     public String getWorkHours() {
         if (clockInTime == null || clockOutTime == null) {
             return "0시간 0분";
@@ -49,6 +50,7 @@ public class AttendanceDTO {
         return String.format("%d시간 %d분", hours, minutes);
     }
 
+    // 초과근무
     public String getOvertimeHours() {
         if (clockInTime == null || clockOutTime == null) {
             return "0시간 0분";

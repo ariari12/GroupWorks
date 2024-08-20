@@ -2,6 +2,8 @@ package kr.co.groupworks.attendance.service;
 
 import kr.co.groupworks.attendance.dto.AttendanceDTO;
 import kr.co.groupworks.attendance.entity.Attendance;
+import kr.co.groupworks.attendance.entity.AttendanceModification;
+import kr.co.groupworks.attendance.repository.AttendanceModificationRepository;
 import kr.co.groupworks.attendance.repository.AttendanceRepository;
 import kr.co.groupworks.employee.entity.Employee;
 import kr.co.groupworks.employee.repository.EmployeeRepository;
@@ -10,10 +12,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.YearMonth;
+import java.time.*;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -25,6 +25,7 @@ import java.util.stream.Collectors;
 public class AttendanceServiceImpl implements AttendanceService {
 
     private final AttendanceRepository attendanceRepository;
+    private final AttendanceModificationRepository attendanceModificationRepository;
     private final EmployeeRepository employeeRepository;
 
     @Override
@@ -37,11 +38,11 @@ public class AttendanceServiceImpl implements AttendanceService {
         LocalDateTime startDateTime = startOfMonth.atStartOfDay();
         LocalDateTime endDateTime = endOfMonth.atTime(23, 59, 59, 999999999); // 하루의 끝
 
-
         List<Attendance> attendances = attendanceRepository.findAllByEmployee_EmployeeIdAndDateBetween(employeeId, startDateTime, endDateTime);
 
         return attendances.stream()
                 .map(this::convertToDTO)
+                .sorted(Comparator.comparing(AttendanceDTO::getDate).reversed()) // 날짜 기준으로 내림차순 정렬
                 .collect(Collectors.toList());
     }
 
@@ -79,11 +80,12 @@ public class AttendanceServiceImpl implements AttendanceService {
             throw new IllegalStateException("이미 출근 기록이 있습니다.");
         }
 
-        Attendance attendance = new Attendance();
-        attendance.setDate(LocalDateTime.now());
-        attendance.setClockInTime(LocalDateTime.now());
-        attendance.setEmployee(employee);
-        attendance.setStatus("\uD83D\uDFE2 출근 완료"); // 이모지 🟢
+        Attendance attendance = Attendance.builder()
+                .date(LocalDateTime.now())
+                .clockInTime(LocalDateTime.now())
+                .employee(employee)
+                .status("\uD83D\uDFE2 출근 완료")
+                .build();
         attendanceRepository.save(attendance);
     }
 
@@ -104,6 +106,52 @@ public class AttendanceServiceImpl implements AttendanceService {
 
         Attendance attendance = attendanceRepository.findClockInRecordForToday(employeeId, startOfDay, endOfDay).get();
         attendance.updateAttendance(LocalDateTime.now());
+    }
+
+    @Override
+    public void addAttendance(AttendanceDTO dto) {
+
+        // 사원을 못찾았을때.
+        Employee employee = employeeRepository.findById(dto.getEmployeeId())
+                .orElseThrow(() -> new RuntimeException("존재하지 않는 직원입니다."));
+
+        // 중복신청
+        LocalDateTime startOfDay = dto.getDate().toLocalDate().atStartOfDay();
+        LocalDateTime endOfDay = dto.getDate().toLocalDate().atTime(LocalTime.MAX);
+        List<Attendance> attendancesByEmployeeIdAndDateRange = attendanceRepository.findAttendancesByEmployeeIdAndDateRange(employee.getEmployeeId(), startOfDay, endOfDay);
+        if (!attendancesByEmployeeIdAndDateRange.isEmpty()) {
+            throw new RuntimeException("이미 근태 기록이 존재합니다.");
+        }
+
+        // 근무시간, 초과근무 시간 계산.
+        Duration duration = Duration.between(dto.getClockInTime(), dto.getClockOutTime());
+        int workTime = (int) duration.toMinutes();
+        int workHours = workTime;
+        int overtimeHours = workTime >= 540 ? workTime - 540 : 0;
+
+        //
+        Attendance attendance = Attendance.builder()
+                .employee(employee)
+                .date(dto.getDate())
+                .clockInTime(dto.getClockInTime())
+                .clockOutTime(dto.getClockOutTime())
+                .workHours(workHours)
+                .overtimeHours(overtimeHours)
+                .status("\uD83D\uDCE5 신청됨") // 📥 신청됨
+                .build();
+        Attendance save = attendanceRepository.save(attendance);
+        
+        // 근태신청
+        AttendanceModification modify = AttendanceModification.builder()
+                .attendance(save)
+                .requestDate(LocalDateTime.now())
+                .requestedClockIn(save.getClockInTime())
+                .requestedClockOut(save.getClockOutTime())
+                .workHours(save.getWorkHours())
+                .overtimeHours(save.getOvertimeHours())
+                .reason(dto.getReason())
+                .build();
+        attendanceModificationRepository.save(modify);
     }
 
     private AttendanceDTO convertToDTO(Attendance attendance) {
