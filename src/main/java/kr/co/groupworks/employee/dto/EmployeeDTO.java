@@ -3,6 +3,7 @@ package kr.co.groupworks.employee.dto;
 import kr.co.groupworks.department.dto.DepartmentDTO;
 import kr.co.groupworks.department.entity.Department;
 import kr.co.groupworks.employee.entity.Employee;
+import kr.co.groupworks.employee.entity.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -44,8 +45,8 @@ public class EmployeeDTO {
     private Long supervisorId;
     //  활동중인지
     private Integer isActive;
-    //  직책
-    private String ruleName;
+    //  직책 enum
+    private Role role;
 
     //    DTO to Entity
     public Employee toEmployee() {
@@ -69,7 +70,7 @@ public class EmployeeDTO {
                 .salary(this.getSalary())
                 .supervisorId(this.getSupervisorId())
                 .isActive(this.getIsActive())
-                .ruleName(this.getRuleName())
+                .role(this.getRole())
                 .build();
     }
 
@@ -83,7 +84,7 @@ public class EmployeeDTO {
                 .email(this.getEmail())
                 .phoneNumber(this.getPhoneNumber())
                 .department(this.getDepartment())
-                .ruleName(this.getRuleName())
+                .role(this.getRole())
                 .build();
     }
 }
