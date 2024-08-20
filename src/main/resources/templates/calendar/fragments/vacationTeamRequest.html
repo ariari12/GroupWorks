@@ -15,6 +15,7 @@
                 <tr>
                     <th>이름</th>
                     <th>사번</th>
+                    <th>직책</th>
                     <th>사용 기간</th>
                     <th>종류</th>
                     <th>증명자료</th>
@@ -38,6 +39,7 @@
                     <tr th:each="dto : ${vacationRequestList}" th:data-id="${dto.calendarId}" class="vacation-row">
                         <td th:text="${dto.name}">사원 이름</td>
                         <td th:text="${dto.employeeId}">사원 번호</td>
+                        <td th:text="${dto.role.name}">사원 번호</td>
                         <td class="w-25" th:text="|${dto.startDate} ~ ${dto.endDate}|">사용 기간</td>
                         <td th:text="${dto.vacationType.description}">종류</td>
                         <td th:text="${dto.fileList.size() > 0 ? '첨부 파일 있음' : '첨부 파일 없음'}">증명자료</td>
@@ -55,7 +57,6 @@
                                 <span aria-hidden="true">&laquo;</span>
                             </a>
                         </li>
-
                         <!-- First Page Link -->
                         <li class="page-item" th:if="${vacationRequestList.totalPages > 1 && vacationRequestList.number > 3}">
                             <a class="page-link" th:href="@{|?page=0|}">1</a>

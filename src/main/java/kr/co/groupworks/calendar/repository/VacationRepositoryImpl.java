@@ -1,11 +1,14 @@
 package kr.co.groupworks.calendar.repository;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.CaseBuilder;
+import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import kr.co.groupworks.calendar.dto.CalendarFormDTO;
 import kr.co.groupworks.calendar.entity.Vacation;
 import kr.co.groupworks.employee.entity.Employee;
+import kr.co.groupworks.employee.entity.Role;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -42,7 +45,16 @@ public class VacationRepositoryImpl implements VacationQueryDsl{
     public Page<Vacation> findAllTeamSearchName(Employee emp, Pageable pageable, String searchName) {
 
         BooleanBuilder whereClause = new BooleanBuilder();
-        whereClause.and(employee.rankId.loe(emp.getRankId()).and(department.eq(emp.getDepartment())));
+//        whereClause.and(employee.rankId.loe(emp.getRankId()).and(department.eq(emp.getDepartment())));
+        NumberExpression<Integer> roleGradeExpression = new CaseBuilder()
+                .when(employee.role.eq(Role.ASSOCIATE)).then(1)
+                .when(employee.role.eq(Role.JUNIOR)).then(2)
+                .when(employee.role.eq(Role.SENIOR)).then(3)
+                .when(employee.role.eq(Role.MANAGER)).then(4)
+                .otherwise(0);
+
+        whereClause.and(roleGradeExpression.loe(emp.getRole().getGrade()))
+                .and(employee.department.eq(emp.getDepartment()));
 
         if (searchName != null && !searchName.isEmpty()) {
             whereClause.and(employee.employeeName.like("%"+searchName+"%"));
@@ -79,15 +91,4 @@ public class VacationRepositoryImpl implements VacationQueryDsl{
                 .where(employee.employeeId.eq(employeeId))
                 .fetch();
     }
-
-//    @Query("SELECT v FROM Vacation v JOIN v.employee e " +
-//            "left join CalendarAttachment ca ON ca.calendar.calendarId = v.calendarId WHERE e.employeeId = :employeeId")
-
-//    SELECT DISTINCT v.*
-//    FROM vacation v
-//    JOIN calendar c ON v.calendar_id = c.calendar_id
-//    JOIN employee e ON c.employee_id = e.employee_id
-//    LEFT JOIN calendar_attachment ca ON v.calendar_id = ca.calendar_id
-//    LEFT JOIN department d ON e.department_id = d.department_id
-//    WHERE d.department_id = 1
 }

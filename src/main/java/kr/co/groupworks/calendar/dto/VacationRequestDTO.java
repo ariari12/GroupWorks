@@ -3,6 +3,7 @@ package kr.co.groupworks.calendar.dto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import kr.co.groupworks.calendar.entity.VacationStatus;
 import kr.co.groupworks.calendar.entity.VacationType;
+import kr.co.groupworks.employee.entity.Role;
 import lombok.*;
 
 import java.util.List;
@@ -21,6 +22,9 @@ public class VacationRequestDTO {
 
     @Schema(description = "사원 이름", example = "사원1")
     private String name;
+
+    @Schema(description = "사원 직책", example = "MANAGER")
+    private Role role;
 
     @Schema(description = "휴가 시작 날짜", example = "2024-08-15")
     private String startDate;

@@ -15,7 +15,7 @@
                 <th>종류</th>
                 <th>증명자료</th>
                 <th>승인</th>
-                <th>관리</th>
+                <th>처리</th>
             </tr>
             </thead>
 
@@ -38,10 +38,15 @@
                     <td th:text="${dto.vacationType.description}">종류</td>
                     <td th:text="${dto.fileList.size() > 0 ? '첨부 파일 있음' : '첨부 파일 없음'}">증명자료</td>
                     <td th:text="${dto.status.description}">승인</td>
-                    <td>
-                        <a th:href="@{|vacation/modify/${dto.calendarId}|}" class="btn btn-primary btn-sm">신청 수정</a>
-                        <button class="btn btn-danger btn-sm" th:onclick="@{|showConfirmModal(${dto.calendarId})|}">신청 취소</button>
-                    </td>
+                    <th:block th:unless="${dto.status == T(kr.co.groupworks.calendar.entity.VacationStatus).PENDING}">
+                        <td></td>
+                    </th:block>
+                    <th:block th:if="${dto.status == T(kr.co.groupworks.calendar.entity.VacationStatus).PENDING}">
+                        <td>
+                            <a th:href="@{|vacation/modify/${dto.calendarId}|}" class="btn btn-primary btn-sm">신청 수정</a>
+                            <button class="btn btn-danger btn-sm" th:onclick="showConfirmModal(${dto.calendarId})">신청 취소</button>
+                        </td>
+                    </th:block>
                 </tr>
             </th:block>
             </tbody>
