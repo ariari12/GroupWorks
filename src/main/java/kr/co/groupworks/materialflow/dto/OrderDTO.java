@@ -102,7 +102,7 @@ public class OrderDTO {
         return Order.builder()
                 .id(this.id)
                 .orderCode(this.orderCode)
-                .classification(OrderClassification.getClassification(this.classification))
+                .classification(OrderClassification.getClassification(this.classification -1))
                 .totalAmount(this.totalAmount)
                 .texAmount(this.tex)
                 .orderDate(od == null ? null : LocalDate.parse(od, DateTimeFormatter.ofPattern(DATE_FORMAT)))

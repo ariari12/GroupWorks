@@ -85,7 +85,10 @@ public class MaterialOpenApiServiceImpl implements MaterialOpenApiService {
         if(mesDTO == null || mesDTO.getItemCode() == null) return Map.of("result", false, "message", "ItemList is empty");
         Map<String, Long> ids = orderRepository.findIdMapByBomItemCode(mesDTO.getItemCode());
 
-        if(ids == null) return Map.of("result", false, "message", "BOM 품목을 찾을 수 없습니다.");
+        if(ids == null || ids.get("oId") == null || ids.get("bId") == null) {
+            log.info("setMes Error - orderId: {}, bomId: {}", ids.get("oId"), ids.get("bId"));
+            return Map.of("result", false, "message", "BOM 품목을 찾을 수 없습니다.");
+        }
         return Map.of("result", true, "mes", new MesDTO(mesRepository.save(mesDTO.toMesDTO()
                 .setOrderId(ids.get("oId")).setBomId(ids.get("bId")).dtoToEntity())));
     }

@@ -37,9 +37,9 @@ public class Bom {
     @JoinColumn(name = "bom_id")
     private List<MaterialItem> itemList;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "bom_id")
-    private Mes mes;
+    private List<Mes> mes;
 
     public Bom setItemList(List<MaterialItem> itemList) {
         this.itemList = itemList;

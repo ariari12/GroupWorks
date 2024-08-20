@@ -22,6 +22,7 @@ public class Mes {
 
     @Column(name = "order_id")
     private Long orderId;
+
     @Column(name = "bom_id")
     private Long bomId;
 

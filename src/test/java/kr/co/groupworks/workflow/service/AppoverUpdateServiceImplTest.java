@@ -79,10 +79,11 @@ class AppoverUpdateServiceImplTest {
 
         // 출력 (확인 용)
         employees.forEach(employee ->
-                System.out.println(employee.getEmployeeId() + ": " +
-                        employee.getEmployeeName() + ", " +
-                        employee.getEmail() + ", " +
-                        employee.getPhoneNumber() + ", " +
+                log.info("{}: {}, {}, {}, {}",
+                        employee.getEmployeeId(),
+                        employee.getEmployeeName(),
+                        employee.getEmail(),
+                        employee.getPhoneNumber(),
                         employee.getDepartment().getDepartmentName())
         );
         long employeeId01 = employees.get(0).getEmployeeId();
@@ -150,7 +151,7 @@ class AppoverUpdateServiceImplTest {
                 .employeeId(employee.getEmployeeId())
                 .email("test@test.test")
                 .phoneNumber("000-0000-0000")
-//                .departmentName("전산")
+                .department(Department.builder().departmentName("전산").build())
                 .rankName("이사")
                 .employeeName(employee.getEmployeeName())
                 .build();
