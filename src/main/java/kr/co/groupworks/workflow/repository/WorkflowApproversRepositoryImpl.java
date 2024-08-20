@@ -1,6 +1,7 @@
 package kr.co.groupworks.workflow.repository;
 
 import com.querydsl.core.Tuple;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import kr.co.groupworks.department.entity.QDepartment;
@@ -45,26 +46,22 @@ public class WorkflowApproversRepositoryImpl extends QuerydslRepositorySupport i
 
     @Override
     public Map<String, List<Long>> workflowDepartmentStatistics() {
-        QWorkFlowEntity workFlow = QWorkFlowEntity.workFlowEntity;
+        QWorkFlowEntity workflow = QWorkFlowEntity.workFlowEntity;
         QDepartment department = QDepartment.department;
 
         List<Tuple> list = queryFactory
                 .select(
-                        workFlow.status
-                                .when(0).then(1L)
-                                .when(3).then(1L)
-                                .otherwise(0L)
-                                .sum(),
-                        workFlow.status
-                                .when(1).then(1L)
-                                .otherwise(0L)
-                                .sum(),
-                        workFlow.status
-                                .when(2).then(1L)
-                                .otherwise(0L)
-                                .sum()
+                        Expressions.cases()
+                                .when(workflow.status.in(0, 1, 2, 3)).then(1L)
+                                .otherwise(0L).sum(),
+                        Expressions.cases()
+                                .when(workflow.status.eq(1)).then(1L)
+                                .otherwise(0L).sum(),
+                        Expressions.cases()
+                                .when(workflow.status.eq(2)).then(1L)
+                                .otherwise(0L).sum()
                 ).from(department)
-                .leftJoin(workFlow).on(workFlow.departmentId.eq(department.departmentId))
+                .leftJoin(workflow).on(workflow.departmentId.eq(department.departmentId))
                 .groupBy(department.departmentId)
                 .fetch();
 

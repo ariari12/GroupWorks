@@ -25,6 +25,10 @@
                         });
                   }
             });
+            
+            function workflowDetial(wId) {
+                  location.href = "/work-flow/detail/" + wId;
+            }
       </script>
 </th:block>
 
@@ -53,7 +57,7 @@
                               </tr>
                               </thead>
                               <tbody>
-                              <tr th:each="list: ${workflowList}">
+                              <tr th:each="list: ${workflowList}" th:onclick="workflowDetial([[${list.getId()}]]);">
                                     <td th:text="${list.getTitle()}"></td>
                                     <td th:text="${list.getEmployeeName()}"></td>
                                     <td th:text="${list.getDraftDate()}"></td>

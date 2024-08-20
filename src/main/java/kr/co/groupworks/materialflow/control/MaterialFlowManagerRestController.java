@@ -184,7 +184,7 @@ public class MaterialFlowManagerRestController {
             // 발주 담당자에게 발신
             // nsFactory.receivePhone = m.getPhone().replaceAll("-", "")
             nsFactory.smsSetup(message);
-            String title = "품목코드: " + b.getItemCode() + " 발주가 완료되었습니다.";
+            String title = "품목코드: " + b.getItemCode() + "\n발주가 완료되었습니다.";
             nsFactory.notifySetup(notificationService, e, title, message);
         }
         return messageService.send(nsFactory.getMessageList(), true);

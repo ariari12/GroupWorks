@@ -22,7 +22,7 @@ function tableSet() {
 }
 
 function load(pk, code, name) {
-    const url = "/materialflow/item/" + pk + "/" + code + "/" + name;
+    const url = "/materialflow/item/" + pk + "/" + code + "/" + name.replaceAll("/", "");
     openWindow(url, "BOM 자재 현황", WINDOW_SIZE);
 }
 
