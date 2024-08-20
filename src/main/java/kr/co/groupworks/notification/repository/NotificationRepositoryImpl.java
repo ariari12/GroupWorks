@@ -6,10 +6,8 @@ import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 @Repository
@@ -53,6 +51,7 @@ public class NotificationRepositoryImpl implements NotificationRedis{
                 }
             }
         }
+
         // 최종적으로 일치하는 모든 알림이 담긴 리스트를 반환합니다.
         return notifications;
     }

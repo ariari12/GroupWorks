@@ -20,7 +20,7 @@ public interface VacationService {
 
     Long save(OtherFormDTO dto, MultipartFile[] files);
 
-    List<VacationHistoryDTO> findVacationHistory(Long employeeId);
+    VacationHistoryDTO findVacationHistory(Long employeeId);
 
     void deleteRequest(Long calendarId, Long employeeId);
 
@@ -30,7 +30,7 @@ public interface VacationService {
 
     List<CalendarFormDTO> findAllVacation(Long employeeId);
 
-    Page<VacationRequestDTO> findAllTeamSearchPending(Long employeeId, Pageable pageable);
+    Page<VacationRequestDTO> findAllTeamSearchPending(Long employeeId, Pageable pageable, String search);
 
     Long approvalVacation(Long calendarId, VacationStatus status, Long employeeId);
 

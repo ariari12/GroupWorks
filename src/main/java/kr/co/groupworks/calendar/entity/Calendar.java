@@ -7,11 +7,7 @@ import kr.co.groupworks.common.BaseEntity;
 import kr.co.groupworks.employee.entity.Employee;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,7 +37,7 @@ public class Calendar extends BaseEntity {
     @Column(name = "end_date")
     protected String endDate;
     // 사원 외래키
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "employee_id")
     protected Employee employee;
 

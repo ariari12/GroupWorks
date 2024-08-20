@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // SSE 연결을 설정합니다. 서버에서 알림을 실시간으로 수신합니다.
     const eventSource = new EventSource('/notifications/sse');
-    console.log("eventSource : " + eventSource);
+
     // 로컬 스토리지에서 배지 상태를 확인합니다.
     const notificationBadge = document.querySelector('.translate-middle.badge');
     if (localStorage.getItem('notificationBadgeVisible') === 'true') {
@@ -105,22 +105,25 @@ document.addEventListener("DOMContentLoaded", function() {
         const offcanvasBody = document.querySelector('#notificationOffcanvasRight .offcanvas-body');
         offcanvasBody.innerHTML = ''; // 기존 내용 지우기
 
+        // 최신순으로 정렬
+        notifications.sort((a, b) => new Date(b.createdDate) - new Date(a.createdDate));
+
         notifications.forEach(notification => {
             const notificationElement = document.createElement('div');
             notificationElement.classList.add('notification-item');
             notificationElement.innerHTML = `
-                <div class="d-flex justify-content-between align-items-start">
-                    <div>
-                        <strong>
-                            <a href="${notification.url}">${notification.title}</a>
-                        </strong>
-                        <p>${notification.contents}</p>
-                        <small>${notification.createdDate}</small>
-                    </div>
-                    <button type="button" class="btn-close delete-notification" data-id="${notification.notificationId}" aria-label="Close"></button>
+            <div class="d-flex justify-content-between align-items-start">
+                <div>
+                    <strong>
+                        <a href="${notification.url}">${notification.title}</a>
+                    </strong>
+                    <p>${notification.contents}</p>
+                    <small>${notification.createdDate}</small>
                 </div>
-                <hr>
-            `;
+                <button type="button" class="btn-close delete-notification" data-id="${notification.notificationId}" aria-label="Close"></button>
+            </div>
+            <hr>
+        `;
             offcanvasBody.appendChild(notificationElement);
 
             // 개별 삭제 버튼 이벤트 리스너 추가
@@ -130,12 +133,6 @@ document.addEventListener("DOMContentLoaded", function() {
             });
         });
     }
-
-    // 알림 전체 삭제 버튼 클릭 이벤트 리스너 추가
-    const deleteAllButton = document.querySelector('.btn-outline-danger');
-    deleteAllButton.addEventListener('click', function() {
-        deleteAllNotifications();
-    });
 
     // 알림 전체 삭제 함수
     function deleteAllNotifications() {

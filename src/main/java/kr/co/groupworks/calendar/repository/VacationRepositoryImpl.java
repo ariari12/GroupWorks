@@ -1,4 +1,5 @@
 package kr.co.groupworks.calendar.repository;
+import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -10,7 +11,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 import java.util.List;
-
 import static kr.co.groupworks.calendar.entity.QCalendarAttachment.calendarAttachment;
 import static kr.co.groupworks.calendar.entity.QVacation.*;
 import static kr.co.groupworks.department.entity.QDepartment.*;
@@ -39,7 +39,14 @@ public class VacationRepositoryImpl implements VacationQueryDsl{
     }
 
     @Override
-    public Page<Vacation> findAllTeam(Employee emp, Pageable pageable) {
+    public Page<Vacation> findAllTeamSearchName(Employee emp, Pageable pageable, String searchName) {
+
+        BooleanBuilder whereClause = new BooleanBuilder();
+        whereClause.and(employee.rankId.loe(emp.getRankId()).and(department.eq(emp.getDepartment())));
+
+        if (searchName != null && !searchName.isEmpty()) {
+            whereClause.and(employee.employeeName.like("%"+searchName+"%"));
+        }
 
         List<Vacation> contents = queryFactory
                 .select(vacation).distinct()
@@ -47,12 +54,7 @@ public class VacationRepositoryImpl implements VacationQueryDsl{
                 .join(vacation.employee, employee)
                 .leftJoin(vacation.attachmentList, calendarAttachment)
                 .leftJoin(employee.department, department)
-                .where(employee.rankId
-                        .loe(emp.getRankId())
-                        .and(
-                            department.eq(emp.getDepartment())
-                        )
-                )
+                .where(whereClause)
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -68,6 +70,18 @@ public class VacationRepositoryImpl implements VacationQueryDsl{
 
         return PageableExecutionUtils.getPage(contents, pageable, countQuery::fetchOne);
     }
+
+    @Override
+    public List<Vacation> findAllByEmployeeId(Long employeeId) {
+        return queryFactory.selectFrom(vacation)
+                .join(vacation.employee, employee)
+                .leftJoin(vacation.attachmentList, calendarAttachment).fetchJoin()
+                .where(employee.employeeId.eq(employeeId))
+                .fetch();
+    }
+
+//    @Query("SELECT v FROM Vacation v JOIN v.employee e " +
+//            "left join CalendarAttachment ca ON ca.calendar.calendarId = v.calendarId WHERE e.employeeId = :employeeId")
 
 //    SELECT DISTINCT v.*
 //    FROM vacation v
