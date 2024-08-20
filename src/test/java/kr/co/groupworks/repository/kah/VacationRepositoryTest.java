@@ -1,12 +1,10 @@
 package kr.co.groupworks.repository.kah;
 
-import kr.co.groupworks.dto.kah.AnnualFormDTO;
-import kr.co.groupworks.entity.kah.Vacation;
-import kr.co.groupworks.entity.kah.VacationType;
-import kr.co.groupworks.repository.cis.EmployeeRepository;
-import kr.co.groupworks.util.mapper.VacationMapper;
-import lombok.RequiredArgsConstructor;
-import org.assertj.core.api.Assertions;
+import kr.co.groupworks.calendar.dto.AnnualFormDTO;
+import kr.co.groupworks.calendar.entity.Vacation;
+import kr.co.groupworks.calendar.repository.VacationRepository;
+import kr.co.groupworks.common.mapper.VacationMapper;
+import kr.co.groupworks.employee.repository.EmployeeRepository;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -18,8 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
 @SpringBootTest
 @Transactional
@@ -35,7 +32,7 @@ class VacationRepositoryTest {
 
     @BeforeAll
     static void beforeAll() {
-        annualFormDTO1 = kr.co.groupworks.dto.kah.AnnualFormDTO.builder()
+        annualFormDTO1 = AnnualFormDTO.builder()
                 .startDate(LocalDate.of(2500,6,22))
                 .endDate(LocalDate.of(2500,8,22))
                 .contents("Family vacation to Hawaii")
@@ -47,14 +44,13 @@ class VacationRepositoryTest {
     void setUp() {
         Vacation entity = vacationMapper.toEntity(annualFormDTO1, employeeRepository.findById(1L).get());
         vacationRepository.save(entity);
-
     }
 
     @Test
     @DisplayName("휴가 기간 중복 테스트")
     void findOverlappingVacations() {
         List<Vacation> overlappingVacations = vacationRepository.findOverlappingVacations(1L, "2500-06-22", "2500-08-22");
-
+        System.out.println(" overlappingVacations " + overlappingVacations );
         assertThat(overlappingVacations).isNotEmpty();
 
     }

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div class="d-flex justify-content-center align-items-stretch" th:fragment="vacationTeamRequest">
+    <div class="card mb-4 w-100 ">
+        <div class="card-header">
+            <i class="fas fa-table me-1"></i>
+            휴가 신청 내역
+            <span class="input-group justify-content-end" style="width: 30%; float: right">
+                <input type="text" class="form-control" id="searchKeyword" placeholder="사원의 이름 검색" style="width: 60%;">
+            </span>
+        </div>
+        <div class="card-body">
+            <table id="vacationTeamRequest" class="table table-hover" style="width:100%">
+                <thead>
+                <tr>
+                    <th>👤 이름</th>
+                    <th>🆔 사번</th>
+                    <th>🏷️ 직책</th>
+                    <th>⭐ 직급</th>
+                    <th>⏳ 사용 기간</th>
+                    <th>🗂️ 종류</th>
+                    <th>📑 증명자료</th>
+                    <th>✅ 승인</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <th:block th:if="${#lists.isEmpty(vacationRequestList)}">
+                    <tr>
+                        <td style="text-align: center">신청 내역 없음</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </th:block>
+
+                <th:block th:if="${!#lists.isEmpty(vacationRequestList)}">
+                    <tr th:each="dto : ${vacationRequestList}" th:data-id="${dto.calendarId}" class="vacation-row">
+                        <td th:text="${dto.name}">사원 이름</td>
+                        <td th:text="${dto.employeeId}">사원 번호</td>
+                        <td th:text="${dto.role.name}">사원 직책</td>
+                        <td th:text="${dto.rankName}">사원 직급</td>
+                        <td class="w-25" th:text="|${dto.startDate} ~ ${dto.endDate}|">사용 기간</td>
+                        <td th:text="${dto.vacationType.description}">종류</td>
+                        <td th:text="${dto.fileList.size() > 0 ? '첨부 파일 있음' : '첨부 파일 없음'}">증명자료</td>
+                        <td th:text="${dto.status.description}">승인</td>
+                    </tr>
+                </th:block>
+                </tbody>
+            </table>
+            <div th:if="${vacationRequestList.totalPages > 0}">
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination justify-content-center">
+                        <!-- Previous Page Link -->
+                        <li class="page-item" th:classappend="${vacationRequestList.number == 0 || vacationRequestList.totalPages == 0} ? 'disabled'">
+                            <a class="page-link" th:href="@{|?page=${vacationRequestList.number - 1 > 0 ? vacationRequestList.number - 1 : 0}|}" aria-label="Previous" th:attr="aria-disabled=${vacationRequestList.number == 0}">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                        <!-- First Page Link -->
+                        <li class="page-item" th:if="${vacationRequestList.totalPages > 1 && vacationRequestList.number > 3}">
+                            <a class="page-link" th:href="@{|?page=0|}">1</a>
+                        </li>
+                        <li class="page-item disabled" th:if="${vacationRequestList.number > 3}">
+                            <span class="page-link">...</span>
+                        </li>
+
+                        <!-- Page Numbers -->
+                        <li class="page-item" th:each="i : ${#numbers.sequence(vacationRequestList.number - 2 < 0 ? 0 : vacationRequestList.number - 2, vacationRequestList.number + 2 >= vacationRequestList.totalPages ? vacationRequestList.totalPages - 1 : vacationRequestList.number + 2)}" th:classappend="${i == vacationRequestList.number} ? 'active'">
+                            <a class="page-link" th:href="@{|?page=${i}|}" th:text="${i + 1}">1</a>
+                        </li>
+
+                        <!-- Last Page Link -->
+                        <li class="page-item disabled" th:if="${vacationRequestList.number < vacationRequestList.totalPages - 4}">
+                            <span class="page-link">...</span>
+                        </li>
+                        <li class="page-item" th:if="${vacationRequestList.totalPages > 1 && vacationRequestList.number < vacationRequestList.totalPages - 3}">
+                            <a class="page-link" th:href="@{|?page=${vacationRequestList.totalPages - 1}|}" th:text="${vacationRequestList.totalPages}">Last</a>
+                        </li>
+
+                        <!-- Next Page Link -->
+                        <li class="page-item" th:classappend="${vacationRequestList.number + 1 == vacationRequestList.totalPages || vacationRequestList.totalPages == 0} ? 'disabled'">
+                            <a class="page-link" th:href="@{|?page=${vacationRequestList.number + 1}|}" aria-label="Next" th:attr="aria-disabled=${vacationRequestList.number + 1 == vacationRequestList.totalPages}">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+
+            <!-- Handling when there's no data -->
+            <div th:if="${vacationRequestList.totalPages == 0}">
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item active">
+                            <a class="page-link" th:href="@{|?page=0|}">1</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+            <div id="modalContainer"></div>
+
+            <script>
+                $(document).ready(function () {
+                    $('.vacation-row').on('click', function () {
+                        const id = $(this).data('id');
+                        $.get('team/detail', {id: id}, function (data) {
+                            $('#modalContainer').html(data);
+                            $('#vacationModal').modal('show');
+                        });
+                    });
+                    $('#searchKeyword').keypress(function (e) {
+                        if (e.keyCode == 13) {
+                            let keyword = $('#searchKeyword').val();
+                            location.href="./team?search=" + keyword;
+                        }
+                    })
+                });
+            </script>
+        </div>
+    </div>
+</div>

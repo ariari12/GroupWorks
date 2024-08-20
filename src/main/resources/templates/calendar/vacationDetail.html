@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>휴가 신청 상세 내역</title>
+</head>
+<body>
+<div class="modal fade" id="vacationModal" tabindex="-1" aria-labelledby="vacationModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-white">
+        <h1 class="modal-title fs-5" id="vacationModalLabel">휴가 상세 내역</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" th:object="${modifyForm}">
+        <div class="mb-3">
+          <h5>휴가 종류</h5>
+          <p class="form-control-plaintext border rounded bg-light p-2" th:text="*{vacationType.getName()}"></p>
+        </div>
+        <div class="mb-3">
+          <h5>휴가 일정</h5>
+          <p class="form-control-plaintext border rounded bg-light p-2" th:text="|*{startDate} ~ *{endDate}|"></p>
+        </div>
+        <div class="mb-3">
+          <h5>상세 사유</h5>
+          <p class="form-control-plaintext border rounded bg-light p-2" th:text="*{contents}"></p>
+        </div>
+        <div class="mb-3">
+          <h5>승인 상태</h5>
+          <p class="form-control-plaintext border rounded bg-light p-2 text-info font-weight-bold" th:text="*{status.getDescription()}"></p>
+        </div>
+        <div class="mb-3">
+          <h5>첨부 파일</h5>
+          <th:block th:if="${!#lists.isEmpty(modifyForm.getFileList())}">
+            <th:block th:each="file : *{fileList}">
+              <div>
+                <a class="form-control-plaintext border rounded bg-light p-2" th:href="@{|/file/download/${file.filePath}|}" th:text="${file.fileName}">파일이름</a>
+              </div>
+            </th:block>
+          </th:block>
+          <th:block th:if="${#lists.isEmpty(modifyForm.getFileList())}">
+            <p class="form-control-plaintext border rounded bg-light p-2">첨부된 파일이 없습니다.</p>
+          </th:block>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="approveBtn" class="btn btn-success">승인</button>
+        <button id="rejectBtn" class="btn btn-danger">반려</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script th:inline="javascript">
+  $(document).ready(function() {
+    let isProcessing = false; // 요청 중 여부를 확인하기 위한 변수
+
+    $('#approveBtn').click(function() {
+      if (isProcessing) return; // 요청 중이라면 클릭을 무시
+
+      isProcessing = true; // 요청 시작
+
+      var calendarId = /*[[${modifyForm.calendarId}]]*/ '';
+      var data = JSON.stringify({
+        calendarId: calendarId,
+        status: 'APPROVED'
+      });
+
+      $.ajax({
+        url: '/vacation/team/approval',
+        type: 'POST',
+        contentType: 'application/json',
+        data: data,
+        success: function(response) {
+          alert('휴가가 승인되었습니다.');
+          location.reload(); // 페이지 새로고침
+        },
+        error: function(xhr, status, error) {
+          var errorResult = JSON.parse(xhr.responseText);
+          alert('오류 코드: ' + errorResult.code + '\n메시지: ' + errorResult.message);
+          isProcessing = false; // 오류 발생 시 클릭 가능하도록 변경
+        }
+      });
+    });
+
+    $('#rejectBtn').click(function() {
+      if (isProcessing) return; // 요청 중이라면 클릭을 무시
+
+      isProcessing = true; // 요청 시작
+
+      var calendarId = /*[[${modifyForm.calendarId}]]*/ '';
+      var data = JSON.stringify({
+        calendarId: calendarId,
+        status: 'REJECTED'
+      });
+
+      $.ajax({
+        url: '/vacation/team/approval',
+        type: 'POST',
+        contentType: 'application/json',
+        data: data,
+        success: function(response) {
+          alert('휴가가 반려되었습니다.');
+          location.reload(); // 페이지 새로고침
+        },
+        error: function(xhr, status, error) {
+          var errorResult = JSON.parse(xhr.responseText);
+          alert('오류 코드: ' + errorResult.code + '\n메시지: ' + errorResult.message);
+          isProcessing = false; // 오류 발생 시 클릭 가능하도록 변경
+        }
+      });
+    });
+  });
+</script>
+</body>
+</html>

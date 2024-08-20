@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:if="${result}">자재 등록 성공</title>
+    <title th:if="${result}">자재 등록 실패</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+<!--/* 자재 등록 성공 */-->
+<th:block th:if="${result}">
+    <h3>자재 상태 등록에 성공하였습니다.</h3>
+    <script>
+        document.addEventListener("DOMContentLoaded", function (e) {
+            alert('[[${message}]]');
+            location.href = `[[${url}]]`;
+        })
+    </script>
+</th:block>
+<!--/* 자재 등록 실패 */-->
+<th:block th:if="${!result}">
+    <h3>자재 상태 둥록에 실패하였습니다.</h3>
+    <script>
+        document.addEventListener("DOMContentLoaded", function (e) {
+            alert("자재 상태 등록에 실패하였습니다.\n" + '[[${message}]]' + "\n자재 QR Code를 다시 확인해 주세요.");
+        })
+    </script>
+</th:block>
+</body>
+</html>

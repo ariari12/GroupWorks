@@ -5,51 +5,8 @@
       layout:decorate="~{layout/layout}"
 >
 
-<!--/* !선택 필요한 style code 와 link 는 여기에 추가 */-->
 <th:block layout:fragment="css">
-    <style>
-        img {
-            width: 80px;
-        }
-        .text-size {
-            width: 120px;
-        }
-        .approver-info-hover:hover {
-            background: #c1c1c1;
-        }
-        .font-danger {
-            color: #bb2d3b;
-            font-weight: bold;
-        }
-        .full-appl {
-            margin-top: -54px;
-            margin-left: 57px;
-            margin-bottom: -51px;
-            width: 2px;
-            height: 186px;
-            background-color: #dee2e6;
-            transform: rotate(39deg);
-        }
-
-        @media print {
-            body {
-                zoom: 68%; /* 배율을 78%로 설정 */
-            }
-            .none-print {
-                display: none;
-            }
-            img {
-                width: 80px;
-            }
-            .text-size {
-                width: 120px;
-            }
-            @page {
-                size: A4;
-                margin: 10mm; /* 페이지의 상단, 하단, 좌측, 우측 여백을 모두 20mm로 설정 */
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="/css/workflow/approval-detail.css">
 </th:block>
 
 <th:block layout:fragment="content">
@@ -67,10 +24,10 @@
     <div class="input-group mb-3">
         <span class="input-group-text">결재 구분</span>
         <label>
-            <!--/*@thymesVar id="workFlowDto" type="kr.co.groupworks.dto.workflow.vo.WorkFlowVO"*/-->
+            <!--/*@thymesVar id="workFlowDto" type="kr.co.groupworks.workflow.dto.vo.WorkFlowVO"*/-->
             <input class="form-control prevent-enter-submit" type="text" th:value="${workFlowDto.getWorkFlowType()}" readonly>
         </label>
-        <!--/*@thymesVar id="workFlowDto" type="kr.co.groupworks.dto.workflow.vo.WorkFlowVO"*/-->
+        <!--/*@thymesVar id="workFlowDto" type="kr.co.groupworks.workflow.dto.vo.WorkFlowVO"*/-->
         <input type="hidden" th:field="${workFlowDto.id}">
         <span class="input-group-text">결재 번호</span>
         <label>
@@ -78,7 +35,7 @@
         </label>
         <span class="input-group-text">기안날짜</span>
         <label>
-            <!--/*@thymesVar id="workFlowDto" type="kr.co.groupworks.dto.workflow.vo.WorkFlowVO"*/-->
+            <!--/*@thymesVar id="workFlowDto" type="kr.co.groupworks.workflow.dto.vo.WorkFlowVO"*/-->
             <input class="form-control prevent-enter-submit" type="text" th:value="${workFlowDto.getDraftDate()}" readonly>
         </label>
 
@@ -139,15 +96,17 @@
                     <th:block th:each="approve : ${approvers}">
                         <td class="border" style="width: 120px;">
                             <div th:if="${approve.approval == 0}" style="text-align: center;">
-                                <!--/*@thymesVar id="approve" type="kr.co.groupworks.dto.workflow.vo.ApproverVO"*/-->
-                                <!--/*@thymesVar id="ApprovalMethod" type="kr.co.groupworks.dto.workflow.ApprovalMethod"*/-->
-                                <th:block th:if="${!approve.getApprovalMethod().equals('전결') && approve.getApprovalMethod().equals('반려')}">
+                                <!--/*@thymesVar id="approve" type="kr.co.groupworks.workflow.dto.vo.ApproverVO"*/-->
+                                <!--/*@thymesVar id="ApprovalMethod" type="kr.co.groupworks.workflow.dto.ApprovalMethod"*/-->
+                                <th:block th:if="${approve.getApprovalMethod() == null}">
                                 <img style="width: 80px;" src="/img/none.png" alt="진행 중">
                                 <br/>
                                 <span style="font-size: 14px;">진행 중</span>
                                 </th:block>
+                                <th:block th:if="${approve.getApprovalMethod() != null}">
                                 <div th:if="${approve.getApprovalMethod().equals('전결')}" class="full-appl"></div>
                                 <img th:if="${approve.getApprovalMethod().equals('반려')}" style="width: 80px;" src="/img/none.png" alt="반려">
+                                </th:block>
                             </div>
                             <div th:if="${approve.approval == 1}">
                                 <img style="width: 80px;" src="/img/approve.png" alt="승인">
@@ -414,7 +373,7 @@
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
                             </div>
                         </div>
-                    </div>zzz
+                    </div>
                 </div>
             </div>
         </th:block>
@@ -699,7 +658,6 @@
             var originalContents = document.body.innerHTML;
             var originalBody = document.body.style.transform;
 
-            // document.body.innerHTML = document.getElementById('layoutSidenav_content').innerHTML;
             document.body.style.transform = 'scale(1)'; // 페이지 스케일 90% 설정
             window.print();
             document.body.innerHTML = originalContents;

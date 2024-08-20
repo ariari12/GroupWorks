@@ -1,0 +1,464 @@
+<!doctype html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<head>
+</head>
+
+<body>
+<th:block layout:fragment="css">
+    <!-- 글쓰기 CSS -->
+    <link href="/css/board/board-write.css" rel="stylesheet" type="text/css"/>
+
+    <style>
+        .custom-btn {
+            background-color: white; /* 배경색 */
+            color: #646982; /* 텍스트 색상 */
+            border: 1px solid #B9BDD3; /* 테두리 */
+            border-radius: 3px; /* 테두리 둥글기 */
+            padding: 5px 10px; /* 내부 여백 */
+            font-size: 12px; /* 폰트 크기 */
+            cursor: pointer; /* 마우스 커서 */
+        }
+        .custom-btn:hover {
+            background-color: white; /* 마우스 호버 시 배경색 변경 */
+            border-color: #B9BDD3; /* 마우스 호버 시 테두리 색 변경 */
+            color: black; /* 마우스 호버 시 텍스트 색상 변경 */
+            font-weight: bold; /* 마우스 호버 시 Bold 로 보여주기 */
+        }
+        .text-bg-custom {
+            background: #343a40;
+        }
+
+        #collapseExample {
+            z-index: 1000;
+        }
+
+        #readJs {
+            box-sizing: border-box; /* 패딩과 보더를 포함한 너비 계산 */
+            border: none;
+            overflow: auto; /* 스크롤바가 필요한 경우 표시되도록 */
+            height: auto;
+            width: 100%;
+            max-width: 800px; /* 최대 너비 설정 */
+            margin: 0 auto; /* 중앙 정렬 */
+            word-wrap: break-word; /* 단어가 길 경우 자동으로 줄바꿈 */
+        }
+    </style>
+</th:block>
+
+<th:block layout:fragment="javascript">
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/header@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/simple-image@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/delimiter@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/list@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/checklist@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/quote@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/code@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/embed@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/table@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/warning@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/marker@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/inline-code@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/table@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/editorjs@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/paragraph@latest"></script>
+
+    <script th:inline="javascript">
+
+        $(document).ready(function () {
+            let boardId = [[${board.boardId}]];
+            // 글삭제
+            $("#deleteBtn").on('click', function () {
+                let url = '../delete/' + boardId
+                $.ajax({
+                    type : 'post',
+                    url : url,
+                    success: function (result) {
+                        if (result.msg !== 'Success') {
+                            alert(result.msg);
+                        }
+                        location.reload();
+                    },
+                    error: function (){
+                        alert("글삭제에 실패하였습니다.");
+                    }
+                })
+            });
+
+            // 대댓글 등록
+            $(document).on('click', '.relay-submit', function () {
+                // 현재 대댓글 폼의 부모 댓글 ID 가져오기
+                let parentId = $(this).closest('.relay-form').closest('[data-parent-id]').attr('data-parent-id');
+
+                // 대댓글 내용을 가져오기
+                let commentContent = $(this).closest('.relay-form').find('textarea').val();
+
+                if (commentContent.trim() === '') {
+                    alert('댓글 내용을 입력해주세요.');
+                    return;
+                }
+                // 부모 댓글 ID와 함께 댓글 추가 함수 호출
+                addComment(commentContent, parentId);
+            });
+
+            // 일반 댓글
+            $("#addCommentBtn").on('click', function () {
+
+                let commentContent = $("#commentContent").val();
+                if (commentContent.trim() === '') {
+                    alert('댓글 내용을 입력해주세요.');
+                    return;
+                }
+                addComment(commentContent, null);
+            });
+
+            // 댓글등록
+            function addComment(content, parentComment) {
+                const commentDTO = {
+                    content: content,
+                    boardId: boardId,
+                    parentCommentId: parentComment
+                };
+
+                fetch(`/comment/${boardId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(commentDTO)
+                })
+                    .then(response => {
+                        if (response.status === 201) {
+                            window.location.reload();
+                        } else {
+                            alert('댓글 등록에 실패했습니다.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('댓글 등록 중 오류가 발생했습니다.');
+                    });
+            }
+
+            let data = [[${board.content}]];
+
+            // Editor.js 초기화
+            const editor = new EditorJS({
+                holder: 'readJs',
+                readOnly: true, // 읽기 전용 모드 활성화
+                tools: {
+                    header: {
+                        class: Header,
+                        inlineToolbar: ['link'],
+                        config: {
+                            placeholder: '제목을 입력하세요'
+                        },
+                        shortcut: 'CMD+SHIFT+H'
+                    },
+                    list: {
+                        class: List,
+                        inlineToolbar: true,
+                        shortcut: 'CMD+SHIFT+L'
+                    },
+                    checklist: {
+                        class: Checklist,
+                        inlineToolbar: true,
+                    },
+                    code: {
+                        class: CodeTool,
+                        shortcut: 'CMD+SHIFT+C'
+                    },
+                    delimiter: Delimiter,
+                    inlineCode: {
+                        class: InlineCode,
+                        shortcut: 'CMD+SHIFT+I'
+                    },
+                    table: {
+                        class: Table,
+                        inlineToolbar: true,
+                        shortcut: 'CMD+ALT+T'
+                    },
+                },
+                data: JSON.parse(data)
+            });
+
+            /* 댓글이동 */
+            $('#comment-count').on('click', function () {
+                let offset=$("#comment-list").offset();
+                $('html, body').animate(
+                    {
+                        scrollTop:offset.top - 70,
+                    },0
+                );
+            });
+            /* 상단이동 */
+            $('#up-button').on('click', function (){
+                $('html, body').animate(
+                    {
+                        scrollTop: 0,
+                    },0
+                );
+            });
+            /* 하단이동 */
+            $('#down-button').on('click', function (){
+                $('html, body').animate(
+                    {
+                        scrollTop: $(document).height() - $(window).height(),
+                    },0
+                );
+            });
+            // 글수정 버튼 클릭
+            $('#comment-edit').on('click', function () {
+                $("#comment-form").hide();
+                $("#edit-form").show();
+            });
+            // 글수정 취소 버튼 클릭
+            $('#edit-cancel').on('click', function () {
+                $("#comment-form").show();
+                $("#edit-form").hide();
+            });
+
+            // 댓글과 대댓글에서 답변 버튼 클릭 시
+            $(document).on('click', '.relay-btn', function() {
+                // 현재 클릭된 버튼의 가장 가까운 부모 div를 찾는다
+                var parentDiv = $(this).closest('div').parent().closest('div');
+                // .relay-form을 토글하고, .edit-form을 숨긴다
+                parentDiv.find('.relay-form').toggle();
+                parentDiv.find('.edit-form').hide();
+            });
+
+            // 댓글과 대댓글에서 수정 버튼 클릭 시
+            $(document).on('click', '.comment-edit', function() {
+                // 현재 클릭된 버튼의 가장 가까운 부모 div를 찾는다
+                var parentDiv = $(this).closest('div').parent().closest('div');
+                // .edit-form을 토글하고, .relay-form을 숨긴다
+                parentDiv.find('.edit-form').toggle();
+                parentDiv.find('.relay-form').hide();
+            });
+
+            // 수정 폼의 취소 버튼 클릭 시
+            $(document).on('click', '.edit-cancel', function() {
+                $(this).closest('.edit-form').hide();  // 수정 폼 숨기기
+            });
+
+            // 답변 폼의 취소 버튼 클릭 시
+            $(document).on('click', '.relay-cancel', function() {
+                $(this).closest('.relay-form').hide();  // 답변 폼 숨기기
+            });
+
+            $('.comment-delete').on('click', function() {
+                let commentId = $(this).closest('[data-comment-id]').attr('data-comment-id');
+                fetch(`/comment/${commentId}`, {
+                    method: 'DELETE',
+                })
+                    .then(response => {
+                        if (response.status === 204) {
+                            window.location.reload();
+                        } else {
+                            alert('댓글 삭제에 실패했습니다.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('댓글 삭제 중 오류가 발생했습니다.');
+                    });
+            });
+
+            // 수정
+            $(".edit-apply").on('click', function() {
+                // 현재 클릭된 버튼이 속한 .edit-form을 찾습니다.
+                let editForm = $(this).closest('.edit-form');
+
+                // .edit-form 안의 textarea의 값을 가져옵니다.
+                let content = editForm.find('textarea').val();
+
+                // .edit-form의 부모 div로 올라가서 data-comment-id를 찾습니다.
+                let commentId = $(this).closest('[data-comment-id]').attr('data-comment-id');
+
+                const commentDTO = {
+                    content: content,
+                    commentId: commentId
+                };
+
+                fetch(`/comment/${commentDTO.commentId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(commentDTO)
+                })
+                    .then(response => {
+                        if (response.status === 204) {
+                            window.location.reload();
+                        } else {
+                            alert('댓글 수정에 실패했습니다.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('댓글 수정 중 오류가 발생했습니다.');
+                    });
+            });
+        });
+    </script>
+</th:block>
+
+<th:block layout:fragment="content" th:with="boardType=${title == '공지 게시판'} ? 'notice' : ${session.employee.getDepartment().departmentId}">
+    <div class="container" style="margin: 0 auto; width: 70%">
+        <div id="titlePreview">
+            <h5>
+                <div th:switch="${board.subject}">
+                    <span th:case="'suggestion'" class="badge bg-primary" th:text="제안"></span>
+                    <span th:case="'general'" class="badge bg-secondary" th:text="일반"></span>
+                    <span th:case="'inquiry'" class="badge bg-success" th:text="문의"></span>
+                    <span th:case="'error'" class="badge bg-danger" th:text="오류"></span>
+                    <span th:case="'mandatory'" class="badge bg-danger" th:text="필독"></span>
+                    <span th:case="'announcement'" class="badge bg-danger" th:text="공지"></span>
+                    <span th:text="${board.title}"></span>
+                </div>
+            </h5>
+        </div>
+        <div id="writerPreview">
+            <div>
+                <b>작성자</b> : <span th:text="${board.employee.getRankName() + ' ' + board.employee.getEmployeeName()} "></span>
+            </div>
+        </div>
+        <div id="datePreview" style="display: flex; align-items: center; justify-content: space-between;">
+            <div>
+                <b>작성일</b> : <span th:text="${#temporals.format(board.createDate, 'yyyy-MM-dd HH:mm:ss')}"></span>
+            </div>
+            <div>
+                <span class="badge rounded-pill text-bg-custom" th:text="'조회수 ' + ${board.hits}"></span>
+                <span class="badge rounded-pill text-bg-custom" id="comment-count" style="cursor: pointer;" th:text="'댓글 ' + ${commentCount}"></span>
+            </div>
+        </div>
+        <hr>
+        <div id="contentPreview" style="margin: 10px 0 0 0;">
+            <!-- 첨부파일 -->
+            <div style="text-align: right;" id="attachFileList">
+                <span data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-folder" viewBox="0 0 16 16">
+                        <path d="M.54 3.87.5 3a2 2 0 0 1 2-2h3.672a2 2 0 0 1 1.414.586l.828.828A2 2 0 0 0 9.828 3h3.982a2 2 0 0 1 1.992 2.181l-.637 7A2 2 0 0 1 13.174 14H2.826a2 2 0 0 1-1.991-1.819l-.637-7a2 2 0 0 1 .342-1.31zM2.19 4a1 1 0 0 0-.996 1.09l.637 7a1 1 0 0 0 .995.91h10.348a1 1 0 0 0 .995-.91l.637-7A1 1 0 0 0 13.81 4zm4.69-1.707A1 1 0 0 0 6.172 2H2.5a1 1 0 0 0-1 .981l.006.139q.323-.119.684-.12h5.396z"/>
+                    </svg>
+                    첨부파일
+                </span>
+                <!-- 다운로드 -->
+                <!--<div class="collapse" id="collapseExample"
+                     style="margin: 10px; position: absolute; right: 14%; transform: translateX( 5% );">
+                    <div class="card card-body" id="preview-file">
+                        <span>test.txt | <a href="#">다운로드</a></span>
+                        <span>test.pdf | <a href="#">다운로드</a></span>
+                        <span>test.png | <a href="#">다운로드</a></span>
+                        <span>test.csv | <a href="#">다운로드</a></span>
+                        <span>test.jpg | <a href="#">다운로드</a></span>
+                    </div>
+                </div>-->
+            </div>
+            <!-- 게시판내용 에디터 -->
+            <div id="readJs"></div>
+        </div>
+        <hr>
+        <div>
+            <h5 id="comment-list" th:text="'댓글 - ' + ${commentCount}"></h5>
+            <div th:each="c : ${comment}">
+                <div style="border: 1px solid gray; border-radius: 5px; padding: 10px; margin: 10px 0 10px 0; background: #F8FAFB"
+                     th:data-comment-id="${c.getCommentId()}"
+                     th:data-parent-id="${c.getParentCommentId() != null ? c.getParentCommentId() : c.getCommentId()}">
+                    <div>
+                        <strong th:text="${c.getEmployee().getRankName()}"></strong>
+                        <strong th:text="${c.getEmployee().getEmployeeName()}"></strong>
+                        <span style="color: #848484;" th:text="'(' + ${#temporals.format(c.getCreatedDate(), 'yyyy-MM-dd HH:mm:ss')} + ')'"></span>
+                    </div>
+                    <div class="comment-content" th:text="${c.getContent()}"></div>
+                    <div class="edit-form" style="display: none;">
+                        <textarea class="form-control" cols="10" rows="5" th:text="${c.getContent()}"></textarea>
+                        <div style="margin-top: 10px;">
+                            <input type="button" class="btn custom-btn edit-apply" value="댓글수정">
+                            <input type="button" class="btn custom-btn edit-cancel" value="수정취소">
+                        </div>
+                    </div>
+                    <div class="relay-form" style="display: none; margin-left: 20px">
+                        <span>└답변</span>
+                        <textarea class="form-control" name="relayContent" cols="10" rows="5"></textarea>
+                        <input type="hidden" class="parent-id" value="${c.getCommentId()}">
+                        <div style="margin-top: 10px;">
+                            <input type="button" class="btn custom-btn relay-submit relayBtn" value="답변작성">
+                            <input type="button" class="btn custom-btn relay-cancel" value="답변취소">
+                        </div>
+                    </div>
+                    <div style="text-align: right">
+                        <input type="button" class="btn custom-btn relay-btn" value="답변">
+                        <th:block th:if="${c.getEmployee().getEmployeeId() == session.employee.getEmployeeId()}">
+                            <input type="button" class="btn custom-btn comment-edit" value="수정">
+                            <input type="button" class="btn custom-btn comment-delete" value="삭제">
+                        </th:block>
+                    </div>
+                </div>
+
+                <!-- 대댓글 -->
+                <div style="border: 1px solid gray; border-radius: 5px; padding: 10px; margin: 5px 0px 5px 50px; background: #F8FAFB"
+                     th:each="child : ${c.getChildComments()}"
+                     th:data-comment-id="${child.getCommentId()}"
+                     th:data-parent-id="${child.getParentCommentId() != null ? child.getParentCommentId() : child.getCommentId()}">
+                    <div>
+                        <strong th:text="${child.getEmployee().getRankName()}"></strong>
+                        <strong th:text="${child.getEmployee().getEmployeeName()}"></strong>
+                        <span style="color: #848484;" th:text="'(' + ${#temporals.format(child.getCreatedDate(), 'yyyy-MM-dd HH:mm:ss')} + ')'"></span>
+                    </div>
+                    <div style="margin-left: 16px;" th:text="${child.getContent()}"></div>
+                    <div class="edit-form" style="display: none;">
+                        <textarea class="form-control" cols="10" rows="5" th:text="${child.getContent()}"></textarea>
+                        <div style="margin-top: 10px;">
+                            <input type="button" class="btn custom-btn edit-apply" value="댓글수정">
+                            <input type="button" class="btn custom-btn edit-cancel" value="수정취소">
+                        </div>
+                    </div>
+                    <div class="relay-form" style="display: none; margin-left: 20px">
+                        <span>└답변</span>
+                        <textarea class="form-control" name="relayContent" cols="10" rows="5"></textarea>
+                        <input type="hidden" class="parent-id" value="${child.getCommentId()}">
+                        <div style="margin-top: 10px;">
+                            <input type="button" class="btn custom-btn relay-submit relayBtn" value="답변작성">
+                            <input type="button" class="btn custom-btn relay-cancel" value="답변취소">
+                        </div>
+                    </div>
+                    <div style="text-align: right">
+                        <input type="button" class="btn custom-btn relay-btn" value="답변">
+                        <th:block th:if="${child.getEmployee().getEmployeeId() == session.employee.getEmployeeId()}">
+                            <input type="button" class="btn custom-btn comment-edit" value="수정">
+                            <input type="button" class="btn custom-btn comment-delete" value="삭제">
+                        </th:block>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 댓글 -->
+        <div>
+            <span>댓글</span>
+            <textarea class="form-control" name="commentContent" id="commentContent" cols="10" rows="5"></textarea>
+            <div style="margin: 10px 0 10px 0; display: flex; justify-content: space-between;">
+                <input type="button" class="btn custom-btn" id="addCommentBtn" value="댓글등록">
+                <form th:action="@{|/board/${boardType}/delete/${board.getBoardId()}|}" method="post">
+                    <div style="display: flex; gap: 5px;">
+
+                        <th:block th:if="${board.employee.getEmployeeId() == session.employee.getEmployeeId()}">
+                            <a th:href="@{|/board/${boardType}/edit/${board.getBoardId()}|}" class="btn custom-btn">글수정</a>
+                            <input type="button" class="btn custom-btn" id="deleteBtn" value="글삭제">
+                        </th:block>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div style="position: fixed; bottom: 75px; right: 40px;">
+            <div class="btn-group-vertical" role="group" aria-label="Vertical button group">
+                <button type="button" class="btn btn-outline-dark btn-sm" id="up-button">▲</button>
+                <button type="button" class="btn btn-outline-dark btn-sm" id="down-button">▼</button>
+            </div>
+        </div>
+    </div>
+</th:block>
+</body>
+</html>

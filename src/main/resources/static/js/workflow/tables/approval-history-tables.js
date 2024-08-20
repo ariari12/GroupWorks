@@ -27,7 +27,7 @@ $(document).ready(function() {
         displayLength: 15,
     });
 
-    // 내 결재 반려 목록 테이블 생성
+    // 내 결재 승인 목록 테이블 생성
     $('#MyRejectionList').DataTable({
         info: false,
         ordering: true,

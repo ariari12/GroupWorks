@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<head>
+</head>
+
+<body>
+<th:block layout:fragment="css">
+    <!-- 글쓰기 CSS -->
+    <link href="/css/board/board-write.css" rel="stylesheet" type="text/css"/>
+    <style>
+        .text-bg-custom {
+            background: #343a40;
+        }
+    </style>
+</th:block>
+
+<th:block layout:fragment="javascript">
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/header@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/simple-image@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/delimiter@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/list@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/checklist@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/quote@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/code@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/embed@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/table@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/warning@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/marker@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/inline-code@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/table@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/editorjs@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/paragraph@latest"></script>
+    <!--/* 미리보기 시간 js */-->
+    <script src="/js/board/preview-time.js?v=<%=System.currentTimeMillis() %>"></script>
+    <!--/* editor 설정 및 미리보기 */-->
+    <script src="/js/board/preview-editor.js?v=<%=System.currentTimeMillis() %>"></script>
+    <!-- 파일 업로드 -->
+    <script src="/js/board/fileupload.js?v=<%=System.currentTimeMillis() %"></script>
+
+
+    <script th:inline="javascript">
+
+
+        $(document).ready(function () {
+
+            async function getEditorContent() {
+                try {
+                    const outputData = await editor.save();
+                    return JSON.stringify(outputData); // JSON 형식으로 반환
+                } catch (error) {
+                    console.error('Error getting editor content:', error);
+                    return ''; // 에러 발생 시 빈 문자열 반환
+                }
+            }
+
+            let boardId = [[${board.boardId}]];
+
+            $('#submitButton').on("click", async function () {
+
+                let title = $('#title').val();
+                let content = await getEditorContent();
+                let subject = 'error';
+
+                alert(title);
+                alert(content);
+                alert(subject);
+
+
+                const boardDTO = {
+                    title: title,
+                    content: content,
+                    subject: subject,
+                    boardId: boardId,
+                };
+
+                fetch(`edit/${boardId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(boardDTO)
+                })
+                    .then(response => {
+                        if (response.status === 204) {
+                            window.location.reload();
+                        } else {
+                            alert('게시글 등록에 실패했습니다.');
+                            console.log('Failed URL:', `/${boardId}`);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        console.log('Failed URL:', `/${boardId}`);
+                        alert('게시글 등록 중 오류가 발생했습니다.');
+                    });
+            })
+
+        });
+
+    </script>
+</th:block>
+
+<th:block layout:fragment="content" th:with="boardType=${title == '공지 게시판'} ? 'notice' : ${session.employee.getDepartment().departmentId}">
+    <form id="writeForm" th:action="@{|/board/${boardType}/write|}" method="post">
+        <div class="container" style="margin: 50px; width: 90%">
+            <div class="form-group">
+
+                <select class="form-control" aria-label="말머리" name="subject" id="subject" th:if="${boardType != 'notice'}">
+                    <option value="general" th:selected="${board.subject == 'general'}">일반</option>
+                    <option value="suggestion" th:selected="${board.subject == 'suggestion'}">제안</option>
+                    <option value="error" th:selected="${board.subject == 'error'}">오류</option>
+                    <option value="inquiry" th:selected="${board.subject == 'inquiry'}">문의</option>
+                    <option value="announcement" th:selected="${board.subject == 'announcement'}">공지</option>
+                    <option value="mandatory" th:selected="${board.subject == 'mandatory'}">필독</option>
+                </select>
+
+                <select class="form-control" aria-label="말머리" name="subject" th:if="${boardType == 'notice'}">
+                    <option value="announcement" selected>공지</option>
+                </select>
+
+                <input type="text" class="form-control" name="title" id="title" th:value="${board.title}" placeholder="제목을 입력하세요">
+                <input type="hidden" name="realContent" id="realContent" th:value="${board.content}">
+                <input type="hidden" name="content" id="contentField">
+                <input type="hidden" name="departmentId" th:value="0">
+                <input type="hidden" name="boardType" th:value="${boardType == 'notice' ? 'NOTICE' : 'DEPARTMENT'}">
+            </div>
+
+            <!-- 에디터 -->
+            <div class="boarder">
+                <div id="editorjs"></div>
+            </div>
+
+            <!-- 파일업로드 -->
+            <div class="insert boarder">
+                <form method="POST" onsubmit="return false;" enctype="multipart/form-data">
+                    <input type="file" class="form-control" onchange="addFile(this);" multiple />
+                    <div class="file-list" id="file-list"></div>
+                </form>
+            </div>
+
+            <div>
+                <input type="button" class="btn btn-success" id="submitButton" value="등록하기">
+                <button type="button" class="btn btn-primary" data-bs-target="#exampleModal"
+                        onclick="preview()" th:text="미리보기">
+                </button>
+            </div>
+        </div>
+    </form>
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-custom">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">미리보기</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="titlePreview">
+                    </div>
+                    <div id="writerPreview"><b>작성자</b> : 대리
+                        <span th:text="${session.employee.getEmployeeName()}"></span></div>
+                    <div id="datePreview"></div><hr>
+                    <div style="text-align: right;" id="attachFileList">
+                        <div class="collapse" id="collapseExample"
+                             style="margin: 10px; position: absolute; right: 25%; transform: translateX( 5% );">
+                            <div class="card card-body" id="preview-file">
+                            </div>
+                        </div>
+                    </div>
+                    <div id="contentPreview"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</th:block>
+</body>
+</html>

@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}"
+>
+
+<th:block layout:fragment="css">
+    <link rel="stylesheet" href="/css/materialflow/order-detail.css">
+</th:block>
+
+<th:block layout:fragment="content">
+<div class="mb-5">
+    <button class="btn btn-secondary mb-5" onclick="printBtn();">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-printer" viewBox="0 0 16 16">
+            <path d="M2.5 8a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1"/><path d="M5 1a2 2 0 0 0-2 2v2H2a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h1v1a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-1h1a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1V3a2 2 0 0 0-2-2zM4 3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2H4zm1 5a2 2 0 0 0-2 2v1H2a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v-1a2 2 0 0 0-2-2zm7 2v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1"/>
+        </svg>인쇄
+    </button>
+    <button class="btn btn-danger mb-5" th:onclick="canselOrder([[${order.getId()}]], [[${division}]]);">등록 취소</button>
+</div>
+
+<div id="orderForm" class="row g-3 needs-validation">
+    <h3 id="title" class="title-header" th:text="${title}"></h3>
+
+    <div class="input-group mb-3">
+        <!--/* 수주자 란 */-->
+        <table class="border-white table-margin">
+            <tr>
+                <td>납기 예정일자</td>
+                <td colspan="3" th:text="${order.getOrderDate()}"></td>
+            </tr>
+            <tr>
+                <td th:text="${title + ' 번호'}"></td>
+                <td colspan="3">
+                    <input class="table-input" type="text" th:value="${order.getOrderCode()}" size="60" readonly>
+                </td>
+            </tr>
+            <tr>
+                <td>납품 일자</td>
+                <td colspan="3" th:text="${order.getDeliveryDate()}"></td>
+            </tr>
+            <tr>
+                <td>공급업체 명</td>
+                <td colspan="3">
+                    <!--/* 수주서: 공급업체: 거래처 */-->
+                    <input th:if="${division == 1}" class="table-input" type="text" th:value="${order.getManager().getBusiness().getBusinessName()}" readonly>
+                    <!--/* 수주서: 공급업체: 본사 */-->
+                    <input th:if="${division == 2}" class="table-input" type="text" th:value="${office.businessName}" size="60" readonly>
+                </td>
+            </tr>
+            <tr>
+                <td>수주 담당자</td>
+                <td colspan="3">
+                    <!--/* 수주서: 수주 담당자:거래처 */-->
+                    <input th:if="${division == 1}" class="table-input" type="text" th:value="${order.getManager().getName()}" readonly>
+                    <!--/* 수주서: 수주 담당자:직원 */-->
+                    <input th:if="${division == 2}" class="table-input" type="text" th:value="${order.getEmployee().getName()}" readonly>
+                </td>
+            </tr>
+            <tr>
+                <td>담당자 연락처</td>
+                <td>
+                    <input th:if="${division == 1}" class="table-input" type="text" th:value="${order.getManager().getPhone()}" readonly>
+                    <input th:if="${division == 2}" class="table-input" type="text" th:value="${order.getEmployee().getPhone()}" readonly>
+                </td>
+                <td>담당자 이메일</td>
+                <td>
+                    <input th:if="${division == 1}" class="table-input" type="text" th:value="${order.getManager().getEmail()}" readonly>
+                    <input th:if="${division == 2}" class="table-input" type="text" th:value="${order.getEmployee().getEmail()}" readonly>
+                </td>
+            </tr>
+        </table>
+
+        <!--/* 발주자 란 */-->
+        <table class="border-white">
+            <tr>
+                <td>사업자 등록 번호</td>
+                <td colspan="3">
+                    <!--/* 발주서: 사업자: 본사 */-->
+                    <input th:if="${division == 1}" class="table-input" type="text" th:value="${office.businessNumber}" readonly>
+                    <!--/* 발주서: 사업자: 거래처 */-->
+                    <input th:if="${division == 2}" class="table-input" type="text" th:value="${order.getManager().getBusiness().getBusinessNumber()}" readonly>
+                </td>
+            </tr>
+            <tr>
+                <td>발주업체 명</td>
+                <td colspan="3">
+                    <!--/* 발주서: 발주업체: 본사 */-->
+                    <input th:if="${division == 1}" class="table-input" type="text" th:value="${office.businessName}" readonly>
+                    <!--/* 발주서: 발주업체: 거래처 */-->
+                    <input th:if="${division == 2}" class="table-input" type="text" th:value="${order.getManager().getBusiness().getBusinessName()}" readonly>
+                </td>
+            </tr>
+            <tr>
+                <td>업 태</td>
+                <td>
+                    <input th:if="${division == 1}" class="table-input" type="text" th:value="${office.type}" readonly>
+                    <input th:if="${division == 2}" class="table-input" type="text" th:value="${order.getManager().getBusiness().getType()}" readonly>
+                </td>
+                <td>종 목</td>
+                <td>
+                    <input th:if="${division == 1}" class="table-input" type="text" th:value="${office.item}" readonly>
+                    <input th:if="${division == 2}" class="table-input" type="text" th:value="${order.getManager().getBusiness().getItem()}" readonly>
+                </td>
+            </tr>
+            <tr>
+                <td>발주 담당자</td>
+                <td colspan="3">
+                    <!--/* 발주서: 발주 담당자: 사원 */-->
+                    <input th:if="${division == 1}" class="table-input" type="text" th:value="${order.getEmployee().getName()}" readonly>
+                    <!--/* 발주서: 발주 담당자: 거래처 */-->
+                    <input th:if="${division == 2}" class="table-input" type="text" th:value="${order.getManager().getName()}" readonly>
+                </td>
+            </tr>
+            <tr>
+                <td>담당자 연락처</td>
+                <td>
+                    <input th:if="${division == 1}" class="table-input" type="text" th:value="${order.getEmployee().getPhone()}" readonly>
+                    <input th:if="${division == 2}" class="table-input" type="text" th:value="${order.getManager().getPhone()}" readonly>
+                </td>
+                <td>담당자 이메일</td>
+                <td>
+                    <input th:if="${division == 1}" class="table-input" type="text" th:value="${order.getEmployee().getEmail()}" readonly>
+                    <input th:if="${division == 2}" class="table-input" type="text" th:value="${order.getManager().getEmail()}" readonly>
+                </td>
+
+            </tr>
+            <tr>
+                <td>발주 일자</td>
+                <td colspan="3"><input class="table-input" type="text" th:value="${order.getOrderDate()}" readonly></td>
+            </tr>
+            <tr>
+                <td>납품 주소</td>
+                <td colspan="3">
+                    <label>주소: <input type="text" class="table-input" th:value="${order.getAddress()}" size="60" readonly></label><br/>
+                    <label>우편번호: <input type="text" class="table-input" th:value="${order.getZipCode()}" size="7" readonly></label>
+                    <label>상세주소: <input type="text" class="table-input" th:value="${order.getAddressDetail()}" size="30"></label>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="mt-3">
+        <div class="table-container">
+            <table class="table-margin-auto" id="itemTable">
+                <thead>
+                <tr>
+                    <th>품목명</th>
+                    <th>품목 코드</th>
+                    <th>수량</th>
+                    <th>단가</th>
+                    <th>공급가액</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="list : ${order.getBomList()}">
+                    <td th:text="${list.getItemName()}"></td>
+                    <td><input type="text" class="table-input" th:value="${list.getItemCode()}" readonly></td>
+                    <td><input type="number" class="table-input" th:value="${list.getQuantity()}" readonly></td>
+                    <td><input type="number" class="table-input" th:value="${list.getUnitPrice()}" readonly></td>
+                    <td><div class="currency-wrapper">
+                        <input type="number" class="table-input" th:value="${list.getQuantity() * list.getUnitPrice()}" readonly>
+                        <span class="currency">￦</span>
+                    </div></td>
+                </tr>
+                </tbody>
+            </table>
+            <table>
+                <tr>
+                    <th>합 계</th>
+                    <td><input type="number" class="table-input" th:value="${order.getTotalAmount()}" size="7" readonly><span>￦</span></td>
+                    <th>세 율</th>
+                    <td><input type="number" class="table-input" th:value="${order.getTex()}" readonly><span> %</span></td>
+                    <th>세 액</th>
+                    <td><input type="number" class="table-input" th:value="${order.getTotalAmount() / (100 / order.getTex())}" size="7" readonly><span>￦</span></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!--/* 거래처 미 선택 중 거래처 담당자 선택 버튼을 클릭 했을 때 알림토스트 */-->
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+    <div id="managerToastTemplate" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+            <img src="" class="rounded me-2" alt="">
+            <strong class="me-auto">거래처 담당자 선택 알림</strong>
+            <small class="text-body-secondary">1 sec ago</small>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body"></div>
+    </div>
+</div>
+</th:block>
+
+<th:block layout:fragment="javascript">
+    <script src="/js/materialflow/order-detail.js"></script>
+</th:block>

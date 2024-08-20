@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+
+<th:block layout:fragment="css">
+    <style>
+        .th-center, .td-center {
+            text-align: center;
+        }
+
+        .menu {
+            display: inline-block; margin: 0 10px 0 10px;
+        }
+
+        a {
+            color: black;
+            text-decoration: none;
+        }
+
+        .menu a.active {
+            font-weight: bold;
+            text-decoration: underline;
+            text-decoration-thickness: 3px;
+            text-underline-offset: 5px;
+        }
+    </style>
+</th:block>
+
+<th:block layout:fragment="javascript">
+    <script th:inline="javascript">
+        /* 검색 */
+        $(document).ready(function (){
+            $('#keyword').keypress(function (e) {
+                if (e.keyCode == 13) {
+                    let keywordType = $('.keywordType').val();
+                    let keyword = $('#keyword').val();
+                    let type = [[${type}]].length !== 0 ? '&type=notice':'';
+                    location.href="./list?keyword=" + keyword + "&keywordtype=" + keywordType + type;
+                }
+            })
+        });
+    </script>
+</th:block>
+
+<th:block layout:fragment="content">
+    <div class="container" style="margin-top: 50px;"
+         th:with="boardType=${title == '공지 게시판'} ? 'notice' : ${session.employee.getDepartment().departmentId}">
+
+        <div style="margin-left: 10px;" th:if="${boardType != 'notice'}">
+            <div class="menu">
+                <a th:href="@{'/board/' + ${boardType} + '/list'}"
+                   th:class="${type == '' ? 'active' : ''}">
+                    <h3>전체</h3>
+                </a>
+            </div>
+            <div class="menu">
+                <a th:href="@{'/board/' + ${boardType} + '/list?type=notice'}"
+                   th:class="${type == 'notice' ? 'active' : ''}">
+                    <h3>공지</h3>
+                </a>
+            </div>
+        </div>
+
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th class="th-center">번호</th>
+                <th>제목</th>
+                <th class="th-center">글쓴이</th>
+                <th class="th-center">날짜</th>
+                <th class="th-center">조회수</th>
+            </tr>
+            </thead>
+
+            <tbody>
+                <tr class="table-secondary"
+                    th:each="board : ${noticePosts}"
+                    th:attr="onclick=|location.href='@{/board/{boardType}/detail/{boardId}(boardType=${boardType}, boardId=${board.boardId})}'|">
+                    <td class="td-center">→</td>
+                    <td th:switch="${board.subject}">
+                        <span th:case="'mandatory'" class="badge bg-danger" th:text="필독"></span>
+                        <span th:case="'announcement'" class="badge bg-danger" th:text="공지"></span>
+                        <span th:text="${board.title}"></span>
+                    </td>
+                    <td class="td-center" th:text="${board.employee.getRankName()} + ' ' + ${board.employee.getEmployeeName()}"></td>
+                    <td class="td-center" th:text="${board.relativeCreateDate}"></td>
+                    <td class="td-center" th:text="${board.hits}"></td>
+                </tr>
+            </tbody>
+
+            <tbody th:if="${allPosts.isEmpty()}">
+                <tr>
+                    <td colspan="5" style="text-align: center; vertical-align: middle;">
+                        <span style="font-size: 30px;">게시판 글이 없습니다.</span>
+                    </td>
+                </tr>
+            </tbody>
+
+            <tbody>
+                <tr th:each="board : ${allPosts}"
+                    th:attr="onclick=|location.href='@{/board/{boardType}/detail/{boardId}(boardType=${boardType}, boardId=${board.boardId})}'|">
+                    <td class="td-center" th:text="${board.getRankNum()}"></td>
+                    <td th:switch="${board.subject}">
+                        <span th:case="'suggestion'" class="badge bg-primary" th:text="제안"></span>
+                        <span th:case="'general'" class="badge bg-secondary" th:text="일반"></span>
+                        <span th:case="'inquiry'" class="badge bg-success" th:text="문의"></span>
+                        <span th:case="'error'" class="badge bg-danger" th:text="오류"></span>
+                        <span th:case="'mandatory'" class="badge bg-danger" th:text="필독"></span>
+                        <span th:case="'announcement'" class="badge bg-danger" th:text="공지"></span>
+                        <span th:text="${board.title}"></span>
+                    </td>
+                    <td class="td-center" th:text="${board.employee.getRankName()} + ' ' + ${board.employee.getEmployeeName()}"></td>
+                    <td class="td-center" th:text="${board.relativeCreateDate}"></td>
+                    <td class="td-center" th:text="${board.hits}"></td>
+                </tr>
+            </tbody>
+
+            <tfoot>
+            <tr>
+                <td colspan="4" style="border-bottom: none;">
+                    <div class="input-group" style="width: 40%;">
+                        <select class="form-select keywordType" id="inputGroupSelect" style="width: 40%;">
+                            <option value="title" selected>제목</option>
+                            <option value="content">내용</option>
+                            <option value="writer">작성자</option>
+                            <option value="rank">직급</option>
+                        </select>
+                        <input type="text" class="form-control" id="keyword" style="width: 60%;">
+                    </div>
+                </td>
+                <td class="td-center" style="border-bottom: none;">
+                    <a th:href="@{|/board/${boardType}/write|}" class="fw-bold btn btn-outline-primary" style="text-decoration-line: none;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
+                            <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325"/>
+                        </svg>
+                        글쓰기
+                    </a>
+                </td>
+            </tr>
+            </tfoot>
+        </table>
+        <div class="d-flex justify-content-center" th:if="${!allPosts.isEmpty()}">
+            <nav aria-label="Page navigation example">
+                <ul class="pagination">
+                    <!-- 처음 버튼 -->
+                    <li class="page-item" th:classappend="${currentPage == 1} ? 'disabled' : ''">
+                        <a class="page-link"
+                           th:href="@{'/board/' + ${boardType} + '/list?' +
+                           (${keyword.length() != 0} ? 'keyword='+${keyword}:'') +
+                           (${keywordType.length() != 0} ? '&keywordtype='+${keywordType}:'') +
+                           (${type.length() != 0} ? '&type='+${type}:'') +
+                           '&page=1'}">처음</a>
+                    </li>
+                    <!-- 이전 버튼 -->
+                    <li class="page-item" th:classappend="${currentPage == 1} ? 'disabled' : ''">
+                        <a class="page-link"
+                           th:href="@{'/board/' + ${boardType} + '/list?' +
+                           (${keyword.length() != 0} ? 'keyword='+${keyword}:'') +
+                           (${keywordType.length() != 0} ? '&keywordtype='+${keywordType}:'') +
+                           (${type.length() != 0} ? '&type='+${type}:'') +
+                           '&page=' + ${currentPage - 1}}">이전</a>
+                    </li>
+                    <!-- 페이지 번호 버튼들 -->
+                    <li class="page-item" th:each="i : ${#numbers.sequence(startPage, endPage)}" th:classappend="${i == currentPage} ? 'active' : ''">
+                        <a class="page-link"
+                           th:href="@{'/board/' + ${boardType} + '/list?' +
+                           (${keyword.length() != 0} ? 'keyword='+${keyword}:'') +
+                           (${keywordType.length() != 0} ? '&keywordtype='+${keywordType}:'') +
+                           (${type.length() != 0} ? '&type='+${type}:'') +
+                           '&page=' + ${i}}">[[${i}]]</a>
+                    </li>
+                    <!-- 다음 버튼 -->
+                    <li class="page-item" th:classappend="${currentPage == totalPages} ? 'disabled' : ''">
+                        <a class="page-link"
+                           th:href="@{'/board/' + ${boardType} + '/list?' +
+                           (${keyword.length() != 0} ? 'keyword='+${keyword}:'') +
+                           (${keywordType.length() != 0} ? '&keywordtype='+${keywordType}:'') +
+                           (${type.length() != 0} ? '&type='+${type}:'') +
+                           '&page=' + ${currentPage + 1}}">다음</a>
+                    </li>
+                    <!-- 마지막 버튼 -->
+                    <li class="page-item" th:classappend="${currentPage == totalPages} ? 'disabled' : ''">
+                        <a class="page-link"
+                           th:href="@{'/board/' + ${boardType} + '/list?' +
+                           (${keyword.length() != 0} ? 'keyword='+${keyword}:'') +
+                           (${keywordType.length() != 0} ? '&keywordtype='+${keywordType}:'') +
+                           (${type.length() != 0} ? '&type='+${type}:'') +
+                           '&page=' + ${totalPages}}">마지막</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</th:block>

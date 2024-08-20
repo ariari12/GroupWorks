@@ -1,0 +1,119 @@
+<html lang="kr" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}"
+>
+<th:block layout:fragment="css">
+</th:block>
+
+<th:block layout:fragment="content">
+<div class="mb-4">
+    <a href="/materialflow/new-order/1" class="btn btn-success">발주서 작성</a>
+    <a href="/materialflow/new-order/2" class="btn btn-primary">수주서 작성</a>
+</div>
+
+<div class="card mb-4">
+    <div class="card-header">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-truck" viewBox="0 0 16 16">
+            <path d="M0 3.5A1.5 1.5 0 0 1 1.5 2h9A1.5 1.5 0 0 1 12 3.5V5h1.02a1.5 1.5 0 0 1 1.17.563l1.481 1.85a1.5 1.5 0 0 1 .329.938V10.5a1.5 1.5 0 0 1-1.5 1.5H14a2 2 0 1 1-4 0H5a2 2 0 1 1-3.998-.085A1.5 1.5 0 0 1 0 10.5zm1.294 7.456A2 2 0 0 1 4.732 11h5.536a2 2 0 0 1 .732-.732V3.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5v7a.5.5 0 0 0 .294.456M12 10a2 2 0 0 1 1.732 1h.768a.5.5 0 0 0 .5-.5V8.35a.5.5 0 0 0-.11-.312l-1.48-1.85A.5.5 0 0 0 13.02 6H12zm-9 1a1 1 0 1 0 0 2 1 1 0 0 0 0-2m9 0a1 1 0 1 0 0 2 1 1 0 0 0 0-2"/>
+        </svg> 수주 목록
+    </div>
+    <div class="card-body">
+        <table id="table1" class="table table-hover" style="width: 100%;">
+            <thead>
+            <tr>
+                <th>수주 번호</th>
+                <th>거래처 상호</th>
+                <th>발주 담당자</th>
+                <th>발주 일자</th>
+
+                <th>납품 수주담당자</th>
+                <th>납기 예정 일자</th>
+                <th>납품 주소</th>
+
+                <th>납기 일자</th>
+                <th>총 액수</th>
+                <th>세 율</th>
+            </tr>
+            </thead>
+            <tbody>
+            <!--/*@thymesVar id="approval" type="kr.co.groupworks.workflow.dto.dto.WorkFlowDTO"*/-->
+            <tr th:onclick="load([[${list.id}]], [[${list.classification +1}]])" th:each="list : ${receiveList}">
+                <!--/*@thymesVar id="list" type="kr.co.groupworks.materialflow.dto.OrderDTO"*/-->
+                <td th:text="${list.getOrderCode()}"></td>
+                <!--/* 거래처 정보 */-->
+                <td th:text="${list.getManager().getBusiness().getBusinessName()}"></td>
+                <td th:text="${list.getManager().getName()}"></td>
+                <!--/* 발주 정보 */-->
+                <td th:text="${list.getOrderDate()}"></td>
+
+                <!--/* 납품 정보 */-->
+                <td th:text="${list.getEmployee().getName()}"></td>
+                <td th:text="${list.getDueDate()}"></td>
+                <td th:text="${list.getAddress()}"></td>
+                <td th:text="${list.getDeliveryDate()}"></td>
+
+                <!--/* 총 액수 */-->
+                <td th:text="${list.getTotalAmount()}"></td>
+                <td th:text="${list.getTex()}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="card mb-4">
+    <div class="card-header">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-truck" viewBox="0 0 16 16" transform="scale(-1,1)">
+            <path d="M0 3.5A1.5 1.5 0 0 1 1.5 2h9A1.5 1.5 0 0 1 12 3.5V5h1.02a1.5 1.5 0 0 1 1.17.563l1.481 1.85a1.5 1.5 0 0 1 .329.938V10.5a1.5 1.5 0 0 1-1.5 1.5H14a2 2 0 1 1-4 0H5a2 2 0 1 1-3.998-.085A1.5 1.5 0 0 1 0 10.5zm1.294 7.456A2 2 0 0 1 4.732 11h5.536a2 2 0 0 1 .732-.732V3.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5v7a.5.5 0 0 0 .294.456M12 10a2 2 0 0 1 1.732 1h.768a.5.5 0 0 0 .5-.5V8.35a.5.5 0 0 0-.11-.312l-1.48-1.85A.5.5 0 0 0 13.02 6H12zm-9 1a1 1 0 1 0 0 2 1 1 0 0 0 0-2m9 0a1 1 0 1 0 0 2 1 1 0 0 0 0-2"/>
+        </svg> 발주 목록
+    </div>
+    <div class="card-body">
+        <table id="table2" class="table table-hover" style="width: 100%;">
+            <thead>
+            <tr>
+                <th>발주 번호</th>
+                <th>거래처 상호</th>
+                <th>발주 담당자</th>
+                <th>발주 일자</th>
+
+                <th>납품 수주담당자</th>
+                <th>납기 예정 일자</th>
+                <th>납품 주소</th>
+
+                <th>납기 일자</th>
+                <th>총 액수</th>
+                <th>세 율</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:onclick="load([[${list.id}]], [[${list.classification +1}]])" th:each="list : ${sendList}">
+                <td th:text="${list.getOrderCode()}"></td>
+                <!--/* 거래처 상호 */-->
+                <td th:text="${list.getManager().getBusiness().getBusinessName()}"></td>
+
+                <!--/* 발주 담당자: 사원 */-->
+                <td th:text="${list.getEmployee().getName()}"></td>
+                <td th:text="${list.getOrderDate()}"></td>
+
+                <!--/* 수주 담당자 */-->
+                <td th:text="${list.getManager().getName()}"></td>
+
+                <!--/* 납품 정보 */-->
+                <td th:text="${list.getDueDate()}"></td>
+                <td th:text="${list.getAddress()}"></td>
+                <td th:text="${list.getDeliveryDate()}"></td>
+
+                <!--/* 총 액수 */-->
+                <td th:text="${list.getTotalAmount()}"></td>
+                <td th:text="${list.getTex()}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</th:block>
+
+<th:block layout:fragment="javascript">
+    <script src="/js/materialflow/tables.js"></script>
+</th:block>
+</html>

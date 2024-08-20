@@ -1,0 +1,43 @@
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<!--/* Section: Tables */-->
+<div class="card mb-4" th:fragment="tables">
+
+    <div class="card-header">
+        <i class="fas fa-table me-1"></i>
+        휴가 보유/사용 현황
+    </div>
+
+    <div class="card-body">
+        <table id="vacationStatus" class="table table-hover" style="width:100%">
+            <thead>
+            <tr>
+                <th>👤 이름</th>
+                <th>🆔 사번</th>
+                <th>🏬 부서</th>
+                <th>⭐ 직급</th>
+                <th>⏳ 잔여 연차</th>
+                <th>📅 연차 누적 사용 일수</th>
+                <th>🤒 병가 사용 일수</th>
+                <th>🛫 기타 휴가 사용 일수</th>
+
+            </tr>
+            </thead>
+
+
+            <tbody>
+                <tr>
+                    <td th:text="${vacationHistoryDTO.employeeName}">사원 이름</td>
+                    <td th:text="${vacationHistoryDTO.employeeId}">사번</td>
+                    <td th:text="${vacationHistoryDTO.departmentName}">부서</td>
+                    <td th:text="${vacationHistoryDTO.rankName}">직급</td>
+                    <td th:text="${vacationHistoryDTO.totalAnnual}">잔여 연차</td>
+                    <td th:text="${vacationHistoryDTO.annualDaysUsed}">연차 사용 일수</td>
+                    <td th:text="${vacationHistoryDTO.sickDaysUsed}">병가 사용 일수</td>
+                    <td th:text="${vacationHistoryDTO.otherDaysUsed}">기타 사용 일수</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+

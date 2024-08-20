@@ -1,0 +1,28 @@
+version: '3.8'
+services:
+  redis:
+    image: redis:latest
+    container_name: redis
+    ports:
+      - "6379:6379"
+
+  web:
+#    build:
+#      context: .
+#      dockerfile: Dockerfile
+    image: app
+    container_name: web
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - redis
+    environment:
+      - KEY_PROPERTY=${KEY_PROPERTY}
+      - SPRING_PROFILES_ACTIVE=prod
+      - SPRING_DATA_REDIS_HOST=redis
+      - SPRING_DATA_REDIS_PORT=6379
+
+networks:
+  default:
+    driver: bridge

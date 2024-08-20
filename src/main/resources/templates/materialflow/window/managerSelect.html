@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns="">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <!--/* Jquery CDN */-->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <!--/* Boot Strap 5.3.0 */-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <!--/* data tables library 5.3.0 */-->
+    <script src="https://cdn.datatables.net/v/bs5/dt-2.0.8/datatables.min.js"></script>
+    <script src="/js/materialflow/manager-select.js"></script>
+
+    <!--/* data tables library 5.3.0 */-->
+    <link href="https://cdn.datatables.net/v/bs5/dt-2.0.8/datatables.min.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/2.0.8/css/dataTables.dataTables.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/styles.css">
+    <style>
+        body, html {
+            overflow: hidden;
+            margin: 0;
+        }
+        form {
+            border: 1px solid #d2d2d2;
+            width: 50%;
+            height: 266px;
+            padding-top: 24px;
+            padding-left: 106px;
+        }
+        th {
+            text-align: center;
+            margin-left: 10px;
+        }
+        h3 {
+            font-weight: bolder;
+            margin: 10px;
+        }
+        .btn-del {
+            height: 27px;
+            padding: 2px 17px;
+        }
+    </style>
+
+    <title>[[${title}]]</title>
+</head>
+<body>
+    <h3>[[${subtitle}]]</h3>
+    <div class="card">
+        <div class="card-header">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-person-fill" viewBox="0 0 16 16">
+                <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0M9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1M11 8a3 3 0 1 1-6 0 3 3 0 0 1 6 0m2 5.755V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-.245S4 12 8 12s5 1.755 5 1.755"/>
+            </svg>거래처 담당자 목록
+        </div>
+        <input type="hidden" id="businessId" th:value="${businessId}">
+
+        <div class="card-body">
+            <table id="table" class="table table-hover" style="width:100%">
+                <thead>
+                <tr>
+                    <th>거래처 상호</th>
+                    <th>담당자 성명</th>
+                    <th>연락처</th>
+                    <th>이메일</th>
+                    <th>정보 삭제</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:if="${managerList.size() > 0}" th:each="list : ${managerList}" onclick="sendDataToParent(this)">
+                    <td th:text="${list.getBusiness().businessName}"></td>
+                    <td>
+                        <input type="hidden" th:value="${list.getId()}">
+                        <input style="border: none;" type="text" th:value="${list.getName()}" readonly>
+                    </td>
+                    <td th:text="${list.getPhone()}"></td>
+                    <td th:text="${list.getEmail()}"></td>
+                    <td th:onclick="delClick(event, [[${list.getId()}]])">
+                        <input class="btn-del btn btn-danger" type="button" value="삭제">
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <form id="managerForm" action="/materialflow/business-manager" method="post">
+        <h3 class="mb-3">거래처 담당자 등록</h3>
+        <div class="input-group mb-3">
+            <table>
+                <tr>
+                    <th>담당자 성명</th>
+                    <td><label><input type="text" size="10" placeholder="홍길동" required></label></td>
+                </tr>
+                <tr>
+                    <th>담당자 연락처</th>
+                    <td><label><input type="text" size="10" placeholder="010-0000-0000" required></label></td>
+                </tr>
+                <tr>
+                    <th>담당자 이메일</th>
+                    <td><label><input type="text" size="17" placeholder="example@example.com" required></label></td>
+                </tr>
+            </table>
+        </div>
+        <button class="btn btn-success" id="frmSub" type="submit">담당자 등록</button>
+    </form>
+
+    <div class="modal fade" id="modal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">거래처 담당자 정보 삭제 알림</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>거래처 담당자 정보를 삭제 하시겠습니까?<br/>
+                        <span style="color: #ba3d3d; font-weight: bolder;">※주의※ 정보를 삭제하면 복구할 수 없습니다.</span>
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button id="okBtn" class="btn btn-danger">정보 삭제</button>
+                    <button id="cns-Btn" class="btn btn-secondary">삭제 취소</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

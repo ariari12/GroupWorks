@@ -3,30 +3,45 @@ Chart.defaults.global.defaultFontFamily = '-apple-system,system-ui,BlinkMacSyste
 Chart.defaults.global.defaultFontColor = '#292b2c';
 
 document.addEventListener("DOMContentLoaded", function() {
-    approvalStatsByDepartment(
-        ["기술부서", "마케팅부서", "영업부서", "인사부서", "재무부서", "IT 지원부서",
-            "제품 관리부서", "고객 서비스부서", "법무부서", "연구개발부서"],
-        [4215, 8417, 6251, 5312, 9821, 14984, 2154, 7841, 5162, 3125,],
-        [2154, 7841, 5162, 3125, 8219, 12984, 2154, 7841, 5162, 3125,],
-        [1542, 4178, 2516, 1253, 2189, 9841, 2154, 7841, 5162, 3125,]
-    );
-    MyApprovalStats(
-        [33259, 30162, 33259, 30274, 33451, 32651, 31274, 34984, 38451, 36162, 32651, 31984],
-        [28682, 25849, 24159, 21849, 24159, 24849, 23159, 26682, 28849, 27682, 25849, 24159],
-        [18394, 18682, 14000, 13394, 12287, 10000, 11591, 12394, 13940, 14839, 15394, 16394]
-    );
-    totalApproval(
-        [12, 19, 3, 5, 2, 3]
-    );
-    totalApproveByThisYear(
-        [330000, 1900000, 200000, 500000, 1000000, 300000]
-    );
+
+    /* 부서별 결재 발송, 승인, 결재 건 */
+    getAjax("/work-flow/stat/1", function (data) {
+        approvalStatsByDepartment(
+            data.departmentList,
+            data.numberList.request,
+            data.numberList.approve,
+            data.numberList.reject
+        );
+    });
+    /* 올해 전체 결재 발송 구분 */
+    getAjax("/work-flow/stat/2", totalApproveByThisYear);
+    /* 월 별 결재 발송/승인/반려 건 */
+    getAjax("/work-flow/stat/4", function (data) {
+        MyApprovalStats(data.request, data.approval, data.rejection);
+    });
+    /* 내 누적 결재 발송 건 구분 */
+    getAjax("/work-flow/stat/5", totalApproval);
 });
 
+function getAjax(url, callback) {
+    $.ajax({
+        url: url,
+        type: 'get',
+        success: function (res) {
+            callback(res);
+        }, error: function (x, e, s) {
+            console.error(x);
+            console.error(e);
+            console.error(s);
+        }
+    });
+}
+
+/* 내 누적 결재 발송 건 구분 */
 function totalApproval(data) {
     // 캔버스 태그 추출
     var ctx = document.getElementById('totalApproval').getContext('2d');
-    
+
     // 색상
     var colors = [
         'rgba(255, 99, 132, 0.6)',
@@ -40,7 +55,7 @@ function totalApproval(data) {
     return new Chart(ctx, {
         type: 'pie',
         data: {
-            labels: ['업무 건', '재무 건', '예산 건', '구매 건', '보고 건', '특별 건'],
+            labels: ['업무', '재무', '예산', '구매', '보고', '특별'],
             datasets: [{
                 data: data,
                 backgroundColor: colors,
@@ -54,6 +69,7 @@ function totalApproval(data) {
     });
 }
 
+/* 올해 전체 결재 발송 구분 */
 function totalApproveByThisYear(data) {
     var ctx2 = document.getElementById('totalApproveByThisYear').getContext('2d');
 
@@ -84,6 +100,7 @@ function totalApproveByThisYear(data) {
     });
 }
 
+/* 월 별 결재 발송/승인/반려 건 */
 function MyApprovalStats(data1, data2, data3) {
     // Area Chart Example
     var ctx = document.getElementById("monthlyApprova");
@@ -145,11 +162,11 @@ function MyApprovalStats(data1, data2, data3) {
                 xAxes: [{
                     time: { unit: 'date' },
                     gridLines: { display: false },
-                    ticks: {  }
+                    ticks: { }
                 }],
                 yAxes: [{
                     ticks: {
-                        min: 0, maxTicksLimit: 100
+                        min: 0, maxTicksLimit: findMaxValue([data1, data2, data3])
                     },
                     gridLines: { color: "rgba(0, 0, 0, .125)", }
                 }],
@@ -203,7 +220,7 @@ function approvalStatsByDepartment(labels, data1, data2, data3) {
                 }],
                 yAxes: [{
                     ticks: {
-                        min: 0, maxTicksLimit: 15
+                        min: 0, maxTicksLimit: findMaxValue([data1, data2, data3])
                     },
                     gridLines: { display: true }
                 }],
@@ -211,4 +228,45 @@ function approvalStatsByDepartment(labels, data1, data2, data3) {
             legend: { display: false }
         }
     });
+}
+
+/* data 최대 값에 따른 범위 */
+function findMaxValue(datasets) {
+    let maxValue = -Infinity;
+    datasets.forEach(data => {
+        const datasetMax = Math.max(...data);
+        if (datasetMax > maxValue) {
+            maxValue = datasetMax;
+        }
+    });
+
+    if (maxValue <= 10) {
+        return 3;
+    } else if (maxValue <= 50) {
+        return 10;
+    } else if (maxValue <= 100) {
+        return 15;
+    } else {
+        return 20;
+    }
+}
+
+// Call the dataTables jQuery plugin
+$(document).ready(function() {
+    // 부서 승인 결재 목록
+    $('#departmentApprovedTable').DataTable({
+        info: false,
+        ordering: true,
+        order: [[5, 'desc']],
+        paging: true,
+        scrollX: true,
+        scrollCollapse: true,
+        scrollY: 450,
+        lengthMenu: [ 10, 15, 20, 25, 30 ],
+        displayLength: 15,
+    });
+});
+
+function load(pk) {
+    window.location = "/work-flow/detail/" + pk;
 }

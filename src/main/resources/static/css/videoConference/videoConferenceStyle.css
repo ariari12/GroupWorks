@@ -1,0 +1,30 @@
+#localStream, #remoteStream {
+    border-style: solid;
+    border-color: #000000;
+    width: 640px;
+    height: 360px;
+    display: none; /* Ensure it is hidden initially */
+}
+.remoteStreamDiv{
+    border-style: solid;
+    border-color: #000000;
+}
+
+video{
+    border-style: solid;
+    border-color: #000000;
+}
+
+
+.video-container {
+    margin-top: 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+}
+
+.btn-container {
+    display: flex;
+    gap: 20px;
+}

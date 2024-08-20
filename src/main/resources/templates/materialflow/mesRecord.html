@@ -1,0 +1,68 @@
+<html lang="kr" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}"
+>
+<th:block layout:fragment="css">
+    <style>
+        .description {
+            background: rgb(0 0 0 / 3%);
+            border: 1px solid #d2d2d2;
+            border-radius: 15px;
+            padding: 12px 15px;
+        }
+    </style>
+</th:block>
+
+<th:block layout:fragment="content">
+<div class="description mb-2">
+    <span>발주/수주 코드를 클릭하면 발주서/수주서 기록 페이지가 나타납니다.<br/>
+        품목코드와 품목명을 클릭하면 재고 현황을 보실 수 있습니다.</span>
+</div>
+
+<div class="card mb-4">
+    <div class="card-header">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-list-task" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M2 2.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5V3a.5.5 0 0 0-.5-.5zM3 3H2v1h1z"/>
+            <path d="M5 3.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5M5.5 7a.5.5 0 0 0 0 1h9a.5.5 0 0 0 0-1zm0 4a.5.5 0 0 0 0 1h9a.5.5 0 0 0 0-1z"/>
+            <path fill-rule="evenodd" d="M1.5 7a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H2a.5.5 0 0 1-.5-.5zM2 7h1v1H2zm0 3.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm1 .5H2v1h1z"/>
+        </svg> MES 생산기록
+    </div>
+    <div class="card-body">
+        <table id="table" class="table table-hover" style="width: 100%">
+            <thead>
+            <tr>
+                <th>발주/수주 코드</th>
+                <th>품목 코드</th>
+                <th>품목 명</th>
+
+                <th>공정 장소</th>
+
+                <th>생산 수량</th>
+                <th>불량 수량</th>
+                <th>단가</th>
+                <th>제조 기록 일자</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="list : ${mesList}">
+                <td th:onclick="orderTabMove([[${list.orderUrl}]])" th:text="${list.getOrderCode()}"></td>
+                <td th:onclick="bomWindow([[${list.bomItemUrl}]])" th:text="${list.getItemCode()}"></td>
+                <td th:onclick="bomWindow([[${list.bomItemUrl}]])" th:text="${list.getItemCode()}"></td>
+
+                <td th:text="${list.getProcessLocation()}"></td>
+
+                <td th:text="${list.getQuantity()}"></td>
+                <td th:text="${list.getDefectsNum()}"></td>
+                <td ><span th:text="${list.getUnitPrice()}"></span> ￦</td>
+                <td th:text="${list.getManufactureDate()}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</th:block>
+
+<th:block layout:fragment="javascript">
+    <script src="/js/materialflow/mes-record.js"></script>
+</th:block>
+</html>

@@ -6,7 +6,6 @@
 >
 
 <th:block layout:fragment="css">
-    <!--/* !선택 필요한 style code 와 link 는 여기에 추가 */-->
     <style>
         .file-list {
             margin-top: -6px;
@@ -29,10 +28,9 @@
 
 <th:block layout:fragment="content">
 
-    <!--/*@thymesVar id="workFlowDto" type="kr.co.groupworks.dto.workflow.dto.WorkFlowDTO"*/-->
+    <!--/*@thymesVar id="workFlowDto" type="kr.co.groupworks.workflow.dto.dto.WorkFlowDTO"*/-->
     <form id="approveForm" class="row g-3 needs-validation" th:action="@{/work-flow/request}" th:object="${workFlowDto}"
         enctype="multipart/form-data" method="post" novalidate>
-
         <!--/* 결재 구분 */-->
         <div class="input-group mb-3" style="width: 1200px;">
             <label class="input-group-text" for="category">결재 구분</label>
@@ -147,7 +145,7 @@
                 <span class="input-group-text">비용</span>
                 <input type="text" class="form-control prevent-enter-submit" id="cost" name="cost" th:field="*{cost}"
                     aria-label="Amount (to the nearest dollar)">
-                <span class="input-group-text">\</span>
+                <span class="input-group-text">￦</span>
             </div>
             <div class="form-text">필요 시 작성하세요.</div>
         </div>
@@ -185,7 +183,6 @@
 </th:block>
 
 <th:block layout:fragment="javascript">
-    <!--/* Add External link 필요한 추가 링크는 여기에... */-->
     <script>
         const userNum = "[[${workFlowDto.employeeId}]]";
         const deptNum = "[[${workFlowDto.departmentId}]]";

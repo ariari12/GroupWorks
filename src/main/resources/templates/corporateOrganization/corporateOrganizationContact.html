@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<th:block layout:fragment="css">
+    <style>
+        .table {
+            border-spacing: 0 10px; /* 행 간의 간격 설정 */
+            width: 100%;
+            border-collapse: separate; /* 테두리가 겹치지 않도록 설정 */
+        }
+        .table td, .table th {
+            padding: 10px; /* 셀 내부 패딩 */
+            background-color: #f9f9f9; /* 배경색 설정 */
+            border: 1px solid #ddd; /* 셀 테두리 */
+        }
+        .table th {
+            background-color: #2b2f32; /* 헤더 배경색 */
+            color: white; /* 헤더 텍스트 색상 */
+        }
+    </style>
+</th:block>
+
+<th:block layout:fragment="javascript">
+
+</th:block>
+
+<th:block layout:fragment="content">
+    <div>
+        <h1>연락망</h1>
+        <hr>
+        <div class="container" style="margin-top: 50px">
+            <table class="table">
+                <tr>
+                    <th>부서명</th>
+                    <th>연락처</th>
+                </tr>
+                <th:block th:each="department : ${departmentDTOList}">
+                    <tr>
+                        <td>
+                            <span th:text="${department.getDepartmentName()}"></span>
+                            <small th:text="'('+${department.getLocation()}+')'"></small>
+                        </td>
+                        <td th:text="${department.getContactNumber()}"></td>
+                    </tr>
+                </th:block>
+
+            </table>
+        </div>
+
+
+    </div>
+</th:block>
+</html>
