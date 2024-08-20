@@ -5,30 +5,18 @@
     <div class="card-header">
         <i class="fas fa-table me-1"></i>
         7월 출근 데이터
-        <div class="container mt-3">
-            <div class="row">
-                <form id="dataForm" method="post">
-                    <div class="col-md-4">
-                        <label for="monthYearPicker">데이터조회 : </label>
-                        <input type="text" id="monthYearPicker" class="form-control"/>
-                        <input type="submit" class="btn btn-primary" value="조회">
-                        <input type="button" class="btn btn-primary" value="근무추가">
-                    </div>
-                </form>
-            </div>
-        </div>
     </div>
 
     <div class="card-body">
         <table id="datatablesCommute" class="table table-hover" style="width:100%">
             <thead>
             <tr>
-                <th>📅날짜</th>
+                <th>📅요청날짜</th>
                 <th>⏰출근시각</th>
                 <th>🕔퇴근시각</th>
                 <th>⏳근무시간</th>
                 <th>⏱️초과근무시간</th>
-                <th>📃상태</th>
+                <th>📃사유</th>
             </tr>
             </thead>
 
@@ -43,7 +31,7 @@
                     <span th:case="0">📥 신청됨</span>
                     <span th:case="1">🔍 검토중</span>
                     <span th:case="2">✅ 승인</span>
-                    <span th:case="3">❌ 미승인</span>
+                    <span th:case="3">서버오류</span>
                 </td>
             </tr>
             </tbody>
