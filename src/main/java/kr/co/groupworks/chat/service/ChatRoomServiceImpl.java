@@ -33,4 +33,17 @@ public class ChatRoomServiceImpl implements ChatRoomService {
         return chatRoomRepository.findByParticipantsContaining(userId);
     }
 
+    @Override
+    public void removeParticipant(Long chatRoomId, Long participantId) {
+        // 채팅방 조회
+        ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid chat room ID"));
+
+        // 참가자 제거
+        chatRoom.removeParticipant(participantId);
+
+        // 변경사항 저장
+        chatRoomRepository.save(chatRoom);
+    }
+
 }

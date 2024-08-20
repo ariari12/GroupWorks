@@ -7,11 +7,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("/chat")
-public class testController {
+public class ChatMainController {
 
     @GetMapping("/list")
-    public String getTestChatPage() {
-        return "chat/testChat";
+    public String chatList() {
+        return "chat/list";
     }
 
 }
