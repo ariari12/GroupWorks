@@ -57,6 +57,7 @@ public class MainController {
         model.addAttribute("workflowList", workFlowRepository.recentWorkflowList(sessionEmployeeDTO.getEmployeeId()));
         model.addAttribute("mailList", mailRepository.findLatestMails(sessionEmployeeDTO.getEmail(), PageRequest.of(0, 5)));
         model.addAttribute("boardList", boardRepository.recentNotices());
+        log.info("asdsadasas : {}",boardRepository.recentNotices().toString());
         return "main";
     }
 

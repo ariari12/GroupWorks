@@ -2,8 +2,8 @@ package kr.co.groupworks.calendar.entity;
 
 
 import jakarta.persistence.*;
-import kr.co.groupworks.BaseEntity;
 import kr.co.groupworks.calendar.dto.CalendarFormDTO;
+import kr.co.groupworks.common.BaseEntity;
 import kr.co.groupworks.employee.entity.Employee;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
