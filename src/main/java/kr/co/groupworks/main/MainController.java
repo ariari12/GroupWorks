@@ -51,8 +51,9 @@ public class MainController {
 //        발신, 수신 여부 상관없이 최신순 5개 메일 가져오기
         session.setAttribute("employee", sessionEmployeeDTO);
         log.info("employee" + sessionEmployeeDTO);
-        model.addAttribute("title", "MAIN");
-        model.addAttribute("subtitle", "SUBMAIN");
+        /* Main Title 안씀 */
+//        model.addAttribute("title", "MAIN");
+//        model.addAttribute("subtitle", "SUBMAIN");
         model.addAttribute("workflowList", workFlowRepository.recentWorkflowList(sessionEmployeeDTO.getEmployeeId()));
         model.addAttribute("mailList", mailRepository.findLatestMails(sessionEmployeeDTO.getEmail(), PageRequest.of(0, 5)));
         model.addAttribute("boardList", boardRepository.recentNotices());
