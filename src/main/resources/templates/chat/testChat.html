@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<head>
+</head>
+<body>
+    <th:block layout:fragment="css">
+        <style>
+            /* 간단한 스타일을 추가하여 레이아웃 설정 */
+            #chat-room-list {
+                width: 30%;
+                float: left;
+                border-right: 1px solid #ccc;
+                padding: 10px;
+            }
+
+            #chat-room {
+                width: 70%;
+                float: right;
+                padding: 10px;
+            }
+
+            #chat-room-list ul {
+                list-style-type: none;
+                padding: 0;
+            }
+
+            #chat-room-list ul li {
+                padding: 8px;
+                cursor: pointer;
+                border-bottom: 1px solid #ddd;
+            }
+
+            #chat-room-list ul li:hover {
+                background-color: #f1f1f1;
+            }
+
+            #chat-room-messages {
+                height: 300px;
+                border: 1px solid #ccc;
+                overflow-y: scroll;
+                margin-bottom: 10px;
+                padding: 10px;
+            }
+
+            #message-input {
+                width: calc(100% - 110px);
+                margin-right: 10px;
+            }
+
+            #send-button {
+                width: 100px;
+            }
+        </style>
+    </th:block>
+
+    <th:block layout:fragment="javascript">
+        <!-- SockJS와 STOMP 라이브러리를 CDN에서 가져옴 -->
+        <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1.4.0/dist/sockjs.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
+
+        <script th:inline="javascript">
+            $(document).ready(function () {
+                $('#message-input').keypress(function(e){
+                    if (e.key === 'Enter' && e.shiftKey) {
+                        return true;
+                    } else if(e.keyCode === 13){
+                        sendMessage();
+                        return false;
+                    }
+                });
+            });
+
+            let stompClient = null;
+            let currentRoomId = null;
+            let currentSubscription = null; // 현재 구독을 저장할 변수
+
+            function connect() {
+                var socket = new SockJS('/ws');
+                stompClient = Stomp.over(socket);
+                stompClient.connect({}, function (frame) {
+                    console.log('Connected: ' + frame);
+
+                }, function(error) {
+                    console.log('STOMP error: ' + error); // 연결 실패 시 에러 로그
+                });
+            }
+
+            function sendMessage() {
+                let content = document.getElementById('message-input').value;
+
+                if (stompClient && stompClient.connected && currentRoomId && content.length !== 0) {
+                    stompClient.send("/app/chat.sendMessage", {},
+                        JSON.stringify(
+                            {
+                                'senderId': [[${session.employee.getEmployeeId()}]],
+                                'chatRoomId': currentRoomId,
+                                'content': content
+                            }
+                        )
+                    );
+                    document.getElementById('message-input').value = '';
+                } else {
+                    console.log('STOMP client is not connected or no room selected');
+                }
+            }
+
+            function showMessage(message) {
+                console.log('Showing message:', message); // 디버깅 로그 추가
+                const messagesDiv = document.getElementById('chat-room-messages');
+                const messageElement = document.createElement('div');
+
+                // 부서명 직급 이름 : 내용
+                const formattedMessage = `${message.senderDepartment} ${message.senderRank} ${message.senderName}: ${message.content}`;
+
+                messageElement.textContent = formattedMessage
+                messagesDiv.appendChild(messageElement);
+                messagesDiv.scrollTop = messagesDiv.scrollHeight; // 메시지를 추가할 때 자동으로 스크롤
+            }
+
+            function loadPreviousMessages(roomId) {
+                fetch(`/messages/${roomId}`)
+                    .then(response => response.json())
+                    .then(messages => {
+                        const messagesDiv = document.getElementById('chat-room-messages');
+                        messagesDiv.innerHTML = ''; // 기존 메시지 제거
+                        messages.forEach(showMessage); // 이전 메시지 표시
+                    })
+                    .catch(error => console.error('Error loading messages:', error));
+            }
+
+            function joinRoom(roomId) {
+                currentRoomId = roomId;
+                document.getElementById('room-name').textContent = "Chat Room " + roomId;
+
+                // 이전 구독 해제
+                if (currentSubscription) {
+                    currentSubscription.unsubscribe();
+                }
+
+                // 이전 메시지 로드
+                loadPreviousMessages(roomId);
+
+                // 방에 대한 구독 설정
+                if (stompClient && stompClient.connected) {
+                    currentSubscription = stompClient.subscribe(`/topic/rooms/${roomId}`, function (message) {
+                        showMessage(JSON.parse(message.body)); // 메시지 처리
+                    });
+                } else {
+                    console.log('STOMP client is not connected');
+                }
+            }
+
+            // 채팅방 리스트를 동적으로 추가
+            document.addEventListener('DOMContentLoaded', function () {
+                const rooms = document.getElementById('rooms');
+                [1, 2, 3].forEach(roomId => {
+                    const li = document.createElement('li');
+                    li.textContent = 'Room ' + roomId;
+                    li.onclick = () => joinRoom(roomId);
+                    rooms.appendChild(li);
+                });
+
+                // 메시지 전송 이벤트 설정
+                document.getElementById('send-button').addEventListener('click', sendMessage);
+
+                // 페이지 로드 시 WebSocket 연결
+                connect();
+            });
+        </script>
+    </th:block>
+
+    <th:block layout:fragment="content">
+
+        <div id="chat-room-list">
+            <h3>Chat Rooms</h3>
+            <ul id="rooms">
+                <!-- 여기에 채팅방 리스트가 동적으로 추가될 것입니다. -->
+            </ul>
+        </div>
+
+        <div id="chat-room">
+            <h3 id="room-name">Select a chat room</h3>
+            <div id="chat-room-messages">
+                <!-- 여기에 메시지가 추가될 것입니다. -->
+            </div>
+            <input type="text" id="message-input" placeholder="Enter your message here...">
+            <button id="send-button">Send</button>
+        </div>
+    </th:block>
+
+</body>
+</html>
