@@ -157,7 +157,7 @@ public class BoardRepositoryImpl implements BoardQueryDsl {
         return queryFactory
                 .select(b).from(b)
                 .where(b.boardType.eq(BoardType.NOTICE))
-                .orderBy(b.createDate.desc(), b.updateDate.asc())
+                .orderBy(b.createDate.desc())
                 .limit(5).fetch();
     }
 

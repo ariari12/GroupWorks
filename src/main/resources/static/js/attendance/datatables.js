@@ -5,13 +5,15 @@ $(document).ready(function() {
     $('#datatablesCommute').DataTable({
         info: false,
         ordering: true,
-        order: [[0, 'desc']],
+        order: [[0, 'asc']],
         scrollX: true,
         scrollCollapse: true,
         scrollY: 450,
         dom: 'rtip',
         pageLength: 31,
         paging: false,
-        columnDefs: [{className: 'text-center', targets: [0, 1, 2, 3, 4]}]
+        columnDefs: [
+            { className: 'text-center', targets: '_all' }
+        ]
     });
 });

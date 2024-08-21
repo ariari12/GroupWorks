@@ -1,56 +1,40 @@
 package kr.co.groupworks.chat.entity;
 
-import jakarta.persistence.*;
-import kr.co.groupworks.department.entity.Department;
 
-import java.time.LocalDateTime;
+import jakarta.persistence.*;
+import lombok.Data;
+
 import java.util.Set;
 
+@Data
 @Entity
 @Table(name = "chat_room")
 public class ChatRoom {
 
     @Id
-    @GeneratedValue(strategy =  GenerationType.IDENTITY)
-    @Column(name = "room_id")
-    private Long roomId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "chat_room_id")
+    private Long chatRoomId;
 
-    @Column(nullable = false, name = "room_name")
-    private String roomName;
+    @Column(name = "name")
+    private String name;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false, name = "room_type")
-    private ChatRoomType roomType;
+    @ElementCollection
+    @CollectionTable(name = "chat_room_participants",
+            joinColumns = @JoinColumn(name = "chat_room_id"))
+    @Column(name = "participant_id")
+    private Set<Long> participants;
 
-    @Column(name = "create_at", nullable = false, updatable = false)
-    private LocalDateTime createAt  = LocalDateTime.now();
 
-    // @ManyToOne(fetch = FetchType.LAZY)
-    @ManyToOne()
-    @JoinColumn(name = "department_id")
-    private Department department;
+    // 새로운 참가자를 채팅방에 추가.
+    public ChatRoom addParticipant(Long participantId) {
+        this.participants.add(participantId);
+        return this;
+    }
 
-    // @OneToMany(mappedBy = "chatRoom", fetch = FetchType.LAZY)
-    @OneToMany(mappedBy = "chatRoom")
-    private Set<ChatRoomMember> members;
-
-    // @OneToMany(mappedBy = "chatRoom", fetch = FetchType.LAZY)
-    @OneToMany(mappedBy = "chatRoom")
-    private Set<ChatRoomAlias> aliases;
-
-    // @OneToMany(mappedBy = "chatRoom", fetch = FetchType.LAZY)
-    @OneToMany(mappedBy = "chatRoom")
-    private Set<ChatMessage> messages;
-
-    // @OneToMany(mappedBy = "chatRoom", fetch = FetchType.LAZY)
-    @OneToMany(mappedBy = "chatRoom")
-    private Set<ChatRoomAdmin> admins;
-
-}
-
-// 채팅방 타입 ( 1:1 / 부서 / 협업 )
-enum ChatRoomType {
-    ONE_TO_ONE,
-    DEPARTMENT,
-    COLLABORATION
+    // 참가자를 채팅방에서 제거
+    public ChatRoom removeParticipant(Long participantId) {
+        this.participants.remove(participantId);
+        return this;
+    }
 }

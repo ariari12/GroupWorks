@@ -5,14 +5,76 @@
 
 <th:block layout:fragment="css">
     <style>
-        /* CSS style */
+        table.dataTable td, table.dataTable th {
+            text-align: center;
+        }
     </style>
 </th:block>
 
 <th:block layout:fragment="javascript">
     <script src="/js/attendance/datatables.js?v=<%=System.currentTimeMillis() %>"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+
+        $(document).ready(function() {
+            function loadAttendanceData(month) {
+                $.ajax({
+                    url: '/api/commute/list',
+                    data: { month: month },
+                    success: function(data) {
+                        var tbody = $('#datatablesCommute tbody');
+                        tbody.empty(); // 기존 데이터를 지우고 새 데이터로 채움
+
+                        $('#monthText').text(month + " 출근 데이터");
+
+                        data.forEach(function(item) {
+                            var row = `<tr>
+                                <td>${item.formattedDate}</td>
+                                <td>${item.formattedStartTime}</td>
+                                <td>${item.formattedEndTime}</td>
+                                <td>${item.workHours}</td>
+                                <td>${item.overtimeHours}</td>
+                                <td>${item.status}</td>
+                            </tr>`;
+                            tbody.append(row);
+                        });
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("데이터 로드 실패:", status, error);
+                    }
+                });
+
+                function attendanceData() {
+                    let date = $('#monthYearPicker').val();
+                    $.ajax({
+                        url: '/api/commute/list?month' + date,
+                        data: {month: month},
+                        success: function (data) {
+                            var tbody = $('#datatablesCommute tbody');
+                            tbody.empty(); // 기존 데이터를 지우고 새 데이터로 채움
+                            data.forEach(function (item) {
+                                var row = `<tr>
+                                <td>${item.formattedDate}</td>
+                                <td>${item.formattedStartTime}</td>
+                                <td>${item.formattedEndTime}</td>
+                                <td>${item.workHours}</td>
+                                <td>${item.overtimeHours}</td>
+                                <td>${item.status}</td>
+                            </tr>`;
+                                tbody.append(row);
+                            });
+                        },
+                        error: function (xhr, status, error) {
+                            console.error("데이터 로드 실패:", status, error);
+                        }
+                    });
+                }
+            }
+
+            // 페이지 로드 시 현재 월의 데이터를 불러옵니다.
+            var currentMonth = new Date().toISOString().slice(0, 7); // YYYY-MM 형식
+            loadAttendanceData(currentMonth);
+
+            // 날짜 선택기 설정
             flatpickr("#monthYearPicker", {
                 locale: "ko", // 한국어 설정
                 plugins: [
@@ -21,79 +83,137 @@
                         dateFormat: "Y-m", // 형식 YYYY-MM
                         altFormat: "Y년 F", // 표시 형식 Month YYYY
                     })
-                ]
+                ],
+                onChange: function(selectedDates, dateStr, instance) {
+                    loadAttendanceData(dateStr); // 날짜 선택 시 해당 월의 데이터를 불러옵니다.
+                }
             });
 
-            document.getElementById('monthYearPicker').addEventListener('change', function(e) {
-                filterDataByMonthYear(e.target.value);
+            // 수정 시작시간.
+            flatpickr("#startTimepicker", {
+                locale: "ko",                    // 한국어 설정,
+                enableTime: true,                // 시간 선택 활성화
+                dateFormat: "Y-m-d\\TH:i:S",     // 날짜 및 시간 형식 설정
+                time_24hr: true,                 // 24시간 형식 사용 (12시간 형식을 원하면 false로 설정)
+                minuteIncrement: 1               // 분 선택 간격 설정 (1분 단위로 선택 가능)
             });
 
-            function filterDataByMonthYear(selectedDate) {
-                console.log("선택된 날짜:", selectedDate); // YYYY-MM 형식
-            }
+            // 수정 종료 시간.
+            flatpickr("#endTimepicker", {
+                locale: "ko",                    // 한국어 설정,
+                enableTime: true,                // 시간 선택 활성화
+                dateFormat: "Y-m-d\\TH:i:S",     // 날짜 및 시간 형식 설정
+                time_24hr: true,                 // 24시간 형식 사용 (12시간 형식을 원하면 false로 설정)
+                minuteIncrement: 1               // 분 선택 간격 설정 (1분 단위로 선택 가능)
+            });
 
-            function filterData() {
-                const selectedDate = document.getElementById('monthYearPicker').value;
-                filterDataByMonthYear(selectedDate);
-            }
+            // 근무추가 버튼 클릭.
+            $("#addWork").on('click', function () {
+
+                // 입력된 근태 시각.
+                let startDate = $("#startTimepicker").val();
+                let endDate = $("#endTimepicker").val();
+                let reason = $("#reason").val();
+
+                // 유효성 검사.
+                if (!startDate || !startDate.trim()) {
+                    alert("근무 시작 시간을 입력해주세요.");
+                    return;
+                } else if (!endDate || !endDate.trim()) {
+                    alert("근무 종료 시간을 입력해주세요.");
+                    return;
+                } else if (startDate >= endDate) {
+                    alert("근무 종료 시간이 근무 시작시간보다 빠름니다.");
+                    return;
+                }
+
+                // 서버에 전송될 데이터.
+                const requestData = {
+                    'date': startDate,          // 적용일
+                    'clockInTime': startDate,   // 시작 시간
+                    'clockOutTime': endDate,    // 종료 시간
+                    'reason': reason            // 사유
+                };
+
+                // 근태 추가 신청.
+                $.ajax({
+                    url: '/api/commute/add-requests',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(requestData),
+                    success: function (response) {
+                        alert("근태 추가 신청이 성공적으로 완료되었습니다.");
+                        location.reload(true);
+                    },
+                    error: function (xhr, status, error) {
+                        alert(`문제가 발생했습니다: ${xhr.responseText || error}`);
+                    }
+                }); // end ajax
+            });
         });
-    </script>
 
-    <script>
-        $(document).ready(function() {
-            $('#dataForm').on('submit', function(event) {
-                var monthYearPickerValue = $('#monthYearPicker').val();
-                var formAction = 'commute/' + monthYearPickerValue;
-                $(this).attr('action', formAction);
-            });
-        });
+
     </script>
 </th:block>
 
 <th:block layout:fragment="content">
+    <div class="card mb-4" th:fragment="tables">
+        <div class="card-header">
+            <i class="fas fa-table me-1"></i>
+            <span id="monthText">출근 데이터</span>
+            <div class="container mt-3">
+                <div class="row">
+                    <div class="d-flex align-items-center">
+                        <label for="monthYearPicker" class="me-2">데이터조회 : </label>
+                        <input type="text" id="monthYearPicker" class="form-control me-2" style="width: auto;"/>
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                            근무추가
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-    <div class="row">
-        <h5>근태 현황</h5>
-        <hr>
-        <div class="col-sm-3 mb-3 mb-sm-0">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">이번주 누적</h5>
-                    <p class="card-text">6h 48m</p>
+        <!-- 근무추가 -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">근무 추가</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div style="margin: 10px;"><span>⏰ 출근시각 </span><input type="text" class="w-100%" id="startTimepicker"/></div>
+                        <div style="margin: 10px;"><span>🕔 퇴근시각 </span><input type="text" class="w-100%" id="endTimepicker"/></div>
+                        <div style="margin: 10px;">
+                            <p>사유</p>
+                            <textarea id="reason" cols="34" rows="5" style="margin-top: -10px;"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="addWork" class="btn btn-primary">추가</button>
+                    </div>
                 </div>
             </div>
-            <br>
         </div>
-        <div class="col-sm-3 mb-3 mb-sm-0">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">이번주 초과</h5>
-                    <p class="card-text">0h 0m</p>
-                </div>
-            </div>
-            <br>
-        </div>
-        <div class="col-sm-3 mb-3 mb-sm-0">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">이번달 누적</h5>
-                    <p class="card-text">52h 1m</p>
-                </div>
-            </div>
-            <br>
-        </div>
-        <div class="col-sm-3 mb-3 mb-sm-0">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">이번달 연장</h5>
-                    <p class="card-text">0h 0m</p>
-                </div>
-            </div>
-            <br>
+
+
+        <div class="card-body">
+            <table id="datatablesCommute" class="table table-hover" style="width:100%">
+                <thead>
+                <tr>
+                    <th>📅날짜</th>
+                    <th>⏰출근시각</th>
+                    <th>🕔퇴근시각</th>
+                    <th>⏳근무시간</th>
+                    <th>⏱️초과근무시간</th>
+                    <th>📃상태</th>
+                </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
         </div>
     </div>
-
-
-    <th:block th:replace="~{attendance/fragments/attendanceTables.html::tables}">
-    </th:block>
 </th:block>

@@ -45,7 +45,230 @@
 
 <th:block layout:fragment="javascript">
     <!-- 채팅.js -->
-    <script src="/js/chat/chat.js?v=<%=System.currentTimeMillis() %"></script>
+    <!--<script src="/js/chat/chat.js?v=<%=System.currentTimeMillis() %"></script>-->
+
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1.4.0/dist/sockjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
+
+    <script th:inline="javascript">
+
+        $(document).ready(function () {
+            $('#messageInput').keypress(function(e){
+                if (e.key === 'Enter' && e.shiftKey) {
+                    return true;
+                } else if(e.keyCode === 13){
+                    sendMessage();
+                    return false;
+                }
+            });
+        });
+
+        let stompClient = null;
+        let currentRoomId = null;
+        let currentSubscription = null;
+        let previousDate = null; // 전역으로 정의
+
+        function connect() {
+            var socket = new SockJS('/ws');
+            stompClient = Stomp.over(socket);
+            stompClient.connect({}, function (frame) {
+                console.log('Connected: ' + frame);
+                loadChatRooms();
+            }, function(error) {
+                console.log('STOMP error: ' + error);
+            });
+        }
+
+        function loadChatRooms() {
+            const userId = [[${session.employee.getEmployeeId()}]];
+            // API 호출
+            fetch(`/chatrooms/user/${userId}`)
+                .then(response => response.json())
+                .then(rooms => {
+                    const chatListElement = document.getElementById('chatList');
+                    chatListElement.innerHTML = ''; // 기존 목록 비우기
+                    rooms.forEach(room => {
+                        const listItem = document.createElement('li');
+                        listItem.classList.add('list-group-item');
+                        listItem.textContent = room.name;
+                        listItem.setAttribute('data-chat-id', room.chatRoomId);
+                        listItem.onclick = () => joinRoom(room.chatRoomId, room.name);
+                        listItem.addEventListener('click', function() {
+                            loadChatHistory(room.chatRoomId);
+                        });
+                        chatListElement.appendChild(listItem);
+                    });
+                })
+                .catch(error => console.error('Error loading chat rooms:', error));
+        }
+
+        function loadChatHistory(chatId) {
+            fetch(`/messages/${chatId}`)
+                .then(response => response.json())
+                .then(messages => {
+                    const chatBox = document.getElementById('chat-room-messages');
+                    chatBox.innerHTML = '';
+
+                    previousDate = null; // 날짜 초기화
+
+                    messages.forEach(message => {
+                        previousDate = showMessage(message, previousDate, chatBox);
+                    });
+                })
+                .catch(error => console.error('Error loading messages:', error));
+        }
+
+        function sendMessage() {
+            const content = document.getElementById('messageInput').value;
+            const senderId = [[${session.employee.getEmployeeId()}]]; // 세션에서 사용자 ID를 가져오는 방법
+
+            if (stompClient && stompClient.connected && currentRoomId && content.trim().length > 0) {
+                stompClient.send("/app/chat.sendMessage", {},
+                    JSON.stringify({
+                        'senderId': senderId,
+                        'chatRoomId': currentRoomId,
+                        'content': content
+                    })
+                );
+                document.getElementById('messageInput').value = '';
+            } else {
+                console.log('STOMP client is not connected or no room selected');
+            }
+        }
+
+        function showMessage(message, previousDate, messagesDiv) {
+            const messageElement = document.createElement('div');
+
+            const messageDate = formatDate(message.timestamp);
+
+            if (previousDate !== messageDate) {
+                insertDateSeparator(messageDate, messagesDiv);
+            }
+
+            let time = formatTime(message.timestamp);
+
+            if (message.senderId !== [[${session.employee.getEmployeeId()}]]) {
+                // 상대방의 메시지
+                messageElement.innerHTML = `
+        <div style="margin-bottom: 5px;">
+            <span>${message.senderDepartment} ${message.senderRank} ${message.senderName}</span>
+        </div>
+        <div class="incoming_msg">
+            <div class="received_msg">
+                <div class="received_withd_msg">
+                    <p>${message.content}</p>
+                    <span class="received_sent_time_date">${time}</span>
+                </div>
+            </div>
+        </div>
+    `;
+            } else {
+                // 내 메시지
+                messageElement.innerHTML = `
+        <div class="outgoing_msg">
+            <div class="sent_msg">
+                <p>${message.content}</p>
+                <span class="sent_time_date">${time}</span>
+            </div>
+        </div>
+    `;
+            }
+
+            messagesDiv.appendChild(messageElement);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+
+            return messageDate; // 현재 메시지의 날짜를 반환
+        }
+
+        function joinRoom(roomId, roomName) {
+            currentRoomId = roomId;
+            document.getElementById('room-name').textContent = roomName;
+
+            if (currentSubscription) {
+                currentSubscription.unsubscribe();
+            }
+
+            loadChatHistory(roomId);
+
+            if (stompClient && stompClient.connected) {
+                currentSubscription = stompClient.subscribe(`/topic/rooms/${roomId}`, function (message) {
+                    const messagesDiv = document.getElementById('chat-room-messages');
+                    previousDate = showMessage(JSON.parse(message.body), previousDate, messagesDiv); // previousDate 업데이트
+                });
+            } else {
+                console.log('STOMP client is not connected');
+            }
+        }
+
+        function leaveRoom() {
+            let participantId = [[${session.employee.getEmployeeId()}]];
+            let chatRoomId = currentRoomId;
+
+            fetch(`/chatrooms/${chatRoomId}/participants/${participantId}`, {
+                method: 'DELETE',
+            })
+                .then(response => {
+                    if (response.ok) {
+                        location.reload(true);
+                    } else {
+                        console.error('Failed to leave the room');
+                    }
+                })
+                .catch(error => console.error('Error leaving the room:', error));
+        }
+
+        function formatTime(time) {
+            // 타임스탬프 문자열을 Date 객체로 변환
+            let date = new Date(time);
+
+            // Date 객체가 유효한지 확인
+            if (isNaN(date.getTime())) {
+                console.error("Invalid date format:", time);
+                return "Invalid time"; // 에러 처리
+            }
+
+            // 시간과 분을 추출
+            let hours = date.getHours();
+            let minutes = date.getMinutes();
+
+            // 오전/오후를 결정
+            let period = hours >= 12 ? '오후' : '오전';
+
+            // 12시간 형식으로 변환
+            hours = hours % 12 || 12; // 시간은 12시간제로 변환 (0시 -> 12시)
+
+            // 분을 2자리로 포맷
+            minutes = minutes < 10 ? '0' + minutes : minutes;
+
+            // 포맷된 시간 문자열 생성
+            let formattedTime = `${period} ${hours}시 ${minutes}분`;
+            return formattedTime;
+        }
+
+        function formatDate(date) {
+            return new Date(date).toLocaleDateString('ko-KR', {
+                year: 'numeric',
+                month: 'numeric',
+                day: 'numeric',
+                weekday: 'long'
+            });
+        }
+
+        function insertDateSeparator(date, messagesDiv) {
+            const dateSeparator = document.createElement('div');
+            dateSeparator.style.textAlign = 'center';
+            dateSeparator.style.margin = '10px 0';
+            dateSeparator.style.color = '#666';
+            dateSeparator.style.fontSize = '14px';
+            dateSeparator.innerHTML = `< ${date} >`;
+            messagesDiv.appendChild(dateSeparator);
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            connect();
+        });
+    </script>
+
 </th:block>
 
 <th:block layout:fragment="content">
@@ -73,7 +296,7 @@
             <div class="col-md-8">
                 <div class="card">
                     <div class="card-header chat-header" style="display: flex; justify-content: space-between; align-items: center;">
-                        채팅
+                        <span id="room-name"></span>
                         <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25"
                              fill="currentColor" class="bi bi-list dropdown-toggle" viewBox="0 0 16 16"
                              id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false"
@@ -90,7 +313,7 @@
                                 </button>
                             </li>
                             <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="#">나가기</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="leaveRoom()">나가기</a></li>
                         </ul>
                     </div>
 
@@ -207,7 +430,7 @@
                         </div>
                     </div>
 
-                    <div class="card-body chat-box" id="chatBox" style="height: 700px; overflow-y: auto;">
+                    <div class="card-body chat-box" id="chat-room-messages" style="height: 700px; overflow-y: auto;">
                         <!-- 메시지들이 여기에 표시됩니다 -->
                     </div>
                     <div class="card-footer">
