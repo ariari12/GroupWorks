@@ -24,6 +24,7 @@ import java.util.stream.IntStream;
 
 @Slf4j
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class BoardServiceImpl implements BoardService{
 
@@ -84,7 +85,6 @@ public class BoardServiceImpl implements BoardService{
 
     // 조회수 증가
     @Override
-    @Transactional
     public void increaseHits(Long boardId) {
         boardRepository.updateViewCount(boardId);
     }
