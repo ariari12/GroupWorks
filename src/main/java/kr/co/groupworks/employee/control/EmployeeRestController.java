@@ -37,8 +37,6 @@ public class EmployeeRestController {
     @PostMapping("/save")
     public ResponseEntity<EmployeeDTO> addEmployee(@RequestBody EmployeeDTO employeeDTO) {
 
-        log.info("새로운 사원 추가 : " + employeeDTO.toString());
-
         String encPassword = bCryptPasswordEncoder.encode(employeeDTO.getEmployeePW());
         employeeDTO.setEmployeePW(encPassword);
         employeeService.saveEmployee(employeeDTO);
@@ -69,10 +67,7 @@ public class EmployeeRestController {
     @PutMapping("/modify")
     public ResponseEntity<EmployeeDTO> modifyEmployee(@RequestBody Map<String, String> request, HttpSession session) {
         SessionEmployeeDTO sessionEmployeeDTO = (SessionEmployeeDTO) session.getAttribute("employee");
-        log.info(sessionEmployeeDTO.getEmployeeName() + " 비밀번호 변경 컨트롤러");
-
         EmployeeDTO employeeDTO = employeeService.findByEmployeeId(sessionEmployeeDTO.getEmployeeId());
-
 
         // 현재 비밀번호 확인 로직
         if(employeeService.isEqualPassword(request.get("employeePW"), employeeDTO.getEmployeePW())) {
@@ -94,12 +89,10 @@ public class EmployeeRestController {
     @PostMapping("/send-one")
     public SingleMessageSentResponse sendOne(@RequestBody Map<String, String> request) {
         String newPhoneNumber = request.get("phoneNumber").replaceAll("-","");
-        log.info("새로운 핸드폰 번호 : " + newPhoneNumber);
         Message message = new Message();
         message.setFrom(encryptor.decrypt(fromNumber));
         message.setTo(newPhoneNumber);
         String certificationNumber = request.get("certificationNumber");
-
         message.setText("Group_Workers 휴대폰 인증 : 다음 번호를 입력해주세요 (" + certificationNumber + ")");
 
         return messageService.sendOne(new SingleMessageSendingRequest(message));
@@ -111,13 +104,9 @@ public class EmployeeRestController {
         SessionEmployeeDTO sessionEmployeeDTO = (SessionEmployeeDTO) session.getAttribute("employee");
         EmployeeDTO employeeDTO = employeeService.findByEmployeeId(sessionEmployeeDTO.getEmployeeId());
 
-        String newPhoneNumber = request.get("newPhoneNumber");
-        log.info("새로운 핸드폰 번호로 업데이트: " + newPhoneNumber);
-        log.info("핸드폰번호 변경 전 employeeDTO : " + employeeDTO.toString());
+        String newPhoneNumber = request.get("newPhoneNumber");;
         employeeDTO.setPhoneNumber(newPhoneNumber);
         employeeService.updatePhoneNumberByEmployee(employeeDTO);
-        log.info("핸드폰번호 변경 후 employeeDTO : " + employeeDTO.toString());
-
         // 성공적으로 업데이트되면 200 OK 응답을 반환합니다.
         return ResponseEntity.ok("핸드폰 번호가 성공적으로 변경되었습니다.");
     }
@@ -129,11 +118,8 @@ public class EmployeeRestController {
         EmployeeDTO employeeDTO = employeeService.findByEmployeeId(sessionEmployeeDTO.getEmployeeId());
 
         String newAddress = request.get("newAddress");
-        log.info("새로운 주소로 업데이트: " + newAddress);
-        log.info("주소 변경 전 employeeDTO : " + employeeDTO.toString());
         employeeDTO.setAddress(newAddress);
         employeeService.updateAddressByEmployee(employeeDTO);
-        log.info("주소 변경 후 employeeDTO : " + employeeDTO.toString());
 
         // 성공적으로 업데이트되면 200 OK 응답을 반환합니다.
         return ResponseEntity.ok("주소가 성공적으로 변경되었습니다.");

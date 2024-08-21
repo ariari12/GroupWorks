@@ -62,13 +62,11 @@ public class MailController {
                           @RequestParam(value = "pageNumber", required = false, defaultValue = "0") int pageNumber) {
         SessionEmployeeDTO employeeDTO = (SessionEmployeeDTO) session.getAttribute("employee");
         String receiverEmail = employeeDTO.getEmail();
-        log.info(receiverEmail + "의 받은 메일함 컨트롤러 동작 중");
 
         pageable = PageRequest.of(pageNumber, PAGE_SIZE);
 
         if (keytype != null && keyword != null) {
-            log.info("검색어 타입은 " + keytype + " 내용은 " + keyword);
-            log.info(receiverEmail + "의 받은 메일 중 검색결과 목록");
+
 
             if (keytype.equals("제목")) {
                 mailPage = mailService.getEmailListByReceiverEmailAndMailTitle(receiverEmail, keyword, pageable);
@@ -89,19 +87,13 @@ public class MailController {
                        @RequestParam(value = "keytype",required = false) String keytype,
                        @RequestParam(value = "keyword",required = false) String keyword,
                        @RequestParam(value = "pageNumber", required = false, defaultValue = "0") int pageNumber) {
-
         SessionEmployeeDTO employeeDTO = (SessionEmployeeDTO) session.getAttribute("employee");
 
         //        로그인 한 사람이 보낸 메일들 가져오기
         String senderEmail = employeeDTO.getEmail();
-        log.info(senderEmail + "이 보낸 메일함 컨트롤러 동작 중");
-
         pageable = PageRequest.of(pageNumber, PAGE_SIZE);
-
-
         //        만약 키워드가 주워졌다면
         if(keytype!=null && keyword!=null){
-            log.info("검색어 타입은 " + keytype + " 내용은 " + keyword);
 //            키워드가 제목일 때
             if(keytype.equals("제목")){
                 mailPage = mailService.getEmailListBySenderEmailAndMailTitle(senderEmail, keyword, pageable);
@@ -109,8 +101,6 @@ public class MailController {
             }else if(keytype.equals("수신자이름")){
                 mailPage = mailService.getEmailListBySenderEmailAndMailReceiverName(senderEmail, keyword, pageable);
             }
-            log.info(senderEmail + "의 보낸 메일 중 검색결과 목록");
-            log.info(mailPage.toString());
         }else{
             mailPage = mailService.getEmailListBySenderEmail(senderEmail, pageable);
         }
@@ -119,23 +109,16 @@ public class MailController {
         return "mail/send";
     }
 
-
     //    중요 메일함
     @GetMapping("/important")
     public String important(HttpSession session, Model model,
                             @RequestParam(value = "pageNumber", required = false, defaultValue = "0") int pageNumber) {
         SessionEmployeeDTO employeeDTO = (SessionEmployeeDTO) session.getAttribute("employee");
-
 //        로그인 한 사람이 받은 메일들 가져오기
         String receiverEmail = employeeDTO.getEmail();
-        log.info(receiverEmail + "의 중요 메일함 컨트롤러 동작 중");
-
         pageable = PageRequest.of(pageNumber, PAGE_SIZE);
         mailPage =
                 mailService.getImportantEmailListByReceiverEmail(receiverEmail, pageable);
-
-        log.info(receiverEmail + "의 받은 메일 목록");
-        log.info(mailPage.toString());
         model.addAttribute("mailList", mailPage);
         model.addAttribute("employee",employeeDTO);
         return "mail/important";
@@ -148,13 +131,9 @@ public class MailController {
 
         SessionEmployeeDTO employeeDTO = (SessionEmployeeDTO) session.getAttribute("employee");
         String receiverEmail = employeeDTO.getEmail();
-        log.info(receiverEmail + "의 휴지통 컨트롤러 동작 중");
         pageable = PageRequest.of(pageNumber, PAGE_SIZE);
         mailPage =
                 mailService.getTrashEmailListTrashByReceiverEmail(receiverEmail, pageable);
-
-        log.info(receiverEmail + "의 휴지통 메일 목록");
-        log.info(mailPage.toString());
         model.addAttribute("mailList", mailPage);
         return "mail/trash";
     }
@@ -162,7 +141,6 @@ public class MailController {
     //    메일 쓰기 (메일 쓰기 버튼 누를 때 writeForm으로 이동)
     @GetMapping("/write")
     public String write(@RequestParam(required = false,name = "email")String sendEmail, Model model) {
-        log.info(sendEmail + " email send request");
         model.addAttribute("sendEmail", sendEmail);
         return "mail/writeForm";
     }
@@ -181,10 +159,8 @@ public class MailController {
         try {
             mailDTO.setMailReceiverId(receiveEmployeeDTO.getEmployeeId());
             mailDTO.setMailReceiverName(receiveEmployeeDTO.getEmployeeName());
-            log.info("mailDTO.getMailReceiverId() : " + mailDTO.getMailReceiverId());
 
         }catch(Exception e) {
-            e.printStackTrace();
             log.info("받는 사람 이메일 설정이 잘못되었습니다.");
         }
 
@@ -209,8 +185,6 @@ public class MailController {
         List<MultipartFile> files = request.getFiles("files");
         mailService.saveOne(mailDTO,files);
 
-        log.info("메일 작성 : " + mailDTO.toString());
-
         sendNotification(mailDTO.getMailReceiverId(),mailDTO.getId());
         if(mailDTO.getMailReferrerId() != null){
             sendNotification(mailDTO.getMailReferrerId(),mailDTO.getId());
@@ -230,7 +204,6 @@ public class MailController {
                 .url("/mail/detail/" + mailId)
                 .build();
 
-        log.info(">>>>>>>>>>>>>>>>>>> notification: {} " , notification.toString());
         notificationService.sendNotificationOne(notification);
     }
 
@@ -238,9 +211,6 @@ public class MailController {
     @PostMapping("/delete")
     public String delete(HttpSession session, @RequestParam("individualCheck") List<String> deleteMailList) {
         SessionEmployeeDTO employeeDTO = (SessionEmployeeDTO) session.getAttribute("employee");
-        log.info(employeeDTO.getEmployeeName() +"의 삭제 요청 이메일 리스트");
-        log.info(deleteMailList.toString());
-
         mailService.deleteMailById(deleteMailList);
         return "redirect:/mail/trash";
     }
@@ -248,10 +218,6 @@ public class MailController {
 //    휴지통 메일 복구하기
     @PostMapping("/restore")
     public String restore(HttpSession session, @RequestParam("individualCheck") List<String> restoreMailList) {
-        SessionEmployeeDTO employeeDTO = (SessionEmployeeDTO) session.getAttribute("employee");
-        log.info(employeeDTO.getEmployeeName() + "의 복구 요청 이메일 리스트");
-        log.info(restoreMailList.toString());
-
         mailService.restoreMailById(restoreMailList);
         return "redirect:/mail/trash";
     }
@@ -259,8 +225,6 @@ public class MailController {
     //    메일 상세보기
     @GetMapping("/detail/{id}")
     public String detail(@PathVariable String id , Model model) {
-
-        log.info(id + "메일 상세보기 컨트롤러 작동 중");
 //        아이디로 메일 찾기
         MailDTO mailDTO = mailService.getEmailById(id);
         model.addAttribute("mailDTO",mailDTO);
@@ -271,7 +235,6 @@ public class MailController {
     @PostMapping("/updateMailStatus")
     @ResponseBody
     public ResponseEntity<String> updateMailStatus(@RequestBody Map<String, Object> mail) {
-        log.info(mail.get("id") + " " + mail.get("status"));
         if(mailService.updateMailStatus((String)mail.get("id"),(Integer) mail.get("status"))){
             return ResponseEntity.ok("메일 상태가 업데이트되었습니다.");
         }else{
@@ -297,8 +260,6 @@ public class MailController {
 
         String uploadDir2 = uploadDir;
         uploadDir2 +=  "/mail-files/" + mailId;
-        log.info("uploadDir : " + uploadDir2 );
-        log.info("mailId : " + mailId);
 
         File file = new File(uploadDir2 +"/"+filename);
         // 파일이 존재하지 않는다면
