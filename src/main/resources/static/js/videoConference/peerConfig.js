@@ -61,7 +61,6 @@ const checkRoomIdFromServer = async (roomId) => {
 const startCam = async () => {
     try {
         const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
-        console.log('Stream found');
         localStream = stream;
         stream.getAudioTracks()[0].enabled = true;
         localStreamElement.srcObject = localStream;
@@ -89,11 +88,9 @@ const connectSocket = async () => {
     const socket = new SockJS('/signaling');
     stompClient = Stomp.over(socket);
     stompClient.debug = (str) => {
-        console.log('STOMP: ' + str);
     };
 
     const onConnect = () => {
-        console.log('Connected to WebRTC server');
         retryCount = 0; // Reset retry count on successful connection
         setupSubscriptions();
     };
@@ -102,7 +99,6 @@ const connectSocket = async () => {
         console.error('Connection error:', error);
         if (retryCount < maxRetries) {
             retryCount++;
-            console.log(`Reconnecting... Attempt ${retryCount}/${maxRetries}`);
             setTimeout(connectSocket, 2000); // Retry connection after 2 seconds
         } else {
             console.error('Max retry attempts reached. Could not connect to WebRTC server.');
@@ -127,7 +123,6 @@ const setupSubscriptions = () => {
     stompClient.subscribe(`/topic/peer/iceCandidate/${myKey}/${roomId}`, candidate => {
         const key = JSON.parse(candidate.body).key;
         const message = JSON.parse(candidate.body).body;
-        console.log(`Received ICE candidate from ${key}:`, message);
         if (pcListMap.has(key)) {
             pcListMap.get(key).addIceCandidate(new RTCIceCandidate(message)).catch(error => {
                 console.error('Error adding received ICE candidate:', error);
@@ -140,7 +135,6 @@ const setupSubscriptions = () => {
     stompClient.subscribe(`/topic/peer/offer/${myKey}/${roomId}`, offer => {
         const key = JSON.parse(offer.body).key;
         const message = JSON.parse(offer.body).body;
-        console.log(`Received offer from ${key}`);
         if (!pcListMap.has(key)) {
             pcListMap.set(key, createPeerConnection(key));
         }
@@ -154,7 +148,6 @@ const setupSubscriptions = () => {
     stompClient.subscribe(`/topic/peer/answer/${myKey}/${roomId}`, answer => {
         const key = JSON.parse(answer.body).key;
         const message = JSON.parse(answer.body).body;
-        console.log(`Received answer from ${key}`);
         if (pcListMap.has(key)) {
             pcListMap.get(key).setRemoteDescription(new RTCSessionDescription(message))
                 .catch(error => {
@@ -166,13 +159,11 @@ const setupSubscriptions = () => {
     });
 
     stompClient.subscribe(`/topic/call/key`, message => {
-        console.log('Received call key message');
         stompClient.send(`/app/send/key`, {}, JSON.stringify(myKey));
     });
 
     stompClient.subscribe(`/topic/send/key`, message => {
         const key = JSON.parse(message.body);
-        console.log(`Received send key: ${key}`);
         if (myKey !== key && !otherKeyList.includes(key)) {
             otherKeyList.push(key);
         }
@@ -180,7 +171,6 @@ const setupSubscriptions = () => {
 
     // 종료 메시지를 수신하여 처리하는 부분
     stompClient.subscribe(`/topic/peer/endConference/${roomId}`, message => {
-        console.log('Received end conference message:', message);
         // 상대방이 종료했을 때 remoteStreamDiv 숨기기
         document.querySelector('#remoteStreamDiv').style.display = 'none';
         alert('상대방이 화상회의를 종료했습니다.');
@@ -190,7 +180,6 @@ const setupSubscriptions = () => {
 
 // 원격 트랙 수신 함수
 let onTrack = (event, otherKey) => {
-    console.log(`Received remote track from ${otherKey}`);
     const remoteVideo = document.getElementById(`${otherKey}`);
     if (remoteVideo) {
         remoteVideo.srcObject = event.streams[0];
@@ -226,7 +215,6 @@ const createPeerConnection = (otherKey) => {
                 pc.addTrack(track, localStream);
             });
         }
-        console.log(`PeerConnection created for ${otherKey}`);
     } catch (error) {
         console.error('PeerConnection failed: ', error);
     }
@@ -236,7 +224,6 @@ const createPeerConnection = (otherKey) => {
 // ICE 후보 처리 함수
 let onIceCandidate = (event, otherKey) => {
     if (event.candidate) {
-        console.log('Sending ICE candidate:', event.candidate);
         stompClient.send(`/app/peer/iceCandidate/${otherKey}/${roomId}`, {}, JSON.stringify({
             key: myKey,
             body: event.candidate
@@ -252,7 +239,6 @@ let sendOffer = (pc, otherKey) => {
             key: myKey,
             body: offer
         }));
-        console.log('Send offer');
     });
 };
 
@@ -264,14 +250,12 @@ let sendAnswer = (pc, otherKey) => {
             key: myKey,
             body: answer
         }));
-        console.log('Send answer');
     });
 };
 
 // 로컬 설명 설정 및 메시지 전송 함수
 const setLocalAndSendMessage = (pc, sessionDescription) => {
     pc.setLocalDescription(sessionDescription).then(() => {
-        console.log('Set local description:', sessionDescription);
     }).catch(error => {
         console.error('Error setting local description:', error);
     });
@@ -287,7 +271,6 @@ const toggleStartEndButton = (buttonSelector, endText, endHandler) => {
 function disconnect(){
     if(stompClient !== null){
         stompClient.disconnect(function (){
-            console.log("Disconnected");
         })
     }
 }
@@ -299,10 +282,8 @@ const sendEndConferenceMessage = () => {
 };
 // 화상회의 종료 함수
 const handleEndConference = async () => {
-    console.log('Sending end conference message');
     setTimeout(() => {
         stompClient.disconnect(() => {
-            console.log("disconnected");
         });
     }, 1000);
     disconnect();
@@ -330,7 +311,6 @@ document.addEventListener('DOMContentLoaded', async (event) => {
 document.querySelector('#createEnterRoomBtn').addEventListener('click', async () => {
     await startCam();
     roomId = document.querySelector('#createRoomIdInput').value;
-    console.log(`Entered room: ${roomId}`);
     document.querySelector('#createRoomIdInput').disabled = true;
     document.querySelector('#createEnterRoomBtn').disabled = true;
     document.querySelector('#joinRoomIdInput').disabled = true;
@@ -344,7 +324,6 @@ document.querySelector('#createEnterRoomBtn').addEventListener('click', async ()
 document.querySelector('#joinEnterRoomBtn').addEventListener('click', async () => {
     await startCam();
     roomId = document.querySelector('#joinRoomIdInput').value;
-    console.log(`Entered room: ${roomId}`);
     document.querySelector('#joinRoomIdInput').disabled = true;
     document.querySelector('#joinEnterRoomBtn').disabled = true;
     document.querySelector('#createRoomIdInput').disabled = true;
@@ -355,7 +334,6 @@ document.querySelector('#joinEnterRoomBtn').addEventListener('click', async () =
 
 // 방 만들기 후 시작하기 버튼 이벤트 리스너
 document.querySelector('#createStartStreamsBtn').addEventListener('click', async () => {
-    console.log('Start button clicked');
     await startConferenceHandler(); // 방 시작하기 핸들러 호출
     document.querySelector('#createStartStreamsBtn').style.display = 'none'; // 시작하기 버튼 숨기기
     // 종료하기 및 카메라끄기 버튼 표시
@@ -363,7 +341,6 @@ document.querySelector('#createStartStreamsBtn').addEventListener('click', async
 });
 
 const startConferenceHandler = async () => {
-    console.log('Starting conference');
     stompClient.send(`/app/call/key`, {}, {});
     setTimeout(() => {
         otherKeyList.forEach((key) => {
@@ -447,7 +424,6 @@ document.querySelector('#toggleMicBtn').addEventListener('click', () => {
 const startScreenShare = async () => {
     try {
         screenStream = await navigator.mediaDevices.getDisplayMedia({ video: true });
-        console.log('Screen share started');
 
         // 화면 공유 비디오를 로컬 화면에 표시
         localStreamElement.srcObject = screenStream;
@@ -478,7 +454,6 @@ const stopScreenShare = () => {
     if (screenStream) {
         screenStream.getTracks().forEach(track => track.stop());
         screenStream = null;
-        console.log('Screen share stopped');
 
         // 기존 웹캠 비디오를 로컬 화면에 다시 표시
         localStreamElement.srcObject = localStream;
