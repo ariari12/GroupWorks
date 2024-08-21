@@ -63,10 +63,10 @@
             });
         });
 
-
         let stompClient = null;
         let currentRoomId = null;
         let currentSubscription = null;
+        let previousDate = null; // 전역으로 정의
 
         function connect() {
             var socket = new SockJS('/ws');
@@ -102,7 +102,6 @@
                 .catch(error => console.error('Error loading chat rooms:', error));
         }
 
-
         function loadChatHistory(chatId) {
             fetch(`/messages/${chatId}`)
                 .then(response => response.json())
@@ -110,44 +109,11 @@
                     const chatBox = document.getElementById('chat-room-messages');
                     chatBox.innerHTML = '';
 
+                    previousDate = null; // 날짜 초기화
+
                     messages.forEach(message => {
-                        const messageElement = document.createElement('div');
-                        messageElement.classList.add('message');
-
-                        let msgObj = JSON.stringify(message)
-                        let msgObject = JSON.parse(msgObj);
-                        let time = formatTime(msgObject.timestamp);
-
-                        if (msgObject.senderId !== [[${session.employee.getEmployeeId()}]]) {
-                            // 상대방의 메시지
-                            messageElement.innerHTML = `
-                        <div style="margin-bottom: 5px;">
-                            <span>${msgObject.senderDepartment} ${msgObject.senderRank} ${msgObject.senderName}</span>
-                        </div>
-                        <div class="incoming_msg">
-                            <div class="received_msg">
-                                <div class="received_withd_msg">
-                                    <p>${msgObject.content}</p>
-                                    <span class="received_sent_time_date">${time}</span>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                        } else {
-                            // 내 메시지
-                            messageElement.innerHTML = `
-                        <div class="outgoing_msg">
-                            <div class="sent_msg">
-                                <p>${msgObject.content}</p>
-                                <span class="sent_time_date">${time}</span>
-                            </div>
-                        </div>
-                    `;
-                        }
-                        chatBox.appendChild(messageElement);
+                        previousDate = showMessage(message, previousDate, chatBox);
                     });
-
-                    chatBox.scrollTop = chatBox.scrollHeight;
                 })
                 .catch(error => console.error('Error loading messages:', error));
         }
@@ -170,42 +136,48 @@
             }
         }
 
-        function showMessage(message) {
-            const messagesDiv = document.getElementById('chat-room-messages');
+        function showMessage(message, previousDate, messagesDiv) {
             const messageElement = document.createElement('div');
 
+            const messageDate = formatDate(message.timestamp);
+
+            if (previousDate !== messageDate) {
+                insertDateSeparator(messageDate, messagesDiv);
+            }
 
             let time = formatTime(message.timestamp);
 
             if (message.senderId !== [[${session.employee.getEmployeeId()}]]) {
                 // 상대방의 메시지
                 messageElement.innerHTML = `
-                    <div style="margin-bottom: 5px;">
-                        <span>${message.senderDepartment} ${message.senderRank} ${message.senderName}</span>
-                    </div>
-                    <div class="incoming_msg">
-                        <div class="received_msg">
-                            <div class="received_withd_msg">
-                                <p>${message.content}</p>
-                                <span class="received_sent_time_date">${time}</span>
-                            </div>
-                        </div>
-                    </div>
-                `;
+        <div style="margin-bottom: 5px;">
+            <span>${message.senderDepartment} ${message.senderRank} ${message.senderName}</span>
+        </div>
+        <div class="incoming_msg">
+            <div class="received_msg">
+                <div class="received_withd_msg">
+                    <p>${message.content}</p>
+                    <span class="received_sent_time_date">${time}</span>
+                </div>
+            </div>
+        </div>
+    `;
             } else {
                 // 내 메시지
                 messageElement.innerHTML = `
-                    <div class="outgoing_msg">
-                        <div class="sent_msg">
-                            <p>${message.content}</p>
-                            <span class="sent_time_date">${time}</span>
-                        </div>
-                    </div>
-                `;
+        <div class="outgoing_msg">
+            <div class="sent_msg">
+                <p>${message.content}</p>
+                <span class="sent_time_date">${time}</span>
+            </div>
+        </div>
+    `;
             }
 
             messagesDiv.appendChild(messageElement);
             messagesDiv.scrollTop = messagesDiv.scrollHeight;
+
+            return messageDate; // 현재 메시지의 날짜를 반환
         }
 
         function joinRoom(roomId, roomName) {
@@ -220,7 +192,8 @@
 
             if (stompClient && stompClient.connected) {
                 currentSubscription = stompClient.subscribe(`/topic/rooms/${roomId}`, function (message) {
-                    showMessage(JSON.parse(message.body));
+                    const messagesDiv = document.getElementById('chat-room-messages');
+                    previousDate = showMessage(JSON.parse(message.body), previousDate, messagesDiv); // previousDate 업데이트
                 });
             } else {
                 console.log('STOMP client is not connected');
@@ -243,7 +216,6 @@
                 })
                 .catch(error => console.error('Error leaving the room:', error));
         }
-
 
         function formatTime(time) {
             // 타임스탬프 문자열을 Date 객체로 변환
@@ -273,8 +245,26 @@
             return formattedTime;
         }
 
+        function formatDate(date) {
+            return new Date(date).toLocaleDateString('ko-KR', {
+                year: 'numeric',
+                month: 'numeric',
+                day: 'numeric',
+                weekday: 'long'
+            });
+        }
+
+        function insertDateSeparator(date, messagesDiv) {
+            const dateSeparator = document.createElement('div');
+            dateSeparator.style.textAlign = 'center';
+            dateSeparator.style.margin = '10px 0';
+            dateSeparator.style.color = '#666';
+            dateSeparator.style.fontSize = '14px';
+            dateSeparator.innerHTML = `< ${date} >`;
+            messagesDiv.appendChild(dateSeparator);
+        }
+
         document.addEventListener('DOMContentLoaded', function () {
-            /*document.getElementById('create-room-button').addEventListener('click', createChatRoom);*/
             connect();
         });
     </script>

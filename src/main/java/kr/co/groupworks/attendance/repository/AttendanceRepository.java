@@ -15,6 +15,12 @@ public interface AttendanceRepository extends JpaRepository<Attendance, Long> {
 
 
     @Query("SELECT a FROM Attendance a WHERE a.employee.id = :employeeId AND a.date BETWEEN :startOfDay AND :endOfDay")
+    List<Attendance> findClockInRecordsForToday(@Param("employeeId") Long employeeId,
+                                                 @Param("startOfDay") LocalDateTime startOfDay,
+                                                 @Param("endOfDay") LocalDateTime endOfDay);
+
+
+    @Query("SELECT a FROM Attendance a WHERE a.employee.id = :employeeId AND a.date BETWEEN :startOfDay AND :endOfDay")
     List<Attendance> findClockOutRecordsForToday(@Param("employeeId") Long employeeId,
                                                  @Param("startOfDay") LocalDateTime startOfDay,
                                                  @Param("endOfDay") LocalDateTime endOfDay);
