@@ -29,6 +29,11 @@
             function workflowDetial(wId) {
                   location.href = "/work-flow/detail/" + wId;
             }
+
+            function moveBoard(boardId) {
+                  location.href = "/board/notice/detail/" + boardId
+            }
+
       </script>
 </th:block>
 
@@ -113,9 +118,9 @@
                               </tr>
                               </thead>
                               <tbody>
-                              <tr th:each="list: ${boardList}">
+                              <tr th:each="list: ${boardList}" th:onclick="moveBoard([[${list.boardId}]])">
                                     <td th:text="${list.getTitle()}"></td>
-                                    <td style="width: 75px;" th:text="${list.getDepartment().getDepartmentName()}"></td>
+                                    <td style="width: 75px;" th:text="${list.employee.getDepartment().getDepartmentName()}"></td>
                                     <td th:text="${list.getEmployee().getEmployeeName()}"></td>
                               </tr>
                               </tbody>

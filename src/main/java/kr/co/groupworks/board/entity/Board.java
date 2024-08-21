@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @Setter
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -65,8 +66,7 @@ public class Board{
     @JoinColumn(name = "employee_id", nullable = false)
     private Employee employee;
 
-    // @ManyToOne(fetch = FetchType.LAZY)
-    @ManyToOne()
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "department_id")
     private Department department;
 
