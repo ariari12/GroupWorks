@@ -17,7 +17,6 @@ public class VideoConferenceServiceImpl implements VideoConferenceService {
 
     @Override
     public boolean roomExists(String roomId) {
-        log.info("roomId 목록 : " + rooms);
         return rooms.contains(roomId);
     }
 }
