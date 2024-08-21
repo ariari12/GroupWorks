@@ -236,12 +236,31 @@ public class WorkFlowServiceImpl implements WorkFlowService {
         );
         workFlowRepository.workflowListFindByApproverId(employeeId, 1).forEach(list -> {
             for (ApproverEntity a : list.getApprovers()) {
-                if(a.getEmployeeId() == employeeId) {
-                    switch (a.getApproval()) {
-                        case 1: listMap.get(WorkFlowController.AttributeName.APPROVAl.getStatus()).add(new WorkflowListVO(list)); break;
-                        case 2: listMap.get(WorkFlowController.AttributeName.REJECTION.getStatus()).add(new WorkflowListVO(list)); break;
-                        default: listMap.get(WorkFlowController.AttributeName.PROGRESS.getStatus()).add(new WorkflowListVO(list));
+                if (a.getEmployeeId() == employeeId) {
+                    if ((list.getStatus() == 0 || list.getStatus() == 3)) {
+                        switch (a.getApproval()) {
+                            case 1:
+                                listMap.get(WorkFlowController.AttributeName.APPROVAl.getStatus()).add(new WorkflowListVO(list));
+                                break;
+                            case 2:
+                                listMap.get(WorkFlowController.AttributeName.REJECTION.getStatus()).add(new WorkflowListVO(list));
+                                break;
+                            default:
+                                listMap.get(WorkFlowController.AttributeName.PROGRESS.getStatus()).add(new WorkflowListVO(list));
+                        }
+                    } else {
+                        switch (list.getStatus()) {
+                            case 1:
+                                listMap.get(WorkFlowController.AttributeName.APPROVAl.getStatus()).add(new WorkflowListVO(list));
+                                break;
+                            case 2:
+                                listMap.get(WorkFlowController.AttributeName.REJECTION.getStatus()).add(new WorkflowListVO(list));
+                                break;
+                            default:
+                                listMap.get(WorkFlowController.AttributeName.PROGRESS.getStatus()).add(new WorkflowListVO(list));
+                        }
                     }
+                    break;
                 }
             }
         });

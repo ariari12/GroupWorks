@@ -40,120 +40,162 @@ public class WorkflowInsertData {
 
     int sequenceNum = 0;
 
+    /* 기술부서 사람들 실용 더미 데이터 */
     @Test
-    void test() {
-        List<Employee> empList = employeeRepository.findAll();
-        // 부서별로 직원 리스트 그룹화 (부서 ID -> 직원 리스트)
-        Map<Long, List<Employee>> departmentMap = empList.stream()
-                .collect(Collectors.groupingBy(e -> e.getDepartment().getDepartmentId()));
+    void testInsert1() {
+        /* 기술부서 사원들 */
+        List<Employee> empList = employeeRepository.findAll().stream().filter(e -> e.getDepartment().getDepartmentId() == 1L).toList();
 
-        // 기안자 선택 (사원 번호가 10, 20, 30, ... 90, 100 인 직급: 사원)
-        List<Employee> drafterList = empList.stream()
-                .filter(e -> e.getEmployeeId() % 10 == 0)
-                .toList();
+        // 기안자 기술부서 사원번호: 10, 직급: 사원
+        Employee drafter = empList.stream().filter(e -> e.getEmployeeId() == 10).findFirst().get();
 
-        departmentMap.forEach((deptId, employees) -> {
-            var ref = new Object() { int cnt = 0; };
-            String dName = employees.get(0).getDepartment().getDepartmentName();
+        long dId = 1L;
+        String dName = drafter.getDepartment().getDepartmentName();
+        // 결재자 (직급이 과장이상)
+        List<Employee> approvers = empList.stream().filter(e -> e.getRankId() >= 3)
+                .limit(3).sorted(Comparator.comparingInt(Employee::getRankId)).toList();
+        // 협조자 (타 부서)
+        List<Employee> cooperators = empList.stream()
+                .filter(e -> e.getRankId() < 3 && e.getEmployeeId() != 10L).limit(3).toList();
+        // 참조자 선정
+        List<Employee> referents = empList.stream().filter(e -> e.getEmployeeId() != 10L && e.getRankId() < 3 && !cooperators.contains(e))
+                .limit(3).toList();
 
-            // 결재자 (직급이 과장이상)
-            List<Employee> approvers = employees.stream().filter(e -> e.getRankId() >= 3)
-                    .limit(3).sorted(Comparator.comparingInt(Employee::getRankId)).toList();
-            // 협조자 (타 부서)
-            List<Employee> cooperators = empList.stream()
-                    .filter(e -> !e.getDepartment().getDepartmentId().equals(deptId) && e.getRankId() >= 3)
-                    .limit(3).toList();
-            // 참조자 선정
-            List<Employee> referents = empList.stream()
-                    .filter(e -> !drafterList.contains(e) && !approvers.contains(e) && !cooperators.contains(e))
-                    .limit(3).toList();
-            // 기안자 부서 당 1명
-            Employee drafter = drafterList.stream().filter(e -> e.getDepartment().getDepartmentId().equals(deptId))
-                    .findFirst().get();
+        empList.forEach(e -> {
+            List<Integer> approval = randomApporvalList(approvers.size());
+            log.info(approval.toString());
+            LocalDateTime draftTime = generateRandomDateTime();
 
-            employees.forEach(e -> {
-                List<Integer> approval = randomApporvalList(approvers.size());
-                log.info(approval.toString());
-                LocalDateTime draftTime = generateRandomDateTime();
+            Employee fa = approvers.get(approvers.size() -1);
+            Map<String, Object> map = getRandSet(dId, dName);
 
-                if(ref.cnt > 5) return;
-                Employee fa = approvers.get(approvers.size() -1);
-                Map<String, Object> map = getRandSet(deptId, dName);
+            int status = 0, method = 1;
+            LocalDateTime approvalDate = null;
+            long wId = workFlowRepository.save(WorkFlowEntity.builder().build()).getId();
 
-                int status = 0, method = 1;
-                LocalDateTime approvalDate = null;
-                long wId = workFlowRepository.save(WorkFlowEntity.builder().build()).getId();
-
-                List<ApproverEntity> approverList = new ArrayList<>();
-                sequenceNum = 1;
-                int nextApproval = approval.get(0);
-                for (int i = 0; i < approvers.size(); i++) {
-                    if(nextApproval == 0) {
-                        approverList.add(createApproverEntity(wId, approvers.get(i), 1, nextApproval, method, null, null));
-                    } else if(nextApproval == 2 || nextApproval == 3) {
-                        String cmt = nextApproval == 2? "반려합니디." : "전결합니다.";
-                        method = nextApproval == 3? 4 : 5;
-                        approvalDate = draftTime.plusDays(3);
-                        nextApproval = nextApproval == 3 ? 1 : nextApproval;
-                        approverList.add(createApproverEntity(wId, approvers.get(i), 1, nextApproval, method, cmt, approvalDate));
-                        status = nextApproval == 2? 2 : 1;
-                        nextApproval = 0;
-                    } else {
-                        approvalDate = approvalDate != null ? approvalDate.plusDays(1) : draftTime.plusDays(1);
-                        approverList.add(createApproverEntity(wId, approvers.get(i), 1, nextApproval, method, "결재 승인합니다.", draftTime.plusDays(1)));
-                        status = 3;
-                        nextApproval = i < approvers.size() -1? approval.get(i +1): 0;
-                    }
+            List<ApproverEntity> approverList = new ArrayList<>();
+            sequenceNum = 0;
+            int nextApproval = approval.get(0);
+            for (int i = 0; i < approvers.size(); i++) {
+                if(nextApproval == 0) {
+                    approverList.add(createApproverEntity(wId, approvers.get(i), 1, nextApproval, method, null, null));
+                } else if(nextApproval == 2 || nextApproval == 3) {
+                    String cmt = nextApproval == 2? "반려합니디." : "전결합니다.";
+                    method = nextApproval == 3? 4 : 5;
+                    approvalDate = draftTime.plusDays(3);
+                    nextApproval = nextApproval == 3 ? 1 : nextApproval;
+                    approverList.add(createApproverEntity(wId, approvers.get(i), 1, nextApproval, method, cmt, approvalDate));
+                    status = nextApproval == 2? 2 : 1;
+                    nextApproval = 0;
+                } else {
+                    approvalDate = approvalDate != null ? approvalDate.plusDays(1) : draftTime.plusDays(1);
+                    approverList.add(createApproverEntity(wId, approvers.get(i), 1, nextApproval, method, "결재 승인합니다.", draftTime.plusDays(1)));
+                    status = 3;
+                    nextApproval = i < approvers.size() -1? approval.get(i +1): 0;
                 }
-                sequenceNum = 1;
-                cooperators.forEach(cooperator -> {
-                    approverList.add(createApproverEntity(wId, cooperator, 2, 1, 0, "협의 합니다.", draftTime.plusDays(1)));
-                });
-                sequenceNum = 1;
-                referents.forEach(referent -> {
-                    approverList.add(createApproverEntity(wId, referent, 3, 0, 0, null, null));
-                });
-
-                // WorkFlowEntity 생성 및 리스트에 추가
-                workFlowRepository.save(WorkFlowEntity.builder()
-                        .id(wId)
-                        /* 기안자 */
-                        .employeeId(drafter.getEmployeeId())
-                        .employeeName(drafter.getEmployeeName())
-                        .phone(drafter.getPhoneNumber())
-                        .email(drafter.getEmail())
-                        .employeeRank(drafter.getRankName())
-                        .draftDate(draftTime)
-
-                        /* 부서정보 */
-                        .departmentId(deptId)
-                        .department(dName)
-
-                        /* 결재 정보 */
-                        .code(map.get("code").toString())
-                        .workFlowType((Integer) map.get("type"))
-                        .title(map.get("content").toString())
-                        .description(map.get("content").toString())
-                        .cost((Long) map.get("cost"))
-
-                        .finalEmployeeId(fa.getEmployeeId())
-                        .finalApprovalRank(fa.getRankName())
-                        .finalApprovalDepartment(fa.getDepartment().getDepartmentName())
-                        .finalApprovalName(fa.getEmployeeName())
-                        .approvalDate(approvalDate)
-
-                        /* 결재 상황 */
-                        .approvers(approverList)
-                        .approverCount(approvers.size())
-                        .approvalCount(method == 4? approval.size() : (int) approverList.stream()
-                                .filter(a -> a.getApproverType() == 1 && a.getApproval() > 0).count())
-                        .status(status) // 초기값
-                        .build()
-                );
-                ref.cnt++;
+            }
+            sequenceNum = 0;
+            cooperators.forEach(cooperator -> {
+                approverList.add(createApproverEntity(wId, cooperator, 2, 1, 0, "협의 합니다.", draftTime.plusDays(1)));
             });
+            sequenceNum = 0;
+            referents.forEach(referent -> {
+                approverList.add(createApproverEntity(wId, referent, 3, 0, 0, null, null));
+            });
+
+            // WorkFlowEntity 생성 및 리스트에 추가
+            WorkFlowEntity saveW = workFlowRepository.save(WorkFlowEntity.builder()
+                    .id(wId)
+                    /* 기안자 */
+                    .employeeId(drafter.getEmployeeId())
+                    .employeeName(drafter.getEmployeeName())
+                    .phone(drafter.getPhoneNumber())
+                    .email(drafter.getEmail())
+                    .employeeRank(drafter.getRankName())
+                    .draftDate(draftTime)
+
+                    /* 부서정보 */
+                    .departmentId(dId)
+                    .department(dName)
+
+                    /* 결재 정보 */
+                    .code(map.get("code").toString())
+                    .workFlowType((Integer) map.get("type"))
+                    .title(map.get("content").toString())
+                    .description(map.get("content").toString())
+                    .cost((Long) map.get("cost"))
+
+                    .finalEmployeeId(fa.getEmployeeId())
+                    .finalApprovalRank(fa.getRankName())
+                    .finalApprovalDepartment(fa.getDepartment().getDepartmentName())
+                    .finalApprovalName(fa.getEmployeeName())
+                    .approvalDate(approvalDate)
+
+                    /* 결재 상황 */
+                    .approvers(approverList)
+                    .approverCount(approvers.size())
+                    .approvalCount(method == 4 ? approval.size() : (int) approverList.stream()
+                            .filter(a -> a.getApproverType() == 1 && a.getApproval() > 0).count())
+                    .status(status) // 초기값
+                    .build()
+            );
+            log.info("save: {}", saveW);
         });
     }
+
+    /* 기술부서가 아닌 사람들의 결재 더미 데이터 생성 */
+    @Test
+    void testInsert2() {
+        List<Employee> empList = employeeRepository.findAll();
+        // 기술부서가 아닌 부서 사원 정보 부서별로 직원 리스트 그룹화 (부서 ID -> 직원 리스트)
+        Map<Long, List<Employee>> departmentMap = empList.stream()
+                .filter(e -> e.getDepartment().getDepartmentId() > 1)
+                .collect(Collectors.groupingBy(e -> e.getDepartment().getDepartmentId()));
+
+        /* 기술부서가 아닌 부서 사원들로 결재 데이터 생성 */
+        departmentMap.forEach((dId, es) -> es.forEach(e -> {
+            String dName = e.getDepartment().getDepartmentName();
+            Map<String, Object> map = getRandSet(dId, dName);
+            LocalDateTime draftTime = generateRandomDateTime();
+            int approvalCnt = new Random().nextInt(4);
+            int status = approvalCnt == 3 ? new Random().nextInt(2) == 0 ? 1 : 0 : new Random().nextInt(3);
+
+            // WorkFlowEntity 생성 및 리스트에 추가
+            workFlowRepository.save(WorkFlowEntity.builder()
+                    /* 기안자 */
+                    .employeeId(e.getEmployeeId())
+                    .employeeName(e.getEmployeeName())
+                    .phone(e.getPhoneNumber())
+                    .email(e.getEmail())
+                    .employeeRank(e.getRankName())
+                    .draftDate(draftTime)
+
+                    /* 부서정보 */
+                    .departmentId(dId)
+                    .department(dName)
+
+                    /* 결재 정보 */
+                    .code(map.get("code").toString())
+                    .workFlowType((Integer) map.get("type"))
+                    .title(map.get("content").toString())
+                    .description(map.get("content").toString())
+                    .cost((Long) map.get("cost"))
+
+                    .finalEmployeeId(e.getEmployeeId())
+                    .finalApprovalRank(e.getRankName())
+                    .finalApprovalDepartment(dName)
+                    .finalApprovalName(e.getEmployeeName())
+                    .approvalDate(draftTime.plusDays(3))
+
+                    /* 결재 상황 */
+                    .approverCount(3)
+                    .approvalCount(approvalCnt)
+                    .status(status)
+                    .build()
+            );
+        }) );
+    }
+
 
     ApproverEntity createApproverEntity(Long wId, Employee employee, int approverType, Integer approval, int method, String cmt, LocalDateTime approvalDate) {
         return ApproverEntity.builder()

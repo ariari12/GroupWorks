@@ -1,10 +1,7 @@
 package kr.co.groupworks.notification.sse;
 
-import kr.co.groupworks.employee.entity.Employee;
 import kr.co.groupworks.employee.repository.EmployeeRepository;
 import kr.co.groupworks.notification.dto.NotificationDTO;
-import kr.co.groupworks.notification.model.Notification;
-import kr.co.groupworks.notification.service.NotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -14,7 +11,6 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Component
@@ -34,7 +30,7 @@ public class NotificationSseEmitter {
         // 연결 시간 초과 시 사용자 제거
         sseEmitter.onTimeout(() -> sseEmitters.remove(employeeId));
 
-        log.info("NotificationSseEmitter employee {}", employeeId);
+//        log.info("NotificationSseEmitter employee {}", employeeId);
         return sseEmitter;
     }
 
