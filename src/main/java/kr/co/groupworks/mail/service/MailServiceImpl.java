@@ -69,13 +69,11 @@ public class MailServiceImpl implements MailService{
                     // 리스트에 추가
                     mailAttachmentFiles.add(attachmentFile);
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    log.error("파일 저장에 실패했습니다.");
                 }
             }
         }
-
         mailDTO.setMailAttachmentFiles(mailAttachmentFiles);
-
         mail = mailDTO.toEntity();
         mailRepository.save(mail);
 
