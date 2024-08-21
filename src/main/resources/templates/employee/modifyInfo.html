@@ -149,7 +149,6 @@
             document.getElementById('verifyPhoneButton').addEventListener('click', function () {
                 newPhoneNumber = document.getElementById('newPhoneNumber').value;
                 let certificationNumber =  Math.floor(Math.random() * 9000 + 1000).toString();
-                console.log(certificationNumber);
                 $.ajax({
                     url: "/employee/send-one",
                     type: "POST",
@@ -172,10 +171,6 @@
             // 핸드폰 번호 변경 인증
             document.getElementById('verificationCodeButton').addEventListener('click', function () {
                 let inputCode = document.getElementById('verificationCode').value;
-                console.log("certificationCode = " + certificationCode);
-                console.log("certificationCode의 타입 " + typeof certificationCode);
-                console.log("inputCode = " + inputCode);
-                console.log("inputCode의 타입 " + typeof inputCode);
                 if (inputCode === certificationCode.toString()) {
                     alert("인증 성공");
                     $.ajax({

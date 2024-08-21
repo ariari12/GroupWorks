@@ -59,7 +59,7 @@
                               <tbody>
                               <tr th:each="list: ${workflowList}" th:onclick="workflowDetial([[${list.getId()}]]);">
                                     <td th:text="${list.getTitle()}"></td>
-                                    <td th:text="${list.getEmployeeName()}"></td>
+                                    <td style="width: 75px;" th:text="${list.getEmployeeName()}"></td>
                                     <td th:text="${list.getDraftDate()}"></td>
                               </tr>
                               </tbody>
@@ -82,13 +82,12 @@
                                     <th>제목</th>
                                     <th>보내는사람</th>
                                     <th>받는사람</th>
-                                    <th>날짜</th>
                               </tr>
                               </thead>
                               <tbody>
                               <tr th:each="list: ${mailList}">
                                     <td th:text="${list.getMailTitle()}"></td>
-                                    <td th:text="${list.getMailReceiverName()}"></td>
+                                    <td style="width: 75px;" th:text="${list.getMailReceiverName()}"></td>
                                     <td th:text="${list.getMailSenderName()}"></td>
                               </tr>
                               </tbody>
@@ -116,7 +115,7 @@
                               <tbody>
                               <tr th:each="list: ${boardList}">
                                     <td th:text="${list.getTitle()}"></td>
-                                    <td th:text="${list.getDepartment().getDepartmentName()}"></td>
+                                    <td style="width: 75px;" th:text="${list.getDepartment().getDepartmentName()}"></td>
                                     <td th:text="${list.getEmployee().getEmployeeName()}"></td>
                               </tr>
                               </tbody>
