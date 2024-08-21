@@ -24,8 +24,6 @@ public enum ApprovalMethod {
 
     public static String getMatch(int value) {
         if(value == 0) return null;
-        log.info("ApprovalMethod value: {}", value);
-        log.info("ApprovalMethod getMatch value: {}", ApprovalMethod.values()[value -1].getMethod());
         return ApprovalMethod.values()[value -1].getMethod();
     }
 

@@ -183,7 +183,8 @@ public class WorkFlowController {
             }
             /* 사용자가(사원번호pk) 현재결재 차례 결재자:4 결재자:1 */
             if (classifications == 3 && a.getApproverType() == 1 && a.getEmployeeId() == employeeId) {
-                classifications = a.getSequenceNum() - 1 == workFlow.getApprovalCount() ? approverClass.CURRENT_APPROVER.ordinal() : approverClass.APPROVER.ordinal();
+                classifications = (workFlow.getStatus() == 0 || workFlow.getStatus() == 3) && a.getSequenceNum() - 1 == workFlow.getApprovalCount() ?
+                        approverClass.CURRENT_APPROVER.ordinal() : approverClass.APPROVER.ordinal();
             }
             /* 사용자가(사원번호pk) 협조자:2
              * 협조자가 코멘트를 작성하면 승인, 작성하지 않은 경우 진행, 진행단계일 때만 코멘트 작성가능 */

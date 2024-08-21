@@ -38,19 +38,19 @@ public class MainController {
 //    로그인 후 메인화면
     @GetMapping("/main")
     public String main(Model model, HttpSession session) {
-        log.info("MainController - mainView");
+//        log.info("MainController - mainView");
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         CustomUserDetails user = (CustomUserDetails) authentication.getPrincipal();
 
         EmployeeDTO employeeDTO = employeeService.findByEmployeeId(Long.valueOf(user.getUsername()));
-        System.out.println("로그인 employee : " + employeeDTO);
+//        log.info("로그인 employee : {}", employeeDTO);
 
         SessionEmployeeDTO sessionEmployeeDTO = employeeDTO.toSessionEmployee();
 
 //        발신, 수신 여부 상관없이 최신순 5개 메일 가져오기
         session.setAttribute("employee", sessionEmployeeDTO);
-        log.info("employee" + sessionEmployeeDTO);
+//        log.info("employee" + sessionEmployeeDTO);
         /* Main Title 안씀 */
 //        model.addAttribute("title", "MAIN");
 //        model.addAttribute("subtitle", "SUBMAIN");
