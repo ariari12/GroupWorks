@@ -59,13 +59,6 @@ public class VacationServiceImpl implements VacationService{
             history.resetAnnual();
         }
     }
-    // 기존의 캐시 제거를 위한 메서드
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @CacheEvict(value = "vacationRequestCache", key = "#employeeId")
-    public void evictVacationCache(Long employeeId) {
-        // 단순히 캐시를 제거하기 위한 메서드이므로, 로직이 필요하지 않습니다.
-        log.info("evictVacationCache {}", employeeId); ;
-    }
 
 
 
@@ -407,7 +400,7 @@ public class VacationServiceImpl implements VacationService{
 
             vacation.approvalStatus(status,approver,vacation.getEmployee().getEmployeeId());
             // 승인 후 캐시 제거
-            evictVacationCache(vacation.getEmployee().getEmployeeId());
+            notificationService.evictVacationCache(vacation.getEmployee().getEmployeeId());
 
             if(status.equals(VacationStatus.APPROVED)) {
                 vacationHistoryUpdate(vacation);
