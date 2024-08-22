@@ -36,7 +36,6 @@ public class CalendarServiceImpl implements CalendarService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     @Cacheable(value = "personalCalendarCache", key = "#employeeId", cacheManager = "cacheManager")
     public List<CalendarFormDTO> findAllPersonalCalendar(Long employeeId) {
         Employee employee = employeeRepository.findById(employeeId)
