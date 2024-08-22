@@ -26,14 +26,17 @@
                   }
             });
             
-            function workflowDetial(wId) {
+            function moveWorkflowDetail(wId) {
                   location.href = "/work-flow/detail/" + wId;
             }
 
-            function moveBoard(boardId) {
-                  location.href = "/board/notice/detail/" + boardId
+            function moveBoardDetail(boardId) {
+                  location.href = "/board/notice/detail/" + boardId;
             }
 
+            function moveMailDetail(mailId) {
+                  location.href = "/mail/detail/" + mailId;
+            }
       </script>
 </th:block>
 
@@ -62,7 +65,7 @@
                               </tr>
                               </thead>
                               <tbody>
-                              <tr th:each="list: ${workflowList}" th:onclick="workflowDetial([[${list.getId()}]]);">
+                              <tr th:each="list: ${workflowList}" th:onclick="moveWorkflowDetail([[${list.getId()}]]);">
                                     <td th:text="${list.getTitle()}"></td>
                                     <td style="width: 75px;" th:text="${list.getEmployeeName()}"></td>
                                     <td th:text="${list.getDraftDate()}"></td>
@@ -90,7 +93,7 @@
                               </tr>
                               </thead>
                               <tbody>
-                              <tr th:each="list: ${mailList}">
+                              <tr th:each="list: ${mailList}" th:onclick="moveMailDetail([[${list.getId()}]])">
                                     <td th:text="${list.getMailTitle()}"></td>
                                     <td style="width: 75px;" th:text="${list.getMailReceiverName()}"></td>
                                     <td th:text="${list.getMailSenderName()}"></td>
@@ -118,7 +121,7 @@
                               </tr>
                               </thead>
                               <tbody>
-                              <tr th:each="list: ${boardList}" th:onclick="moveBoard([[${list.boardId}]])">
+                              <tr th:each="list: ${boardList}" th:onclick="moveBoardDetail([[${list.boardId}]])">
                                     <td th:text="${list.getTitle()}"></td>
                                     <td style="width: 75px;" th:text="${list.employee.getDepartment().getDepartmentName()}"></td>
                                     <td th:text="${list.getEmployee().getEmployeeName()}"></td>

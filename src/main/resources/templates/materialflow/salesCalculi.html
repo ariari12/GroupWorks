@@ -76,8 +76,8 @@
                 <tr th:onclick="load([[${list.id}]], [[${list.classification +1}]])" th:each="list : ${orderList}">
                     <!--/*@thymesVar id="list" type="kr.co.groupworks.materialflow.dto.OrderDTO"*/-->
                     <td th:text="${list.getOrderCode()}"></td>
-                    <td th:if="${list.getClassification() == 0}">수주</td>
-                    <td th:if="${list.getClassification() == 1}">발주</td>
+                    <td th:if="${list.getClassification() == 0}">발주</td>
+                    <td th:if="${list.getClassification() == 1}">수주</td>
                     <!--/* 거래처 정보 */-->
                     <td th:text="${list.getManager().getBusiness().getBusinessName()}"></td>
                     <td th:text="${list.getManager().getName()}"></td>

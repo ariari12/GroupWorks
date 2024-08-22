@@ -124,10 +124,8 @@ public class MaterialFlowManagerController {
         model.addAttribute(ATTR_TITLE, title);
         model.addAttribute(ATTR_SUB_TITLE, subTitle);
 
-        log.info("start: {}, end: {}", start, end);
-
         if (start != null && end != null)
-            materialService.seles(start, end).forEach(model::addAttribute);
+            materialService.sales(start, end).forEach(model::addAttribute);
         return "materialflow/salesCalculi";
     }
 
