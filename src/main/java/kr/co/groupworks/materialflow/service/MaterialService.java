@@ -39,5 +39,5 @@ public interface MaterialService {
 
     List<MesListVO> getMesList();
 
-    Map<String, Object> seles(String start, String end);
+    Map<String, Object> sales(String start, String end);
 }

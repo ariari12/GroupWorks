@@ -234,7 +234,7 @@ public class MaterialServiceImpl implements MaterialService {
     }
 
     @Override
-    public Map<String, Object> seles(String start, String end) {
+    public Map<String, Object> sales(String start, String end) {
         DateTimeFormatter datePettern = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
         LocalDate startLD = LocalDate.parse(start, datePettern), endLD = LocalDate.parse(end, datePettern);
@@ -246,7 +246,7 @@ public class MaterialServiceImpl implements MaterialService {
         return Map.of(
                 "total", orderRepository.calculate(startLD, endLD),
                 "orderList", ol.stream().map(OrderDTO::new).toList(),
-                "mesList", ml.stream().map(MesDTO::new).toList()
+                "mesList", ml.stream().map(MesListVO::new).toList()
         );
     }
 

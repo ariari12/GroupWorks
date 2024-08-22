@@ -1,7 +1,9 @@
 package kr.co.groupworks.materialflow.entity;
 
 import jakarta.persistence.AttributeConverter;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class OrderClassificationConverter implements AttributeConverter<OrderClassification, String> {
 
     @Override

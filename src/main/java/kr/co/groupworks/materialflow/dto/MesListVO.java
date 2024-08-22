@@ -55,5 +55,18 @@ public class MesListVO {
         this.unitPrice = m.getUnitPrice();
         this.manufactureDate = m.getManufactureDate().format(DateTimeFormatter.ofPattern(DATE_PATTERN));
     }
+
+    public MesListVO(Mes m) {
+        final String DATE_PATTERN = "yyyy.MM.dd HH:mm:ss";
+
+        this.itemCode = m.getItemCode();
+        this.itemName = m.getItemName();
+
+        this.processLocation = m.getProcessLocation();
+        this.quantity = m.getQuantity();
+        this.defectsNum = m.getDefectsNum();
+        this.unitPrice = m.getUnitPrice();
+        this.manufactureDate = m.getManufactureDate().format(DateTimeFormatter.ofPattern(DATE_PATTERN));
+    }
 }
 

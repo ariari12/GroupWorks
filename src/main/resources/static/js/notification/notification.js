@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", function() {
     // SSE로 새로운 알림 수신
     eventSource.onmessage = function(event) {
         const notification = JSON.parse(event.data);
-        console.log("Received notification: ", notification);
+        // console.log("Received notification: ", notification);
 
         // 새로운 알림을 캐시된 데이터에 추가
         if (cachedNotifications) {
@@ -133,19 +133,19 @@ document.addEventListener("DOMContentLoaded", function() {
             });
         });
     }
-
-    // 알림 전체 삭제 함수
-    function deleteAllNotifications() {
-        fetch(`/notifications/deleteAll`, { method: 'DELETE' })
-            .then(response => {
-                if (response.ok) {
-                    const offcanvasBody = document.querySelector('#notificationOffcanvasRight .offcanvas-body');
-                    offcanvasBody.innerHTML = ''; // 화면에서 모든 알림 제거
-                    cachedNotifications = []; // 캐시 초기화
-                } else {
-                    console.error('Failed to delete all notifications');
-                }
-            })
-            .catch(error => console.error('Error deleting all notifications:', error));
-    }
 });
+
+// 알림 전체 삭제 함수
+function deleteAllNotifications() {
+    fetch(`/notifications/deleteAll`, { method: 'DELETE' })
+        .then(response => {
+            if (response.ok) {
+                const offcanvasBody = document.querySelector('#notificationOffcanvasRight .offcanvas-body');
+                offcanvasBody.innerHTML = ''; // 화면에서 모든 알림 제거
+                cachedNotifications = []; // 캐시 초기화
+            } else {
+                console.error('Failed to delete all notifications');
+            }
+        })
+        .catch(error => console.error('Error deleting all notifications:', error));
+}

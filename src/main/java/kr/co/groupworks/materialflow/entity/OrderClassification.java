@@ -1,10 +1,12 @@
 package kr.co.groupworks.materialflow.entity;
 
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Arrays;
 import java.util.Objects;
 
+@Slf4j
 @Getter
 public enum OrderClassification {
     SEND("발주"),

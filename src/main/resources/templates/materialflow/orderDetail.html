@@ -172,7 +172,7 @@
                     <th>세 율</th>
                     <td><input type="number" class="table-input" th:value="${order.getTex()}" readonly><span> %</span></td>
                     <th>세 액</th>
-                    <td><input type="number" class="table-input" th:value="${order.getTotalAmount() / (100 / order.getTex())}" size="7" readonly><span>￦</span></td>
+                    <td><input type="number" class="table-input" th:value="${order.getTotalAmount() * order.getTex() / 100}" size="7" readonly><span>￦</span></td>
                 </tr>
             </table>
         </div>

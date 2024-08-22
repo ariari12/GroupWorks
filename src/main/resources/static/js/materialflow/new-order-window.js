@@ -13,6 +13,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
 /* window 기존 창을 닫고 새창을 열고 Listener 등록 함수 */
 function openWindow(url, windowName, windowSize, eventHandler) {
+    console.log(eventHandler);
+    
     // 기존 창(이전 url 과 새로여는 url 이 같은 경우)이 열려 있다면 포커스
     if (preUrl === url && !currentWindow.closed) {
         currentWindow.focus();
@@ -26,10 +28,18 @@ function openWindow(url, windowName, windowSize, eventHandler) {
         // 새 창 열기
         currentWindow = window.open(url, windowName, windowSize);
         preUrl = url;
-
-        // 창이 열리고 나서 이벤트 리스너 추가
-        currentListener = eventHandler;
-        window.addEventListener("message", currentListener, { once : true });
+        
+        // 새 창이 로드된 후 리스너 등록
+        currentWindow.onload = () => {
+            // 이전 리스너가 있으면 제거
+            if (currentListener) {
+                window.removeEventListener("message", currentListener);
+            }
+            
+            // 새로운 리스너 등록
+            currentListener = eventHandler;
+            window.addEventListener("message", currentListener);
+        };
     }
 }
 
@@ -37,7 +47,7 @@ function openWindow(url, windowName, windowSize, eventHandler) {
 function registerWindow() {
     document.getElementById('registerBusiness').addEventListener("click", ev => {
         openWindow("/materialflow/new-business", "거래처 등록", "width=805, height=510, left=470, top=150",
-            ev => businessInfoUpdate(ev))
+            ev => businessInfoUpdate(ev));
     });
 }
 /* 거래처 목록 */
@@ -52,6 +62,7 @@ function businessInfoUpdate(event) {
     if(event.data.id === undefined) return;
 
     const division = document.getElementById("division").value;
+    
     if(division === '1') {
         document.getElementById("businessId").value = event.data.id;
         document.getElementById("receiveBusiness").value = event.data.businessName;
@@ -88,6 +99,7 @@ function managerReceive(event) {
     if (event.origin !== window.location.origin) { return; }
     if(currentWindow.closed) preUrl = null; // 창닫힘
     if(event.data.id === undefined) return;
+    console.dir(event.data);
 
     document.getElementById("managerId").value = event.data.id;
     document.getElementById("managerName").value = event.data.name;
@@ -107,6 +119,7 @@ function employeeReceive(event) {
     if (event.origin !== window.location.origin) { return; }
     if(currentWindow.closed) preUrl = null; // 창닫힘
     if(event.data.id === undefined) return;
+    console.dir(event.data);
 
     document.getElementById("employeeId").value = event.data.id;
     document.getElementById("employeeName").value = event.data.name;
