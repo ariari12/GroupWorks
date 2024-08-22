@@ -68,7 +68,6 @@ public class VacationController {
                              @SessionAttribute(name = "employee") SessionEmployeeDTO sessionEmployeeDTO){
         log.info("VacationController - modifyForm");
         VacationModifyFormDTO modifyFormDTO =vacationService.findCalendarByIdAndEmployee(calendarId, sessionEmployeeDTO.getEmployeeId());
-        log.info("{}",modifyFormDTO);
         model.addAttribute("title", "휴가 신청 수정");
         model.addAttribute("modifyForm",modifyFormDTO);
         model.addAttribute("vacationStatusList",vacationStatusList());

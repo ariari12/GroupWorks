@@ -7,6 +7,7 @@ import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import kr.co.groupworks.calendar.dto.CalendarFormDTO;
 import kr.co.groupworks.calendar.entity.Vacation;
+import kr.co.groupworks.calendar.entity.VacationStatus;
 import kr.co.groupworks.employee.entity.Employee;
 import kr.co.groupworks.employee.entity.Role;
 import lombok.RequiredArgsConstructor;
@@ -37,7 +38,7 @@ public class VacationRepositoryImpl implements VacationQueryDsl{
                 ))
                 .from(vacation)
                 .join(vacation.employee, employee)
-                .where(employee.eq(emp))
+                .where(employee.eq(emp).and(vacation.status.eq(VacationStatus.APPROVED)))
                 .fetch();
     }
 
