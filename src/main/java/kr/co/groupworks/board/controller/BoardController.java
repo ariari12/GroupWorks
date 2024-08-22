@@ -182,6 +182,9 @@ public class BoardController {
     @PutMapping("/edit/{no}")
     public ResponseEntity<Void> edit(@PathVariable("no") Long no,
                                      @RequestBody BoardDTO dto) {
+
+        log.info("dto test : {}", dto);
+
         boardService.editBoard(no, dto);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }

@@ -509,7 +509,7 @@
             });
         </script>
     </th:block>
-    <th:block th:if="${classifications == 0 && workFlowDto.getStatus() > 0}">
+    <th:block th:if="${classifications == 0 && 0 < workFlowDto.getStatus()}">
     <script>
         document.addEventListener('DOMContentLoaded', (event) => {
             const addToastBtn = document.getElementById('canselToastBtn');
@@ -575,7 +575,7 @@
     </th:block>
 
     <!--/* 해당 결재요청의 결재차례의 결재자인 경우 */-->
-    <th:block th:if="${classifications == 4}">
+    <th:block th:if="${classifications == 4  && (workFlowDto.status == 1 || workFlowDto.status == 3)}">
     <script>
         $(function () {
             $('#approveSubBtn').on('click', function(event) {
@@ -609,7 +609,7 @@
     </th:block>
 
     <!--/* 해당 결재요청의 협조자인 경우 */-->
-    <th:block th:if="${classifications == 2}">
+    <th:block th:if="${classifications == 2 && (workFlowDto.status == 1 || workFlowDto.status == 3)}">
     <script>
         $(function () {
             $('#collSubBtn').on('click', function(event) {

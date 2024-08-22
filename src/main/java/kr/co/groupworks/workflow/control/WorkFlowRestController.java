@@ -184,13 +184,11 @@ public class WorkFlowRestController {
 
     public static ResponseEntity<Object> getObjectResponseEntity(@PathVariable int code, HttpSession session, Logger log, WorkFlowService workFlowService) {
         SessionEmployeeDTO sessionDTO = (SessionEmployeeDTO) session.getAttribute("employee");
-        log.info("WorkFlowRestController - workStatus ok, sessionDTO: {}", sessionDTO);
 
         Object result = workFlowService.getWorkflowStatistics(sessionDTO.getEmployeeId(), sessionDTO.getDepartment().getDepartmentId(), code);
-        if (result != null) {
-            log.info("WorkFlowRestController - workStatus ok, result: {}", result);
-            return ResponseEntity.ok().body(result);
-        }
+        if (result != null) return ResponseEntity.ok().body(result);
+
+        log.error("error result is null");
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
 }

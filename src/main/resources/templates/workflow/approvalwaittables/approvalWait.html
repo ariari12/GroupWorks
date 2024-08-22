@@ -40,7 +40,7 @@
             <tbody>
             <!--/*@thymesVar id="approval" type="kr.co.groupworks.workflow.dto.dto.WorkFlowDTO"*/-->
             <tr th:onclick="load([[${list.id}]])" th:each="list : ${progress}">
-                <td>[[${list.id}]]</td>
+                <td>[[${list.code}]]</td>
                 <td>[[${list.workFlowType}]]</td>
                 <td>[[${list.title}]]</td>
                 <!--/* 기안자 정보 */-->
