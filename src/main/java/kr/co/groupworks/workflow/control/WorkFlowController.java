@@ -124,7 +124,7 @@ public class WorkFlowController {
     /* 결재 현황 */
     @GetMapping(WORK_STATUS)
     public String workStat(Model model, HttpSession session) {
-        title = "WorkFlow Status Board";
+        title = "WorkFlow Dashboard";
         subtitle = "전자결재 현황";
 
         model.addAttribute(AttributeName.TITLE.getStatus(), title);
