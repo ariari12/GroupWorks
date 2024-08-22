@@ -38,13 +38,11 @@ public class MainController {
 //    로그인 후 메인화면
     @GetMapping("/main")
     public String main(Model model, HttpSession session) {
-//        log.info("MainController - mainView");
-
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         CustomUserDetails user = (CustomUserDetails) authentication.getPrincipal();
 
         EmployeeDTO employeeDTO = employeeService.findByEmployeeId(Long.valueOf(user.getUsername()));
-//        log.info("로그인 employee : {}", employeeDTO);
+//        log.info("MainController - mainView, 로그인 employee : {}", employeeDTO);
 
         SessionEmployeeDTO sessionEmployeeDTO = employeeDTO.toSessionEmployee();
 
@@ -57,7 +55,6 @@ public class MainController {
         model.addAttribute("workflowList", workFlowRepository.recentWorkflowList(sessionEmployeeDTO.getEmployeeId()));
         model.addAttribute("mailList", mailRepository.findLatestMails(sessionEmployeeDTO.getEmail(), PageRequest.of(0, 5)));
         model.addAttribute("boardList", boardRepository.recentNotices());
-        log.info("asdsadasas : {}",boardRepository.recentNotices().toString());
         return "main";
     }
 
