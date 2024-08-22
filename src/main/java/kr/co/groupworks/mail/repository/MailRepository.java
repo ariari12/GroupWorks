@@ -21,7 +21,7 @@ public interface MailRepository extends MongoRepository<Mail, String> {
     Page<Mail> findAllByMailReceiverOrMailReferrerAndMailTitle(String receiverEmail, String mailTitle, Pageable pageable);
 
     // 받은 메일함에서 보낸 사람으로 검색하는 JPA
-    @Query(value = "{ $or: [{mail_receiver: ?0}, {mail_referrer: ?0}], 'mail_sendername': { $regex: ?1, $options: 'i' }, 'mail_status': { $ne: 2 } }", sort = "{'mail_send_time' : -1}")
+    @Query(value = "{ $or: [{mail_receiver: ?0}, {mail_referrer: ?0}], 'mail_sender_name': { $regex: ?1, $options: 'i' }, 'mail_status': { $ne: 2 } }", sort = "{'mail_send_time' : -1}")
     Page<Mail> findAllByMailReceiverOrMailReferrerAndMailSenderName(String receiverEmail, String mailSenderName, Pageable pageable);
 //  ==================================================================================================
 
@@ -35,7 +35,7 @@ public interface MailRepository extends MongoRepository<Mail, String> {
 
 //    보낸 메일함에서 받은 사람으로 검색하는 JPA
 //    $regex는 2번째 파라미터를 정확하게 일치하는 것 뿐 아니라 포함하는지를 비교함, $options 'i'는 대소문자 구분 안하겠다는 것
-    @Query(value = "{mail_sender: ?0,'mail_receivername': {$regex: ?1, $options: 'i'},'mail_status': {$ne: 2}}", sort = "{'mail_send_time' : -1}")
+    @Query(value = "{mail_sender: ?0,'mail_receiver_name': {$regex: ?1, $options: 'i'},'mail_status': {$ne: 2}}", sort = "{'mail_send_time' : -1}")
     Page<Mail> findAllByMailSenderAndMailReceiverName(String senderEmail, String mailRecieverName, Pageable pageable);
 
 //  ==================================================================================================
