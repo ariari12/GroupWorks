@@ -11,23 +11,56 @@ const existingRoomIds = [];
 
 let screenStream = null; // 화면 공유를 위한 스트림
 
-document.addEventListener('DOMContentLoaded', async ()=>{
-    roomId = document.querySelector('#roomId').value;
 
-    // 카메라 시작
-    await startCam();
+// 방 ID를 서버와 동기화하는 함수
+const syncRoomIdsWithServer = async () => {
+    try {
+        // 서버에서 방 ID 목록을 가져오는 API 호출
+        const response = await fetch('/videoConference/rooms');
+        const data = await response.json();
+        existingRoomIds.length = 0;  // 기존 방 ID 목록 초기화
+        existingRoomIds.push(...data);
+    } catch (error) {
+        console.error("Failed to sync room IDs with server:", error);
+    }
+};
 
-    // 소켓 연결 시작
-    await connectSocket();
+// 방 ID를 서버에 저장하는 함수
+const saveRoomIdToServer = async (roomId) => {
+    try {
+        await fetch('/videoConference/rooms', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ roomId })  // 수정된 부분
+        });
+    } catch (error) {
+        console.error("Failed to save room ID to server:", error);
+    }
+};
 
-    await startConferenceHandler()
+// 방 ID를 서버에서 확인하는 함수
+const checkRoomIdFromServer = async (roomId) => {
+    try {
+        // 서버에서 방 ID 확인하는 API 호출
+        const response = await fetch(`/videoConference/rooms/${roomId}`);
+        if (response.ok) {
+            const data = await response.json();
+            return data;  // 서버에서 받은 boolean 값을 반환
+        } else {
+            return false;
+        }
+    } catch (error) {
+        console.error("Failed to check room ID from server:", error);
+        return false;
+    }
+};
 
-})
 // 카메라 시작 함수
 const startCam = async () => {
     try {
         const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
-        console.log('Stream found');
         localStream = stream;
         stream.getAudioTracks()[0].enabled = true;
         localStreamElement.srcObject = localStream;
@@ -36,21 +69,6 @@ const startCam = async () => {
         console.error("Error accessing media devices:", error);
         handleMediaError(error);
     }
-};
-
-const startConferenceHandler = async () => {
-    console.log('Starting conference');
-    stompClient.send(`/app/call/key`, {}, {});
-    setTimeout(() => {
-        otherKeyList.forEach((key) => {
-            if (!pcListMap.has(key)) {
-                pcListMap.set(key, createPeerConnection(key));
-                sendOffer(pcListMap.get(key), key);
-            } else {
-                sendOffer(pcListMap.get(key), key);
-            }
-        });
-    }, 1000);
 };
 
 // 미디어 오류 처리 함수
@@ -70,11 +88,9 @@ const connectSocket = async () => {
     const socket = new SockJS('/signaling');
     stompClient = Stomp.over(socket);
     stompClient.debug = (str) => {
-        console.log('STOMP: ' + str);
     };
 
     const onConnect = () => {
-        console.log('Connected to WebRTC server');
         retryCount = 0; // Reset retry count on successful connection
         setupSubscriptions();
     };
@@ -83,7 +99,6 @@ const connectSocket = async () => {
         console.error('Connection error:', error);
         if (retryCount < maxRetries) {
             retryCount++;
-            console.log(`Reconnecting... Attempt ${retryCount}/${maxRetries}`);
             setTimeout(connectSocket, 2000); // Retry connection after 2 seconds
         } else {
             console.error('Max retry attempts reached. Could not connect to WebRTC server.');
@@ -108,7 +123,6 @@ const setupSubscriptions = () => {
     stompClient.subscribe(`/topic/peer/iceCandidate/${myKey}/${roomId}`, candidate => {
         const key = JSON.parse(candidate.body).key;
         const message = JSON.parse(candidate.body).body;
-        console.log(`Received ICE candidate from ${key}:`, message);
         if (pcListMap.has(key)) {
             pcListMap.get(key).addIceCandidate(new RTCIceCandidate(message)).catch(error => {
                 console.error('Error adding received ICE candidate:', error);
@@ -121,7 +135,6 @@ const setupSubscriptions = () => {
     stompClient.subscribe(`/topic/peer/offer/${myKey}/${roomId}`, offer => {
         const key = JSON.parse(offer.body).key;
         const message = JSON.parse(offer.body).body;
-        console.log(`Received offer from ${key}`);
         if (!pcListMap.has(key)) {
             pcListMap.set(key, createPeerConnection(key));
         }
@@ -135,7 +148,6 @@ const setupSubscriptions = () => {
     stompClient.subscribe(`/topic/peer/answer/${myKey}/${roomId}`, answer => {
         const key = JSON.parse(answer.body).key;
         const message = JSON.parse(answer.body).body;
-        console.log(`Received answer from ${key}`);
         if (pcListMap.has(key)) {
             pcListMap.get(key).setRemoteDescription(new RTCSessionDescription(message))
                 .catch(error => {
@@ -147,13 +159,11 @@ const setupSubscriptions = () => {
     });
 
     stompClient.subscribe(`/topic/call/key`, message => {
-        console.log('Received call key message');
         stompClient.send(`/app/send/key`, {}, JSON.stringify(myKey));
     });
 
     stompClient.subscribe(`/topic/send/key`, message => {
         const key = JSON.parse(message.body);
-        console.log(`Received send key: ${key}`);
         if (myKey !== key && !otherKeyList.includes(key)) {
             otherKeyList.push(key);
         }
@@ -161,7 +171,6 @@ const setupSubscriptions = () => {
 
     // 종료 메시지를 수신하여 처리하는 부분
     stompClient.subscribe(`/topic/peer/endConference/${roomId}`, message => {
-        console.log('Received end conference message:', message);
         // 상대방이 종료했을 때 remoteStreamDiv 숨기기
         document.querySelector('#remoteStreamDiv').style.display = 'none';
         alert('상대방이 화상회의를 종료했습니다.');
@@ -171,7 +180,6 @@ const setupSubscriptions = () => {
 
 // 원격 트랙 수신 함수
 let onTrack = (event, otherKey) => {
-    console.log(`Received remote track from ${otherKey}`);
     const remoteVideo = document.getElementById(`${otherKey}`);
     if (remoteVideo) {
         remoteVideo.srcObject = event.streams[0];
@@ -207,7 +215,6 @@ const createPeerConnection = (otherKey) => {
                 pc.addTrack(track, localStream);
             });
         }
-        console.log(`PeerConnection created for ${otherKey}`);
     } catch (error) {
         console.error('PeerConnection failed: ', error);
     }
@@ -217,7 +224,6 @@ const createPeerConnection = (otherKey) => {
 // ICE 후보 처리 함수
 let onIceCandidate = (event, otherKey) => {
     if (event.candidate) {
-        console.log('Sending ICE candidate:', event.candidate);
         stompClient.send(`/app/peer/iceCandidate/${otherKey}/${roomId}`, {}, JSON.stringify({
             key: myKey,
             body: event.candidate
@@ -233,7 +239,6 @@ let sendOffer = (pc, otherKey) => {
             key: myKey,
             body: offer
         }));
-        console.log('Send offer');
     });
 };
 
@@ -245,24 +250,27 @@ let sendAnswer = (pc, otherKey) => {
             key: myKey,
             body: answer
         }));
-        console.log('Send answer');
     });
 };
 
 // 로컬 설명 설정 및 메시지 전송 함수
 const setLocalAndSendMessage = (pc, sessionDescription) => {
     pc.setLocalDescription(sessionDescription).then(() => {
-        console.log('Set local description:', sessionDescription);
     }).catch(error => {
         console.error('Error setting local description:', error);
     });
 };
 
+const toggleStartEndButton = (buttonSelector, endText, endHandler) => {
+    const button = document.querySelector(buttonSelector);
+    button.textContent = endText;
+    button.removeEventListener('click', startConferenceHandler); // startConferenceHandler를 정의했기 때문에 사용
+    button.addEventListener('click', endHandler);
+};
 
 function disconnect(){
     if(stompClient !== null){
         stompClient.disconnect(function (){
-            console.log("Disconnected");
         })
     }
 }
@@ -272,13 +280,10 @@ const sendEndConferenceMessage = () => {
         content: "GoodBye!"
     }));
 };
-
 // 화상회의 종료 함수
 const handleEndConference = async () => {
-    console.log('Sending end conference message');
     setTimeout(() => {
         stompClient.disconnect(() => {
-            console.log("disconnected");
         });
     }, 1000);
     disconnect();
@@ -286,6 +291,104 @@ const handleEndConference = async () => {
     window.location.href = '/main';
 };
 
+// UUID 생성 함수
+function generateUUID() {
+    return 'xxxx-xxxx-xxxx-xxxx'.replace(/[xy]/g, function(c) {
+        const r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+    });
+}
+
+// 페이지 로드 시 createRoomIdInput에 UUID 설정
+document.addEventListener('DOMContentLoaded', async (event) => {
+    await syncRoomIdsWithServer(); // 방 ID를 서버와 동기화
+    const newRoomId = generateUUID(); // 새로운 UUID 생성
+    document.querySelector('#createRoomIdInput').value = newRoomId; // 생성된 UUID를 input 박스에 설정
+    existingRoomIds.push(newRoomId); // 새로 생성된 방 ID를 배열에 추가
+});
+
+// 방만들기 버튼 이벤트 리스너
+document.querySelector('#createEnterRoomBtn').addEventListener('click', async () => {
+    await startCam();
+    roomId = document.querySelector('#createRoomIdInput').value;
+    document.querySelector('#createRoomIdInput').disabled = true;
+    document.querySelector('#createEnterRoomBtn').disabled = true;
+    document.querySelector('#joinRoomIdInput').disabled = true;
+    document.querySelector('#joinEnterRoomBtn').disabled = true;
+    await connectSocket();
+    document.querySelector('#createStartStreamsBtn').style.display = 'block';
+    await saveRoomIdToServer(roomId); // 방 ID를 서버에 저장
+});
+
+// 참여하기 버튼 이벤트 리스너
+document.querySelector('#joinEnterRoomBtn').addEventListener('click', async () => {
+    await startCam();
+    roomId = document.querySelector('#joinRoomIdInput').value;
+    document.querySelector('#joinRoomIdInput').disabled = true;
+    document.querySelector('#joinEnterRoomBtn').disabled = true;
+    document.querySelector('#createRoomIdInput').disabled = true;
+    document.querySelector('#createEnterRoomBtn').disabled = true;
+    await connectSocket();
+    document.querySelector('#joinStartStreamsBtn').style.display = 'block';
+});
+
+// 방 만들기 후 시작하기 버튼 이벤트 리스너
+document.querySelector('#createStartStreamsBtn').addEventListener('click', async () => {
+    await startConferenceHandler(); // 방 시작하기 핸들러 호출
+    document.querySelector('#createStartStreamsBtn').style.display = 'none'; // 시작하기 버튼 숨기기
+    // 종료하기 및 카메라끄기 버튼 표시
+    document.getElementById('controlButtons').style.display = 'block';
+});
+
+const startConferenceHandler = async () => {
+    stompClient.send(`/app/call/key`, {}, {});
+    setTimeout(() => {
+        otherKeyList.forEach((key) => {
+            if (!pcListMap.has(key)) {
+                pcListMap.set(key, createPeerConnection(key));
+                sendOffer(pcListMap.get(key), key);
+            } else {
+                sendOffer(pcListMap.get(key), key);
+            }
+        });
+    }, 1000);
+};
+
+// 참여하기 후 시작하기 버튼 이벤트 리스너
+document.querySelector('#joinStartStreamsBtn').addEventListener('click', async () => {
+    roomId = document.querySelector('#joinRoomIdInput').value;
+    const roomExists = await checkRoomIdFromServer(roomId); // 서버에서 방 ID 확인
+    if (!roomExists) {
+        alert('채팅방 ID를 확인해주세요.');
+        // 컴포넌트 다시 활성화
+        document.querySelector('#joinRoomIdInput').disabled = false;
+        document.querySelector('#joinEnterRoomBtn').disabled = false;
+        document.querySelector('#createRoomIdInput').disabled = false;
+        document.querySelector('#createEnterRoomBtn').disabled = false;
+
+        // 시작하기 버튼과 카메라 화면 숨기기
+        document.querySelector('#joinStartStreamsBtn').style.display = 'none';
+        localStreamElement.style.display = 'none';
+        localStreamElement.srcObject = null;
+
+        return;
+    }
+    document.querySelector('#joinStartStreamsBtn').style.display = 'none'; // 시작하기 버튼 숨기기
+    stompClient.send(`/app/call/key`, {}, {});
+    setTimeout(() => {
+        otherKeyList.forEach((key) => {
+            if (!pcListMap.has(key)) {
+                pcListMap.set(key, createPeerConnection(key));
+                sendOffer(pcListMap.get(key), key);
+            } else {
+                sendOffer(pcListMap.get(key), key);
+            }
+        });
+    }, 1000);
+
+    // 종료하기 및 카메라끄기 버튼 표시
+    document.getElementById('controlButtons').style.display = 'block';
+});
 
 // 종료하기 버튼 이벤트 리스너를 새로운 종료하기 버튼에 추가
 document.querySelector('#endConferenceBtn').addEventListener('click', async () => {
@@ -321,27 +424,25 @@ document.querySelector('#toggleMicBtn').addEventListener('click', () => {
 const startScreenShare = async () => {
     try {
         screenStream = await navigator.mediaDevices.getDisplayMedia({ video: true });
-        console.log('Screen share started');
-
-        // 기존 비디오 트랙을 화면 공유 트랙으로 교체
-        pcListMap.forEach(pc => {
-            // 기존의 모든 비디오 트랙 제거
-            const senders = pc.getSenders();
-            senders.forEach(sender => {
-                if (sender.track && sender.track.kind === 'video') {
-                    pc.removeTrack(sender);
-                }
-            });
-
-            // 화면 공유 트랙 추가
-            screenStream.getTracks().forEach(track => {
-                pc.addTrack(track, screenStream);
-            });
-        });
 
         // 화면 공유 비디오를 로컬 화면에 표시
         localStreamElement.srcObject = screenStream;
         localStreamElement.style.display = 'block';
+
+        // 기존 비디오 트랙을 화면 공유 트랙으로 교체
+        pcListMap.forEach(pc => {
+            const videoSender = pc.getSenders().find(sender => sender.track && sender.track.kind === 'video');
+            if (videoSender) {
+                screenStream.getTracks().forEach(track => {
+                    videoSender.replaceTrack(track);
+                });
+            } else {
+                screenStream.getTracks().forEach(track => {
+                    pc.addTrack(track, screenStream);
+                });
+            }
+        });
+
     } catch (error) {
         console.error("Error starting screen share:", error);
         alert("화면 공유를 시작할 수 없습니다.");
@@ -353,29 +454,28 @@ const stopScreenShare = () => {
     if (screenStream) {
         screenStream.getTracks().forEach(track => track.stop());
         screenStream = null;
-        console.log('Screen share stopped');
-
-        // 기존의 비디오 트랙 복구
-        pcListMap.forEach(pc => {
-            // 기존의 모든 비디오 트랙 제거
-            const senders = pc.getSenders();
-            senders.forEach(sender => {
-                if (sender.track && sender.track.kind === 'video') {
-                    pc.removeTrack(sender);
-                }
-            });
-
-            // 로컬 비디오 트랙 추가
-            localStream.getTracks().forEach(track => {
-                if (track.kind === 'video') {
-                    pc.addTrack(track, localStream);
-                }
-            });
-        });
 
         // 기존 웹캠 비디오를 로컬 화면에 다시 표시
         localStreamElement.srcObject = localStream;
         localStreamElement.style.display = 'block';
+
+        // 기존의 비디오 트랙 복구
+        pcListMap.forEach(pc => {
+            const videoSender = pc.getSenders().find(sender => sender.track && sender.track.kind === 'video');
+            if (videoSender) {
+                localStream.getTracks().forEach(track => {
+                    if (track.kind === 'video') {
+                        videoSender.replaceTrack(track);
+                    }
+                });
+            } else {
+                localStream.getTracks().forEach(track => {
+                    if (track.kind === 'video') {
+                        pc.addTrack(track, localStream);
+                    }
+                });
+            }
+        });
     }
 };
 
@@ -390,6 +490,3 @@ document.querySelector('#toggleScreenShareBtn').addEventListener('click', () => 
         });
     }
 });
-
-// 종료하기 및 카메라끄기 버튼 표시
-document.getElementById('controlButtons').style.display = 'block';

@@ -26,45 +26,23 @@ public class SignalingController {
     @RequestMapping("")
     public ModelAndView videoConference() {
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("videoConference/.html");
+        modelAndView.setViewName("videoConference/videoConferenceMenu.html");
         return modelAndView;
     }
 
-    @RequestMapping("/createroom")
-    public ModelAndView createRoom() {
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("videoConference/videoConferenceCreateRoom.html");
-        return modelAndView;
-    }
 
-    @RequestMapping("/enterroom")
-    public ModelAndView enterRoom() {
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("videoConference/videoConferenceEnterRoom.html");
-        return modelAndView;
-    }
-
-    @RequestMapping("/room")
-    public ModelAndView room(@RequestParam("roomId") String roomId) {
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("videoConference/videoConferenceRoom.html");
-        modelAndView.addObject("roomId", roomId);  // roomId를 모델에 추가
-        return modelAndView;
-    }
 
     // 방 생성 엔드포인트
     @PostMapping("/rooms")
     public ResponseEntity<Void> createRoom(@RequestBody Map<String, String> request) {
         String roomId = request.get("roomId");
         videoConferenceService.addRoom(roomId);
-        log.info("Room created: {}", roomId);
         return ResponseEntity.ok().build();
     }
 
     // 방 확인 엔드포인트
     @GetMapping("/rooms/{roomId}")
     public ResponseEntity<Boolean> checkRoom(@PathVariable String roomId) {
-        log.info("Wanted join Room: {}", roomId);
         boolean exists = videoConferenceService.roomExists(roomId);
         return ResponseEntity.ok(exists);
     }
@@ -75,7 +53,6 @@ public class SignalingController {
     @SendTo("/topic/peer/offer/{camKey}/{roomId}")
     public String PeerHandleOffer(@Payload String offer, @DestinationVariable(value = "roomId") String roomId,
                                   @DestinationVariable(value = "camKey") String camKey) {
-        log.info("[OFFER] {} : {}", camKey, offer);
         return offer;
     }
 
@@ -85,7 +62,6 @@ public class SignalingController {
     @SendTo("/topic/peer/iceCandidate/{camKey}/{roomId}")
     public String PeerHandleIceCandidate(@Payload String candidate, @DestinationVariable(value = "roomId") String roomId,
                                          @DestinationVariable(value = "camKey") String camKey) {
-        log.info("[ICECANDIDATE] {} : {}", camKey, candidate);
         return candidate;
     }
 
@@ -95,7 +71,6 @@ public class SignalingController {
     @SendTo("/topic/peer/answer/{camKey}/{roomId}")
     public String PeerHandleAnswer(@Payload String answer, @DestinationVariable(value = "roomId") String roomId,
                                    @DestinationVariable(value = "camKey") String camKey) {
-        log.info("[ANSWER] {} : {}", camKey, answer);
         return answer;
     }
 
@@ -103,7 +78,6 @@ public class SignalingController {
     @MessageMapping("/call/key")
     @SendTo("/topic/call/key")
     public String callKey(@Payload String message) {
-        log.info("[Key] : {}", message);
         return message;
     }
 

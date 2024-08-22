@@ -6,10 +6,13 @@ import jakarta.validation.constraints.NotNull;
 import kr.co.groupworks.employee.dto.EmployeeDTO;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
+@Slf4j
 @Entity
 @Table(name="vacation")
 @Getter
@@ -19,7 +22,8 @@ import java.time.temporal.ChronoUnit;
 public class Vacation extends Calendar{
 
     // 승인하는 사람
-    private String approver;
+    @Embedded
+    private Approver approver;
     // 승인 상태
     @Enumerated(EnumType.STRING)
     private VacationStatus status;
@@ -47,8 +51,9 @@ public class Vacation extends Calendar{
         return this;
     }
 
-    public void approvalStatus(VacationStatus status, Approver approver) {
+    public void approvalStatus(VacationStatus status, Approver approver, Long employeeId) {
         this.status=status;
+        this.approver=approver;
     }
 
     public void updateUsedVacation(LocalDate startDate, LocalDate endDate) {

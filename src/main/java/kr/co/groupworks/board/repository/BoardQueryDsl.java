@@ -13,4 +13,7 @@ public interface BoardQueryDsl {
 
     Page<Board> findBoardList(Long departmentId, Pageable pageable, String keyword, String keywordType);
     Page<Board> findBoardNotice(Long departmentId, Pageable pageable, String keyword, String keywordType);
+
+    /* 공지사항 최근 5개 가져오기 */
+    List<Board> recentNotices();
 }

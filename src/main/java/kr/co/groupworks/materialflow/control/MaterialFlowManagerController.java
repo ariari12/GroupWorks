@@ -123,11 +123,11 @@ public class MaterialFlowManagerController {
         String title = "매출액 산출", subTitle = "영업 손익 계산";
         model.addAttribute(ATTR_TITLE, title);
         model.addAttribute(ATTR_SUB_TITLE, subTitle);
-
-        log.info("start: {}, end: {}", start, end);
+        model.addAttribute("start", start);
+        model.addAttribute("end", end);
 
         if (start != null && end != null)
-            materialService.seles(start, end).forEach(model::addAttribute);
+            materialService.sales(start, end).forEach(model::addAttribute);
         return "materialflow/salesCalculi";
     }
 

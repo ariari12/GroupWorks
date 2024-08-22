@@ -47,7 +47,6 @@ public class MaterialItemVO {
     public MaterialItemVO(MaterialItem item) {
         this.id = item.getId();
         this.bomId = item.getBomId();
-        this.mesId = item.getMesId();
 
         this.itemStatus = item.getItemStatus() == null ? null : item.getItemStatus().getValue();
         this.itemCode = item.getItemCode();

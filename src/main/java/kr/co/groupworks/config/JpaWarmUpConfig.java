@@ -21,8 +21,8 @@ public class JpaWarmUpConfig {
     public ApplicationRunner jpaWarmUpRunner() {
         return args -> {
             // JPA 엔티티를 미리 로드하여 초기화
-            calendarRepository.findAll();
-            vacationHistoryRepository.findAll();
+            calendarRepository.findById(1L);
+            vacationHistoryRepository.findById(1L);
             log.info("JPA warm-up completed.");
         };
     }

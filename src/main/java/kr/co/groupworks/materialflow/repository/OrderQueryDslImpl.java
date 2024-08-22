@@ -127,28 +127,27 @@ public class OrderQueryDslImpl extends QuerydslRepositorySupport implements Orde
         QOrder o = QOrder.order;
         QMes m = QMes.mes;
 
-        // materialflow_mes 테이블의 계산된 합산값
-        NumberExpression<Long> minus = m.defectsNum.multiply(m.unitPrice).sum().multiply(-1L);
-
-        // NumberExpression<Long>으로 연산 수행
-        NumberExpression<Long> adjustedAmount = o.totalAmount
-                .multiply(o.texAmount.add(-100L).multiply(-1L))
-                .divide(100L);
-
-        // CASE 문을 Long 타입으로 정의
-        NumberExpression<Long> resultExpression = new CaseBuilder()
-                .when(o.classification.eq(OrderClassification.getClassification("발주"))).then(adjustedAmount)
-                .when(o.classification.eq(OrderClassification.getClassification("수주"))).then(o.texAmount.multiply(-1L))
+        // 1. Order 테이블에서 발주/수주 합계 계산
+        NumberExpression<Long> orderResultExpression = new CaseBuilder()
+                .when(o.classification.eq(OrderClassification.getClassification("발주"))).then(o.totalAmount)
+                .when(o.classification.eq(OrderClassification.getClassification("수주"))).then(o.totalAmount.multiply(-1L))
                 .otherwise(0L);
 
-        // 최종 합산 결과 계산
-        Long result = queryFactory
-                .select(resultExpression.sum().add(minus))
+        Long orderResultLong = queryFactory
+                .select(orderResultExpression.sum())
                 .from(o)
-                .innerJoin(m).on(m.manufactureDate.between(start.atStartOfDay(), end.atTime(LocalTime.MAX)))
                 .where(o.orderDate.between(start, end))
                 .fetchOne();
-        return result != null ? result : 0L;  // null 체크 후 0L 반환
+
+        // 2. Mes 테이블에서 결함수량과 단가의 곱의 합계 계산
+        Long mesResultLong = queryFactory
+                .select(m.defectsNum.multiply(m.unitPrice).sum().multiply(-1L))
+                .from(m)
+                .where(m.manufactureDate.between(start.atStartOfDay(), end.atTime(LocalTime.MAX)))
+                .fetchOne();
+
+        // 3. NullPointerException 방지를 위해 null 체크 후 언박싱 결과를 더한 최종 결과 반환
+        return (orderResultLong != null ? orderResultLong : 0L) + (mesResultLong != null ? mesResultLong : 0L);
     }
 
     private List<Order> findByItemName(String orderCode, String itemCode, String itemName) {

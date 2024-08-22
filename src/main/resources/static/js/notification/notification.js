@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", function() {
     // SSE로 새로운 알림 수신
     eventSource.onmessage = function(event) {
         const notification = JSON.parse(event.data);
-        console.log("Received notification: ", notification);
+        // console.log("Received notification: ", notification);
 
         // 새로운 알림을 캐시된 데이터에 추가
         if (cachedNotifications) {

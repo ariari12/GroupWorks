@@ -30,9 +30,9 @@
             <table class="table table-hover" style="width: 100%">
                 <tr>
                     <th>계산 시작 일</th>
-                    <td><input id="start" type="date" required></td>
+                    <td><input id="start" type="date" th:value="${start}" required></td>
                     <th>계산 종료 일</th>
-                    <td><input id="end" type="date" required></td>
+                    <td><input id="end" type="date" th:value="${end}" required></td>
                 </tr>
                 <tr>
                     <th>예산 금액</th>
@@ -76,8 +76,8 @@
                 <tr th:onclick="load([[${list.id}]], [[${list.classification +1}]])" th:each="list : ${orderList}">
                     <!--/*@thymesVar id="list" type="kr.co.groupworks.materialflow.dto.OrderDTO"*/-->
                     <td th:text="${list.getOrderCode()}"></td>
-                    <td th:if="${list.getClassification() == 0}">수주</td>
-                    <td th:if="${list.getClassification() == 1}">발주</td>
+                    <td th:if="${list.getClassification() == 0}">발주</td>
+                    <td th:if="${list.getClassification() == 1}">수주</td>
                     <!--/* 거래처 정보 */-->
                     <td th:text="${list.getManager().getBusiness().getBusinessName()}"></td>
                     <td th:text="${list.getManager().getName()}"></td>

@@ -18,12 +18,14 @@ import kr.co.groupworks.notification.service.NotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -57,11 +59,19 @@ public class VacationServiceImpl implements VacationService{
             history.resetAnnual();
         }
     }
+    // 기존의 캐시 제거를 위한 메서드
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @CacheEvict(value = "vacationRequestCache", key = "#employeeId")
+    public void evictVacationCache(Long employeeId) {
+        // 단순히 캐시를 제거하기 위한 메서드이므로, 로직이 필요하지 않습니다.
+        log.info("evictVacationCache {}", employeeId); ;
+    }
 
 
 
     // 연차 저장
     @Override
+    @CacheEvict(value = "vacationRequestCache", key = "#dto.employeeId")
     public Long save(AnnualFormDTO dto) {
         // 사원 엔티티 반환
         Employee employee = employeeRepository.findById(dto.getEmployeeId())
@@ -93,6 +103,7 @@ public class VacationServiceImpl implements VacationService{
 
     // 반차 저장
     @Override
+    @CacheEvict(value = "vacationRequestCache", key = "#dto.employeeId")
     public Long save(HalfFormDTO dto) {
         // 사원 엔티티 반환
         Employee employee = employeeRepository.findById(dto.getEmployeeId())
@@ -123,6 +134,7 @@ public class VacationServiceImpl implements VacationService{
 
     // 병가 저장
     @Override
+    @CacheEvict(value = "vacationRequestCache", key = "#dto.employeeId")
     public Long save(SickFormDTO dto, MultipartFile[] files) {
         Employee employee = employeeRepository.findById(dto.getEmployeeId())
                 .orElseThrow(() -> new EntityNotFoundException("사원을 찾을 수 없습니다. " + dto.getEmployeeId()));
@@ -173,6 +185,7 @@ public class VacationServiceImpl implements VacationService{
 
     // 기타 휴가 신청
     @Override
+    @CacheEvict(value = "vacationRequestCache", key = "#dto.employeeId")
     public Long save(OtherFormDTO dto, MultipartFile[] files) {
         Employee employee = employeeRepository.findById(dto.getEmployeeId())
                 .orElseThrow(() -> new EntityNotFoundException("사원을 찾을 수 없습니다. " + dto.getEmployeeId()));
@@ -260,6 +273,7 @@ public class VacationServiceImpl implements VacationService{
 
     // 휴가 수정
     @Override
+    @CacheEvict(value = "vacationRequestCache", key = "#employeeId")
     public void modifyVacation(Long calendarId, VacationModifyFormDTO dto, Long employeeId, MultipartFile[] files) {
         Employee employee = employeeRepository.findById(employeeId)
                 .orElseThrow(() -> new EntityNotFoundException("사원을 찾을 수 없습니다. " + employeeId));
@@ -305,7 +319,7 @@ public class VacationServiceImpl implements VacationService{
 
         // 업데이트 메서드 호출
         vacation.updateVacation(dto.getVacationType(),
-                dto.getContents(), dto.getVacationType().getName(),
+                dto.getContents(), dto.getVacationType().getDescription(),
                 date[0], date[1]);
 
     }
@@ -313,11 +327,13 @@ public class VacationServiceImpl implements VacationService{
     // 캘린더 페이지 사원의 휴가신청 내역 모두 조회 DTO 다름 (첨부파일 조회 안함)
     @Override
     @Cacheable(value = "vacationRequestCache", key = "#employeeId", cacheManager = "cacheManager")
-    @Transactional(readOnly = true)
     public List<CalendarFormDTO> findAllVacation(Long employeeId) {
+
         Employee employee = employeeRepository.findById(employeeId)
                 .orElseThrow(() -> new EntityNotFoundException("사원을 찾을 수 없습니다. " + employeeId));
-        return vacationRepository.findCalendarFormByEmployee(employee);
+        List<CalendarFormDTO> calendarFormByEmployee = vacationRepository.findCalendarFormByEmployee(employee);
+        log.info(calendarFormByEmployee.toString());
+        return calendarFormByEmployee;
     }
 
 
@@ -351,8 +367,8 @@ public class VacationServiceImpl implements VacationService{
                                                              ) Pageable pageable, String search) {
         Employee employee = employeeRepository.findById(employeeId)
                 .orElseThrow(() -> new EntityNotFoundException("사원을 찾을 수 없습니다. " + employeeId));
-        if(employee.getRankId()<3){
-            throw new RankNotSufficientException("직급이 낮아 해당 작업을 수행할 권한이 없습니다.");
+        if(employee.getRole().getGrade()<3){
+            throw new RankNotSufficientException("직책이 낮아 해당 작업을 수행할 권한이 없습니다.");
         }
         Page<Vacation> vacationList = vacationRepository.findAllTeamSearchName(employee, pageable, search);
 
@@ -363,6 +379,8 @@ public class VacationServiceImpl implements VacationService{
                                 .calendarId(vacation.getCalendarId())
                                 .employeeId(vacation.getEmployee().getEmployeeId())
                                 .name(vacation.getEmployee().getEmployeeName())
+                                .role(vacation.getEmployee().getRole())
+                                .rankName(vacation.getEmployee().getRankName())
                                 .startDate(vacation.getStartDate())
                                 .endDate(vacation.getEndDate() != null ? vacation.getEndDate() : vacation.getStartDate())
                                 .vacationType(vacation.getVacationType())
@@ -386,7 +404,10 @@ public class VacationServiceImpl implements VacationService{
         if (vacation.getStatus().equals(VacationStatus.PENDING)) {
             Approver approver = Approver.builder().approverId(employeeId)
                     .approverName(senderEmployee.getEmployeeName()).build();
-            vacation.approvalStatus(status,approver);
+
+            vacation.approvalStatus(status,approver,vacation.getEmployee().getEmployeeId());
+            // 승인 후 캐시 제거
+            evictVacationCache(vacation.getEmployee().getEmployeeId());
 
             if(status.equals(VacationStatus.APPROVED)) {
                 vacationHistoryUpdate(vacation);
@@ -405,8 +426,8 @@ public class VacationServiceImpl implements VacationService{
     public Page<VacationHistoryDTO> findAllTeamHistory(Long employeeId, Pageable pageable) {
         Employee employee = employeeRepository.findById(employeeId)
                 .orElseThrow(() -> new EntityNotFoundException("사원을 찾을 수 없습니다. " + employeeId));
-        if(employee.getRankId()<3){
-            throw new RankNotSufficientException("직급이 낮아 해당 작업을 수행할 권한이 없습니다.");
+        if(employee.getRole().getGrade()<3){
+            throw new RankNotSufficientException("직책이 낮아 해당 작업을 수행할 권한이 없습니다.");
         }
         return vacationHistoryRepository.findAllTeamDTO(employee, pageable);
     }

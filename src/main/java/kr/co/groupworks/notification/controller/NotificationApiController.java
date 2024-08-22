@@ -25,13 +25,13 @@ public class NotificationApiController {
 
     @GetMapping(value = "/sse", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public SseEmitter subscribe(@SessionAttribute(name = "employee") SessionEmployeeDTO sessionEmployeeDTO) {
-        log.info("NotificationController");
+//        log.info("NotificationController");
         return notificationSseEmitter.connect(sessionEmployeeDTO.getEmployeeId());
     }
     // 전체 알림 조회
     @GetMapping("/all")
     public List<NotificationDTO> getAllNotifications(@SessionAttribute(name = "employee") SessionEmployeeDTO sessionEmployeeDTO) {
-        log.info("NotificationController - Fetching All Notifications");
+//        log.info("NotificationController - Fetching All Notifications");
         return notificationService.getAllNotificationsByReceiverId(sessionEmployeeDTO.getEmployeeId());
 
     }

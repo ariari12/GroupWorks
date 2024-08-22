@@ -35,16 +35,16 @@ public class EmployeeTest {
     public void insertDepartment() {
         // 샘플 부서 데이터
         List<Department> departments = List.of(
-                new Department(0L, "기술부서", "010-1234-5678", "A동"),
-                new Department(1L, "마케팅부서", "010-1234-5679", "B동"),
-                new Department(2L, "영업부서", "010-1234-5680", "C동"),
-                new Department(3L, "인사부서", "010-1234-5681", "D동"),
-                new Department(4L, "재무부서", "010-1234-5682", "E동"),
-                new Department(5L, "IT 지원부서", "010-1234-5683", "F동"),
-                new Department(6L, "제품 관리부서", "010-1234-5684", "G동"),
-                new Department(7L, "고객 서비스부서", "010-1234-5685", "H동"),
-                new Department(8L, "법무부서", "010-1234-5686", "I동"),
-                new Department(9L, "연구개발부서", "010-1234-5687", "J동")
+                new Department(1L, "기술부서", "010-1234-5678", "A동"),
+                new Department(2L, "마케팅부서", "010-1234-5679", "B동"),
+                new Department(3L, "영업부서", "010-1234-5680", "C동"),
+                new Department(4L, "인사부서", "010-1234-5681", "D동"),
+                new Department(5L, "재무부서", "010-1234-5682", "E동"),
+                new Department(6L, "IT 지원부서", "010-1234-5683", "F동"),
+                new Department(7L, "제품 관리부서", "010-1234-5684", "G동"),
+                new Department(8L, "고객 서비스부서", "010-1234-5685", "H동"),
+                new Department(9L, "법무부서", "010-1234-5686", "I동"),
+                new Department(10L, "연구개발부서", "010-1234-5687", "J동")
         );
         // 부서 데이터 생성 및 저장
         departmentRepository.saveAll(departments);
@@ -59,7 +59,7 @@ public class EmployeeTest {
                 .rankId((i % 5) + 1)    // rankId: 사원 직급 ID (1부터 5까지 반복)
                 .rankName("직급" + (i % 5 + 1)) // rankName: 사원 직급 이름 (직급1, 직급2, ..., 직급5 반복)
                 .department(finalDepartments.get(i % finalDepartments.size())) // department: 부서 (부서 목록에서 순환 선택)
-                .email("employee" + i + "@testEmploy.com") // email: 사원 이메일 (employee1@example.com, employee2@example.com, ..., employee100@example.com)
+                .email("employee" + i + "@example.com") // email: 사원 이메일 (employee1@example.com, employee2@example.com, ..., employee100@example.com)
                 .phoneNumber("010-1111-111" + (i % 10)) // phoneNumber: 사원 전화번호 (010-1111-1110, 010-1111-1111, ..., 010-1111-1119 반복)
                 .address("주소 " + i) // address: 사원 주소 (주소 1, 주소 2, ..., 주소 100)
                 .gender((i % 2 == 0) ? "남" : "여") // gender: 사원 성별 (남 또는 여, 홀수는 여, 짝수는 남)

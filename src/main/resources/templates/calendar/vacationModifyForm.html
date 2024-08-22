@@ -37,7 +37,8 @@
                                     th:field="*{vacationType}">
                                 <th:block th:each="vacationStatus : ${vacationStatusList}">
                                     <option th:selected="*{vacationType} == ${vacationStatus}"
-                                            th:value="${vacationStatus}" th:text="${vacationStatus.getName()}"></option>
+                                            th:value="${vacationStatus}" th:text="${vacationStatus.getDescription()}">
+                                    </option>
                                 </th:block>
                             </select>
                             <br>

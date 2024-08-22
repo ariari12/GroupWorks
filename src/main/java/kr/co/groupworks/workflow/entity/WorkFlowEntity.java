@@ -36,7 +36,7 @@ public class WorkFlowEntity {
 
     // 9, 결재 기안 코드
     private String code;
-    // 10, 결재 요청 분류
+    // 10, 결재 요청 분류 1:업무, 2:재무, 3:예산, 4:구매, 5:보고, 6:특별
     private int workFlowType;
     // 11, 결재 명
     private String title;

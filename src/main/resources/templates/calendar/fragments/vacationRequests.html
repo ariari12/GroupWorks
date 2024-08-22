@@ -10,25 +10,24 @@
         <table id="vacationMyHistory" class="table table-hover" style="width:100%">
             <thead>
             <tr>
-                <th>이름</th>
-                <th>사용 기간</th>
-                <th>종류</th>
-                <th>증명자료</th>
-                <th>승인</th>
-                <th>관리</th>
+                <th>👤 이름</th>
+                <th>⏳ 사용 기간</th>
+                <th>🗂️ 종류</th>
+                <th>📑 증명자료</th>
+                <th>✅ 승인</th>
+                <th>⚙️ 처리</th>
+
             </tr>
             </thead>
 
             <tbody>
             <th:block th:if="${#lists.isEmpty(vacationRequestList)}">
-                <tr>
-                    <td style="text-align: center">신청 내역 없음</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
+                <td style="text-align: center">신청 내역 없음</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
             </th:block>
 
             <th:block th:if="${!#lists.isEmpty(vacationRequestList)}">
@@ -39,8 +38,10 @@
                     <td th:text="${dto.fileList.size() > 0 ? '첨부 파일 있음' : '첨부 파일 없음'}">증명자료</td>
                     <td th:text="${dto.status.description}">승인</td>
                     <td>
-                        <a th:href="@{|vacation/modify/${dto.calendarId}|}" class="btn btn-primary btn-sm">신청 수정</a>
-                        <button class="btn btn-danger btn-sm" th:onclick="@{|showConfirmModal(${dto.calendarId})|}">신청 취소</button>
+                        <th:block th:if="${dto.status == T(kr.co.groupworks.calendar.entity.VacationStatus).PENDING}">
+                            <a th:href="@{|vacation/modify/${dto.calendarId}|}" class="btn btn-primary btn-sm">신청 수정</a>
+                            <button class="btn btn-danger btn-sm cancel-btn" th:data-calendar-id="${dto.calendarId}">신청 취소</button>
+                        </th:block>
                     </td>
                 </tr>
             </th:block>
@@ -66,13 +67,24 @@
             </div>
         </div>
     </div>
+
+    <!-- jQuery Script -->
     <script>
-        function showConfirmModal(calendarId) {
-            $('#confirmDelete').off('click').on('click', function() {
-                window.location.href = '/vacation/delete/' + calendarId;
+        $(document).ready(function() {
+            // 신청 취소 버튼 클릭 이벤트 처리
+            $('.cancel-btn').on('click', function() {
+                var calendarId = $(this).data('calendar-id');
+                showConfirmModal(calendarId);
             });
-            $('#confirmModal').modal('show');
-        }
+
+            // 모달 표시 및 삭제 처리
+            function showConfirmModal(calendarId) {
+                $('#confirmDelete').off('click').on('click', function() {
+                    window.location.href = '/vacation/delete/' + calendarId;
+                });
+                $('#confirmModal').modal('show');
+            }
+        });
     </script>
 </div>
 

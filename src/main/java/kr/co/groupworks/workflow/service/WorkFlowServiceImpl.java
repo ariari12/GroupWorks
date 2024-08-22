@@ -193,7 +193,7 @@ public class WorkFlowServiceImpl implements WorkFlowService {
             /* 결재자 ApproveEntity: {approvalMethod, approvalDate, approval} UPDATE */
             approverEntity.setApproval(approverDTO.getApprovalMethod() <= 4 ? 1 : 2);
             if(approverEntity.getApprovalMethod() == ApprovalMethod.FULL_APPROVAL.ordinal() +1 ||
-                        approverEntity.getApprovalMethod() == ApprovalMethod.REJECTION.ordinal() +1) { // 전결 또는 후결
+                        approverEntity.getApprovalMethod() == ApprovalMethod.REJECTION.ordinal() +1) { // 전결 또는 반려
                 workFlow.getApprovers().forEach(a -> {
                     /* 결재 차례인 결재자인 경우 결재 적용 */
                     if(a.getApproverType() == 1 && a.getSequenceNum() > approverEntity.getSequenceNum()) {
@@ -216,7 +216,6 @@ public class WorkFlowServiceImpl implements WorkFlowService {
              * 코멘트를 작성 시, ApproverDTO: {approval = 1, approvalDate} UPDATE */
             approverEntity.setApproval(1);
             approversRepository.save(approverEntity.dtoToEntity());
-
             return true;
         }
         return false;
@@ -237,12 +236,31 @@ public class WorkFlowServiceImpl implements WorkFlowService {
         );
         workFlowRepository.workflowListFindByApproverId(employeeId, 1).forEach(list -> {
             for (ApproverEntity a : list.getApprovers()) {
-                if(a.getEmployeeId() == employeeId) {
-                    switch (a.getApproval()) {
-                        case 1: listMap.get(WorkFlowController.AttributeName.APPROVAl.getStatus()).add(new WorkflowListVO(list)); break;
-                        case 2: listMap.get(WorkFlowController.AttributeName.REJECTION.getStatus()).add(new WorkflowListVO(list)); break;
-                        default: listMap.get(WorkFlowController.AttributeName.PROGRESS.getStatus()).add(new WorkflowListVO(list));
+                if (a.getEmployeeId() == employeeId) {
+                    if ((list.getStatus() == 0 || list.getStatus() == 3)) {
+                        switch (a.getApproval()) {
+                            case 1:
+                                listMap.get(WorkFlowController.AttributeName.APPROVAl.getStatus()).add(new WorkflowListVO(list));
+                                break;
+                            case 2:
+                                listMap.get(WorkFlowController.AttributeName.REJECTION.getStatus()).add(new WorkflowListVO(list));
+                                break;
+                            default:
+                                listMap.get(WorkFlowController.AttributeName.PROGRESS.getStatus()).add(new WorkflowListVO(list));
+                        }
+                    } else {
+                        switch (list.getStatus()) {
+                            case 1:
+                                listMap.get(WorkFlowController.AttributeName.APPROVAl.getStatus()).add(new WorkflowListVO(list));
+                                break;
+                            case 2:
+                                listMap.get(WorkFlowController.AttributeName.REJECTION.getStatus()).add(new WorkflowListVO(list));
+                                break;
+                            default:
+                                listMap.get(WorkFlowController.AttributeName.PROGRESS.getStatus()).add(new WorkflowListVO(list));
+                        }
                     }
+                    break;
                 }
             }
         });

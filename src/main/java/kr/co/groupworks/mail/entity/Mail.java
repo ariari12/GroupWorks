@@ -9,7 +9,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.List;
 
-@Document(collection = "this")
+@Document(collection = "mail")
 @Getter
 @AllArgsConstructor @NoArgsConstructor
 @Builder @ToString
