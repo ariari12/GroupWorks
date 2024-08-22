@@ -16,16 +16,22 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/calendar")
 public class CalendarController {
+
     private final CalendarService calendarService;
     private final VacationService vacationService;
+
     @GetMapping
     public String calendar(Model model,
                            @SessionAttribute(name = "employee") SessionEmployeeDTO sessionEmployeeDTO){
         Long employeeId = sessionEmployeeDTO.getEmployeeId();
         // 개인 일정
         List<CalendarFormDTO> calendarFormDTOList = calendarService.findAllPersonalCalendar(employeeId);
+        log.info("calendar vacationService before: {}", vacationService);
         // 휴가 일정
         List<CalendarFormDTO> vacationFormDTOList = vacationService.findAllVacation(employeeId);
+
+        log.info("calendar CalendarFormDTO:{}", vacationFormDTOList.toString());
+
         model.addAttribute("calendarFormDTO", calendarFormDTOList);
         model.addAttribute("vacationFormDTO", vacationFormDTOList);
         model.addAttribute("title","캘린더");

@@ -18,6 +18,7 @@ import kr.co.groupworks.notification.service.NotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -62,6 +63,7 @@ public class VacationServiceImpl implements VacationService{
 
     // 연차 저장
     @Override
+    @CacheEvict(value = "vacationRequestCache", key = "#dto.employeeId")
     public Long save(AnnualFormDTO dto) {
         // 사원 엔티티 반환
         Employee employee = employeeRepository.findById(dto.getEmployeeId())
@@ -93,6 +95,7 @@ public class VacationServiceImpl implements VacationService{
 
     // 반차 저장
     @Override
+    @CacheEvict(value = "vacationRequestCache", key = "#dto.employeeId")
     public Long save(HalfFormDTO dto) {
         // 사원 엔티티 반환
         Employee employee = employeeRepository.findById(dto.getEmployeeId())
@@ -123,6 +126,7 @@ public class VacationServiceImpl implements VacationService{
 
     // 병가 저장
     @Override
+    @CacheEvict(value = "vacationRequestCache", key = "#dto.employeeId")
     public Long save(SickFormDTO dto, MultipartFile[] files) {
         Employee employee = employeeRepository.findById(dto.getEmployeeId())
                 .orElseThrow(() -> new EntityNotFoundException("사원을 찾을 수 없습니다. " + dto.getEmployeeId()));
@@ -173,6 +177,7 @@ public class VacationServiceImpl implements VacationService{
 
     // 기타 휴가 신청
     @Override
+    @CacheEvict(value = "vacationRequestCache", key = "#dto.employeeId")
     public Long save(OtherFormDTO dto, MultipartFile[] files) {
         Employee employee = employeeRepository.findById(dto.getEmployeeId())
                 .orElseThrow(() -> new EntityNotFoundException("사원을 찾을 수 없습니다. " + dto.getEmployeeId()));
@@ -260,6 +265,7 @@ public class VacationServiceImpl implements VacationService{
 
     // 휴가 수정
     @Override
+    @CacheEvict(value = "vacationRequestCache", key = "#employeeId")
     public void modifyVacation(Long calendarId, VacationModifyFormDTO dto, Long employeeId, MultipartFile[] files) {
         Employee employee = employeeRepository.findById(employeeId)
                 .orElseThrow(() -> new EntityNotFoundException("사원을 찾을 수 없습니다. " + employeeId));
@@ -305,7 +311,7 @@ public class VacationServiceImpl implements VacationService{
 
         // 업데이트 메서드 호출
         vacation.updateVacation(dto.getVacationType(),
-                dto.getContents(), dto.getVacationType().getName(),
+                dto.getContents(), dto.getVacationType().getDescription(),
                 date[0], date[1]);
 
     }
@@ -313,11 +319,14 @@ public class VacationServiceImpl implements VacationService{
     // 캘린더 페이지 사원의 휴가신청 내역 모두 조회 DTO 다름 (첨부파일 조회 안함)
     @Override
     @Cacheable(value = "vacationRequestCache", key = "#employeeId", cacheManager = "cacheManager")
-    @Transactional(readOnly = true)
     public List<CalendarFormDTO> findAllVacation(Long employeeId) {
+        log.info("findAllVacation eId: {}", employeeId);
+
         Employee employee = employeeRepository.findById(employeeId)
                 .orElseThrow(() -> new EntityNotFoundException("사원을 찾을 수 없습니다. " + employeeId));
-        return vacationRepository.findCalendarFormByEmployee(employee);
+        List<CalendarFormDTO> calendarFormByEmployee = vacationRepository.findCalendarFormByEmployee(employee);
+        log.info(calendarFormByEmployee.toString());
+        return calendarFormByEmployee;
     }
 
 
