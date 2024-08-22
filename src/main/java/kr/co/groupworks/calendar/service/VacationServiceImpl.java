@@ -25,6 +25,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -320,7 +321,6 @@ public class VacationServiceImpl implements VacationService{
     @Override
     @Cacheable(value = "vacationRequestCache", key = "#employeeId", cacheManager = "cacheManager")
     public List<CalendarFormDTO> findAllVacation(Long employeeId) {
-        log.info("findAllVacation eId: {}", employeeId);
 
         Employee employee = employeeRepository.findById(employeeId)
                 .orElseThrow(() -> new EntityNotFoundException("사원을 찾을 수 없습니다. " + employeeId));
@@ -397,7 +397,10 @@ public class VacationServiceImpl implements VacationService{
         if (vacation.getStatus().equals(VacationStatus.PENDING)) {
             Approver approver = Approver.builder().approverId(employeeId)
                     .approverName(senderEmployee.getEmployeeName()).build();
-            vacation.approvalStatus(status,approver);
+
+            vacation.approvalStatus(status,approver,vacation.getEmployee().getEmployeeId());
+            // 승인 후 캐시 제거
+            notificationService.evictVacationCache(vacation.getEmployee().getEmployeeId());
 
             if(status.equals(VacationStatus.APPROVED)) {
                 vacationHistoryUpdate(vacation);
