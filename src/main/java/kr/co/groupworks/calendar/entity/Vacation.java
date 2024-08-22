@@ -3,6 +3,7 @@ package kr.co.groupworks.calendar.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotNull;
+import kr.co.groupworks.employee.dto.EmployeeDTO;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.slf4j.Slf4j;

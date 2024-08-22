@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -95,5 +96,13 @@ public class NotificationServiceImpl implements NotificationService {
     public void deleteNotificationById(String notificationId, Long receiverId) {
         log.info("Deleting notification with ID: {} for receiverId: {}", notificationId, receiverId);
         notificationRepository.deleteByIdAndReceiverId(notificationId, receiverId);
+    }
+
+    // 기존의 캐시 제거를 위한 메서드
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @CacheEvict(value = "vacationRequestCache", key = "#employeeId")
+    public void evictVacationCache(Long employeeId) {
+        // 단순히 캐시를 제거하기 위한 메서드이므로, 로직이 필요하지 않습니다.
+        log.info("evictVacationCache {}", employeeId); ;
     }
 }
