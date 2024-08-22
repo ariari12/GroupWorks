@@ -30,9 +30,9 @@
             <table class="table table-hover" style="width: 100%">
                 <tr>
                     <th>계산 시작 일</th>
-                    <td><input id="start" type="date" required></td>
+                    <td><input id="start" type="date" th:value="${start}" required></td>
                     <th>계산 종료 일</th>
-                    <td><input id="end" type="date" required></td>
+                    <td><input id="end" type="date" th:value="${end}" required></td>
                 </tr>
                 <tr>
                     <th>예산 금액</th>
