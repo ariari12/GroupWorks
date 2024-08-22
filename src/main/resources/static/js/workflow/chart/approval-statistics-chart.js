@@ -48,7 +48,7 @@ function totalApproval(data) {
         'rgba(54, 162, 235, 0.6)',
         'rgba(255, 206, 86, 0.6)',
         'rgba(75, 192, 192, 0.6)',
-        'rgba(153, 102, 255, 0.6)',
+        'rgba(170,133,246,0.6)',
         'rgba(255, 159, 64, 0.6)'
     ];
     
@@ -75,12 +75,12 @@ function totalApproveByThisYear(data) {
 
     // 색상
     var colors2 = [
-        'rgba(255, 0, 0, 0.6)',
-        'rgba(0, 255, 0, 0.6)',
+        'rgba(255,108,108,0.94)',
+        'rgba(123,255,123,0.69)',
         'rgba(0, 0, 255, 0.6)',
-        'rgba(255, 255, 0, 0.6)',
-        'rgba(255, 0, 255, 0.6)',
-        'rgba(0, 255, 255, 0.6)'
+        'rgba(251,216,99,0.79)',
+        'rgba(244,123,255,0.6)',
+        'rgba(131,246,246,0.6)'
     ];
 
     var chart2 = new Chart(ctx2, {
@@ -119,7 +119,7 @@ function MyApprovalStats(data1, data2, data3) {
                     pointBackgroundColor: "rgba(2,117,216,1)",
                     pointBorderColor: "rgba(255,255,255,0.8)",
                     pointHoverRadius: 5,
-                    pointHoverBackgroundColor: "rgba(2,117,216,1)",
+                    pointHoverBackgroundColor: "rgb(2,70,216)",
                     pointHitRadius: 50,
                     pointBorderWidth: 2,
                     // 그래프 value
@@ -128,13 +128,13 @@ function MyApprovalStats(data1, data2, data3) {
                 {
                     label: "승인 건",
                     lineTension: 0.3,
-                    backgroundColor: "rgba(153, 102, 255, 0.2)",
-                    borderColor: "rgba(153, 102, 255, 1)",
+                    backgroundColor: "rgba(93,165,88,0.2)",
+                    borderColor: "rgb(93,165,88)",
                     pointRadius: 5,
-                    pointBackgroundColor: "rgba(75, 192, 192, 0.6)",
-                    pointBorderColor: "rgba(75, 192, 192, 1)",
+                    pointBackgroundColor: "rgb(93,165,88)",
+                    pointBorderColor: "rgba(255,255,255,0.8)",
                     pointHoverRadius: 5,
-                    pointHoverBackgroundColor: "rgba(75, 192, 192, 1)",
+                    pointHoverBackgroundColor: "rgb(17,211,55)",
                     pointHitRadius: 50,
                     pointBorderWidth: 2,
                     // 그래프 value
@@ -143,13 +143,13 @@ function MyApprovalStats(data1, data2, data3) {
                 {
                     label: "반려 건",
                     lineTension: 0.3,
-                    backgroundColor: "rgba(153, 102, 255, 0.2)",
-                    borderColor: "rgba(153, 102, 255, 1)",
+                    backgroundColor: "rgba(255,99,132,0.2)",
+                    borderColor: "rgb(255,99,132)",
                     pointRadius: 5,
-                    pointBackgroundColor: "rgba(153, 102, 255, 0.6)",
-                    pointBorderColor: "rgba(153, 102, 255, 1)",
+                    pointBackgroundColor: "rgb(255,99,132)",
+                    pointBorderColor: "rgba(255,255,255,0.8)",
                     pointHoverRadius: 5,
-                    pointHoverBackgroundColor: "rgba(153, 102, 255, 1)",
+                    pointHoverBackgroundColor: "rgb(255,51,51)",
                     pointHitRadius: 50,
                     pointBorderWidth: 2,
                     // 그래프 value
@@ -197,15 +197,15 @@ function approvalStatsByDepartment(labels, data1, data2, data3) {
                 },
                 {
                     label: "승인 건",
-                    backgroundColor: "rgba(255,99,132,0.8)",
-                    borderColor: "rgba(255,99,132,1)",
+                    backgroundColor: "rgba(75,192,192,0.8)",
+                    borderColor: "rgba(75,192,192,1)",
                     // 차트 value
                     data: data2,
                 },
                 {
                     label: "반려 건",
-                    backgroundColor: "rgba(75,192,192,0.8)",
-                    borderColor: "rgba(75,192,192,1)",
+                    backgroundColor: "rgba(255,99,132,0.8)",
+                    borderColor: "rgba(255,99,132,1)",
                     // 차트 value
                     data: data3,
                 }

@@ -21,6 +21,7 @@ function sendDataToParent(tr) {
         type: tr.children[3].innerText,
         item: tr.children[4].innerText,
     };
+    
     // JSON으로 변환하여 부모 창으로 전송
     window.opener.postMessage(data, window.location.origin);
     window.close();
