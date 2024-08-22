@@ -5,11 +5,13 @@ services:
     container_name: redis
     ports:
       - "6379:6379"
+    environment:
+      - TZ=Asia/Seoul  # 한국 시간대로 설정
 
   web:
-#    build:
-#      context: .
-#      dockerfile: Dockerfile
+    # build:
+    #   context: .
+    #   dockerfile: Dockerfile
     image: app
     container_name: web
     ports:
@@ -22,6 +24,7 @@ services:
       - SPRING_PROFILES_ACTIVE=prod
       - SPRING_DATA_REDIS_HOST=redis
       - SPRING_DATA_REDIS_PORT=6379
+      - TZ=Asia/Seoul  # 한국 시간대로 설정
 
 networks:
   default:
