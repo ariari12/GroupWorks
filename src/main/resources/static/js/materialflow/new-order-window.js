@@ -28,8 +28,10 @@ function openWindow(url, windowName, windowSize, eventHandler) {
         preUrl = url;
 
         // 창이 열리고 나서 이벤트 리스너 추가
-        currentListener = eventHandler;
-        window.addEventListener("message", currentListener, { once : true });
+        // 창이 로드된 후 이벤트 리스너 등록
+        currentWindow.onload = function() {
+            window.addEventListener("message", eventHandler, { once: true });
+        };
     }
 }
 
@@ -37,7 +39,7 @@ function openWindow(url, windowName, windowSize, eventHandler) {
 function registerWindow() {
     document.getElementById('registerBusiness').addEventListener("click", ev => {
         openWindow("/materialflow/new-business", "거래처 등록", "width=805, height=510, left=470, top=150",
-            ev => businessInfoUpdate(ev))
+            ev => businessInfoUpdate(ev));
     });
 }
 /* 거래처 목록 */
@@ -52,6 +54,7 @@ function businessInfoUpdate(event) {
     if(event.data.id === undefined) return;
 
     const division = document.getElementById("division").value;
+    
     if(division === '1') {
         document.getElementById("businessId").value = event.data.id;
         document.getElementById("receiveBusiness").value = event.data.businessName;
@@ -88,6 +91,7 @@ function managerReceive(event) {
     if (event.origin !== window.location.origin) { return; }
     if(currentWindow.closed) preUrl = null; // 창닫힘
     if(event.data.id === undefined) return;
+    console.dir(event.data);
 
     document.getElementById("managerId").value = event.data.id;
     document.getElementById("managerName").value = event.data.name;
@@ -107,6 +111,7 @@ function employeeReceive(event) {
     if (event.origin !== window.location.origin) { return; }
     if(currentWindow.closed) preUrl = null; // 창닫힘
     if(event.data.id === undefined) return;
+    console.dir(event.data);
 
     document.getElementById("employeeId").value = event.data.id;
     document.getElementById("employeeName").value = event.data.name;
