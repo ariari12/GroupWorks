@@ -17,4 +17,6 @@ public interface NotificationService {
     void deleteAllNotificationsByReceiverId(Long employeeId);
 
     void deleteNotificationById(String notificationId, Long employeeId);
+
+    void evictVacationCache(Long employeeId);
 }

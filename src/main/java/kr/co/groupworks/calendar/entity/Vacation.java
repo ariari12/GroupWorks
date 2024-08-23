@@ -3,12 +3,16 @@ package kr.co.groupworks.calendar.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotNull;
+import kr.co.groupworks.employee.dto.EmployeeDTO;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
+@Slf4j
 @Entity
 @Table(name="vacation")
 @Getter
@@ -47,8 +51,9 @@ public class Vacation extends Calendar{
         return this;
     }
 
-    public void approvalStatus(VacationStatus status, Approver approver) {
+    public void approvalStatus(VacationStatus status, Approver approver, Long employeeId) {
         this.status=status;
+        this.approver=approver;
     }
 
     public void updateUsedVacation(LocalDate startDate, LocalDate endDate) {

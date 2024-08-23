@@ -30,7 +30,6 @@ public class NotificationSseEmitter {
         // 연결 시간 초과 시 사용자 제거
         sseEmitter.onTimeout(() -> sseEmitters.remove(employeeId));
 
-//        log.info("NotificationSseEmitter employee {}", employeeId);
         return sseEmitter;
     }
 

@@ -16,11 +16,6 @@ import java.util.List;
 public interface VacationQueryDsl {
     List<CalendarFormDTO> findCalendarFormByEmployee(Employee employee);
     Page<Vacation> findAllTeamSearchName(Employee emp, Pageable pageable, String searchName);
-    //fetch 조인으로 바꿔야함
-//    @Query("SELECT v FROM Vacation v JOIN v.employee e " +
-//            "left join CalendarAttachment ca ON ca.calendar.calendarId = v.calendarId WHERE e.employeeId = :employeeId")
-//    List<Vacation> findAllByEmployeeId(@Param("employeeId") Long employeeId);
-
     List<Vacation> findAllByEmployeeId(Long employeeId);
 
 }
