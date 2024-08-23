@@ -575,7 +575,7 @@
     </th:block>
 
     <!--/* 해당 결재요청의 결재차례의 결재자인 경우 */-->
-    <th:block th:if="${classifications == 4  && (workFlowDto.status == 1 || workFlowDto.status == 3)}">
+    <th:block th:if="${classifications == 4}">
     <script>
         $(function () {
             $('#approveSubBtn').on('click', function(event) {
