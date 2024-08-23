@@ -7,6 +7,8 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import kr.co.groupworks.materialflow.dto.MesListVO;
 import kr.co.groupworks.materialflow.entity.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 import org.springframework.stereotype.Repository;
@@ -18,6 +20,7 @@ import java.util.Map;
 
 @Repository
 public class OrderQueryDslImpl extends QuerydslRepositorySupport implements OrderQueryDsl {
+    private static final Logger log = LoggerFactory.getLogger(OrderQueryDslImpl.class);
     private final JPAQueryFactory queryFactory;
 
     @Autowired
@@ -116,9 +119,8 @@ public class OrderQueryDslImpl extends QuerydslRepositorySupport implements Orde
                 .fetchJoin().fetch().stream().map(t -> {
                     Bom bom = t.get(0, Bom.class);
                     Order order = t.get(2, Order.class);
-                    int cl = order.getClassification().ordinal();
-                    return new MesListVO(order.getOrderCode(), order.getId(),
-                            cl, bom.getId(), t.get(1, Mes.class));
+                    int cl = order.getClassification().ordinal() +1;
+                    return new MesListVO(order.getOrderCode(), order.getId(), cl, bom.getId(), t.get(1, Mes.class));
                 }).toList();
     }
 
