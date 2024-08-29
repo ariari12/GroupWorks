@@ -21,9 +21,12 @@ services:
       - redis
     environment:
       - KEY_PROPERTY=${KEY_PROPERTY}
-      - SPRING_PROFILES_ACTIVE=prod
-      - SPRING_DATA_REDIS_HOST=redis
-      - SPRING_DATA_REDIS_PORT=6379
+      - DB_URL=${DB_URL}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - MONGODB_URI=${MONGODB_URI}
+      - SPRING_DATA_REDIS_HOST=${REDIS_HOST}
+      - SPRING_DATA_REDIS_PORT=${REDIS_PORT}
       - TZ=Asia/Seoul  # 한국 시간대로 설정
 
 networks:
