@@ -92,10 +92,11 @@
 - ### 채팅 <담당: 유현종>
   - 
 
-- ### <담당: 최일성>
-    
+- ### 로그인 - <담당: 최일성>
+    - Spring Security를 활용한 로그인
     <br/>
     <img src="https://github.com/user-attachments/assets/663561ed-b036-481a-867b-25c814a3e2d8">
+    <small>로그인 Sequence Diagram</small>
 - ### <담당: 최일성>
 - ### Work Flow - 전자 결재 <담당: 이정민>
     - 결재 요청 : 결재 요청란(기안일, 결재구분, 결재자, 협조자, 참조자, 결재제목, 결재내용, 비용, 첨부파일 등) 작성 후 결재를 요청
